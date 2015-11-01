@@ -22,9 +22,11 @@ Install dependencies:
 ```
 $ cd hapi-learning
 $ npm install
+$ cd app/public
+$ bower install
 ```
 
-Start the app:
+Start the app: (go back to the root folder)
 ```
 $ npm start
 ```
