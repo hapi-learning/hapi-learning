@@ -17,14 +17,23 @@ https:
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
 
+Install dependencies:
+
 ```
 $ cd hapi-learning
 $ npm install
-$ cd app 
-$ node server.js
 ```
 
-To start the tests :
+Start the app:
+```
+$ npm start
+```
+or 
+```
+$ node .
+```
+
+Start the node tests :
 
 ```
 $ npm test

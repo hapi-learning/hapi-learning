@@ -2,31 +2,36 @@
 
 require('dotenv').load(); // Load .env file
 
-const Hapi = require('hapi');
-const Glue = require('glue');
-const _    = require('lodash');
+const Hapi  = require('hapi');
+const Glue  = require('glue');
+const _     = require('lodash');
+const Path  = require('path');
 
 let internals = {
     manifest: {
         connections: [{
             host: process.env.HOST || 'localhost',
             port: process.env.PORT || 8080,
+            routes: {
+                cors: true,
+                files: {
+                    relativeTo: Path.join(__dirname, 'public')
+                }
+            },
             labels: ['web']
         }, {
             host: process.env.HOST || 'localhost',
             port: process.env.API_PORT || 8088,
+            routes: {
+                cors: true
+            },
             labels: ['api']
         }],
         plugins: {
-            './routes/api': [{
-                'select': ['api']
-            }],
-            './routes/web': [{
-                'select': ['web']
-            }],
-            './controllers': [{
-                'select': ['api', 'web']
-            }],
+            inert: [{'select': ['web']}],
+            './routes/api': [{'select': ['api']}],
+            './routes/web': [{'select': ['web']}],
+            './controllers': [{'select': ['api', 'web']}],
             good: {
                 reporters: [
                     {

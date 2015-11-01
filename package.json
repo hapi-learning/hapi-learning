@@ -2,9 +2,10 @@
   "name": "hapi-learning",
   "version": "1.0.0",
   "description": "",
-  "main": "app/server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/lab -v -t 100"
+    "test": "node_modules/.bin/lab -v -t 100",
+	"start": "node ."
   },
   "repository": {
     "type": "git",

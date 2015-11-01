@@ -1,8 +1,17 @@
 'use strict';
 
+
 exports.register = function (server, options, next) {
 
-    // Routes for web connection here
+    server.route({
+        method: 'GET',
+        path: '/{param*}',
+        handler: {
+            directory: {
+                path: '.'
+            }
+        }
+    });
 
     next();
 };
