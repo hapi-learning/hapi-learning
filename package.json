@@ -1,0 +1,33 @@
+{
+  "name": "elearning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "node_modules/.bin/lab -v -t 100"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/fknop/ATL3-39310-39189-39631-39171-eLearning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-eLearning/issues"
+  },
+  "homepage": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-eLearning#README",
+  "dependencies": {
+    "boom": "^3.0.0",
+    "dotenv": "^1.2.0",
+    "glue": "^2.4.0",
+    "hapi": "^11.0.3",
+    "inert": "^3.2.0",
+    "joi": "^6.10.0",
+    "qs": "^5.2.0",
+    "sequelize": "^3.13.0"
+  },
+  "devDependencies": {
+    "code": "^2.0.1",
+    "lab": "^7.1.0"
+  }
+}
