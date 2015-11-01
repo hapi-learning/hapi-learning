@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/fknop/ATL3-39310-39189-39631-39171-eLearning.git"
+    "url": "git+ssh://git@gitlab.com/fknop/ATL3-39310-39189-39631-39171-elearning.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-eLearning/issues"
+    "url": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-elearning/issues"
   },
-  "homepage": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-eLearning#README",
+  "homepage": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-elearning#README",
   "dependencies": {
     "boom": "^3.0.0",
     "dotenv": "^1.2.0",
