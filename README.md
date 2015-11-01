@@ -5,6 +5,32 @@
 Framapad : https://lite6.framapad.org/p/atl2016-e12-elearning
 Google Sheets : https://docs.google.com/spreadsheets/d/1RvT8Yisf4I6zTw3u3PwaiVU_Fisp1x2lrA5AXp8Ckrw/edit#gid=0
 
+## How to use
+
+ssh: 
+```
+$ git clone git@gitlab.com:fknop/ATL3-hapi-learning.git hapi-learning
+```
+
+https:
+```
+$ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
+```
+
+```
+$ cd hapi-learning
+$ npm install
+$ cd app 
+$ node server.js
+```
+
+To start the tests :
+
+```
+$ npm test
+```
+
+
 ## Directory Layout
 
 ```
