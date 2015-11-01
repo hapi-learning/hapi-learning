@@ -1,8 +1,8 @@
 {
-  "name": "elearning",
+  "name": "hapi-learning",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app/server.js",
   "scripts": {
     "test": "node_modules/.bin/lab -v -t 100"
   },
