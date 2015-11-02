@@ -90,5 +90,5 @@ exports.register = function (server, options, next) {
 exports.register.attributes = {
     name: 'api-routes',
     version: require('../../package.json').version,
-    dependencies: ['controllers', 'models']
+    dependencies: ['hapi-learning-auth', 'controllers', 'models']
 };

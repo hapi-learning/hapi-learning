@@ -27,7 +27,8 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
-            'hapi-auth-jwt2': [{'select': ['api']}], 
+            'hapi-auth-jwt2': [{'select': ['api']}],
+            './auth': [{'select': ['api']}],
             inert: [{'select': ['web']}],
             './models': [{'select' : ['api']}],
             './controllers': [{'select': ['api']}],
@@ -65,18 +66,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
         logging: console.log
     });
 
-    server.auth.strategy('jwt', 'jwt', { 
-        key: process.env.KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
-        validateFunc: function(decode, request, callback){
-            return callback(null, true); // verification ok(err, isValid, credential);
-        },            
-        verifyOptions: { 
-            algorithms: [ 'HS256' ] 
-        }                       
-    });
- 
-    server.auth.default('jwt');
-    
+
     server.start((err) => {
         if (err)
         {
