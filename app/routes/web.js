@@ -17,6 +17,6 @@ exports.register = function (server, options, next) {
 };
 
 exports.register.attributes = {
-  name: 'web-routes',
+    name: 'web-routes',
     version: require('../../package.json').version
 };

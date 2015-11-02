@@ -42,5 +42,6 @@ exports.register = function (server, options, next) {
 
 exports.register.attributes = {
     name: 'controllers',
-    version: require('../../package.json').version
+    version: require('../../package.json').version,
+    dependencies: 'models'
 };

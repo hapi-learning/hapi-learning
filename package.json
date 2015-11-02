@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/lab -v -t 100",
-	"start": "node ."
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,8 @@
     "joi": "^6.10.0",
     "lodash": "^3.10.1",
     "qs": "^5.2.0",
-    "sequelize": "^3.13.0"
+    "sequelize": "^3.13.0",
+    "sqlite3": "^3.1.0"
   },
   "devDependencies": {
     "code": "^2.0.1",

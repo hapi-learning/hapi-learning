@@ -29,9 +29,10 @@ let internals = {
         }],
         plugins: {
             inert: [{'select': ['web']}],
+            './models': [{'select' : ['api']}],
+            './controllers': [{'select': ['api']}],
             './routes/api': [{'select': ['api']}],
             './routes/web': [{'select': ['web']}],
-            './controllers': [{'select': ['api', 'web']}],
             good: {
                 reporters: [
                     {

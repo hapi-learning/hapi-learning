@@ -9,5 +9,6 @@ exports.register = function (server, options, next) {
 
 exports.register.attributes = {
     name: 'api-routes',
-    version: require('../../package.json').version
+    version: require('../../package.json').version,
+    dependencies: ['controllers', 'models']
 };
