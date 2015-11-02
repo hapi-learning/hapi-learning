@@ -26,7 +26,9 @@ exports.register = function (server, options, next) {
         {method: 'GET', path: '/role/{id}', config: Controllers.Role.get},
         {method: 'POST', path: '/role', config: Controllers.Role.post},
         {method: 'PUT', path: '/role/{id}', config: Controllers.Role.put},
-        {method: 'DELETE', path: '/role/{id}', config: Controllers.Role.delete}
+        {method: 'DELETE', path: '/role/{id}', config: Controllers.Role.delete},
+		{method: 'GET', path: '/permission', config: Controllers.Permission.getAll},
+        {method: 'GET', path: '/permission/{id}', config: Controllers.Permission.get}
 	]);
 
     next();
