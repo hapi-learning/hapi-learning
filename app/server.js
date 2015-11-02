@@ -27,6 +27,7 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
+            'hapi-auth-jwt2': [{'select': ['api']}],
             inert: [{'select': ['web']}],
             './models': [{'select' : ['api']}],
             './controllers': [{'select': ['api']}],
