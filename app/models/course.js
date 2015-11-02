@@ -26,4 +26,4 @@ module.exports = function(sequelize, DataTypes) {
         tableName: 'courses',
         underscored: true
     });
-}
+};

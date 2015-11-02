@@ -1,3 +1,5 @@
+'use strict';
+
 exports.getAll = {
     description: 'List all the courses',
     validate: {

@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
 exports.get = {
-	description: 'Returns a specific role',
-	handler: function (request, reply) {
-		reply('');
-	}
+    description: 'Returns a specific role',
+    handler: function (request, reply) {
+        reply('');
+    }
 };
 
 exports.getAll = {
-	description: 'Returns all roles',
-	handler: function (request, reply) {
-		reply('');
-	}
+    description: 'Returns all roles',
+    handler: function (request, reply) {
+        reply('');
+    }
 };

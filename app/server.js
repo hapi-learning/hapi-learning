@@ -66,10 +66,13 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
 
     server.start((err) => {
         if (err)
+        {
             throw err;
+        }
         else
+        {
             _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
-
+        }
     });
 
 });
