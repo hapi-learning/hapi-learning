@@ -2,7 +2,6 @@
 
 require('dotenv').load(); // Load .env file
 
-const Hapi  = require('hapi');
 const Glue  = require('glue');
 const _     = require('lodash');
 const Path  = require('path');
@@ -58,6 +57,12 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
         console.log('server.register error :');
         throw err;
     }
+
+    var Models = server.plugins.models.models;
+    Models.sequelize.sync({
+        force: true,
+        logging: console.log
+    });
 
     server.start((err) => {
         if (err)

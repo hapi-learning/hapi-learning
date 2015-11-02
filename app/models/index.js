@@ -24,7 +24,7 @@ exports.register = function(server, options, next) {
         if (file !== Path.basename(__filename)) {
             const model = Path.basename(file, '.js');
 
-            const name = model.charAt(0).toUpperCase() + model.splice(1);
+            const name = model.charAt(0).toUpperCase() + model.slice(1);
 
             models[name] = sequelize.import(model);
         }

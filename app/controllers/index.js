@@ -15,7 +15,7 @@ const load = function (options, callback) {
         if (file != Path.basename(__filename)) {
             let key = Path.basename(file, options.extension);
             // If file = controller.js -> key will be Controller
-            key = key.charAt(0).toUpperCase() + key.splice(1);
+            key = key.charAt(0).toUpperCase() + key.slice(1);
 
             controllers[key] = require((options.path || __dirname) + '/' + file);
         }
