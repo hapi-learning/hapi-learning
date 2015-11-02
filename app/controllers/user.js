@@ -2,7 +2,9 @@
 
 exports.get = {
     description: 'Get one user',
+    auth : 'jwt',
     handler: function(request, reply) {
+        console.log(request.headers.authorization);
         reply('Not implemented');
     }
 };
