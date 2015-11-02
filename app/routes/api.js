@@ -2,6 +2,16 @@
 
 exports.register = function (server, options, next) {
 
+    var Controllers = server.plugins.controllers.controllers;
+    var Models      = server.plugins.models.models;
+
+    // Sets context for handlers
+    // Can now access models with this.models
+    server.bind({
+        models: Models
+    });
+
+
     // Routes for rest connection here
 
     next();
