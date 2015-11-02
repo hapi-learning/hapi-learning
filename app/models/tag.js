@@ -1,16 +1,16 @@
 'use strict';
 
 module.exports = function (sequelize, DataTypes) {
-	return sequelize.define('tag', {
+	return sequelize.define('Tag', {
 		name: {
 			type: DataTypes.TEXT,
 			unique: true,
 			allowNull: false,
-			code: 'name'
+			field: 'name'
 		},
 		{
 			paranoid: true,
-			tableName: 'tag',
+			tableName: 'tags',
 			underscored: true
 		}
 	});
