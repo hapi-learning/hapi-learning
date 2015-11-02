@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 exports.get = {
 	description: 'Returns a specific tag',
