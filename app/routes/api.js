@@ -21,7 +21,12 @@ exports.register = function (server, options, next) {
 		{ method: 'GET', path: '/tags', config:  Controllers.Tag.getAll},
 		{ method: 'GET', path: '/tags/{id}', config: Controllers.Tag.get},
 		{ method: 'POST', path: '/tags', config: Controllers.Tag.post},
-		{ method: 'DELETE', path: '/tags/{id}', config: Controllers.Tag.delete}
+		{ method: 'DELETE', path: '/tags/{id}', config: Controllers.Tag.delete},
+		{method: 'GET', path: '/role', config: Controllers.Role.getAll},
+        {method: 'GET', path: '/role/{id}', config: Controllers.Role.get},
+        {method: 'POST', path: '/role', config: Controllers.Role.post},
+        {method: 'PUT', path: '/role/{id}', config: Controllers.Role.put},
+        {method: 'DELETE', path: '/role/{id}', config: Controllers.Role.delete}
 	]);
 
     next();
