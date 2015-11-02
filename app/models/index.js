@@ -32,6 +32,7 @@ exports.register = function(server, options, next) {
 
     (function setAssociations(m) {
 
+		m.Tag.belongsToMany(m.Course, {through : 'tags_courses'});
     // Associations here...
 
     })(models);
