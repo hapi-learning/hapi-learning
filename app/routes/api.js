@@ -29,7 +29,7 @@ exports.register = function (server, options, next) {
         {method: 'GET',    path: '/courses',                       config: Controllers.Course.getAll},
         {method: 'GET',    path: '/courses/{id}',                  config: Controllers.Course.get},
         {method: 'GET',    path: '/courses/{id}/documents',        config: Controllers.Course.getDocuments},
-        {method: 'GET',    path: '/courses/{id}/documents/{path}', config: Controllers.Course.getPath},
+        {method: 'GET',    path: '/courses/{id}/documents/{path}', config: Controllers.Course.getDocument},
     
         {method: 'GET',    path: '/courses/{id}/tree',             config: Controllers.Course.getTree},
         {method: 'GET',    path: '/courses/{id}/tree/{path}',      config: Controllers.Course.getFolderTree},
