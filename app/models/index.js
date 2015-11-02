@@ -32,7 +32,18 @@ exports.register = function(server, options, next) {
 
     (function setAssociations(m) {
 
-    // Associations here...
+        // A course has a category
+        _.Course.belongsToMany(_.Tag, { through: 'course_tags' });
+
+        // A user has many courses (not in a folder)
+        _.Course.belongsToMany(_.User, { through: 'user_courses' });
+
+        // A user has many course folders
+        _.CourseFolder.belongsToMany(_.User, { through: 'user_folders'});
+
+        // A Course folders has many courses
+        _.Course.belongsToMany(_.CourseFolder, { through: 'user_courses_folders'})
+
 
     })(models);
 
