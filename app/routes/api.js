@@ -39,18 +39,18 @@ exports.register = function (server, options, next) {
         {method: 'DELETE', path: '/users/{id}',                     config: Controllers.User.delete},
 
 
-        {method: 'GET',    path: '/role',                           config: Controllers.Role.getAll},
-        {method: 'GET',    path: '/role/{id}',                      config: Controllers.Role.get},
+        {method: 'GET',    path: '/roles',                           config: Controllers.Role.getAll},
+        {method: 'GET',    path: '/roles/{id}',                      config: Controllers.Role.get},
 
-        {method: 'POST',   path: '/role',                           config: Controllers.Role.post},
+        {method: 'POST',   path: '/roles',                           config: Controllers.Role.post},
 
-        {method: 'PUT',    path: '/role/{id}',                      config: Controllers.Role.put},
+        {method: 'PUT',    path: '/roles/{id}',                      config: Controllers.Role.put},
 
-        {method: 'DELETE', path: '/role/{id}',                      config: Controllers.Role.delete},
+        {method: 'DELETE', path: '/roles/{id}',                      config: Controllers.Role.delete},
 
 
-        {method: 'GET',    path: '/permission',                     config: Controllers.Permission.getAll},
-        {method: 'GET',    path: '/permission/{id}',                config: Controllers.Permission.get},
+        {method: 'GET',    path: '/permissions',                     config: Controllers.Permission.getAll},
+        {method: 'GET',    path: '/permissions/{id}',                config: Controllers.Permission.get},
 
 
         {method: 'GET',    path: '/tags',                           config:  Controllers.Tag.getAll},
