@@ -7,11 +7,10 @@ module.exports = function (sequelize, DataTypes) {
 			unique: true,
 			allowNull: false,
 			field: 'name'
-		},
-		{
-			paranoid: true,
-			tableName: 'tags',
-			underscored: true
 		}
+	}, {
+		paranoid: true,
+		tableName: 'tags',
+		underscored: true
 	});
 }
