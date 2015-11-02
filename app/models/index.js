@@ -42,7 +42,7 @@ exports.register = function(server, options, next) {
         _.CourseFolder.belongsToMany(_.User, { through: 'user_folders'});
 
         // A Course folders has many courses
-        _.Course.belongsToMany(_.CourseFolder, { through: 'user_courses_folders'})
+        _.Course.belongsToMany(_.CourseFolder, { through: 'user_courses_folders'});
 
 
     })(models);
