@@ -46,6 +46,16 @@ exports.register = function(server, options, next) {
         
         // An User can have multiple Tags (for example 'A12' + 'gestion')
         m.User.belongsToMany(m.Tag, { through: 'user_tags' }); 
+		
+		 // A permission can belongs to many roles    
+ m.Permission.belongsToMany(m.Role, { through: 'role_permissions' }); 
+ 
+ 
+    // A user has a role    
+    m.User.belongsTo(m.Role);    
+    
+    // A user can have specifics additional permissions.  
+  m.User.belongsToMany(m.Permission, { through: 'user_permissions' });
 
     })(models);
 
