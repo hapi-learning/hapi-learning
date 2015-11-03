@@ -64,8 +64,12 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
 
     var Models = server.plugins.models.models;
     Models.sequelize.sync({
-        force: false, // drops all db and recreates them
+        force: true, // drops all db and recreates them
         logging: console.log
+    })
+    .then(() => {
+        require('../roles.json').forEach(role => Models.Role.create(role));
+        require('../users.json').forEach(user => Models.User.create(user));
     });
 
 
