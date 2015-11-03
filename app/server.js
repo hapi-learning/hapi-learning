@@ -27,11 +27,15 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
-            inert: [{'select': ['web']}],
+            'hapi-auth-jwt2': [{'select': ['api']}],
+            './auth': [{'select': ['api']}],
+            inert: [{'select': ['api', 'web']}],
             './models': [{'select' : ['api']}],
             './controllers': [{'select': ['api']}],
             './routes/api': [{'select': ['api']}],
             './routes/web': [{'select': ['web']}],
+            vision: [{'select': ['api']}],
+            lout: [{'select': ['api']}],
             good: {
                 reporters: [
                     {
@@ -62,14 +66,22 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     Models.sequelize.sync({
         force: true, // drops all db and recreates them
         logging: console.log
+    })
+    .then(() => {
+        require('../roles.json').forEach(role => Models.Role.create(role));
+        require('../users.json').forEach(user => Models.User.create(user));
     });
+
 
     server.start((err) => {
         if (err)
+        {
             throw err;
+        }
         else
+        {
             _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
-
+        }
     });
 
 });

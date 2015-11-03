@@ -1,10 +1,12 @@
+'use strict';
+
 exports.getAll = {
     description: 'List all the courses',
     validate: {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -15,7 +17,7 @@ exports.get = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -26,7 +28,7 @@ exports.getDocuments = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -37,7 +39,7 @@ exports.getDocument = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -48,7 +50,7 @@ exports.getTree = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -59,7 +61,7 @@ exports.getFolderTree = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -70,7 +72,7 @@ exports.getTags = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -80,7 +82,7 @@ exports.getTeachers = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -90,7 +92,7 @@ exports.getStudents = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -101,7 +103,7 @@ exports.post = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -112,7 +114,7 @@ exports.postDocument = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -123,7 +125,7 @@ exports.put = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -134,7 +136,7 @@ exports.delete = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -145,7 +147,7 @@ exports.deleteDocument = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };
 
@@ -156,6 +158,6 @@ exports.deleteFolder = {
 
     },
     handler: function(request, reply) {
-
+        reply('Not implemented');
     }
 };

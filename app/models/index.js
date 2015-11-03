@@ -39,22 +39,22 @@ exports.register = function(server, options, next) {
         m.Course.belongsToMany(m.User, { through: 'user_courses' });
 
         // An User can create many Folders containing Courses
-        m.Folder.belongsToMany(m.User, { through: 'user_folders'}); 
+        m.Folder.belongsToMany(m.User, { through: 'user_folders'});
 
         // A Folder contains many Courses
         m.Course.belongsToMany(m.Folder, { through: 'user_courses_folders'});
-        
+
         // An User can have multiple Tags (for example 'A12' + 'gestion')
-        m.User.belongsToMany(m.Tag, { through: 'user_tags' }); 
-		
-		 // A permission can belongs to many roles    
- m.Permission.belongsToMany(m.Role, { through: 'role_permissions' }); 
- 
- 
-    // A user has a role    
-    m.User.belongsTo(m.Role);    
-    
-    // A user can have specifics additional permissions.  
+        m.User.belongsToMany(m.Tag, { through: 'user_tags' });
+
+         // A permission can belongs to many roles
+ m.Permission.belongsToMany(m.Role, { through: 'role_permissions' });
+
+
+    // A user has a role
+    m.User.belongsTo(m.Role);
+
+    // A user can have specifics additional permissions.
   m.User.belongsToMany(m.Permission, { through: 'user_permissions' });
 
     })(models);
@@ -69,5 +69,5 @@ exports.register = function(server, options, next) {
 exports.register.attributes = {
     name: 'models',
     version: require('../../package.json').version
-}
+};
 

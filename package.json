@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/fknop/ATL3-39310-39189-39631-39171-elearning.git"
+    "url": "git+ssh://git@gitlab.com/fknop/ATL3-hapi-learning.git"
   },
   "author": "",
   "license": "ISC",
@@ -18,18 +18,23 @@
   },
   "homepage": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-elearning#README",
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "boom": "^3.0.0",
     "dotenv": "^1.2.0",
     "glue": "^2.4.0",
     "good": "^6.4.0",
     "good-console": "^5.1.0",
     "hapi": "^11.0.3",
+    "hapi-auth-jwt2": "^5.2.0",
     "inert": "^3.2.0",
     "joi": "^6.10.0",
+    "jsonwebtoken": "^5.4.1",
     "lodash": "^3.10.1",
+    "lout": "^7.2.0",
     "qs": "^5.2.0",
     "sequelize": "^3.13.0",
-    "sqlite3": "^3.1.0"
+    "sqlite3": "^3.1.0",
+    "vision": "^3.0.0"
   },
   "devDependencies": {
     "code": "^2.0.1",

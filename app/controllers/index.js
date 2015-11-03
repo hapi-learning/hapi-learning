@@ -12,7 +12,7 @@ const load = function (options, callback) {
     const files = Fs.readdirSync(__dirname);
 
     _.forEach(files, (file) => {
-        if (file != Path.basename(__filename)) {
+        if (file !== Path.basename(__filename)) {
             let key = Path.basename(file, options.extension);
             // If file = controller.js -> key will be Controller
             key = key.charAt(0).toUpperCase() + key.slice(1);
