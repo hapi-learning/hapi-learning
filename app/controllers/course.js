@@ -136,6 +136,9 @@ exports.post = {
             }
         })) : Promise.resolve([]);
 
+        // TODO -- FIXME
+        // -> Handle create (same unique key)
+        // -> Return titulars and tags array
 
         Promise.all([setTags, setUsers])
             .then(values => {
@@ -158,6 +161,8 @@ exports.post = {
                             Promise.all([course.addTitulars(titulars),
                                          course.addTags(tags)])
                                 .then(() => {
+                                    course.tags = tags;
+                                    course.titulars = titulars;
                                     return reply(course);
                                 });
                         });

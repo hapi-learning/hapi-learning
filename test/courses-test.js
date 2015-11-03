@@ -86,11 +86,11 @@ describe('Controller.Course', () => {
                         expect(response.name).to.equal(request.payload.name);
                         expect(response.code).to.equal(request.payload.code);
                         expect(response.description).to.equal(request.payload.description);
-                      /*  expect(response.titulars).to.be.an.array();
-                        expect(response.titulars).to.equal(request.teachers);
+                        expect(response.titulars).to.be.an.array();
+                        expect(response.titulars).to.have.length(request.payload.titulars.length);
                         expect(response.tags).to.be.an.array();
-                        expect(response.titulars).to.equal(request.tags);
-*/
+                        expect(response.titulars).to.have.length(request.payload.tags.length);
+
                         done();
                     });
                 });
