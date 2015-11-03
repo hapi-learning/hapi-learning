@@ -1,10 +1,15 @@
 <h1>Courses</h1>
 
 
-<ul>
-    <li ng-repeat="course in courses">
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="course in courses">
         <h3>{{course.code}} -- {{course.name}}</h3>
-        
+
         <blockquote>{{course.description}}</blockquote>
+
+        <div>
+            <button type="button" class="btn btn-success" ng-hide="subscribed()">Subscribe</button>
+            <button type="button" class="btn btn-danger" ng-show="subscribed()">Unsubscribe</button>
+        </div>
     </li>
 </ul>
