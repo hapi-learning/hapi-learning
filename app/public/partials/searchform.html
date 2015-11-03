@@ -1,0 +1,37 @@
+<style>
+    #dropdown-arrow {
+        margin-bottom: 15px;
+    }
+
+    #title {
+        display: inline;
+        margin-left: 15px;
+    }
+</style>
+<div>
+    <button id="dropdown-arrow" class="btn btn-default glyphicon glyphicon-menu-down" data-toggle="collapse" aria-controls="collapseForm" data-target="#collapseForm">
+    </button>
+    <span><h3 id="title">Search Form</h3></span>
+    <form ng-controller="formCtrl" class="collapse in" id="collapseForm">
+        <div class="row">
+            <div class="col-xs-4">
+                <label>Course Name</label>
+                <input class="form-control" type="text" ng-model="search.ids[0]" clearable/>
+            </div>
+        </div>
+
+        <br/>
+        
+        <div class="row">
+            <div class="col-xs-4">
+                <input class="form-control" type='submit' value="Search" ng-click="searchPerson()" />
+            </div>
+            <div class="col-xs-4">
+                <input class="form-control" type="button" ng-click="resetForm()" value="Reset form" />
+            </div>
+            <div class="col-xs-4" ng-controller="resultsCtrl">
+                <input class="form-control" type="button" ng-click="resetResults()" value="Reset results" />
+            </div>
+        </div>
+    </form>
+</div>

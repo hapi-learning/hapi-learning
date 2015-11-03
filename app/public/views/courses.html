@@ -1,21 +1,40 @@
-<h1>Courses</h1>
+<div class="container">
+
+    <h1 class="page-header">Courses</h1>
 
 
-<ul class="list-group">
-    <li class="list-group-item" ng-repeat="course in courses">
-        <h3><a href="{{course.code}}">{{course.code}} − {{course.name}}</a></h3>
 
-        <blockquote>{{course.description}}</blockquote>
+    <div ng-include="'../partials/searchform.html'"></div>
 
-        <div class="row">
-            <div class="col-md-1" ng-repeat="teacher in course.teachers"><teacher-info></teacher-info></div>
-        </div>
-        
-        <br />
+    <br />
 
-        <div>
-            <button type="button" class="btn btn-success" ng-hide="subscribed()"><span class="glyphicon glyphicon-ok"></span> Subscribe</button>
-            <button type="button" class="btn btn-danger" ng-show="subscribed()"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
-        </div>
-    </li>
-</ul>
+
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="course in courses">
+            <h3>
+                
+                <span class="label label-default label-pill pull-right" ng-show="updated()"><span class="glyphicon glyphicon-eye-open"></span></span>
+                
+                
+                <a href="#/courses/{{course.code}}">{{course.code}} − {{course.name}}</a></h3>
+
+            <blockquote>{{course.description}}</blockquote>
+
+            <div class="row">
+                <div class="col-md-2" ng-repeat="teacher in course.teachers">
+                    <teacher-info></teacher-info>
+                </div>
+            </div>
+            
+            <br />
+
+            <div>
+                <button type="button" class="btn btn-success" ng-hide="subscribed()"><span class="glyphicon glyphicon-ok"></span> Subscribe</button>
+                <button type="button" class="btn btn-danger" ng-show="subscribed()"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+            </div>
+            
+            <br />
+        </li>
+    </ul>
+
+</div>
