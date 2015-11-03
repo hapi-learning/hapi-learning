@@ -16,7 +16,12 @@ let internals = {
         }],
         plugins: {
             'hapi-auth-jwt2': [{select: ['api']}],
-            '../app/auth': [{select: ['api']}],
+            '../app/auth': [{
+                select: ['api'],
+                options: {
+                    setDefault: false
+                }
+            }],
             '../app/models': [
                 {
                     select: ['api'],

@@ -31,7 +31,10 @@ let internals = {
                 select: ['api']
             }],
             './auth': [{
-                select: ['api']
+                select: ['api'],
+                options: {
+                    setDefault: true
+                }
             }],
             inert: [{
                 select: ['api', 'web']

@@ -2,3 +2,4 @@ node_modules
 app/public/lib
 npm-debug.log
 database.sqlite
+test_database.sqlite

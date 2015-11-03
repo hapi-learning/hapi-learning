@@ -1,6 +1,7 @@
 'use strict';
 
 const Joi = require('joi');
+const Boom = require('boom');
 
 
 const createCourse = (schema, titulars, tags) => {
@@ -121,7 +122,7 @@ exports.post = {
         let titulars;
         let tags;
 
-        Use.findAll({
+        User.findAll({
                 where: {
                     username: {
                         $in: request.payload.titulars
