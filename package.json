@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/fknop/ATL3-39310-39189-39631-39171-elearning.git"
+    "url": "git+ssh://git@gitlab.com/fknop/ATL3-hapi-learning.git"
   },
   "author": "",
   "license": "ISC",
