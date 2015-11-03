@@ -21,7 +21,7 @@ exports.get = {
                     username: request.params.username
                 }
             })
-            .then(function (user) {
+            .then(function(user) {
 
                 if (user === null) {
                     return reply(Boom.badData('Invalid personal ID'));
@@ -37,7 +37,19 @@ exports.getAll = {
     auth: false,
     description: 'Get all users',
     handler: function(request, reply) {
-        reply('Not implemented');
+        
+        
+        const User = this.models.User;
+        
+        User.findAll()
+            .then(function(users) {
+            
+            if (users === null) {
+                return reply(Boom.notFound('No user found'));
+            } else {
+                return reply(users);
+            }
+        });
     }
 };
 
