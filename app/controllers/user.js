@@ -21,14 +21,8 @@ exports.get = {
                     username: request.params.username
                 }
             })
-            .then(function(user) {
-
-                if (user === null) {
-                    return reply(Boom.badData('Invalid personal ID'));
-                } else {
-                    return reply(user);
-                }
-            });
+            .catch(error => reply(Boom.badRequest(error)))
+            .then(result => reply(result));
     }
 };
 
@@ -42,14 +36,8 @@ exports.getAll = {
         const User = this.models.User;
         
         User.findAll()
-            .then(function(users) {
-            
-            if (users === null) {
-                return reply(Boom.notFound('No user found'));
-            } else {
-                return reply(users);
-            }
-        });
+            .catch(error => reply(Boom.notFound(error)))
+            .then(results => reply(results));
     }
 };
 
