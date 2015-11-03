@@ -11,16 +11,6 @@ angular.module('hapi-learning')
     }]);
 
 
-angular.module('hapi-learning')
-    .directive('teacherInfo', function() {
-   return {
-       restrict: 'EAC',
-       template: '<a ng-href="mailto: {{teacher.acronyme | lowercase}}@heb.be">{{teacher.name}} ({{teacher.acronyme}})</a>'
-//       templateUrl: '../directives/teacher-info.html'
-   };
-});
-
-
 var courses = [
     {
         name: 'Atelier logiciel 3e',
