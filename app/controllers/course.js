@@ -4,10 +4,8 @@ const Joi = require('joi');
 const Boom = require('boom');
 
 
-const createCourse = (schema, titulars, tags) => {
-    const Course = this.models.Course;
-    Course.create(schema).then(course => course.addTitulars(titulars).then(() => course.addTags(tags)));
-};
+
+
 
 exports.getAll = {
     description: 'List all the courses',
@@ -119,29 +117,17 @@ exports.post = {
         const User = this.models.User;
         const Tag = this.models.Tag;
 
-        let titulars;
+
         let tags;
+        let titulars;
+        let response;
 
-        User.findAll({
-                where: {
-                    username: {
-                        $in: request.payload.titulars
-                    }
-                }
-            })
-            // Check that titulars exists
-            .then(users => {
+        const hasTitulars = request.payload.titulars ? true : false;
+        const hasTags = request.payload.tags ? true : false;
 
-                if (users.length !== request.payload.titulars.length) {
-                    reply(Boom.badData('Invalid titular(s)'));
-                }
-
-                titulars = users;
-
-            })
-            .then(() => {
-                // Check that tags exists
-                Tag.findAll({
+        const setTags = () => {
+            if (hasTags) {
+                return Tag.findAll({
                         where: {
                             name: {
                                 $in: request.payload.tags
@@ -149,20 +135,52 @@ exports.post = {
                         }
                     })
                     .then(t => {
-
-                        if (t.length !== request.payload.tags.length) {
-                            reply(Boom.badData('Invalid tag(s)'));
-                        }
-
                         tags = t;
+                    });
+            }
+        }
 
-                        createCourse({
+        const setUsers = () => {
+            if (hasTitulars) {
+                return User.findAll({
+                    where: {
+                        username: {
+                            $in: request.payload.titulars
+                        }
+                    }
+                }).then(users => {
+                    titulars = users;
+                });
+            }
+        }
+
+
+
+        Promise.all([setTags(), setUsers()])
+            .then(() => {
+                console.log(titulars.length);
+                console.log(tags.length);
+                const a = (hasTitulars && titulars.length !== request.payload.titulars.length);
+                const b = (hasTags && tags.length !== request.payload.tags.length);
+                if (a || b) {
+                    return reply(Boom.badData(a ? 'Invalid titular(s)' : 'Invalid tag(s)'));
+                } else {
+
+                    console.log(request.payload);
+
+                    Course.create({
                             name: request.payload.name,
                             code: request.payload.code,
-                            description: request.payload.description,
-                        }, titulars, tags);
-
-                    });
+                            description: request.payload.description
+                        })
+                        .then(course => {
+                            Promise.all([course.addTitulars(titulars),
+                                    course.addTags(tags)])
+                                .then(() => {
+                                    return reply(course);
+                                });
+                        });
+                }
             });
     }
 };

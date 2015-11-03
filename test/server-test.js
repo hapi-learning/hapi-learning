@@ -4,7 +4,7 @@ require('dotenv').load(); // Load .env file
 
 const Glue  = require('glue');
 
-let internals = {
+const internals = {
     manifest: {
         connections: [{
             host: process.env.HOST || 'localhost',

@@ -33,7 +33,7 @@ let internals = {
             './auth': [{
                 select: ['api'],
                 options: {
-                    setDefault: true
+                    setDefault: false
                 }
             }],
             inert: [{
@@ -103,18 +103,6 @@ Glue.compose(internals.manifest, {
         .then(() => {
             require('../roles.json').forEach(role => Models.Role.create(role));
             require('../users.json').forEach(user => Models.User.create(user));
-
-            Models.Course.create({
-                name: 'Ateliers Logiciel',
-                code: 'ATL',
-                description: 'Bullshit'
-            }).then(course => {
-                course.addTitular(1).then(() => {
-                    Models.Course.findAll().then(results => {
-                        results[0].getTitulars().then(r => console.log(r));
-                    });
-                });
-            });
         });
 
 
