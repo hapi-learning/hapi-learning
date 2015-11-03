@@ -1,19 +1,40 @@
 'use strict';
 
+const Joi = require('joi');
+const Boom = require('boom');
+
 exports.get = {
+    auth: false,
     description: 'Get one user',
-   validate: {
+    validate: {
         params: {
-            id: Joi.string().min(1).max(255).required().description('User personal ID')
+            username: Joi.string().min(1).max(255).required().description('User personal ID')
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
         console.log(request.headers.authorization);
-        reply('Not implemented');
+
+        const User = this.models.User;
+
+        User.findOne({
+                where: {
+                    username: request.params.username
+                }
+            })
+            .then(function (user) {
+
+                if (user === null) {
+                    return reply(Boom.badData('Invalid personal ID'));
+                } else {
+                    return reply(user);
+                }
+            });
     }
 };
 
+
 exports.getAll = {
+    auth: false,
     description: 'Get all users',
     handler: function(request, reply) {
         reply('Not implemented');
@@ -21,6 +42,7 @@ exports.getAll = {
 };
 
 exports.post = {
+    auth: false,
     description: 'Add user',
     validate: {
         payload: {
@@ -38,6 +60,7 @@ exports.post = {
 };
 
 exports.delete = {
+    auth: false,
     description: 'Delete user',
     validate: {
         params: {
@@ -50,6 +73,7 @@ exports.delete = {
 };
 
 exports.put = {
+    auth: false,
     description: 'Update user',
     validate: {
         params: {
@@ -69,6 +93,7 @@ exports.put = {
 };
 
 exports.getTags = {
+    auth: false,
     description: 'Get the user\'s tag',
     validate: {
         params: {
@@ -81,6 +106,7 @@ exports.getTags = {
 };
 
 exports.getCourses = {
+    auth: false,
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
@@ -93,6 +119,7 @@ exports.getCourses = {
 };
 
 exports.subscribeToCourse = {
+    auth: false,
     description: 'Subscribe to a course',
     validate: {
         params: {
@@ -106,6 +133,7 @@ exports.subscribeToCourse = {
 };
 
 exports.unsubscribeToCourse = {
+    auth: false,
     description: 'Unsubscribe to a course',
     validate: {
         params: {
@@ -119,6 +147,7 @@ exports.unsubscribeToCourse = {
 };
 
 exports.addFolder = {
+    auth: false,
     description: 'Add a folder',
     validate: {
         params: {
@@ -132,6 +161,7 @@ exports.addFolder = {
 };
 
 exports.addCourseToFolder = {
+    auth: false,
     description: 'Add a course to the folder (removes from the old folder)',
     validate: {
         params: {

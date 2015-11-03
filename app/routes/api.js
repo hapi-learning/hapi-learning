@@ -19,9 +19,9 @@ exports.register = function (server, options, next) {
 
         // Users routes
         {method: 'GET',    path: '/users',                             config: Controllers.User.getAll},
-        {method: 'GET',    path: '/users/{id}',                        config: Controllers.User.get},
-        {method: 'GET',    path: '/users/{id}/tags',                   config: Controllers.User.getTags},
-        {method: 'GET',    path: '/users/{id}/courses',                config: Controllers.User.getCourses},
+        {method: 'GET',    path: '/users/{username}',                        config: Controllers.User.get},
+        {method: 'GET',    path: '/users/{username}/tags',                   config: Controllers.User.getTags},
+        {method: 'GET',    path: '/users/{username}/courses',                config: Controllers.User.getCourses},
         {method: 'POST',   path: '/users',                             config: Controllers.User.post},
         {method: 'POST',   path: '/users/{id}/subscribe/{crsId}',      config: Controllers.User.subscribeToCourse},
         {method: 'POST',   path: '/users/{id}/unsubscribe/{crsId}',    config: Controllers.User.unsubscribeToCourse},
