@@ -44,9 +44,9 @@ exports.register = function (server, options, next) {
 
         // Tags routes
         {method: 'GET',    path: '/tags',      config:  Controllers.Tag.getAll},
-        {method: 'GET',    path: '/tags/{id}', config: Controllers.Tag.get},
+        {method: 'GET',    path: '/tags/{name}', config: Controllers.Tag.get},
         {method: 'POST',   path: '/tags',      config: Controllers.Tag.post},
-        {method: 'DELETE', path: '/tags/{id}', config: Controllers.Tag.delete},
+        {method: 'DELETE', path: '/tags/{name}', config: Controllers.Tag.delete},
 
         // Courses routes
         {method: 'GET',    path: '/courses',                        config: Controllers.Course.getAll},
