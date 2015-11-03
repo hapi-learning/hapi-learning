@@ -2,9 +2,9 @@
 
 require('dotenv').load(); // Load .env file
 
-const Glue  = require('glue');
-const _     = require('lodash');
-const Path  = require('path');
+const Glue = require('glue');
+const _ = require('lodash');
+const Path = require('path');
 
 let internals = {
     manifest: {
@@ -27,9 +27,18 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
-            'hapi-auth-jwt2': [{select: ['api']}],
-            './auth': [{select: ['api']}],
-            inert: [{select: ['api', 'web']}],
+            'hapi-auth-jwt2': [{
+                select: ['api']
+            }],
+            './auth': [{
+                select: ['api'],
+                options: {
+                    setDefault: true
+                }
+            }],
+            inert: [{
+                select: ['api', 'web']
+            }],
             './models': [
                 {
                     select: ['api'],
@@ -43,22 +52,32 @@ let internals = {
                     }
                 }
             ],
-            './controllers': [{select: ['api']}],
-            './routes/api': [{select: ['api']}],
-            './routes/web': [{select: ['web']}],
-            vision: [{select: ['api']}],
-            lout: [{select: ['api']}],
+            './controllers': [{
+                select: ['api']
+            }],
+            './routes/api': [{
+                select: ['api']
+            }],
+            './routes/web': [{
+                select: ['web']
+            }],
+            vision: [{
+                select: ['api']
+            }],
+            lout: [{
+                select: ['api']
+            }],
             good: {
                 reporters: [
                     {
-                      'reporter': 'good-console',
-                      'events': {
-                          'ops': '*',
-                          'log': '*',
-                          'response': '*',
-                          'request': '*',
-                          'error': '*'
-                      }
+                        'reporter': 'good-console',
+                        'events': {
+                            'ops': '*',
+                            'log': '*',
+                            'response': '*',
+                            'request': '*',
+                            'error': '*'
+                        }
                     }
                 ]
             }
@@ -67,7 +86,9 @@ let internals = {
 };
 
 
-Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
+Glue.compose(internals.manifest, {
+    relativeTo: __dirname
+}, (err, server) => {
 
     if (err) {
         console.log('server.register error :');
@@ -84,31 +105,26 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
         require('../users.json').forEach(user => Models.User.create(user));
         require('../tags.json').forEach(tag => Models.Tag.create(tag));
 
-        Models.Course.create({
-            name: 'Ateliers Logiciel',
-            code: 'ATL',
-            description: 'Bullshit'
-        }).then(course =>{
-            course.addTitular(1).then(() => {
-                Models.Course.findAll().then(results => {
-                    results[0].getTitulars().then(r => console.log(r));
+            Models.Course.create({
+                name: 'Ateliers Logiciel',
+                code: 'ATL',
+                description: 'Bullshit'
+            }).then(course => {
+                course.addTitular(1).then(() => {
+                    Models.Course.findAll().then(results => {
+                        results[0].getTitulars().then(r => console.log(r));
+                    });
                 });
             });
         });
-    });
 
 
     server.start((err) => {
-        if (err)
-        {
+        if (err) {
             throw err;
-        }
-        else
-        {
+        } else {
             _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
         }
     });
 
 });
-
-
