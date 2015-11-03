@@ -27,8 +27,9 @@ exports.register = function (server, options, next) {
         {method: 'POST',   path: '/users/{id}/unsubscribe/{crsId}',    config: Controllers.User.unsubscribeToCourse},
         {method: 'POST',   path: '/users/{id}/folders/{name}',         config: Controllers.User.addFolder},
         {method: 'POST',   path: '/users/{id}/folders/{name}/{crsId}', config: Controllers.User.addCourseToFolder},
-        {method: 'PUT',    path: '/users/{id}',                        config: Controllers.User.put},
-        {method: 'DELETE', path: '/users/{id}',                        config: Controllers.User.delete},
+        {method: 'PUT',    path: '/users/{username}',                  config: Controllers.User.put},
+        {method: 'PATCH',  path: '/users/{username}',                  config: Controllers.User.patch},
+        {method: 'DELETE', path: '/users/{username}',                  config: Controllers.User.delete},
 
         // Roles routes
         {method: 'GET',    path: '/roles',       config: Controllers.Role.getAll},
