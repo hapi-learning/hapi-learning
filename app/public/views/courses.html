@@ -7,6 +7,10 @@
 
         <blockquote>{{course.description}}</blockquote>
 
+        Teachers: <span class="col-sd-4" ng-repeat="teacher in course.teachers">
+        <teacher-info></teacher-info>
+        </span>
+
         <div>
             <button type="button" class="btn btn-success" ng-hide="subscribed()">Subscribe</button>
             <button type="button" class="btn btn-danger" ng-show="subscribed()">Unsubscribe</button>
