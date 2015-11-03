@@ -1,7 +1,14 @@
 'use strict';
 
+const Joi = require('joi');
+
 exports.get = {
     description: 'Returns a specific tag',
+    validate: {
+        params: {
+            id: Joi.number().integer().required().description('Tag id')
+        }
+    },
     handler: function (request, reply) {
         reply('Not implemented');
     }
@@ -23,6 +30,11 @@ exports.post = {
 
 exports.delete = {
     description: 'Delete a specific tag',
+    validate: {
+        params: {
+            id: Joi.number().integer().required().description('Tag id')
+        }
+    },
     handler: function (request, reply) {
         reply('Not implemented');
     }

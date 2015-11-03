@@ -9,11 +9,12 @@ exports.register = function(server, options, next) {
     let models = {};
 
     const sequelize = new Sequelize(
-    null,
-    null,
-    null, {
-        dialect: 'sqlite',
-        storage: 'database.sqlite'
+    options.name || null,
+    options.username || null,
+    options.password || null, {
+        host: options.host || null,
+        dialect: options.dialect || null,
+        storage: options.storage || null
     });
 
     models.sequelize = sequelize;
@@ -36,7 +37,9 @@ exports.register = function(server, options, next) {
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
 
         // An User can subscribe to many Courses (not in a Folder)
-        m.Course.belongsToMany(m.User, { through: 'user_courses' });
+        m.Course.belongsToMany(m.User, { as: 'Users', through: 'user_courses' });
+
+        m.Course.belongsToMany(m.User, { as: 'Titulars',  through: 'course_titulars'});
 
         // An User can create many Folders containing Courses
         m.Folder.belongsToMany(m.User, { through: 'user_folders'});
@@ -48,14 +51,14 @@ exports.register = function(server, options, next) {
         m.User.belongsToMany(m.Tag, { through: 'user_tags' });
 
          // A permission can belongs to many roles
- m.Permission.belongsToMany(m.Role, { through: 'role_permissions' });
+        m.Permission.belongsToMany(m.Role, { through: 'role_permissions' });
 
 
-    // A user has a role
-    m.User.belongsTo(m.Role);
+        // A user has a role
+        m.User.belongsTo(m.Role);
 
-    // A user can have specifics additional permissions.
-  m.User.belongsToMany(m.Permission, { through: 'user_permissions' });
+        // A user can have specifics additional permissions.
+        m.User.belongsToMany(m.Permission, { through: 'user_permissions' });
 
     })(models);
 
