@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('hapi-learning', [
+angular.module('hapi-learning', [
         'ui.router'])
         .config(['$urlRouterProvider', '$stateProvider',
                 function($urlRouterProvider, $stateProvider) {
@@ -13,7 +13,7 @@ var app = angular.module('hapi-learning', [
                             controller: 'home-controller'
                         })
                         .state('courses', {
-                                url: '/',
+                                url: '/courses',
                                 templateUrl: '/views/courses.html',
                                 controller: 'courses-controller'
                         })

@@ -1,7 +1,10 @@
 <h1>Courses</h1>
 
-<div>{{cpt}}</div>
 
 <ul>
-    <li ng-repeat="course in courses">{{course.name}}</li>
+    <li ng-repeat="course in courses">
+        <h3>{{course.code}} -- {{course.name}}</h3>
+        
+        <blockquote>{{course.description}}</blockquote>
+    </li>
 </ul>
