@@ -12,4 +12,10 @@ angular.module('hapi-learning', [
                             templateUrl: '/views/home.html',
                             controller: 'home-controller'
                         })
+                        .state('courses', {
+                                url: '/courses',
+                                templateUrl: '/views/courses.html',
+                                controller: 'courses-controller'
+                        })
                 }]);
+

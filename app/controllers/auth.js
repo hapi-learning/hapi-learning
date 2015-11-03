@@ -2,7 +2,7 @@
 
 const Joi = require('joi');
 const JWT = require('jsonwebtoken');
-const Bcrypt = require('bcrypt');
+const Bcrypt = require('bcrypt-nodejs');
 const Boom = require('boom');
 
 exports.login = {
