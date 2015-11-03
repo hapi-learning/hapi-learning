@@ -3,13 +3,15 @@
 
 <ul class="list-group">
     <li class="list-group-item" ng-repeat="course in courses">
-        <h3>{{course.code}} -- {{course.name}}</h3>
+        <h3><a href="{{course.code}}">{{course.code}} -- {{course.name}}</a></h3>
 
         <blockquote>{{course.description}}</blockquote>
 
-        Teachers: <span class="col-sd-4" ng-repeat="teacher in course.teachers">
-        <teacher-info></teacher-info>
-        </span>
+        <div class="row">
+            <div class="col-md-1" ng-repeat="teacher in course.teachers"><teacher-info></teacher-info></div>
+        </div>
+        
+        <br />
 
         <div>
             <button type="button" class="btn btn-success" ng-hide="subscribed()">Subscribe</button>
