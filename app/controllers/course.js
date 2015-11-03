@@ -117,56 +117,37 @@ exports.post = {
         const User = this.models.User;
         const Tag = this.models.Tag;
 
-
-        let tags;
-        let titulars;
-        let response;
-
         const hasTitulars = request.payload.titulars ? true : false;
         const hasTags = request.payload.tags ? true : false;
 
-        const setTags = () => {
-            if (hasTags) {
-                return Tag.findAll({
-                        where: {
-                            name: {
-                                $in: request.payload.tags
-                            }
-                        }
-                    })
-                    .then(t => {
-                        tags = t;
-                    });
+        const setTags = hasTags ? Promise.resolve(Tag.findAll({
+            where: {
+                name: {
+                    $in: request.payload.tags
+                }
             }
-        }
+        })) : Promise.resolve([]);
 
-        const setUsers = () => {
-            if (hasTitulars) {
-                return User.findAll({
-                    where: {
-                        username: {
-                            $in: request.payload.titulars
-                        }
-                    }
-                }).then(users => {
-                    titulars = users;
-                });
+        const setUsers = hasTitulars ? Promise.resolve(User.findAll({
+            where: {
+                username: {
+                    $in: request.payload.titulars
+                }
             }
-        }
+        })) : Promise.resolve([]);
 
 
+        Promise.all([setTags, setUsers])
+            .then(values => {
+                const tags = values[0];
+                const titulars = values[1];
 
-        Promise.all([setTags(), setUsers()])
-            .then(() => {
-                console.log(titulars.length);
-                console.log(tags.length);
                 const a = (hasTitulars && titulars.length !== request.payload.titulars.length);
                 const b = (hasTags && tags.length !== request.payload.tags.length);
+
                 if (a || b) {
                     return reply(Boom.badData(a ? 'Invalid titular(s)' : 'Invalid tag(s)'));
                 } else {
-
-                    console.log(request.payload);
 
                     Course.create({
                             name: request.payload.name,
@@ -175,7 +156,7 @@ exports.post = {
                         })
                         .then(course => {
                             Promise.all([course.addTitulars(titulars),
-                                    course.addTags(tags)])
+                                         course.addTags(tags)])
                                 .then(() => {
                                     return reply(course);
                                 });
