@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router'])
+        'ui.router', 'ngTagsInput'])
         .config(['$urlRouterProvider', '$stateProvider',
                 function($urlRouterProvider, $stateProvider) {
                     $urlRouterProvider.otherwise('/');
