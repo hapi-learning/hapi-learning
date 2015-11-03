@@ -2,9 +2,9 @@
 
 exports.get = {
     description: 'Get one user',
-    validate: {
+   validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id')
+            id: Joi.string().min(1).max(255).required().description('User personal ID')
         }
     },
     handler: function(request, reply) {
@@ -15,11 +15,6 @@ exports.get = {
 
 exports.getAll = {
     description: 'Get all users',
-    validate: {
-        params: {
-            id: Joi.string().min(1).max(255).required().description('User personal ID')
-        }
-    },
     handler: function(request, reply) {
         reply('Not implemented');
     }
