@@ -29,11 +29,13 @@ let internals = {
         plugins: {
             'hapi-auth-jwt2': [{'select': ['api']}],
             './auth': [{'select': ['api']}],
-            inert: [{'select': ['web']}],
+            inert: [{'select': ['api', 'web']}],
             './models': [{'select' : ['api']}],
             './controllers': [{'select': ['api']}],
             './routes/api': [{'select': ['api']}],
             './routes/web': [{'select': ['web']}],
+            vision: [{'select': ['api']}],
+            lout: [{'select': ['api']}],
             good: {
                 reporters: [
                     {
