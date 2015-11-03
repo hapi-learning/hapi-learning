@@ -1,6 +1,7 @@
 'use strict';
 
 const Joi = require('joi');
+const Boom = require('boom');
 
 exports.get = {
     description: 'Returns a specific tag',
@@ -18,11 +19,9 @@ exports.get = {
             where: {
                 name : request.params.name
             }
-        }).catch((error) => {
-            return reply(Boom.badRequest(error));
-        }).then((results) => {
-            return reply(results);
-        });
+        })
+        .catch(error => reply(Boom.badRequest(error)))
+        .then(result => reply(result));
     }
 };
 
@@ -33,11 +32,9 @@ exports.getAll = {
                 
         const Tag = this.models.Tag;
 
-        Tag.findAll().catch((error) => {
-            return reply(Boom.badRequest(error));
-        }).then((results) => {
-            return reply(results);
-        });
+        Tag.findAll()
+        .catch(error => reply(Boom.badRequest(error)))
+        .then(results => reply(results));
     }
 };
 
@@ -55,11 +52,9 @@ exports.post = {
         
         Tag.create({
             name : request.payload.name
-        }).then((tag) => {
-            return reply(tag);
-        }).catch((error) => {
-            return reply(Boom.badRequest(error));
-        });
+        })
+        .then(tag => reply(tag))
+        .catch(error => reply(Boom.badRequest(error)));
     }
 };
 
@@ -79,12 +74,8 @@ exports.delete = {
             where : {
                 name : request.params.name
             }
-        }).then((tag) => {
-            return reply(tag);
-        }).catch((error) => {
-            return reply(error);
-        });
-        
-        reply('Not implemented');
+        })
+        .then(tag => reply(tag))
+        .catch(error => reply(error));
     }
 };
