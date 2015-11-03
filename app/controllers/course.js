@@ -1,6 +1,11 @@
 'use strict';
 
 const Joi = require('joi');
+const Boom = require('boom');
+
+
+
+
 
 exports.getAll = {
     description: 'List all the courses',
@@ -8,12 +13,11 @@ exports.getAll = {
     handler: function (request, reply) {
 
         const Course = this.models.Course;
-        const User   = this.models.User;
+        const User = this.models.User;
 
         Course.findAll().then(results => {
 
         });
-
     }
 };
 
@@ -101,13 +105,69 @@ exports.post = {
     description: 'Add a course',
     validate: {
         payload: {
-            name : Joi.string().min(1).max(255).required().description('Course name'),
-            code : Joi.string().min(1).max(255).required().description('Course code'),
-            description : Joi.string().min(1).max(255).description('Course description')
+            name: Joi.string().min(1).max(255).required().description('Course name'),
+            code: Joi.string().min(1).max(255).required().description('Course code'),
+            description: Joi.string().min(1).max(255).description('Course description'),
+            titulars: Joi.array().items(Joi.string()).description('Teachers'),
+            tags: Joi.array().items(Joi.string()).description('Tags')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        const Course = this.models.Course;
+        const User = this.models.User;
+        const Tag = this.models.Tag;
+
+        const hasTitulars = request.payload.titulars ? true : false;
+        const hasTags = request.payload.tags ? true : false;
+
+        const setTags = hasTags ? Promise.resolve(Tag.findAll({
+            where: {
+                name: {
+                    $in: request.payload.tags
+                }
+            }
+        })) : Promise.resolve([]);
+
+        const setUsers = hasTitulars ? Promise.resolve(User.findAll({
+            where: {
+                username: {
+                    $in: request.payload.titulars
+                }
+            }
+        })) : Promise.resolve([]);
+
+        // TODO -- FIXME
+        // -> Handle create (same unique key)
+        // -> Return titulars and tags array
+
+        Promise.all([setTags, setUsers])
+            .then(values => {
+                const tags = values[0];
+                const titulars = values[1];
+
+                const a = (hasTitulars && titulars.length !== request.payload.titulars.length);
+                const b = (hasTags && tags.length !== request.payload.tags.length);
+
+                if (a || b) {
+                    return reply(Boom.badData(a ? 'Invalid titular(s)' : 'Invalid tag(s)'));
+                } else {
+
+                    Course.create({
+                            name: request.payload.name,
+                            code: request.payload.code,
+                            description: request.payload.description
+                        })
+                        .then(course => {
+                            Promise.all([course.addTitulars(titulars),
+                                         course.addTags(tags)])
+                                .then(() => {
+                                    course.tags = tags;
+                                    course.titulars = titulars;
+                                    return reply(course);
+                                });
+                        });
+                }
+            });
     }
 };
 

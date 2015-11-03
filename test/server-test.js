@@ -4,7 +4,7 @@ require('dotenv').load(); // Load .env file
 
 const Glue  = require('glue');
 
-let internals = {
+const internals = {
     manifest: {
         connections: [{
             host: process.env.HOST || 'localhost',
@@ -16,8 +16,13 @@ let internals = {
         }],
         plugins: {
             'hapi-auth-jwt2': [{select: ['api']}],
-            './auth': [{select: ['api']}],
-            './models': [
+            '../app/auth': [{
+                select: ['api'],
+                options: {
+                    setDefault: false
+                }
+            }],
+            '../app/models': [
                 {
                     select: ['api'],
                     options: {
@@ -26,14 +31,14 @@ let internals = {
                     }
                 }
             ],
-            './controllers': [{select: ['api']}],
-            './routes/api': [{select: ['api']}],
+            '../app/controllers': [{select: ['api']}],
+            '../app/routes/api': [{select: ['api']}],
         }
     }
 };
 
 
-Glue.compose(internals.manifest, {relativeTo: 'app'}, (err, server) => {
+Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
 
     if (err) {
         console.log('server.register error :');

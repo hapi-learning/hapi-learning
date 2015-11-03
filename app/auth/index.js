@@ -13,7 +13,9 @@ exports.register = function (server, options, next) {
         }
     });
 
-    server.auth.default('jwt');
+    if (options.setDefault) {
+        server.auth.default('jwt');
+    }
 
     next();
 };
