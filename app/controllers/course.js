@@ -1,5 +1,7 @@
 'use strict';
 
+const Joi = require('joi');
+
 exports.getAll = {
     description: 'List all the courses',
     handler: function (request, reply) {
@@ -11,7 +13,9 @@ exports.getAll = {
 exports.get = {
     description: 'Get info for one course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -22,7 +26,10 @@ exports.get = {
 exports.getDocuments = {
     description: 'Get a ZIP containing all course documents',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id'),
+            path: Joi.string() // TODO - FIX
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -30,45 +37,27 @@ exports.getDocuments = {
 };
 
 
-exports.getDocument = {
-    description: 'Get one document of the course',
-    validate: {
-        id: Joi.number().integer().required().description('Course id'),
-        path : Joi.string()//TODO
-    },
-    handler: function (request, reply) {
-        reply('Not implemented');
-    }
-};
 
 
 exports.getTree = {
     description: 'Get course folder tree',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id'),
+            path: Joi.string() // TODO - FIXME
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
     }
 };
-
-
-exports.getFolderTree = {
-    description: 'Get folder tree',
-    validate: {
-        id: Joi.number().integer().required().description('Course id'),
-        path : Joi.string()//TODO
-    },
-    handler: function (request, reply) {
-        reply('Not implemented');
-    }
-};
-
 
 exports.getTags = {
     description: 'Get tags related to the course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -78,7 +67,9 @@ exports.getTags = {
 exports.getTeachers = {
     description: 'Get teachers giving the course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -88,7 +79,9 @@ exports.getTeachers = {
 exports.getStudents = {
     description: 'Get students following the course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -99,9 +92,11 @@ exports.getStudents = {
 exports.post = {
     description: 'Add a course',
     validate: {
-        name : Joi.string().min(1).max(255).required().description('Course name'),
-        code : Joi.string().min(1).max(255).required().description('Course code'),
-        description : Joi.string().min(1).max(255).description('Course description')
+        payload: {
+            name : Joi.string().min(1).max(255).required().description('Course name'),
+            code : Joi.string().min(1).max(255).required().description('Course code'),
+            description : Joi.string().min(1).max(255).description('Course description')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -112,7 +107,10 @@ exports.post = {
 exports.postDocument = {
     description: 'Upload a file to a course',
     validate: {
-       id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id'),
+            path: Joi.string() // TODO - FIXME
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -123,7 +121,9 @@ exports.postDocument = {
 exports.put = {
     description: 'Modify a course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -134,7 +134,9 @@ exports.put = {
 exports.delete = {
     description: 'Delete a course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -145,7 +147,9 @@ exports.delete = {
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
@@ -156,7 +160,9 @@ exports.deleteDocument = {
 exports.deleteFolder = {
     description: 'Delete a document from a course',
     validate: {
-        id: Joi.number().integer().required().description('Course id')
+        params: {
+            id: Joi.number().integer().required().description('Course id')
+        }
     },
     handler: function (request, reply) {
         reply('Not implemented');
