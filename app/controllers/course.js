@@ -4,8 +4,16 @@ const Joi = require('joi');
 
 exports.getAll = {
     description: 'List all the courses',
+    auth: false,
     handler: function (request, reply) {
-        reply('Not implemented');
+
+        const Course = this.models.Course;
+        const User   = this.models.User;
+
+        Course.findAll().then(results => {
+
+        });
+
     }
 };
 
