@@ -112,30 +112,6 @@ exports.getTree = {
     }
 };
 
-exports.getTags = {
-    description: 'Get tags related to the course',
-    validate: {
-        params: {
-            id: Joi.number().integer().required().description('Course id')
-        }
-    },
-    handler: function (request, reply) {
-        reply('Not implemented');
-    }
-};
-
-exports.getTeachers = {
-    description: 'Get teachers giving the course',
-    validate: {
-        params: {
-            id: Joi.number().integer().required().description('Course id')
-        }
-    },
-    handler: function (request, reply) {
-        reply('Not implemented');
-    }
-};
-
 exports.getStudents = {
     description: 'Get students following the course',
     validate: {
