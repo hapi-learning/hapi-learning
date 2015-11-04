@@ -27,7 +27,7 @@ exports.get = {
         .then(result => {
             if (result)
             {
-                return reply(result);
+                return reply(result.get({plain : true}));
             }
             else
             {
@@ -50,7 +50,7 @@ exports.getAll = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(results => reply(results))
+        .then(results => reply(_.map(results, (result => result.get({plain : true})))))
         .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
     }
 };
@@ -71,7 +71,7 @@ exports.post = {
             name : request.payload.name
         })
         .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at')))
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
     }
 };
 
@@ -93,6 +93,6 @@ exports.delete = {
             }
         })
         .then(count => reply({count : count}))
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(error => reply(Boom.badRequest('An internal server error occurred : ' + error)));
     }
 };

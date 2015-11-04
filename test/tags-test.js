@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
@@ -16,23 +17,21 @@ before((done) => {
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => {
-        require('../tags.json').forEach(tag => Models.Tag.create(tag));
-        done()
-    });
+    }).then(() => done());
     
 });
 
 describe('Controller.Tag', () => {
 
     describe('#post()', () => {
-        it('should return error because this tag already exist', done => {
+        
+        it('should return error because empty tag name', done => {
 
             const request = {
                 method: 'POST',
                 url: '/tags',
                 payload: {
-                    name: 'Laboratory'
+                    name: ''
                 }
             };
 
@@ -42,7 +41,7 @@ describe('Controller.Tag', () => {
                 done();
             });
         });
- 
+        
         it('should return the created object', done => {
 
             const request = {
@@ -55,13 +54,33 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response.dataValues.name).to.equal(request.payload.name);
+                expect(res.request.response.statusCode).to.equal(200);
+                expect(response.name).to.equal(request.payload.name);
                 done();
             });
         });
+        
+        it('should return error because this tag already exist', done => {
+
+            const request = {
+                method: 'POST',
+                url: '/tags',
+                payload: {
+                    name: '4_Security'
+                }
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(409);
+                done();
+            });
+        });
+        
     });
 
-    describe('#get()', () => {
+    describe('#getAll()', () => {
+        
         it('should return all tags', done => {
 
             const request = {
@@ -72,24 +91,24 @@ describe('Controller.Tag', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
+                expect(response).to.have.length(1);
                 done();
             });
         });
-        
+    });
+    
+    describe('#get()', () => {
+       
         it('should return specific tag', done => {
 
             const request = {
                 method: 'GET',
-                url: '/tags',
-                params : {
-                    name : "Theory"
-                }
+                url: '/tags/4_Security'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
-                expect(response.name).to.equal('Theory');
+                expect(response.name).to.equal('4_Security');
                 done();
             });
         });
@@ -98,53 +117,43 @@ describe('Controller.Tag', () => {
 
             const request = {
                 method: 'GET',
-                url: '/tags',
-                params : {
-                    name : "IWillProbablyNeverExist"
-                }
+                url: '/tags/IWillProbablyNeverExist'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-               // console.log(response);
-                //expect(response.name).to.be.an.array(request.params.name);
+                expect(res.request.response.statusCode).equal(404);
                 done();
             });
         });
     });
     
     describe('#delete()', () => {
-        it('should return the deleted tag', done => {
+        
+        it('should return 1 deleted tag', done => {
 
             const request = {
                 method: 'DELETE',
-                url: '/tags',
-                payload: {
-                    name: '2I12'
-                }
+                url: '/tags/4_Security'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                //console.log(response);
-                expect(response.statusCode).to.equal(200);
+                expect(response.count).equal(1);
                 done();
             });
         });
  
-        it('should throw a error because of already deleted (or inexistant) tag', done => {
+        it('should return 0 deleted tag', done => {
 
             const request = {
                 method: 'DELETE',
-                url: '/tags',
-                payload: {
-                    name: 'IWillProbablyNeverExist'
-                }
+                url: '/tags/IWillProbablyNeverExist'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                //console.log(response);
+                expect(response.count).equal(0);
                 done();
             });
         });
