@@ -4,8 +4,27 @@ const Joi = require('joi');
 const Boom = require('boom');
 const _ = require('lodash');
 
+let internals = {};
+internals.getCourse = function(result) {
 
+    // Attributes to include in titulars
+    const titularsInclude = ['id', 'username', 'email',
+                             'first_name', 'last_name'];
 
+    return Promise.resolve(
+        Promise
+        .all([result.getTags({attributes: ['name'], joinTableAttributes: []}),
+              result.getTitulars({attributes: titularsInclude, joinTableAttributes: []})])
+
+        .then(values => {
+            let course = result.get({plain:true});
+            course.tags = _.map(values[0], (t => t.get({plain:true})));
+            course.titulars = _.map(values[1], (t => t.get({plain:true})));
+
+            return course;
+        })
+    );
+}
 
 
 exports.getAll = {
@@ -17,6 +36,12 @@ exports.getAll = {
         const User = this.models.User;
 
         Course.findAll().then(results => {
+
+            let promises = _.map(results, (r => internals.getCourse(r)));
+            // Wait for all promises to end
+            Promise
+                .all(promises)
+                .then(values => reply(values));
 
         });
     }
@@ -33,11 +58,6 @@ exports.get = {
     handler: function (request, reply) {
         const Course = this.models.Course;
 
-        // Attributes to include in titulars
-        const titularsInclude = ['id', 'username', 'email',
-                                 'first_name', 'last_name',
-                                 'phone_number'];
-
         // Find course
         Course.findOne({
             where: {
@@ -49,17 +69,7 @@ exports.get = {
         .then(result => {
             if (result) // If found
             {
-                Promise
-                .all([result.getTags({attributes: ['name'], joinTableAttributes: []}),
-                      result.getTitulars({attributes: titularsInclude, joinTableAttributes: []})])
-
-                .then(values => {
-                    let course = result.get({plain:true});
-                    course.tags = _.map(values[0], (t => t.get({plain:true})));
-                    course.titulars = _.map(values[1], (t => t.get({plain:true})));
-
-                    return reply(course);
-                })
+                internals.getCourse(result).then(course => reply(course));
             }
             else // If not found
             {
@@ -210,10 +220,8 @@ exports.post = {
 
                             // Build response
                             let course = newCourse.get({plain:true});
-                            course.tags = [];
-                            course.titulars = [];
-                            tags.forEach(t => course.tags.push(t.get('name', {plain:true})));
-                            titulars.forEach(t => course.titulars.push(t.get('username', {plain:true})));
+                            course.tags = _.map(tags, (t => t.get('name', {plain:true})));
+                            course.titulars = _.map(titulars, (t => t.get('username', {plain:true})));
 
                             return reply(course);
                         });

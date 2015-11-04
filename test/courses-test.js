@@ -27,6 +27,19 @@ const course = {
     tags: ['3e', 'Java']
 }
 
+const courses = [{
+    name: 'Analyse 3e',
+    code: 'ANL3',
+    description: 'Analyse',
+    titulars: ['FPL'],
+    tags: ['3e', 'Java']
+}, {
+    name: 'Analyse 2e',
+    code: 'ANL2',
+    description: 'ANL 2e',
+    titulars: ['FPL']
+}]
+
 const pRequest = {
     method: 'POST',
     url: '/courses',
@@ -143,6 +156,31 @@ describe('Controller.Course', () => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(400);
                 done();
+            });
+        });
+
+        it ('Should return 3 courses', done => {
+            let post = {
+                method: 'POST',
+                url: '/courses',
+                payload: courses[0]
+            };
+
+            const request = {
+                method: 'GET',
+                url: '/courses'
+            };
+
+            server.inject(post, res => {
+                post.payload = courses[1];
+                server.inject(post, res => {
+                    server.inject(request, res => {
+                        const response = res.request.response.source;
+                        expect(response).to.be.an.array();
+                        expect(response).to.have.length(3);
+                        done();
+                    });
+                });
             });
         });
     });
