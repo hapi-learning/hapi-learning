@@ -82,7 +82,7 @@ describe('Controller.Course', () => {
             Promise.all([createTags, createUsers])
                 .then(() => {
                     server.inject(request, res => {
-                        const response = res.request.response.source;
+                        const response = JSON.parse(res.request.response.source);
                         expect(response.name).to.equal(request.payload.name);
                         expect(response.code).to.equal(request.payload.code);
                         expect(response.description).to.equal(request.payload.description);
