@@ -2,16 +2,16 @@ angular.module('hapi-learning')
     .controller('courses-controller', ['$scope', function ($scope) {
 
         $scope.courses = courses;
-        
-       $scope.subscribed = function() {
-           // did the user already subscribe to the course?
-           return false;
-       };
-        
-        $scope.updated = function() {
-           // course updated since user last connection?
-           return true;
-       };
+
+        $scope.subscribed = function () {
+            // did the user already subscribe to the course?
+            return false;
+        };
+
+        $scope.updated = function () {
+            // course updated since user last connection?
+            return true;
+        };
 
     }]);
 
