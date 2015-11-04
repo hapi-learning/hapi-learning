@@ -38,7 +38,6 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response.statusCode);
                 expect(response.statusCode).to.equal(400);
                 done();
             });
@@ -56,9 +55,7 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
-                expect(response.statusCode).to.equal(200);
-                //expect(response.name).to.equal(request.payload.name);
+                expect(response.dataValues.name).to.equal(request.payload.name);
                 done();
             });
         });
@@ -74,15 +71,12 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
-                expect(response.statusCode).to.equal(200);
                 expect(response).to.be.an.array();
-                //expect(response).to.have.length(..);
                 done();
             });
         });
         
-        it('should specific tag', done => {
+        it('should return specific tag', done => {
 
             const request = {
                 method: 'GET',
@@ -95,8 +89,6 @@ describe('Controller.Tag', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 console.log(response);
-                expect(response.statusCode).to.equal(200);
-                expect(response.name).to.be.an.array(request.params.name);
                 expect(response.name).to.equal('Theory');
                 done();
             });
@@ -114,7 +106,7 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
+               // console.log(response);
                 //expect(response.name).to.be.an.array(request.params.name);
                 done();
             });
@@ -134,7 +126,7 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
+                //console.log(response);
                 expect(response.statusCode).to.equal(200);
                 done();
             });
@@ -152,7 +144,7 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
+                //console.log(response);
                 done();
             });
         });
