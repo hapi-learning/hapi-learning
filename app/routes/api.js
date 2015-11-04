@@ -39,7 +39,7 @@ exports.register = function (server, options, next) {
 
         // Permissions routes
         {method: 'GET', path: '/permissions',      config: Controllers.Permission.getAll},
-        {method: 'GET', path: '/permissions/{id}', config: Controllers.Permission.get},
+        {method: 'GET', path: '/permissions/{type}', config: Controllers.Permission.get},
 
         // Tags routes
         {method: 'GET',    path: '/tags',      config:  Controllers.Tag.getAll},
