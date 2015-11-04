@@ -18,11 +18,14 @@ exports.get = {
         User.findOne({
                 where: {
                     username: request.params.username
+                },
+                attributes: {
+                    exclude: 'password'
                 }
             })
             .catch(error => reply(Boom.badRequest(error)))
             .then(result => reply(result));
-    }
+        }
 };
 
 
@@ -33,7 +36,11 @@ exports.getAll = {
         
         const User = this.models.User;
         
-        User.findAll()
+        User.findAll({
+                attributes: {
+                    exclude: 'password'
+                }
+            })
             .catch(error => reply(Boom.notFound(error)))
             .then(results => reply(results));
     }
