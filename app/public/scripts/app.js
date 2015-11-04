@@ -17,5 +17,10 @@ angular.module('hapi-learning', [
                                 templateUrl: '/views/courses.html',
                                 controller: 'courses-controller'
                         })
+                        .state('admin', {
+                                url: '/admin',
+                                templateUrl: '/views/admin.html',
+                                controller: 'admin-controller'
+                        })
                 }]);
 

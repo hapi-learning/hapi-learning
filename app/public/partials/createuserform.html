@@ -1,0 +1,79 @@
+<form name="userForm" ng-controller="admin-controller as adminCtrl" novalidate>
+
+    <fieldset class="form-group">
+        <div>
+            <label>Username (required)</label>
+            <input type="text" class="form-control" name="username" ng-model="username" ng-minlength="5" ng-maxlength="5" title="Username" placeholder="42424" required="" />
+        </div>
+
+        <div ng-show="userForm.username.$touched">
+            <br />
+
+            <div ng-show="userForm.username.$error.required" class="alert alert-danger">
+                Username is required
+            </div>
+
+            <div ng-show="userForm.username.$error.minlength || userForm.username.$error.maxlength" class="alert alert-danger">
+                Username has to be 5 characters long
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <div class="row">
+            <div class="col-xs-6">
+                <label>First name</label>
+                <input type="text" class="form-control" name="firstname" title="First name" placeholder="John"></input>
+            </div>
+
+            <div class="col-xs-6">
+                <label>Last name</label>
+                <input type="text" class="form-control" name="lastname" title="Last name" placeholder="Doe"></input>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label>Password (required)</label>
+        <input type="password" class="form-control" ng-model="password" ng-minlength=8 name="password" title="Password" placeholder="●●●●●●●●" required></input>
+
+        <div ng-show="userForm.password.$touched">
+            <br />
+
+            <div ng-show="userForm.password.$error.required" class="alert alert-danger">
+                Password is required
+            </div>
+
+            <div ng-show="userForm.password.$error.maxlength" class="alert alert-danger">
+                Password has to be at least 8 characters long
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label>Email (required)</label>
+        <input type="email" class="form-control" ng-model="email" name="email" title="Email" placeholder="42424@heb.be" required></input>
+
+        <div ng-show="userForm.email.$touched">
+            <br />
+
+            <div ng-show="userForm.email.$error.required" class="alert alert-danger">
+                Email is required
+            </div>
+
+            <div ng-show="userForm.email.$error.email" class="alert alert-danger">
+                Email is not valid
+            </div>
+        </div>
+
+    </fieldset>
+
+    <br />
+
+
+    <fieldset class="form-group">
+        <input type="submit" class="btn btn-primary" value="Create new user" />
+        <input type="submit" class="btn btn-warning" value="Reset" />
+    </fieldset>
+
+</form>

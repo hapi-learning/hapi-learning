@@ -1,0 +1,45 @@
+<form name="courseForm" ng-controller="admin-controller as adminCtrl" novalidate>
+    
+    <fieldset class="form-group">
+        <div>
+            <label>Name</label>
+            <input type="text" class="form-control" name="name" ng-model="name" title="Course name" placeholder="Algorithmique, Atelier logiciel..." required />
+        </div>
+
+        <div ng-show="courseForm.name.$touched && courseForm.name.$error.required">
+            <br />
+
+            <div class="alert alert-danger">
+                Name is required
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <div>
+            <label>Code</label>
+            <input type="text" class="form-control" name="code" ng-model="code" title="Course short name" placeholder="ALG, ATL..." required />
+        </div>
+
+        <div ng-show="courseForm.code.$touched && courseForm.code.$error.required">
+            <br />
+
+            <div class="alert alert-danger">
+                Code is required
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" placeholder="Description of the course..."></textarea>
+    </fieldset>
+
+    <br />
+
+    <fieldset class="form-group">
+        <input type="submit" class="btn btn-primary" value="Create new course" />
+        <input type="submit" class="btn btn-warning" value="Reset" />
+    </fieldset>
+    
+</form>
