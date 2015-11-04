@@ -227,19 +227,20 @@ describe('Controller.Course', () => {
             });
         });
 
-        it ('Should return an array with 2 users', done => {
+        it ('Should return an array with 1 users', done => {
             const Course = server.plugins.models.models.Course;
             const user = {
-                username: 'kevin1999',
+                username: 'kevin2004',
+                password: 'jsstrofor',
                 firstName: 'Kevin',
                 lastName: 'Keke',
-                email: 'bogoss1999@hotmail.fr'
+                email: 'bogoss2004@hotmail.fr'
             };
 
             Course
                 .findOne({where: { code: { $eq: 'ATL3'}}})
                 .then(course => {
-                    course.addUsers(1)
+                    course.createUser(user)
                         .then(() => {
                             server.inject(request, res => {
                                 const response = res.request.response.source;
