@@ -156,19 +156,19 @@ exports.patch = {
 
         var payload = {};
 
-        if (request.payload.password != null)
+        if (request.payload.password)
             payload.password = request.payload.password;
 
-        if (request.payload.email != null)
+        if (request.payload.email)
             payload.email = request.payload.email;
 
-        if (request.payload.firstName != null)
+        if (request.payload.firstName)
             payload.firstName = request.payload.firstName;
 
-        if (request.payload.lastName != null)
+        if (request.payload.lastName)
             payload.lastName = request.payload.lastName;
 
-        if (request.payload.phoneNumber != null)
+        if (request.payload.phoneNumber)
             payload.phoneNumber = request.payload.phoneNumber;
 
         User.update(
