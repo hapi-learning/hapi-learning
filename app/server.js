@@ -115,7 +115,6 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 });
             });
         });
-    });
 
 
     server.start((err) => {
