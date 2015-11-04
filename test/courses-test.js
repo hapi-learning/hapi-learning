@@ -193,8 +193,8 @@ describe('Controller.Course', () => {
     describe('#delete', () => {
         const request = {
             method: 'DELETE',
-            url: '/courses/ATL3'
-        }
+            url: '/courses/ANL3'
+        };
         it ('Should return 1', done => {
             server.inject(request, res => {
                 const response = res.request.response.source;
@@ -210,5 +210,49 @@ describe('Controller.Course', () => {
                 done();
             });
         });
+    });
+
+    describe('#getStudents', () => {
+        const request = {
+            method: 'GET',
+            url: '/courses/ATL3/students'
+        };
+
+        it ('Should return empty array', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(0);
+                done();
+            });
+        });
+
+        it ('Should return an array with 2 users', done => {
+            const Course = server.plugins.models.models.Course;
+            const user = {
+                username: 'kevin1999',
+                firstName: 'Kevin',
+                lastName: 'Keke',
+                email: 'bogoss1999@hotmail.fr'
+            };
+
+            Course
+                .findOne({where: { code: { $eq: 'ATL3'}}})
+                .then(course => {
+                    course.addUsers(1)
+                        .then(() => {
+                            server.inject(request, res => {
+                                const response = res.request.response.source;
+                                console.log(response);
+                                expect(response).to.be.an.array();
+                                expect(response).to.have.length(1);
+                                done();
+                            });
+                    });
+                });
+
+
+        });
+
     });
 });

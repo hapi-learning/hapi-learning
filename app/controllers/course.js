@@ -75,9 +75,8 @@ exports.get = {
                 return reply(Boom.notFound('Cannot find course ' + request.params.id));
             }
         })
-        .catch(err => {
-            return reply(Boom.badImplementation('An internal server error occurred : ' + err));
-        });
+        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+
     }
 };
 
@@ -115,11 +114,25 @@ exports.getStudents = {
     description: 'Get students following the course',
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id')
+            id: Joi.string().alphanum().required().description('Course code')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        const Course = this.models.Course;
+
+        Course.findOne({
+            where: {
+                code: {
+                    $eq: request.params.id
+                }
+            }
+        })
+        .then(course => {
+            course.getUsers({joinTableAttributes: []}).then(users =>{
+                reply(_.map(users, (u => u.get({plain:true}))));
+            });
+        })
+        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
     }
 };
 
