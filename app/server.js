@@ -33,7 +33,7 @@ let internals = {
             './auth': [{
                 select: ['api'],
                 options: {
-                    setDefault: true
+                    setDefault: false
                 }
             }],
             inert: [{
@@ -86,9 +86,7 @@ let internals = {
 };
 
 
-Glue.compose(internals.manifest, {
-    relativeTo: __dirname
-}, (err, server) => {
+Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
 
     if (err) {
         console.log('server.register error :');
@@ -117,6 +115,7 @@ Glue.compose(internals.manifest, {
                 });
             });
         });
+    });
 
 
     server.start((err) => {

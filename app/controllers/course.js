@@ -4,10 +4,8 @@ const Joi = require('joi');
 const Boom = require('boom');
 
 
-const createCourse = (schema, titulars, tags) => {
-    const Course = this.models.Course;
-    Course.create(schema).then(course => course.addTitulars(titulars).then(() => course.addTags(tags)));
-};
+
+
 
 exports.getAll = {
     description: 'List all the courses',
@@ -115,54 +113,73 @@ exports.post = {
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
         const User = this.models.User;
         const Tag = this.models.Tag;
 
-        let titulars;
-        let tags;
+        const hasTitulars = request.payload.titulars ? true : false;
+        const hasTags = request.payload.tags ? true : false;
+        const coursePayload = {
+            name: request.payload.name,
+            code: request.payload.code,
+            description: request.payload.description
+        };
 
-        User.findAll({
-                where: {
-                    username: {
-                        $in: request.payload.titulars
-                    }
+        // If tags has been passed to the payload, return a promise
+        // loading the tags, otherwise return a promise returning an empty array
+        const getTags = hasTags
+            ? Promise.resolve(Tag.findAll({where: {name: {$in: request.payload.tags}}}))
+            : Promise.resolve([]);
+
+        // If titulars has been passed to the payload, return a promise
+        // loading the titulars, otherwise return a promise returning an empty array
+        const getTitulars = hasTitulars
+            ? Promise.resolve(User.findAll(
+                {where: {username: {$in: request.payload.titulars}},
+                 attributes: {exclude: ['password']}}))
+            : Promise.resolve([]);
+
+        // Loads tags and titulars to be added
+        Promise
+        .all([getTags, getTitulars])
+        .then(values => {
+
+                const tags = values[0];
+                const titulars = values[1];
+
+                const wrongTitulars = (hasTitulars && titulars.length !== request.payload.titulars.length);
+                const wrongTags = (hasTags && tags.length !== request.payload.tags.length);
+
+                if (wrongTitulars || wrongTags)
+                {
+                    return reply(Boom.badData(wrongTitulars ? 'Invalid titular(s)' : 'Invalid tag(s)'));
                 }
-            })
-            // Check that titulars exists
-            .then(users => {
+                else
+                {
+                    // TODO - Should refactor this somewhere else.
+                    // Create course
+                    Course
+                    .create(coursePayload)
+                    .then(newCourse => {
 
-                if (users.length !== request.payload.titulars.length) {
-                    reply(Boom.badData('Invalid titular(s)'));
-                }
+                        // Add titulars and tags to the new added course
+                        Promise
+                        .all([newCourse.addTitulars(titulars), newCourse.addTags(tags)])
+                        .then(() => {
 
-                titulars = users;
+                            // Build response
+                            let course = newCourse.get({plain:true});
+                            course.tags = [];
+                            course.titulars = [];
+                            tags.forEach(t => course.tags.push(t));
+                            titulars.forEach(t => course.titulars.push(t));
 
-            })
-            .then(() => {
-                // Check that tags exists
-                Tag.findAll({
-                        where: {
-                            name: {
-                                $in: request.payload.tags
-                            }
-                        }
-                    })
-                    .then(t => {
-
-                        if (t.length !== request.payload.tags.length) {
-                            reply(Boom.badData('Invalid tag(s)'));
-                        }
-
-                        tags = t;
-
-                        createCourse({
-                            name: request.payload.name,
-                            code: request.payload.code,
-                            description: request.payload.description,
-                        }, titulars, tags);
-
+                            return reply(JSON.stringify(course, null, 4));
+                        })
+                        .catch(() => {/*TODO*/});
                     });
+                }
             });
     }
 };
