@@ -55,8 +55,6 @@ exports.register = function (server, options, next) {
         {method: 'GET',    path: '/courses/{id}/documents/{path*}', config: Controllers.Course.getDocuments},
         {method: 'GET',    path: '/courses/{id}/tree',              config: Controllers.Course.getTree},
         {method: 'GET',    path: '/courses/{id}/tree/{path*}',      config: Controllers.Course.getTree},
-        {method: 'GET',    path: '/courses/{id}/tags',              config: Controllers.Course.getTags},
-        {method: 'GET',    path: '/courses/{id}/teachers',          config: Controllers.Course.getTeachers},
         {method: 'GET',    path: '/courses/{id}/students',          config: Controllers.Course.getStudents},
         {method: 'POST',   path: '/courses',                        config: Controllers.Course.post},
         {method: 'POST',   path: '/courses/{id}/documents',         config: Controllers.Course.postDocument},
