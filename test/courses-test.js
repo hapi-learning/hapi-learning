@@ -19,17 +19,20 @@ before((done) => {
     }).then(() => done());
 });
 
-const request = {
+const course = {
+    name: 'Ateliers Logiciel 3e',
+    code: 'ATL3',
+    description: 'A course',
+    titulars: ['SRV', 'FPL'],
+    tags: ['3e', 'Java']
+}
+
+const pRequest = {
     method: 'POST',
     url: '/courses',
-    payload: {
-        name: 'Ateliers Logiciel 3e',
-        code: 'ATL3',
-        description: 'A course',
-        titulars: ['SRV', 'FPL'],
-        tags: ['3e', 'Java']
-    }
+    payload: course
 };
+
 
 const users = [{
     username: 'SRV',
@@ -51,7 +54,7 @@ describe('Controller.Course', () => {
     describe('#post()', () => {
         it('should return 422 response because of invalid titulars/tags', done => {
 
-            server.inject(request, res => {
+            server.inject(pRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(422);
 
@@ -81,19 +84,19 @@ describe('Controller.Course', () => {
 
             Promise.all([createTags, createUsers])
                 .then(() => {
-                    server.inject(request, res => {
-                        const response = JSON.parse(res.request.response.source);
+                    server.inject(pRequest, res => {
+                        const response = res.request.response.source;
 
-                        expect(response.name).to.equal(request.payload.name);
-                        expect(response.code).to.equal(request.payload.code);
-                        expect(response.description).to.equal(request.payload.description);
+                        expect(response.name).to.equal(course.name);
+                        expect(response.code).to.equal(course.code);
+                        expect(response.description).to.equal(course.description);
                         expect(response.titulars).to.be.an.array();
-                        expect(response.titulars).to.have.length(request.payload.titulars.length);
-                        expect(response.titulars).to.only.include(request.payload.titulars);
+                        expect(response.titulars).to.have.length(pRequest.payload.titulars.length);
+                        expect(response.titulars).to.only.include(pRequest.payload.titulars);
 
                         expect(response.tags).to.be.an.array();
-                        expect(response.tags).to.have.length(request.payload.tags.length);
-                        expect(response.tags).to.only.include(request.payload.tags);
+                        expect(response.tags).to.have.length(pRequest.payload.tags.length);
+                        expect(response.tags).to.only.include(pRequest.payload.tags);
 
                         done();
                     });
@@ -101,11 +104,44 @@ describe('Controller.Course', () => {
         });
 
         it('Should return a 409 conflict because resource already exists', done => {
-             server.inject(request, res => {
+             server.inject(pRequest, res => {
                 const response = res.request.response.source;
 
                 expect(response.statusCode).to.equal(409);
 
+                done();
+            });
+        });
+
+        it('Should return the course with tags and titulars', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses/ATL3'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                expect(response.code).to.equal(course.code);
+                expect(response.name).to.equal(course.name);
+                expect(response.description).to.equal(course.description);
+                expect(response.titulars).to.be.an.array();
+                expect(response.titulars).to.have.length(users.length);
+                expect(response.tags).to.be.an.array();
+                expect(response.tags).to.have.length(tags.length);
+                done();
+            });
+        });
+
+        it ('Should return code 400 - bad validation', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses/_ATL3'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
                 done();
             });
         });

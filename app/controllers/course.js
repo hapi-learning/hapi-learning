@@ -2,6 +2,7 @@
 
 const Joi = require('joi');
 const Boom = require('boom');
+const _ = require('lodash');
 
 
 
@@ -26,11 +27,48 @@ exports.get = {
     description: 'Get info for one course',
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id')
+            id: Joi.string().alphanum().required().description('Course code')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        const Course = this.models.Course;
+
+        // Attributes to include in titulars
+        const titularsInclude = ['id', 'username', 'email',
+                                 'first_name', 'last_name',
+                                 'phone_number'];
+
+        // Find course
+        Course.findOne({
+            where: {
+                code: {
+                    $eq: request.params.id
+                }
+            }
+        })
+        .then(result => {
+            if (result) // If found
+            {
+                Promise
+                .all([result.getTags({attributes: ['name'], joinTableAttributes: []}),
+                      result.getTitulars({attributes: titularsInclude, joinTableAttributes: []})])
+
+                .then(values => {
+                    let course = result.get({plain:true});
+                    course.tags = _.map(values[0], (t => t.get({plain:true})));
+                    course.titulars = _.map(values[1], (t => t.get({plain:true})));
+
+                    return reply(course);
+                })
+            }
+            else // If not found
+            {
+                return reply(Boom.notFound('Cannot find course ' + request.params.id));
+            }
+        })
+        .catch(err => {
+            return reply(Boom.badImplementation('An internal server error occurred : ' + err));
+        });
     }
 };
 
@@ -177,7 +215,7 @@ exports.post = {
                             tags.forEach(t => course.tags.push(t.get('name', {plain:true})));
                             titulars.forEach(t => course.titulars.push(t.get('username', {plain:true})));
 
-                            return reply(JSON.stringify(course, null, 4));
+                            return reply(course);
                         });
                     })
                     .catch((err) => {
