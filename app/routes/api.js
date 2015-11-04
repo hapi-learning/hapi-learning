@@ -33,10 +33,9 @@ exports.register = function (server, options, next) {
 
         // Roles routes
         {method: 'GET',    path: '/roles',       config: Controllers.Role.getAll},
-        {method: 'GET',    path: '/roles/{id}',  config: Controllers.Role.get},
+        {method: 'GET',    path: '/roles/{name}',  config: Controllers.Role.get},
         {method: 'POST',   path: '/roles',       config: Controllers.Role.post},
-        {method: 'PUT',    path: '/roles/{id}',  config: Controllers.Role.put},
-        {method: 'DELETE', path: '/roles/{id}',  config: Controllers.Role.delete},
+        {method: 'DELETE', path: '/roles/{name}',  config: Controllers.Role.delete},
 
         // Permissions routes
         {method: 'GET', path: '/permissions',      config: Controllers.Permission.getAll},

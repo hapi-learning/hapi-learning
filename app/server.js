@@ -103,6 +103,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
         require('../roles.json').forEach(role => Models.Role.create(role));
         require('../users.json').forEach(user => Models.User.create(user));
         require('../tags.json').forEach(tag => Models.Tag.create(tag));
+        require('../roles.json').forEach(role => Models.Role.create(role));
 
             Models.Course.create({
                 name: 'Ateliers Logiciel',
