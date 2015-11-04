@@ -189,11 +189,24 @@ exports.getTags = {
     description: 'Get the user\'s tag',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID')
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+        
+        const User = this.models.User;
+        
+        User.findOne({
+                where: {
+                    username: request.params.username
+                },
+                attributes: {
+                    exclude: 'password'
+                }
+            })
+            .catch(error => reply(Boom.badRequest(error)))
+            .then(result => result.getTags()
+                  .then(tags => reply(tags)));
     }
 };
 
@@ -202,11 +215,24 @@ exports.getCourses = {
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID')
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+        
+        const User = this.models.User;
+        
+        User.findOne({
+                where: {
+                    username: request.params.username
+                },
+                attributes: {
+                    exclude: 'password'
+                }
+            })
+            .catch(error => reply(Boom.badRequest(error)))
+            .then(result => result.getCourses()
+                  .then(courses => reply(courses)));
     }
 };
 
@@ -215,7 +241,7 @@ exports.subscribeToCourse = {
     description: 'Subscribe to a course',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID'),
+            username: Joi.string().min(1).max(30).required().description('User personal ID'),
             course: Joi.number().integer().required().description('Course id')
         }
     },
@@ -229,7 +255,7 @@ exports.unsubscribeToCourse = {
     description: 'Unsubscribe to a course',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID'),
+            username: Joi.string().min(1).max(30).required().description('User personal ID'),
             course: Joi.number().integer().required().description('Course id')
         }
     },
@@ -243,7 +269,7 @@ exports.addFolder = {
     description: 'Add a folder',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID'),
+            username: Joi.string().min(1).max(30).required().description('User personal ID'),
             folder: Joi.string().min(1).max(255).required().description('New folder name')
         }
     },
@@ -257,7 +283,7 @@ exports.addCourseToFolder = {
     description: 'Add a course to the folder (removes from the old folder)',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID'),
+            username: Joi.string().min(1).max(30).required().description('User personal ID'),
             folder: Joi.string().min(1).max(255).required().description('New folder name'),
             course: Joi.number().integer().required().description('Course id')
         }
