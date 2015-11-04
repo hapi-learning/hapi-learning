@@ -57,12 +57,16 @@ exports.register = function (server, options, next) {
         {method: 'GET',    path: '/courses/{id}/tree/{path*}',      config: Controllers.Course.getTree},
         {method: 'GET',    path: '/courses/{id}/students',          config: Controllers.Course.getStudents},
         {method: 'POST',   path: '/courses',                        config: Controllers.Course.post},
+        {method: 'POST',   path: '/courses/{id}/tags',              config: Controllers.Course.addTags},
+        {method: 'POST',   path: '/courses/{id}/teachers',          config: Controllers.Course.addTeachers},
         {method: 'POST',   path: '/courses/{id}/documents',         config: Controllers.Course.postDocument},
         {method: 'POST',   path: '/courses/{id}/documents/{path*}', config: Controllers.Course.postDocument},
-        {method: 'PUT',    path: '/courses/{id}',                   config: Controllers.Course.put},
+        {method: 'PATCH',  path: '/courses/{id}',                   config: Controllers.Course.patch},
         {method: 'DELETE', path: '/courses/{id}',                   config: Controllers.Course.delete},
         {method: 'DELETE', path: '/courses/{id}/documents',         config: Controllers.Course.deleteDocument},
-        {method: 'DELETE', path: '/courses/{id}/documents/{path*}', config: Controllers.Course.deleteFolder}
+        {method: 'DELETE', path: '/courses/{id}/documents/{path*}', config: Controllers.Course.deleteFolder},
+        {method: 'DELETE', path: '/courses/{id}/tags/{name}',       config: Controllers.Course.deleteTags},
+        {method: 'DELETE', path: '/courses/{id}/teachers/{name}',   config: Controllers.Course.deleteTeachers},
     ]);
 
     next();

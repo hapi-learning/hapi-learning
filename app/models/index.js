@@ -37,7 +37,7 @@ exports.register = function(server, options, next) {
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
 
         // A Course can have multiple Users as Titulars
-        m.Course.belongsToMany(m.User, { as: 'Titulars',  through: 'course_titulars'});
+        m.Course.belongsToMany(m.User, { as: 'Teachers',  through: 'course_titulars'});
 
 
         m.Course.belongsToMany(m.User, { as: 'Users', through: 'user_courses'});
