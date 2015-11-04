@@ -129,15 +129,17 @@ exports.post = {
         // If tags has been passed to the payload, return a promise
         // loading the tags, otherwise return a promise returning an empty array
         const getTags = hasTags
-            ? Promise.resolve(Tag.findAll({where: {name: {$in: request.payload.tags}}}))
+            ? Promise.resolve(Tag.findAll(
+                {where: {name: {$in: request.payload.tags}}}))
             : Promise.resolve([]);
 
         // If titulars has been passed to the payload, return a promise
         // loading the titulars, otherwise return a promise returning an empty array
+        const userExclude = ['password'];
         const getTitulars = hasTitulars
             ? Promise.resolve(User.findAll(
                 {where: {username: {$in: request.payload.titulars}},
-                 attributes: {exclude: ['password']}}))
+                 attributes: {exclude: userExclude}}))
             : Promise.resolve([]);
 
         // Loads tags and titulars to be added
@@ -172,12 +174,14 @@ exports.post = {
                             let course = newCourse.get({plain:true});
                             course.tags = [];
                             course.titulars = [];
-                            tags.forEach(t => course.tags.push(t));
-                            titulars.forEach(t => course.titulars.push(t));
+                            tags.forEach(t => course.tags.push(t.get('name', {plain:true})));
+                            titulars.forEach(t => course.titulars.push(t.get('username', {plain:true})));
 
                             return reply(JSON.stringify(course, null, 4));
-                        })
-                        .catch(() => {/*TODO*/});
+                        });
+                    })
+                    .catch((err) => {
+                        return reply(Boom.conflict('Conflict'));
                     });
                 }
             });
