@@ -24,7 +24,7 @@ internals.getCourse = function(result) {
             return course;
         })
     );
-}
+};
 
 
 exports.getAll = {
@@ -33,7 +33,6 @@ exports.getAll = {
     handler: function (request, reply) {
 
         const Course = this.models.Course;
-        const User = this.models.User;
 
         Course.findAll().then(results => {
 
@@ -152,16 +151,16 @@ exports.post = {
 
         // If tags has been passed to the payload, return a promise
         // loading the tags, otherwise return a promise returning an empty array
-        const getTags = hasTags
-            ? Promise.resolve(Tag.findAll(
+        const getTags = hasTags ?
+            Promise.resolve(Tag.findAll(
                 {where: {name: {$in: request.payload.tags}}}))
             : Promise.resolve([]);
 
         // If titulars has been passed to the payload, return a promise
         // loading the titulars, otherwise return a promise returning an empty array
         const userExclude = ['password'];
-        const getTitulars = hasTitulars
-            ? Promise.resolve(User.findAll(
+        const getTitulars = hasTitulars ?
+            Promise.resolve(User.findAll(
                 {where: {username: {$in: request.payload.titulars}},
                  attributes: {exclude: userExclude}}))
             : Promise.resolve([]);
@@ -202,9 +201,7 @@ exports.post = {
                             return reply(course);
                         });
                     })
-                    .catch((err) => {
-                        return reply(Boom.conflict('Conflict'));
-                    });
+                    .catch(() => reply(Boom.conflict('Conflict')));
                 }
             });
     }
@@ -242,11 +239,19 @@ exports.delete = {
     description: 'Delete a course',
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id')
+            id: Joi.string().alphanum().required().description('Course code')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        const Course = this.models.Course;
+
+        Course.destroy({
+            where : {
+                code : request.params.id
+            }
+        })
+        .then(count => reply({count: count}))
+        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
     }
 };
 

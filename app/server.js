@@ -48,7 +48,8 @@ let internals = {
                         password: null,
                         host: null,
                         dialect: 'sqlite',
-                        storage: 'database.sqlite'
+                        storage: 'database.sqlite',
+                        logging: console.log
                     }
                 }
             ],

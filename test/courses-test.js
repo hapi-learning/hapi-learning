@@ -25,7 +25,7 @@ const course = {
     description: 'A course',
     titulars: ['SRV', 'FPL'],
     tags: ['3e', 'Java']
-}
+};
 
 const courses = [{
     name: 'Analyse 3e',
@@ -38,7 +38,7 @@ const courses = [{
     code: 'ANL2',
     description: 'ANL 2e',
     titulars: ['FPL']
-}]
+}];
 
 const pRequest = {
     method: 'POST',
@@ -61,7 +61,7 @@ const tags = [{
     name: '3e',
 }, {
     name: 'Java'
-}]
+}];
 
 describe('Controller.Course', () => {
     describe('#post()', () => {
@@ -126,6 +126,9 @@ describe('Controller.Course', () => {
             });
         });
 
+    });
+
+    describe('#get', () => {
         it('Should return the course with tags and titulars', done => {
             const request = {
                 method: 'GET',
@@ -158,7 +161,9 @@ describe('Controller.Course', () => {
                 done();
             });
         });
+    });
 
+    describe('#getAll', () => {
         it ('Should return 3 courses', done => {
             let post = {
                 method: 'POST',
@@ -171,9 +176,9 @@ describe('Controller.Course', () => {
                 url: '/courses'
             };
 
-            server.inject(post, res => {
+            server.inject(post, () => {
                 post.payload = courses[1];
-                server.inject(post, res => {
+                server.inject(post, () => {
                     server.inject(request, res => {
                         const response = res.request.response.source;
                         expect(response).to.be.an.array();
@@ -181,6 +186,28 @@ describe('Controller.Course', () => {
                         done();
                     });
                 });
+            });
+        });
+    });
+
+    describe('#delete', () => {
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ATL3'
+        }
+        it ('Should return 1', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).to.equal(1);
+                done();
+            });
+        });
+
+        it ('Should return 0', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).to.equal(0);
+                done();
             });
         });
     });
