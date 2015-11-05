@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router', 'ngTagsInput', 'jcs-autoValidate'])
+        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
