@@ -1,0 +1,29 @@
+<form name="courseForm" ng-controller="admin-controller as adminCtrl" novalidate>
+    
+    <fieldset class="form-group">
+        <div>
+            <label>Name (required)</label>
+            <input type="text" class="form-control" name="name" ng-model="name" title="Course name" placeholder="Algorithmique, Atelier logiciel..." required />
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <div>
+            <label>Code (required)</label>
+            <input type="text" class="form-control" name="code" ng-model="code" title="Course short name" placeholder="ALG, ATL..." required />
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" placeholder="Description of the course..."></textarea>
+    </fieldset>
+
+    <br />
+
+    <fieldset class="form-group">
+        <input type="submit" class="btn btn-primary" value="Create new course" />
+        <input type="reset" class="btn btn-warning" value="Reset" />
+    </fieldset>
+    
+</form>
