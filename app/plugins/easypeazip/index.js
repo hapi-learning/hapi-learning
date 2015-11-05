@@ -9,7 +9,16 @@ const Path  = require('path');
 const internals = {};
 
 internals.getDirectoryFileNames = function(path) {
-    return glob.sync(Path.join(path, '**', '*'), { nodir: true });
+    const paths = glob.sync(Path.join(path, '**', '*'), { nodir: true });
+
+    let filenames = [];
+
+    paths.forEach(file => {
+        const dir = Path.parse(path).dir;
+        filenames.push({ name: Path.relative(dir, file), prefix: dir});
+    });
+
+    return filenames;
 };
 
 internals.getPathFileNames = function(path) {
@@ -19,7 +28,10 @@ internals.getPathFileNames = function(path) {
     if (stat.isDirectory())
         filenames = internals.getDirectoryFileNames(path);
     else
-        filenames.push(path);
+        filenames.push({
+            name: Path.basename(path),
+            prefix: Path.parse(path).dir
+        });
 
     return filenames;
 };
@@ -45,16 +57,15 @@ internals.getFileNames = function(path) {
 exports.toBuffer = function(path) {
 
     const filenames = internals.getFileNames(path);
-
     let zip = new JSzip();
 
     return new Promise((resolve, reject) => {
 
         items.parallel(filenames, function(filename, next) {
 
-            zip.file(filename, fs.readFileSync(filename));
-
+            zip.file(filename.name, fs.readFileSync(Path.join(filename.prefix, filename.name)));
             next();
+
         }, function(err) {
            if (err) {
                reject(err);
@@ -76,11 +87,6 @@ exports.toZipFile = function(path, zipFile) {
                     resolve();
            });
         });
-
     });
 };
-
-exports.toZipFile('node_modules/glob', 'modules.zip')
-    .then(() => console.log('fini'))
-    .catch(console.log);
 
