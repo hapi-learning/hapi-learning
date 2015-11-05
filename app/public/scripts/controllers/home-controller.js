@@ -1,15 +1,6 @@
 angular
     .module('hapi-learning')
-    .controller('home-controller',  ['$scope', 'connection_factory', function ($scope, connection_factory) {
+    .controller('home-controller',  ['$scope', function ($scope) {
 
-        $scope.user = {};
-        $scope.connected = false;
         
-        $scope.connect = function() {
-            $scope.connected = connection_factory.connect($scope.user);
-        };
-        
-        $scope.disconnect = function() {
-            $scope.connected = connection_factory.disconnect($scope.user);
-        };
 }]);

@@ -1,0 +1,18 @@
+<form name="connection" data-ng-submit='connect()'  data-ng-hide='connected'>
+    <div class="col-sm-4">
+        <h2>Connect to your account</h2>
+
+        <label>User name</label>
+        <input class="form-control" type="text" data-ng-model="user.name" data-ng-required='true' />
+        <label>Password</label>
+        <input class="form-control" type="password" data-ng-model="user.password" data-ng-required='true' />
+
+        <button type='submit' data-ng-disabled="connection.$invalid">Connection</button>
+    </div>
+</form>
+<form name="disconnection" data-ng-submit='disconnect()'  data-ng-show='connected'>
+    <div class="col-sm-4">
+        <h2>Disonnect to your account</h2>
+        <button type='submit'>Disconnection</button>
+    </div>
+</form>
