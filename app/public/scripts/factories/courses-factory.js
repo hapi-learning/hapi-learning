@@ -36,9 +36,17 @@ angular.module('hapi-learning').factory('courses_factory', function () {
         }
     ];
     
-    this.getCourses = function () {
+    var courses_factory = {};
+    
+    courses_factory.getCourses = function () {
         return courses;
     };
+    
+    courses_factory.addCourse = function(course) {
+        
+        if (course)
+            courses.push(course);
+    }
 
-    return this;
+    return courses_factory;
 });
