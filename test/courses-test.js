@@ -244,7 +244,6 @@ describe('Controller.Course', () => {
                         .then(() => {
                             server.inject(request, res => {
                                 const response = res.request.response.source;
-                                console.log(response);
                                 expect(response).to.be.an.array();
                                 expect(response).to.have.length(1);
                                 done();
