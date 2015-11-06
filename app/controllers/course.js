@@ -94,24 +94,29 @@ exports.getDocuments = {
 
         const Storage = this.storage;
         const path = request.params.path;
+        const course = request.params.id;
 
         Storage
-            .download(request.params.id, request.params.path)
-            .then((results) => {
+        .download(course, request.params.path)
+        .then((results) => {
 
-                if (results.isFile) {
-                    return reply.file(results.result, { mode: 'attachment'});
-                } else {
-                    const pathName = path === '/' ? '' : '_' + require('path').basename(path);
-                    const filename = request.params.id + pathName;
-                    return reply(results.result)
-                        .type('application/zip')
-                        .header('Content-Disposition', 'attachment; filename=' + filename)
-                }
-            })
-            .catch(err => {
-                return reply(Boom.notFound('File not found'));
-            });
+            const isFile = results.isFile;
+            const result = results.result;
+
+            if (isFile)
+            {
+                return reply.file(result, { mode: 'attachment'});
+            }
+            else
+            {
+                const pathName = path === '/' ? '' : '_' + require('path').basename(path);
+                const contentDisposition = 'attachment; filename=' + course + pathName;
+                return reply(result)
+                    .type('application/zip')
+                    .header('Content-Disposition', contentDisposition);
+            }
+        })
+        .catch(err => reply(Boom.notFound('File not found')))
     }
 };
 
@@ -331,7 +336,7 @@ exports.patch = {
         Course
         .update(payload, { where: { code: { $eq: request.params.id } } })
         .then(values => reply({ count: values[0] }))
-        .catch(err => reply(err));
+        .catch(reply);
     }
 };
 
