@@ -26,8 +26,13 @@ exports.get = {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .catch(error => reply(Boom.badRequest(error)))
-            .then(result => reply(result));
+            .catch(error => reply(Boom.badImplementation(error)))
+            .then(result => {
+                if (result)
+                    return reply(result);
+                else
+                    return reply(Boom.notFound('User not found'));
+            });
         }
 };
 
