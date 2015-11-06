@@ -2,7 +2,7 @@
 
 exports.register = function (server, options, next) {
 
-    const Storage = server.plugins.storage.Storage;
+    const Storage = server.plugins.storage.storage;
     const Controllers = server.plugins.controllers.controllers;
     const Models      = server.plugins.models.models;
 

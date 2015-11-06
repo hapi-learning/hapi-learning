@@ -3,17 +3,17 @@
 const Path = require('path');
 const P = require('bluebird');
 const Fs = P.promisifyAll(require('fs'));
-const rimraf = require('rimraf');
 const Glob = require('glob');
 const Items = require('items');
 const Hoek  = require('hoek');
+const rm = require('rmdir');
+const Easypeazip = require('../plugins/easypeazip');
 
 const internals = {};
 
 internals.isFolder = path => Fs.statSync(path).isDirectory();
 
 internals.isFile = path => Fs.statSync(path).isFile();
-
 
 // Create folder and remove an existing file
 internals.initializeFolder = function (path) {
@@ -28,30 +28,26 @@ internals.initializeFolder = function (path) {
                         resolve();
                 });
             }
-
-            resolve();
-
+            else
+            {
+               resolve();
+            }
         } catch(err) {
             Fs.mkdirSync(path);
-            resolve(); // If does not exists, create and continue.
+            resolve(); // If path does not exists, create and continue.
         }
     });
 };
 
 // Removes 'path' recursively
 internals.removeRecursively = function(path, callback) {
-    rimraf(path, callback);
+    rm(path, callback);
 };
 
 // Removes 'path' recursively (async)
 internals.removeRecursivelyAsync = function(path) {
     return new P((resolve, reject) => {
-        internals.removeRecursively(path, err => {
-            if (err)
-                reject(err);
-            else
-                resolve();
-        });
+        internals.removeRecursively(path, resolve);
     });
 };
 
@@ -104,18 +100,18 @@ internals.initialize = function () {
 
 
 const load = function() {
+
     const Storage = {};
-
-
-
 
     /**
      * Create a course folder.
      */
     Storage.createCourse = function (name) {
         const path = Path.join(internals.courseFolder, name);
-        Fs.mkdirSync(path);
-        Fs.mkdirSync(Path.join(path, internals.documents));
+        try {
+            Fs.mkdirSync(path);
+            Fs.mkdirSync(Path.join(path, internals.documents));
+        } catch(err) {}
     };
 
 
@@ -180,6 +176,38 @@ const load = function() {
         return Fs.renameAsync(oldFile, newFile);
     };
 
+    Storage.downloadZip = function(course, path) {
+        const documents = internals.getDocumentPath;
+
+        return Easypeazip.toBuffer(documents);
+    };
+
+    Storage.download = function(course, path) {
+
+        const document = internals.getDocumentPath(course, path);
+        return new P((resolve, reject) => {
+
+            try {
+
+                const isFile = internals.isFile(document);
+
+                if (isFile)
+                {
+                    return resolve({ result: document, isFile: isFile });
+                }
+                else
+                {
+                    Easypeazip.toBuffer(document)
+                        .then(buffer => resolve({ result: buffer, isFile: isFile }));
+                }
+
+            } catch(err) {
+                console.log(err);
+                reject(err);
+            }
+        });
+    };
+
     return Storage;
 };
 
@@ -195,18 +223,15 @@ exports.register = function(server, options, next) {
     internals.documents = options.documents || 'documents';
 
     internals.initialize();
-
     const Storage = load();
-
     server.expose('storage', Storage);
-
     next();
 };
 
 exports.register.attributes = {
     name: 'storage',
     version: require('../../package.json').version,
-}
+};
 
 
 

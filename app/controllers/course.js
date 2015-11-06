@@ -86,15 +86,32 @@ exports.getDocuments = {
     description: 'Get a ZIP containing all course documents',
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id'),
-            path: Joi.string() // TODO - FIX
+            id: Joi.string().alphanum().required().description('Course code'),
+            path: Joi.string().default('/')
         }
     },
     handler: function (request, reply) {
-        // JUST A TEST !
-        reply(require('../plugins/easypeazip').toBuffer('./app/controllers'))
-              .type('application/zip')
-              .header('Content-Disposition', 'attachment; filename=MONARCHIVE.zip')
+
+        const Storage = this.storage;
+        const path = request.params.path;
+
+        Storage
+            .download(request.params.id, request.params.path)
+            .then((results) => {
+
+                if (results.isFile) {
+                    return reply.file(results.result, { mode: 'attachment'});
+                } else {
+                    const pathName = path === '/' ? '' : '_' + require('path').basename(path);
+                    const filename = request.params.id + pathName;
+                    return reply(results.result)
+                        .type('application/zip')
+                        .header('Content-Disposition', 'attachment; filename=' + filename)
+                }
+            })
+            .catch(err => {
+                return reply(Boom.notFound('File not found'));
+            });
     }
 };
 
@@ -151,6 +168,7 @@ exports.post = {
         const Course = this.models.Course;
         const User = this.models.User;
         const Tag = this.models.Tag;
+        const Storage = this.storage;
 
         const hasTeachers = request.payload.teachers ? true : false;
         const hasTags = request.payload.tags ? true : false;
@@ -208,6 +226,8 @@ exports.post = {
                             let course = newCourse.get({plain:true});
                             course.tags = _.map(tags, (t => t.get('name', {plain:true})));
                             course.teachers = _.map(teachers, (t => t.get('username', {plain:true})));
+
+                            Storage.createCourse(course.code);
 
                             return reply(course);
                         });
@@ -325,13 +345,19 @@ exports.delete = {
     },
     handler: function (request, reply) {
         const Course = this.models.Course;
+        const Storage = this.storage;
+
 
         Course.destroy({
             where : {
                 code : request.params.id
             }
         })
-        .then(count => reply({count: count}))
+        .then(count => {
+            const tail = request.tail('delete course folder');
+            Storage.deleteCourse(request.params.id).then(tail);
+            return reply({count: count});
+        })
         .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
     }
 };
