@@ -70,7 +70,7 @@ exports.post = {
         Tag.create({
             name : request.payload.name
         })
-        .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at')))
+        .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at', 'deleted_at')))
         .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
     }
 };

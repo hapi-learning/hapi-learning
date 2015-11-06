@@ -1,6 +1,8 @@
 'use strict';
 
+const _ = require('lodash');
 const Joi = require('joi');
+Joi.phone = require('joi-phone');
 const Boom = require('boom');
 
 exports.get = {
@@ -20,7 +22,7 @@ exports.get = {
                     username: request.params.username
                 },
                 attributes: {
-                    exclude: 'password'
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
             .catch(error => reply(Boom.badRequest(error)))
@@ -38,7 +40,7 @@ exports.getAll = {
         
         User.findAll({
                 attributes: {
-                    exclude: 'password'
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
             .catch(error => reply(Boom.notFound(error)))
@@ -53,10 +55,10 @@ exports.post = {
         payload: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
             password: Joi.string().min(1).max(255).required().description('User password'),
-            email: Joi.string().min(1).max(255).required().description('User email'),
+            email: Joi.string().email().required().description('User email'),
             firstName: Joi.string().min(1).max(255).description('User first name'),
             lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.string().min(1).max(255).description('User phone number')
+            phoneNumber: Joi.phone.e164().description('User phone number')
         }
     },
     handler: function(request, reply) {
@@ -71,8 +73,8 @@ exports.post = {
             lastName: request.payload.lastName,
             phoneNumber: request.payload.phoneNumber
         })
-        .then(user => reply(user))
-        .catch(error => reply(Boom.badRequest(error)));
+        .then(user => reply(_.omit(user.get({plain : true}), 'updated_at', 'created_at', 'deleted_at')).code(201))
+        .catch(error => reply(Boom.conflict(error)));
     }
 };
 
