@@ -6,16 +6,16 @@ const _ = require('lodash');
 
 exports.get = {
     description: 'Returns a specific permission',
-    auth : false,
+
     validate : {
         params : {
-            type : Joi.number().integer().required().description('Permission type number') 
+            type : Joi.number().integer().required().description('Permission type number')
         }
     },
     handler: function (request, reply) {
-        
+
         const Permission = this.models.Permission;
-        
+
         Permission.findOne({
             where : {
                 type : request.params.type
@@ -40,9 +40,9 @@ exports.get = {
 
 exports.getAll = {
     description: 'Returns every permissions',
-    auth : false,
+
      handler: function (request, reply) {
-                
+
         const Permission = this.models.Permission;
 
         Permission.findAll({

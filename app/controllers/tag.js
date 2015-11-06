@@ -3,20 +3,19 @@
 const Joi = require('joi');
 const Boom = require('boom');
 
-const utilities = require('../utils/utilities.js');
+const Utils = require('../utils/sequelize');
 
 exports.get = {
     description: 'Returns a specific tag',
-    auth : false,
     validate: {
         params: {
             name: Joi.string().min(1).max(255).required().description('Tag name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Tag = this.models.Tag;
-        
+
         Tag.findOne({
             where: {
                 name : request.params.name
@@ -41,9 +40,8 @@ exports.get = {
 
 exports.getAll = {
     description: 'Returns all tags',
-    auth : false,
     handler: function (request, reply) {
-                
+
         const Tag = this.models.Tag;
 
         Tag.findAll({
@@ -51,41 +49,39 @@ exports.getAll = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(results => reply(utilities.clean_results(results)))
+        .then(results => reply(Utils.removeDates(results)))
         .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
     }
 };
 
 exports.post = {
     description: 'Create a new tag',
-    auth : false,
     validate : {
         payload : {
-            name: Joi.string().min(1).max(255).required().description('Tag name') 
+            name: Joi.string().min(1).max(255).required().description('Tag name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Tag = this.models.Tag;
-        
+
         Tag.create({
             name : request.payload.name
         })
-        .then(result => reply(utilities.clean_result(result)))
+        .then(result => reply(Utils.removeDates(result)))
         .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
     }
 };
 
 exports.delete = {
     description: 'Delete a specific tag',
-    auth : false,
     validate: {
         params : {
-            name: Joi.string().min(1).max(255).required().description('Tag name') 
+            name: Joi.string().min(1).max(255).required().description('Tag name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Tag = this.models.Tag;
 
         Tag.destroy({

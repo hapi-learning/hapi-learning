@@ -37,7 +37,6 @@ internals.findCourseByCode = function(Course, id) {
 
 exports.getAll = {
     description: 'List all the courses',
-    auth: false,
     handler: function (request, reply) {
 
         const Course = this.models.Course;

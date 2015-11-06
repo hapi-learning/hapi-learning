@@ -6,16 +6,16 @@ const _ = require('lodash');
 
 exports.get = {
     description: 'Returns a specific role',
-    auth : false,
+
     validate: {
         params: {
             name: Joi.string().min(1).max(255).required().description('Role name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Role = this.models.Role;
-        
+
         Role.findOne({
             where: {
                 name : request.params.name
@@ -40,9 +40,9 @@ exports.get = {
 
 exports.getAll = {
     description: 'Returns all roles',
-    auth : false,
+
     handler: function (request, reply) {
-                
+
         const Role = this.models.Role;
 
         Role.findAll({
@@ -57,16 +57,16 @@ exports.getAll = {
 
 exports.post = {
     description: 'Create a new role',
-    auth : false,
+
     validate : {
         payload : {
-            name: Joi.string().min(1).max(255).required().description('Role name') 
+            name: Joi.string().min(1).max(255).required().description('Role name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Role = this.models.Role;
-        
+
         Role.create({
             name : request.payload.name
         })
@@ -77,14 +77,14 @@ exports.post = {
 
 exports.delete = {
     description: 'Delete a specific role',
-    auth : false,
+
     validate: {
         params : {
-            name: Joi.string().min(1).max(255).required().description('Role name') 
+            name: Joi.string().min(1).max(255).required().description('Role name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Role = this.models.Role;
 
         Role.destroy({
