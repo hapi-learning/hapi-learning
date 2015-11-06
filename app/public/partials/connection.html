@@ -1,18 +1,29 @@
-<form name="connection" data-ng-submit='connect()'  data-ng-hide='connected'>
+<form name="connection" data-ng-submit='connect()' data-ng-hide='connected'>
     <div class="col-sm-4">
-        <h2>Connect to your account</h2>
+        <h2>Connect</h2>
 
-        <label>User name</label>
-        <input class="form-control" type="text" data-ng-model="user.name" data-ng-required='true' />
-        <label>Password</label>
-        <input class="form-control" type="password" data-ng-model="user.password" data-ng-required='true' />
+        <fieldset class="form-group">
+            <label>Username</label>
+            <input class="form-control" type="text" data-ng-model="user.name" data-ng-required="true" />
+        </fieldset>
+        
+        <fieldset class="form-group">
+            <label>Password</label>
+            <input class="form-control" type="password" data-ng-model="user.password" data-ng-required="true" />
+        </fieldset>
+        
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
 
-        <button type='submit' data-ng-disabled="connection.$invalid">Connection</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" data-ng-disabled="connection.$invalid">Log in</button>
     </div>
 </form>
-<form name="disconnection" data-ng-submit='disconnect()'  data-ng-show='connected'>
+<form name="disconnection" data-ng-submit='disconnect()' data-ng-show='connected'>
     <div class="col-sm-4">
-        <h2>Disonnect to your account</h2>
-        <button type='submit'>Disconnection</button>
+        <h2>Disconnect</h2>
+        <button class="btn btn-lg btn-warning btn-block" type="submit">Log out</button>
     </div>
 </form>
