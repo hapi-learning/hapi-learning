@@ -14,9 +14,9 @@ internals.removeDatesArray = function(sequelizeObjects) {
 module.exports = {
     removeDates: function (result) {
         if (Array.isArray(result)) {
-            internals.removeDatesArray(result);
+            return internals.removeDatesArray(result);
         } else {
-            internals.removeDates(result);
+            return internals.removeDates(result);
         }
     }
 };
