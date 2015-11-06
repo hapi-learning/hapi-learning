@@ -64,6 +64,15 @@ app/                          --> app folder
         index.js            --> entry point (loads all the handlers and exports them)
         user.js             --> handlers for the user resource
     utils/                  --> utils folder (contains some logic)
+    plugins/                --> plugins that we write ourselves 
+        plugin1/
+            package.json
+            test/           --> test folder
+            index.js        --> entry point for plugin1
+        plugin2/
+            package.json
+            test/
+            index.js        --> entry point for plugin2
     public/                 --> angular app
         index.html          --> entry point for angular app
         scripts/            --> scripts for main module
@@ -94,15 +103,7 @@ app/                          --> app folder
                 views/
                 test/   --> test folder for mudule2
 test/                   --> test folder (for the backend)
-plugins/                --> plugins that we write ourselves 
-    plugin1/
-        package.json
-        test/           --> test folder
-        index.js        --> entry point for plugin1
-    plugin2/
-        package.json
-        test/
-        index.js        --> entry point for plugin2
+
 
 
 ```

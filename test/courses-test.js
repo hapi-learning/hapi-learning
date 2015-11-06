@@ -23,7 +23,7 @@ const course = {
     name: 'Ateliers Logiciel 3e',
     code: 'ATL3',
     description: 'A course',
-    titulars: ['SRV', 'FPL'],
+    teachers: ['SRV', 'FPL'],
     tags: ['3e', 'Java']
 };
 
@@ -31,13 +31,13 @@ const courses = [{
     name: 'Analyse 3e',
     code: 'ANL3',
     description: 'Analyse',
-    titulars: ['FPL'],
+    teachers: ['FPL'],
     tags: ['3e', 'Java']
 }, {
     name: 'Analyse 2e',
     code: 'ANL2',
     description: 'ANL 2e',
-    titulars: ['FPL']
+    teachers: ['FPL']
 }];
 
 const pRequest = {
@@ -65,7 +65,7 @@ const tags = [{
 
 describe('Controller.Course', () => {
     describe('#post()', () => {
-        it('should return 422 response because of invalid titulars/tags', done => {
+        it('should return 422 response because of invalid teachers/tags', done => {
 
             server.inject(pRequest, res => {
                 const response = res.request.response.source;
@@ -103,9 +103,9 @@ describe('Controller.Course', () => {
                         expect(response.name).to.equal(course.name);
                         expect(response.code).to.equal(course.code);
                         expect(response.description).to.equal(course.description);
-                        expect(response.titulars).to.be.an.array();
-                        expect(response.titulars).to.have.length(pRequest.payload.titulars.length);
-                        expect(response.titulars).to.only.include(pRequest.payload.titulars);
+                        expect(response.teachers).to.be.an.array();
+                        expect(response.teachers).to.have.length(pRequest.payload.teachers.length);
+                        expect(response.teachers).to.only.include(pRequest.payload.teachers);
 
                         expect(response.tags).to.be.an.array();
                         expect(response.tags).to.have.length(pRequest.payload.tags.length);
@@ -129,7 +129,7 @@ describe('Controller.Course', () => {
     });
 
     describe('#get', () => {
-        it('Should return the course with tags and titulars', done => {
+        it('Should return the course with tags and teachers', done => {
             const request = {
                 method: 'GET',
                 url: '/courses/ATL3'
@@ -141,8 +141,8 @@ describe('Controller.Course', () => {
                 expect(response.code).to.equal(course.code);
                 expect(response.name).to.equal(course.name);
                 expect(response.description).to.equal(course.description);
-                expect(response.titulars).to.be.an.array();
-                expect(response.titulars).to.have.length(users.length);
+                expect(response.teachers).to.be.an.array();
+                expect(response.teachers).to.have.length(users.length);
                 expect(response.tags).to.be.an.array();
                 expect(response.tags).to.have.length(tags.length);
                 done();
@@ -253,6 +253,45 @@ describe('Controller.Course', () => {
 
 
         });
+    });
+
+    describe('#patch', () => {
+        const request = {
+            method: 'PATCH',
+            url: '/courses/ATL3',
+            payload: {
+                name: 'Ateliers Logiciels Gestion',
+                code: 'ATL3G',
+                description: 'Java / NodeJS 3e Gestion'
+            }
+        };
+
+        it ('Should return the number of rows updated (1)', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).to.equal(1);
+                done();
+            });
+        });
+
+        it ('Should return the updated course', done => {
+            server.inject({method: 'GET', url:'/courses/ATL3G'}, res => {
+                const response = res.request.response.source;
+
+                expect(response.code).to.equal(request.payload.code);
+                expect(response.name).to.equal(request.payload.name);
+                expect(response.description).to.equal(request.payload.description);
+                expect(response.teachers).to.be.an.array();
+                expect(response.teachers).to.have.length(users.length);
+                expect(response.tags).to.be.an.array();
+                expect(response.tags).to.have.length(tags.length);
+
+                done();
+            });
+        });
+    });
+
+    describe('#addTags', () => {
 
     });
 });

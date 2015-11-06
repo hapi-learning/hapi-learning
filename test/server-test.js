@@ -15,6 +15,16 @@ const internals = {
             labels: ['api']
         }],
         plugins: {
+            '../app/utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        documents: 'documents',
+                        courses: 'courses',
+                        storage: 'storage',
+                    }
+                }],
             'hapi-auth-jwt2': [{select: ['api']}],
             '../app/auth': [{
                 select: ['api'],
