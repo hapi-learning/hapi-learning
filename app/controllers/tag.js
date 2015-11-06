@@ -2,6 +2,7 @@
 
 const Joi = require('joi');
 const Boom = require('boom');
+const _ = require('lodash');
 
 exports.get = {
     description: 'Returns a specific tag',
@@ -15,13 +16,25 @@ exports.get = {
         
         const Tag = this.models.Tag;
         
-        Tag.findAll({
+        Tag.findOne({
             where: {
                 name : request.params.name
+            },
+            attributes :{
+                exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .catch(error => reply(Boom.badRequest(error)))
-        .then(result => reply(result));
+        .then(result => {
+            if (result)
+            {
+                return reply(result.get({plain : true}));
+            }
+            else
+            {
+                return reply(Boom.notFound('Can not find tag :' + request.params.name));
+            }
+        })
+        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
     }
 };
 
@@ -32,9 +45,13 @@ exports.getAll = {
                 
         const Tag = this.models.Tag;
 
-        Tag.findAll()
-        .catch(error => reply(Boom.badRequest(error)))
-        .then(results => reply(results));
+        Tag.findAll({
+            attributes :{
+                exclude: ['deleted_at', 'updated_at', 'created_at']
+            }
+        })
+        .then(results => reply(_.map(results, (result => result.get({plain : true})))))
+        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
     }
 };
 
@@ -53,8 +70,8 @@ exports.post = {
         Tag.create({
             name : request.payload.name
         })
-        .then(tag => reply(tag))
-        .catch(error => reply(Boom.badRequest(error)));
+        .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at')))
+        .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
     }
 };
 
@@ -75,7 +92,7 @@ exports.delete = {
                 name : request.params.name
             }
         })
-        .then(tag => reply(tag))
-        .catch(error => reply(error));
+        .then(count => reply({count : count}))
+        .catch(error => reply(Boom.badRequest('An internal server error occurred : ' + error)));
     }
 };

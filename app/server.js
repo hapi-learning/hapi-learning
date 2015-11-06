@@ -103,7 +103,21 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
         require('../roles.json').forEach(role => Models.Role.create(role));
         require('../users.json').forEach(user => Models.User.create(user));
         require('../tags.json').forEach(tag => Models.Tag.create(tag));
-    });
+        require('../roles.json').forEach(role => Models.Role.create(role));
+        require('../permissions.json').forEach(permission => Models.Permission.create(permission));
+
+            Models.Course.create({
+                name: 'Ateliers Logiciel',
+                code: 'ATL',
+                description: 'Bullshit'
+            }).then(course => {
+                course.addTitular(1).then(() => {
+                    Models.Course.findAll().then(results => {
+                        results[0].getTitulars().then(r => console.log(r));
+                    });
+                });
+            });
+        });
 
 
     server.start((err) => {

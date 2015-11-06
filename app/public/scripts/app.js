@@ -1,21 +1,30 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router', 'ngTagsInput'])
-        .config(['$urlRouterProvider', '$stateProvider',
-                function($urlRouterProvider, $stateProvider) {
-                    $urlRouterProvider.otherwise('/');
+        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload'])
+    .config(['$urlRouterProvider', '$stateProvider',
+                function ($urlRouterProvider, $stateProvider) {
+            $urlRouterProvider.otherwise('/');
 
-                    $stateProvider
-                        .state('home', {
-                            url: '/',
-                            templateUrl: '/views/home.html',
-                            controller: 'home-controller'
-                        })
-                        .state('courses', {
-                                url: '/courses',
-                                templateUrl: '/views/courses.html',
-                                controller: 'courses-controller'
-                        })
-                }]);
-
+            $stateProvider
+                .state('home', {
+                    url: '/',
+                    templateUrl: '/views/home.html',
+                    controller: 'home-controller'
+                })
+                .state('courses', {
+                    url: '/courses',
+                    templateUrl: '/views/courses.html',
+                    controller: 'courses-controller'
+                })
+                .state('admin', {
+                    url: '/admin',
+                    templateUrl: '/views/admin.html',
+                    controller: 'admin-controller'
+                })
+                }])
+    .run([
+        'bootstrap3ElementModifier',
+        function (bootstrap3ElementModifier) {
+            bootstrap3ElementModifier.enableValidationStateIcons(true);
+       }]);

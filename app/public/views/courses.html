@@ -2,9 +2,7 @@
 
     <h1 class="page-header">Courses</h1>
 
-
-
-    <div ng-include="'../partials/searchform.html'"></div>
+    <div ng-include="'../partials/course-search-form.html'"></div>
 
     <br />
 
@@ -19,23 +17,29 @@
                 <a href="#/courses/{{course.code}}">{{course.code}} − {{course.name}}</a></h3>
 
             <div>
-                <span ng-repeat="tag in course.tags">
-                    <button class="btn btn-default btn-xs disabled">#{{tag}}</button>
-                </span>
-            </div>
+                <label>Teachers</label>
+                
+                <br />
 
-            <br />
-
-
-            <blockquote>{{course.description}}</blockquote>
-
-            <div>
                 <span ng-repeat="teacher in course.teachers">
                     <teacher-info></teacher-info>
                 </span>
             </div>
 
             <br />
+
+            <div>
+                <label>Tags</label>
+                
+                <br />
+
+                <span ng-repeat="tag in course.tags">
+                    <button class="btn btn-default btn-xs">#{{tag}}</button>
+                </span>
+            </div>
+
+            <br />
+
 
             <div>
                 <button type="button" class="btn btn-success" ng-hide="subscribed()"><span class="glyphicon glyphicon-ok"></span> Subscribe</button>

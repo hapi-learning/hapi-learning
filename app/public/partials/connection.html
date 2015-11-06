@@ -1,0 +1,65 @@
+<div ng-controller="admin-controller as adminCtrl">
+    <form name="connection" data-ng-submit="connect()" data-ng-hide="connected || forgot" novalidate>
+
+        <div class="col-sm-4">
+            <h2>Connect</h2>
+
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input class="form-control" type="text" ng-minlength="5" data-ng-model="user.name" data-ng-required="true" placeholder="Username" />
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input class="form-control" type="password" data-ng-model="user.password" data-ng-required="true" placeholder="Password" />
+                </div>
+            </fieldset>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me" /> Remember me
+                </label>
+            </div>
+
+            <fieldset class="form-group">
+                <input class="btn btn-lg btn-success btn-block" type="submit" value="Log in" />
+            </fieldset>
+
+            <div>
+                <a ng-click="reset()">Forgot your password?</a>
+            </div>
+        </div>
+
+    </form>
+
+    <form name="reset-password" data-ng-submit="reset()" data-ng-show="forgot">
+        <div class="col-sm-4">
+            <h2>Reset your password</h2>
+            
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input class="form-control" type="text" ng-minlength="5" data-ng-model="user.name" data-ng-required="true" placeholder="Username" />
+                </div>
+            </fieldset>
+            
+            <fieldset class="form-group">
+                <input class="btn btn-lg btn-warning btn-block" type="submit" value="Reset password" />
+            </fieldset>
+            
+            <div>
+                <a ng-click="back()">Back to login</a>
+            </div>
+        </div>
+    </form>
+
+    <form name="disconnection" data-ng-submit="disconnect()" data-ng-show="connected">
+        <div class="col-sm-4">
+            <h2>Disconnect</h2>
+            <button class="btn btn-lg btn-warning btn-block" type="submit">Log out</button>
+        </div>
+    </form>
+</div>

@@ -1,11 +1,3 @@
-[
-	{
-		"name": "admin"
-	},
-	{
-		"name": "teacher"
-	},
-	{
-		"name": "student"
-	}
-]
+[{"name": "admin"},
+{"name": "teacher"},
+{"name": "student"}]
