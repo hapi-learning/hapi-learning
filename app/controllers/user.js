@@ -132,7 +132,7 @@ exports.put = {
             where: {username: request.params.username}
         }
         )
-        .then(result => reply({count : result[0] || 0})
+        .then(result => reply({count : result[0] || 0}))
         .catch(error => reply(error));
     }
 };
@@ -182,7 +182,7 @@ exports.patch = {
                     }
                 }
             )
-            .then(result => reply({count : result[0] || 0})
+            .then(result => reply({count : result[0] || 0}))
             .catch(error => reply(error));
     }
 };
