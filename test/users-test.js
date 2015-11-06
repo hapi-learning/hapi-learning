@@ -25,6 +25,16 @@ const badUser = {
     password: 'superpassword'
 };
 
+const badUsers = [{
+    username: 'SRV',
+    email: '',
+    password: 'superpassword'
+}, {
+    username: 'FPL',
+    email: 'pluquos@hotmail.com',
+    password: 'superpassword'
+}];
+
 const user = {
     username: 'Johnny',
     email: 'Bogoss42@gmail.com',
@@ -49,6 +59,19 @@ describe('Controller.User', () => {
                 method: 'POST',
                 url: '/users',
                 payload : badUser
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(400);
+                done();
+            });
+        });
+        it('Should return 400 response because of one invalid email in array', done => {
+            const request = {
+                method: 'POST',
+                url: '/users',
+                payload : badUsers
             };
 
             server.inject(request, res => {
@@ -86,6 +109,21 @@ describe('Controller.User', () => {
                 const response = res.request.response.source;
                 expect(response.statusCode).equal(409);
 
+                done();
+            });
+        });
+        
+        it('Should return number of created users from array', done => {
+            const request = {
+                method: 'POST',
+                url: '/users',
+                payload : users
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(201);
+                expect(response.count).equal(2);
                 done();
             });
         });
