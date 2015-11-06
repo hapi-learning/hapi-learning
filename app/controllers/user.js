@@ -54,33 +54,48 @@ exports.getAll = {
     }
 };
 
+const schemaUserPOST = function(){
+    const user = Joi.object().keys({
+        username: Joi.string().min(1).max(30).required().description('User personal ID'),
+        password: Joi.string().min(1).max(255).required().description('User password'),
+        email: Joi.string().email().required().description('User email'),
+        firstName: Joi.string().min(1).max(255).description('User first name'),
+        lastName: Joi.string().min(1).max(255).description('User last name'),
+        phoneNumber: Joi.phone.e164().description('User phone number')
+    });
+    
+    return Joi.alternatives().try(user, Joi.array().items(user.required()));
+};
+
 exports.post = {
     auth: false,
     description: 'Add user',
     validate: {
-        payload: {
-            username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            password: Joi.string().min(1).max(255).required().description('User password'),
-            email: Joi.string().email().required().description('User email'),
-            firstName: Joi.string().min(1).max(255).description('User first name'),
-            lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.phone.e164().description('User phone number')
-        }
+        payload : schemaUserPOST()
     },
     handler: function(request, reply) {
         
         const User = this.models.User;
         
-        User.create({
-            username : request.payload.username,
-            password: request.payload.password,
-            email: request.payload.email,
-            firstName: request.payload.firstName,
-            lastName: request.payload.lastName,
-            phoneNumber: request.payload.phoneNumber
-        })
-        .then(result => reply(utilities.clean_result(result)).code(201))
-        .catch(error => reply(Boom.conflict(error)));
+        if (Array.isArray(request.payload))
+        {
+            User.bulkCreate(request.payload, {validate : true})
+            .then(results => (reply({count : results.length}).code(201)))
+            .catch(error => reply(Boom.conflict(errors)));
+        }
+        else
+        {
+            User.create({
+                username : request.payload.username,
+                password: request.payload.password,
+                email: request.payload.email,
+                firstName: request.payload.firstName,
+                lastName: request.payload.lastName,
+                phoneNumber: request.payload.phoneNumber
+            })
+            .then(result => reply(utilities.clean_result(result)).code(201))
+            .catch(error => reply(Boom.conflict(error)));
+        }
     }
 };
 
