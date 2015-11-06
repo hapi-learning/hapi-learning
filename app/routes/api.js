@@ -2,6 +2,7 @@
 
 exports.register = function (server, options, next) {
 
+    const Storage = server.plugins.storage.storage;
     const Controllers = server.plugins.controllers.controllers;
     const Models      = server.plugins.models.models;
 
@@ -9,7 +10,8 @@ exports.register = function (server, options, next) {
     // Sets context for handlers
     // Can now access models with this.models
     server.bind({
-        models: Models
+        models: Models,
+        storage: Storage
     });
 
     server.route([
@@ -74,5 +76,5 @@ exports.register = function (server, options, next) {
 exports.register.attributes = {
     name: 'api-routes',
     version: require('../../package.json').version,
-    dependencies: ['hapi-learning-auth', 'controllers', 'models']
+    dependencies: ['storage', 'hapi-learning-auth', 'controllers', 'models']
 };
