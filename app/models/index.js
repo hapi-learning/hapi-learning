@@ -7,14 +7,14 @@ const _         = require('lodash');
 
 exports.register = function(server, options, next) {
     let models = {};
-
     const sequelize = new Sequelize(
     options.name || null,
     options.username || null,
     options.password || null, {
         host: options.host || null,
         dialect: options.dialect || null,
-        storage: options.storage || null
+        storage: options.storage || null,
+        logging: options.logging
     });
 
     models.sequelize = sequelize;
@@ -35,9 +35,12 @@ exports.register = function(server, options, next) {
 
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
-        
+
         // A Course can have multiple Users as Titulars
         m.Course.belongsToMany(m.User, { as: 'Titulars',  through: 'course_titulars'});
+
+
+        m.Course.belongsToMany(m.User, { as: 'Users', through: 'user_courses'});
 
         // An User can subscribe to many Courses (not in a Folder)
         m.User.belongsToMany(m.Course, { as: 'Courses', through: 'user_courses' });

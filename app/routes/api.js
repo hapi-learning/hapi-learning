@@ -33,14 +33,13 @@ exports.register = function (server, options, next) {
 
         // Roles routes
         {method: 'GET',    path: '/roles',       config: Controllers.Role.getAll},
-        {method: 'GET',    path: '/roles/{id}',  config: Controllers.Role.get},
+        {method: 'GET',    path: '/roles/{name}',  config: Controllers.Role.get},
         {method: 'POST',   path: '/roles',       config: Controllers.Role.post},
-        {method: 'PUT',    path: '/roles/{id}',  config: Controllers.Role.put},
-        {method: 'DELETE', path: '/roles/{id}',  config: Controllers.Role.delete},
+        {method: 'DELETE', path: '/roles/{name}',  config: Controllers.Role.delete},
 
         // Permissions routes
         {method: 'GET', path: '/permissions',      config: Controllers.Permission.getAll},
-        {method: 'GET', path: '/permissions/{id}', config: Controllers.Permission.get},
+        {method: 'GET', path: '/permissions/{type}', config: Controllers.Permission.get},
 
         // Tags routes
         {method: 'GET',    path: '/tags',      config:  Controllers.Tag.getAll},
@@ -55,8 +54,6 @@ exports.register = function (server, options, next) {
         {method: 'GET',    path: '/courses/{id}/documents/{path*}', config: Controllers.Course.getDocuments},
         {method: 'GET',    path: '/courses/{id}/tree',              config: Controllers.Course.getTree},
         {method: 'GET',    path: '/courses/{id}/tree/{path*}',      config: Controllers.Course.getTree},
-        {method: 'GET',    path: '/courses/{id}/tags',              config: Controllers.Course.getTags},
-        {method: 'GET',    path: '/courses/{id}/teachers',          config: Controllers.Course.getTeachers},
         {method: 'GET',    path: '/courses/{id}/students',          config: Controllers.Course.getStudents},
         {method: 'POST',   path: '/courses',                        config: Controllers.Course.post},
         {method: 'POST',   path: '/courses/{id}/documents',         config: Controllers.Course.postDocument},

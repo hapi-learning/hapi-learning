@@ -25,7 +25,20 @@ const course = {
     description: 'A course',
     titulars: ['SRV', 'FPL'],
     tags: ['3e', 'Java']
-}
+};
+
+const courses = [{
+    name: 'Analyse 3e',
+    code: 'ANL3',
+    description: 'Analyse',
+    titulars: ['FPL'],
+    tags: ['3e', 'Java']
+}, {
+    name: 'Analyse 2e',
+    code: 'ANL2',
+    description: 'ANL 2e',
+    titulars: ['FPL']
+}];
 
 const pRequest = {
     method: 'POST',
@@ -48,7 +61,7 @@ const tags = [{
     name: '3e',
 }, {
     name: 'Java'
-}]
+}];
 
 describe('Controller.Course', () => {
     describe('#post()', () => {
@@ -113,6 +126,9 @@ describe('Controller.Course', () => {
             });
         });
 
+    });
+
+    describe('#get', () => {
         it('Should return the course with tags and titulars', done => {
             const request = {
                 method: 'GET',
@@ -145,5 +161,99 @@ describe('Controller.Course', () => {
                 done();
             });
         });
+    });
+
+    describe('#getAll', () => {
+        it ('Should return 3 courses', done => {
+            let post = {
+                method: 'POST',
+                url: '/courses',
+                payload: courses[0]
+            };
+
+            const request = {
+                method: 'GET',
+                url: '/courses'
+            };
+
+            server.inject(post, () => {
+                post.payload = courses[1];
+                server.inject(post, () => {
+                    server.inject(request, res => {
+                        const response = res.request.response.source;
+                        expect(response).to.be.an.array();
+                        expect(response).to.have.length(3);
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    describe('#delete', () => {
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ANL3'
+        };
+        it ('Should return 1', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).to.equal(1);
+                done();
+            });
+        });
+
+        it ('Should return 0', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).to.equal(0);
+                done();
+            });
+        });
+    });
+
+    describe('#getStudents', () => {
+        const request = {
+            method: 'GET',
+            url: '/courses/ATL3/students'
+        };
+
+        it ('Should return empty array', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(0);
+                done();
+            });
+        });
+
+        it ('Should return an array with 1 users', done => {
+            const Course = server.plugins.models.models.Course;
+            const user = {
+                username: 'kevin2004',
+                password: 'jsstrofor',
+                firstName: 'Kevin',
+                lastName: 'Keke',
+                email: 'bogoss2004@hotmail.fr'
+            };
+
+            Course
+                .findOne({where: { code: { $eq: 'ATL3'}}})
+                .then(course => {
+                    course.createUser(user)
+                        .then(() => {
+                            server.inject(request, res => {
+                                const response = res.request.response.source;
+                                console.log(response);
+                                expect(response).to.be.an.array();
+                                expect(response).to.have.length(1);
+                                done();
+                            });
+                    });
+                });
+
+
+        });
+
     });
 });

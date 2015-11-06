@@ -1,6 +1,6 @@
+angular
+    .module('hapi-learning')
+    .controller('home-controller',  ['$scope', function ($scope) {
 
-// TODO
-angular.module('hapi-learning')
-       .controller('home-controller', function() {
-
-});
+        
+}]);

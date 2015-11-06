@@ -3,7 +3,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block;}
 ol,ul{list-style:none;margin:0px;padding:0px;}
 blockquote,q{quotes:none;}
-blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+blockquote:before,blockquote:after,q:before/*,q:after{aside:'';aside:none;}*/
 table{border-collapse:collapse;border-spacing:0;}
 /* start editing from here */
 a{text-decoration:none;}
@@ -27,23 +27,23 @@ body{
 	background: url(../images/bg1.png);
 	font-family: "Century Gothic",Arial, Helvetica, sans-serif;
 	}
-.content p{
+aside p{
 	margin: 18px 0px 45px 0px;
 }
-.content p{
+aside p{
 	font-family: "Century Gothic";
 	font-size:2em;
 	color:#666;
 	text-align:center;
 }
-.content p span,.logo h1 a{
+aside p span,.logo h1 a{
 	color:#e54040;
 }
-.content{
+aside{
 	text-align:center;
 	padding:115px 0px 0px 0px;
 }
-.content a{
+aside a{
 	color:#fff;
 	font-family: "Century Gothic";
 	background: #666666; /* Old browsers */
@@ -57,7 +57,7 @@ body{
 	padding: 15px 20px;
 	border-radius: 1em;
 }
-.content a:hover{
+aside a:hover{
 	color:#e54040;
 }
 .logo{
@@ -99,20 +99,20 @@ body{
 }
 /*------responive-design--------*/
 @media screen and (max-width: 1366px)	{
-	.content {
+	aside {
 		padding: 58px 0px 0px 0px;
 	}
 }
 @media screen and (max-width:1280px)	{
-	.content {
+	aside {
 		padding: 58px 0px 0px 0px;
 	}
 }
 @media screen and (max-width:1024px)	{
-	.content {
+	aside {
 		padding: 58px 0px 0px 0px;
 	}
-	.content p {
+	aside p {
 		font-size: 1.5em;
 	}
 	.copy-right p{
@@ -121,10 +121,10 @@ body{
 	}
 }
 @media screen and (max-width:640px)	{
-	.content {
+	aside {
 		padding: 58px 0px 0px 0px;
 	}
-	.content p {
+	aside p {
 		font-size: 1.3em;
 	}
 	.copy-right p{
@@ -132,11 +132,11 @@ body{
 	}
 }
 @media screen and (max-width:460px)	{
-	.content {
+	aside {
 		padding:20px 0px 0px 0px;
 		margin:0px 12px;
 	}
-	.content p {
+	aside p {
 		font-size:0.9em;
 	}
 	.copy-right p{
@@ -144,15 +144,15 @@ body{
 	}
 }
 @media screen and (max-width:320px)	{
-	.content {
+	aside {
 		padding:30px 0px 0px 0px;
 		margin:0px 12px;
 	}
-	.content a {
+	aside a {
 		padding:10px 15px;
 		font-size:0.8em;
 	}
-	.content p {
+	aside p {
 		margin: 18px 0px 22px 0px;
 	}
 }
