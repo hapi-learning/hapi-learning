@@ -1,9 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
 const Boom = require('boom');
+
+const utilities = require('../utils/utilities.js');
 
 exports.get = {
     auth: false,
@@ -44,7 +45,7 @@ exports.getAll = {
                 }
             })
             .catch(error => reply(Boom.notFound(error)))
-            .then(results => reply(results));
+            .then(results => reply(utilities.clean_results(results)));
     }
 };
 
@@ -73,7 +74,7 @@ exports.post = {
             lastName: request.payload.lastName,
             phoneNumber: request.payload.phoneNumber
         })
-        .then(user => reply(_.omit(user.get({plain : true}), 'updated_at', 'created_at', 'deleted_at')).code(201))
+        .then(result => reply(utilities.clean_result(result)).code(201))
         .catch(error => reply(Boom.conflict(error)));
     }
 };
@@ -95,7 +96,7 @@ exports.delete = {
                 username : request.params.username
             }
         })
-        .then(user => reply(user))
+        .then(count => reply({count : count}))
         .catch(error => reply(error));
     }
 };
@@ -131,7 +132,7 @@ exports.put = {
             where: {username: request.params.username}
         }
         )
-        .then(user => reply(user))
+        .then(result => reply({count : result[0] || 0})
         .catch(error => reply(error));
     }
 };
@@ -181,7 +182,7 @@ exports.patch = {
                     }
                 }
             )
-            .then(user => reply(user))
+            .then(result => reply({count : result[0] || 0})
             .catch(error => reply(error));
     }
 };

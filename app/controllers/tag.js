@@ -2,7 +2,8 @@
 
 const Joi = require('joi');
 const Boom = require('boom');
-const _ = require('lodash');
+
+const utilities = require('../utils/utilities.js');
 
 exports.get = {
     description: 'Returns a specific tag',
@@ -50,7 +51,7 @@ exports.getAll = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(results => reply(_.map(results, (result => result.get({plain : true})))))
+        .then(results => reply(utilities.clean_results(results)))
         .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
     }
 };
@@ -70,7 +71,7 @@ exports.post = {
         Tag.create({
             name : request.payload.name
         })
-        .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at', 'deleted_at')))
+        .then(result => reply(utilities.clean_result(result)))
         .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
     }
 };
