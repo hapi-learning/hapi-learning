@@ -79,20 +79,19 @@ exports.post = {
         
         if (Array.isArray(request.payload))
         {
+            /*
             User.bulkCreate(request.payload, {validate : true})
+            */
+            User.bulkCreate(
+                utilities.extractUsers(request.payload), 
+                {validate : true}
+            )
             .then(results => (reply({count : results.length}).code(201)))
             .catch(error => reply(Boom.conflict(errors)));
         }
         else
         {
-            User.create({
-                username : request.payload.username,
-                password: request.payload.password,
-                email: request.payload.email,
-                firstName: request.payload.firstName,
-                lastName: request.payload.lastName,
-                phoneNumber: request.payload.phoneNumber
-            })
+            User.create(utilities.extractUser(request.payload))
             .then(result => reply(utilities.clean_result(result)).code(201))
             .catch(error => reply(Boom.conflict(error)));
         }
