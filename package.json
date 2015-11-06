@@ -28,6 +28,7 @@
     "hapi-auth-jwt2": "^5.2.0",
     "inert": "^3.2.0",
     "joi": "^6.10.0",
+    "joi-phone": "0.0.1",
     "jsonwebtoken": "^5.4.1",
     "lodash": "^3.10.1",
     "lout": "^7.2.0",
