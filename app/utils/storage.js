@@ -6,28 +6,14 @@ const Fs = P.promisifyAll(require('fs'));
 const rimraf = require('rimraf');
 const Glob = require('glob');
 const Items = require('items');
+const Hoek  = require('hoek');
 
 const internals = {};
-internals.root = '..';
-internals.relativeTo = Path.join(internals.root, 'storage');
-internals.courseFolder = Path.join(internals.relativeTo, 'courses');
-internals.documents = 'documents';
 
-internals.isFolder = function (path) {
+internals.isFolder = path => Fs.statSync(path).isDirectory();
 
-    return Fs.statSync(path).isDirectory();
+internals.isFile = path => Fs.statSync(path).isFile();
 
-    return Fs.statAsync(path)
-        .then(stats => stats.isDirectory());
-};
-
-internals.isFile = function (path) {
-
-    return Fs.statSync(path).isFile();
-
-    return Fs.statAsync(path)
-        .then(stats => stats.isFile());
-};
 
 // Create folder and remove an existing file
 internals.initializeFolder = function (path) {
@@ -69,49 +55,6 @@ internals.removeRecursivelyAsync = function(path) {
     });
 };
 
-
-internals.throw = function(err) {
-    if (err)
-        throw err;
-};
-
-/**
- * Initialize storage.
- */
-exports.initialize = function () {
-    internals.initializeFolder(internals.relativeTo)
-        .then(() => internals.initializeFolder(internals.courseFolder));
-};
-
-/**
- * Create a course folder.
- */
-exports.createCourse = function (name) {
-    const path = Path.join(internals.courseFolder, name);
-    Fs.mkdirSync(path);
-    Fs.mkdirSync(Path.join(path, internals.documents));
-};
-
-/**
- * Rename a course folder
- * @return a promise
- */
-exports.renameCourse = function (oldName, newName) {
-    const oldPath = Path.join(internals.courseFolder, oldName);
-    const newPath = Path.join(internals.courseFolder, newName);
-
-    return Fs.renameAsync(oldPath, newPath);
-};
-
-/**
- * Delete the entire course folder
- * @return a promise
- */
-exports.deleteCourse = function (name) {
-    const path = Path.join(internals.courseFolder, name);
-    return internals.removeRecursivelyAsync(path);
-};
-
 // Removes folder / files in parallel
 internals.removeParallel = function(filenames) {
     return new P((resolve, reject) => {
@@ -125,6 +68,7 @@ internals.removeParallel = function(filenames) {
         });
     });
 };
+
 
 // Returns the path of the file in the course
 internals.getDocumentPath = function(course, path) {
@@ -146,42 +90,126 @@ internals.deleteFile = function (path) {
     return Fs.unlinkAsync(path);
 };
 
-exports.delete = function (course, path) {
-    const toDelete = internals.getDocumentPath(course, path);
-    return new P((resolve, reject) => {
-        try {
-            if (internals.isFile(toDelete))
-                exports.deleteFile(toDelete).then(resolve);
-            else
-                exports.deleteFolder(toDelete).then(resolve);
-        } catch {
-            resolve();
-        }
-    });
+
+/**
+ * Initialize storage.
+ */
+internals.initialize = function () {
+    internals.initializeFolder(internals.relativeTo)
+        .then(() => internals.initializeFolder(internals.courseFolder));
 };
 
-exports.deleteFiles = function (course, filenames) {
-    return new P((resolve, reject) => {
-        Items.parallel(filenames, function(filename, next) {
 
-            exports.delete(course, filename).then(next);
 
-        }, function(err) {
-            if (err)
-                reject(err);
-            else
+
+
+const load = function() {
+    const Storage = {};
+
+
+
+
+    /**
+     * Create a course folder.
+     */
+    Storage.createCourse = function (name) {
+        const path = Path.join(internals.courseFolder, name);
+        Fs.mkdirSync(path);
+        Fs.mkdirSync(Path.join(path, internals.documents));
+    };
+
+
+    /**
+     * Rename a course folder
+     * @return a promise
+     */
+    Storage.renameCourse = function (oldName, newName) {
+        const oldPath = Path.join(internals.courseFolder, oldName);
+        const newPath = Path.join(internals.courseFolder, newName);
+
+        return Fs.renameAsync(oldPath, newPath);
+    };
+
+    /**
+     * Delete the entire course folder
+     * @return a promise
+     */
+    Storage.deleteCourse = function (name) {
+        const path = Path.join(internals.courseFolder, name);
+        return internals.removeRecursivelyAsync(path);
+    };
+
+    Storage.delete = function (course, path) {
+        const toDelete = internals.getDocumentPath(course, path);
+        return new P((resolve, reject) => {
+            try {
+                if (internals.isFile(toDelete))
+                    exports.deleteFile(toDelete).then(resolve);
+                else
+                    exports.deleteFolder(toDelete).then(resolve);
+            } catch(err) {
                 resolve();
+            }
         });
-    });
+    };
+
+    Storage.deleteFiles = function (course, filenames) {
+        return new P((resolve, reject) => {
+            Items.parallel(filenames, function(filename, next) {
+
+                exports.delete(course, filename).then(next);
+
+            }, function(err) {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+    };
+
+
+    Storage.createOrReplaceFile = function (course, path, data) {
+        const file = internals.getDocumentPath(course, path);
+        return Fs.writeFileAsync(file, data);
+    };
+
+    Storage.renameFile = function(course, oldPath, newPath) {
+        const oldFile = internals.getDocumentPath(course, oldPath);
+        const newFile = internals.getDocumentPath(course, newPath);
+        return Fs.renameAsync(oldFile, newFile);
+    };
+
+    return Storage;
 };
 
-exports.createOrReplaceFile = function (course, path, data) {
-    const file = internals.getDocumentPath(course, path);
-    return Fs.writeFileAsync(file, data);
+
+
+exports.register = function(server, options, next) {
+
+    Hoek.assert(options.root, 'option.root is required');
+
+    internals.root = options.root;
+    internals.relativeTo = Path.join(internals.root, options.storage || 'storage');
+    internals.courseFolder = Path.join(internals.relativeTo, options.courses || 'courses');
+    internals.documents = options.documents || 'documents';
+
+    internals.initialize();
+
+    const Storage = load();
+
+    server.expose('storage', Storage);
+
+    next();
 };
 
-exports.renameFile(course, oldPath, newPath) {
-    const oldFile = internals.getDocumentPath(course, oldPath);
-    const newFile = internals.getDocumentPath(course, newPath);
-    return Fs.renameAsync(oldFile, newFile);
-};
+exports.register.attributes = {
+    name: 'storage',
+    version: require('../../package.json').version,
+}
+
+
+
+
+
+

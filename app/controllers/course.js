@@ -91,6 +91,7 @@ exports.getDocuments = {
         }
     },
     handler: function (request, reply) {
+        // JUST A TEST !
         reply(require('../plugins/easypeazip').toBuffer('./app/controllers'))
               .type('application/zip')
               .header('Content-Disposition', 'attachment; filename=MONARCHIVE.zip')

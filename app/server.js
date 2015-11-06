@@ -27,6 +27,16 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
+            './utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        documents: 'documents',
+                        courses: 'courses',
+                        storage: 'storage'
+                    }
+                }],
             'hapi-auth-jwt2': [{
                 select: ['api']
             }],
