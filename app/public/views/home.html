@@ -1,8 +1,29 @@
-<div class="container">
+<div class="container-fluid">
 
-    <h1 class="page-header">Home sweet home :)</h1>
+    <!--    <h1 class="page-header">News</h1>-->
 
+    <!--
     <div class="row">
         <connection></connection>
     </div>
+-->
+
+
+
+    <div>
+        <div class="col-md-4" ng-controller="home-controller as homeCtrl">
+
+            <h1 class="page-header">News</h1>
+
+            <div ng-include="'../views/news.html'"></div>
+        </div>
+
+        <div class="col-md-8" ng-controller="courses-controller">
+
+            <h1 class="page-header">My courses</h1>
+
+            <div ng-include="'../views/courses.html'"></div>
+        </div>
+    </div>
+
 </div>
