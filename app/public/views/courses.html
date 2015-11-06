@@ -2,13 +2,12 @@
 
     <h1 class="page-header">Courses</h1>
 
-    <div ng-include="'../partials/course-search-form.html'"></div>
 
+    <search-courses></search-courses>
     <br />
 
-
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="course in courses">
+        <li class="list-group-item" ng-repeat="course in courses | filter:{name : filter.course, code : filter.code}">
             <h3>
                 
                 <span class="label label-default label-pill pull-right" ng-show="updated()"><span class="glyphicon glyphicon-eye-open"></span></span>
