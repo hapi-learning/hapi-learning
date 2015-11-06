@@ -7,7 +7,7 @@ const Glob = require('glob');
 const Items = require('items');
 const Hoek  = require('hoek');
 const rm = require('rmdir');
-const Easypeazip = require('../plugins/easypeazip');
+const Easypeazip = require('easypeazip');
 
 const internals = {};
 
