@@ -18,6 +18,7 @@
   },
   "homepage": "https://gitlab.com/fknop/ATL3-39310-39189-39631-39171-elearning#README",
   "dependencies": {
+	"easypeazip": "file:./app/plugins/easypeazip",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.0.5",
     "boom": "^3.0.0",
