@@ -2,6 +2,8 @@
 
 require('dotenv').load(); // Load .env file
 
+require('hoek').assert(process.env.UPLOAD_MAX);
+
 const Glue = require('glue');
 const _ = require('lodash');
 const Path = require('path');

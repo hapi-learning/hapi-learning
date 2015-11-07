@@ -135,14 +135,14 @@ const load = function() {
         return internals.removeRecursivelyAsync(path);
     };
 
-    Storage.delete = function (course, path) {
+    Storage.deleteOne = function (course, path) {
         const toDelete = internals.getDocumentPath(course, path);
         return new P((resolve, reject) => {
             try {
                 if (internals.isFile(toDelete))
-                    exports.deleteFile(toDelete).then(resolve);
+                    internals.deleteFile(toDelete).then(resolve);
                 else
-                    exports.deleteFolder(toDelete).then(resolve);
+                    internals.deleteFolder(toDelete).then(resolve);
             } catch(err) {
                 resolve();
             }
@@ -153,7 +153,7 @@ const load = function() {
         return new P((resolve, reject) => {
             Items.parallel(filenames, function(filename, next) {
 
-                exports.delete(course, filename).then(next);
+                Storage.deleteOne(course, filename).then(next);
 
             }, function(err) {
                 if (err)
@@ -164,22 +164,34 @@ const load = function() {
         });
     };
 
+    Storage.delete = function(course, filenames) {
+        return new P((resolve, reject) => {
 
-    Storage.createOrReplaceFile = function (course, path, data) {
+            if (Array.isArray(filenames)) {
+                Storage.deleteFiles(course, filenames).then(resolve).catch(reject);
+            } else {
+                Storage.deleteOne(course, filenames).then(resolve).catch(reject);
+            }
+
+        });
+    };
+
+
+    Storage.createOrReplaceFile = function (course, path, datafile) {
         const file = internals.getDocumentPath(course, path);
-        return Fs.writeFileAsync(file, data);
+        datafile.pipe(Fs.createWriteStream(file));
+    };
+
+    // Returns a promise
+    Storage.createFolder = function (course, path) {
+        const folder = internals.getDocumentPath(course, path);
+        return Fs.mkdirAsync(folder);
     };
 
     Storage.renameFile = function(course, oldPath, newPath) {
         const oldFile = internals.getDocumentPath(course, oldPath);
         const newFile = internals.getDocumentPath(course, newPath);
         return Fs.renameAsync(oldFile, newFile);
-    };
-
-    Storage.downloadZip = function(course, path) {
-        const documents = internals.getDocumentPath;
-
-        return Easypeazip.toBuffer(documents);
     };
 
     Storage.download = function(course, path) {

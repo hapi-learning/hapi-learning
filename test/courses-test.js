@@ -149,18 +149,6 @@ describe('Controller.Course', () => {
             });
         });
 
-        it ('Should return code 400 - bad validation', done => {
-            const request = {
-                method: 'GET',
-                url: '/courses/_ATL3'
-            };
-
-            server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.statusCode).to.equal(400);
-                done();
-            });
-        });
     });
 
     describe('#getAll', () => {

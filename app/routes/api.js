@@ -62,10 +62,11 @@ exports.register = function (server, options, next) {
         {method: 'POST',   path: '/courses/{id}/teachers',          config: Controllers.Course.addTeachers},
         {method: 'POST',   path: '/courses/{id}/documents',         config: Controllers.Course.postDocument},
         {method: 'POST',   path: '/courses/{id}/documents/{path*}', config: Controllers.Course.postDocument},
+        {method: 'POST',   path: '/courses/{id}/folder/{path*}' ,   config: Controllers.Course.createFolder},
         {method: 'PATCH',  path: '/courses/{id}',                   config: Controllers.Course.patch},
         {method: 'DELETE', path: '/courses/{id}',                   config: Controllers.Course.delete},
         {method: 'DELETE', path: '/courses/{id}/documents',         config: Controllers.Course.deleteDocument},
-        {method: 'DELETE', path: '/courses/{id}/documents/{path*}', config: Controllers.Course.deleteFolder},
+        {method: 'DELETE', path: '/courses/{id}/documents/{path*}', config: Controllers.Course.deleteDocument},
         {method: 'DELETE', path: '/courses/{id}/tags/{name}',       config: Controllers.Course.deleteTags},
         {method: 'DELETE', path: '/courses/{id}/teachers/{name}',   config: Controllers.Course.deleteTeachers},
     ]);

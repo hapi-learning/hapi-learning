@@ -1,10 +1,15 @@
 'use strict';
 
-const Joi = require('joi');
-const Boom = require('boom');
-const _ = require('lodash');
+const Joi   = require('joi');
+const Boom  = require('boom');
+const _     = require('lodash');
+const Hoek  = require('hoek');
+const Utils = require('../utils/sequelize');
+const Error = require('../utils/error');
 
-let internals = {};
+const internals = {};
+
+// result is a sequelize instance
 internals.getCourse = function(result) {
 
     // Attributes to include in teachers
@@ -27,6 +32,10 @@ internals.getCourse = function(result) {
 };
 
 internals.findCourseByCode = function(Course, id) {
+
+    Hoek.assert(Course, 'Model Course required');
+    Hoek.assert(id, 'Course code required');
+
     return Course.findOne({
         where: {
             code: { $eq : id }
@@ -34,10 +43,27 @@ internals.findCourseByCode = function(Course, id) {
     });
 };
 
+internals.checkCourse = function(Course, id, reply, callback) {
+
+    Hoek.assert(Course, 'Model Course required');
+    Hoek.assert(id, 'Course code required');
+    Hoek.assert(callback, 'Callback required');
+    Hoek.assert(reply, 'Reply interface required');
+
+    internals
+        .findCourseByCode(Course, id)
+        .then(result => {
+            if (result)
+                return callback();
+            else
+                return reply(Boom.badRequest('The course ' + id + ' does not exists.'));
+        })
+        .catch(err => Error.badImplementation(reply, err));
+};
+
 
 exports.getAll = {
     description: 'List all the courses',
-    auth: false,
     handler: function (request, reply) {
 
         const Course = this.models.Course;
@@ -59,13 +85,14 @@ exports.get = {
     description: 'Get info for one course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code')
+            id: Joi.string().required().description('Course code')
         }
     },
     handler: function (request, reply) {
         const Course = this.models.Course;
+        const id = request.params.id;
 
-        internals.findCourseByCode(Course, request.params.id)
+        internals.findCourseByCode(Course, id)
         .then(result => {
             if (result) // If found
             {
@@ -73,20 +100,20 @@ exports.get = {
             }
             else // If not found
             {
-                return reply(Boom.notFound('Cannot find course ' + request.params.id));
+                return reply(Boom.notFound('Cannot find course ' + id));
             }
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => Error.badImplementation(reply, err));
 
     }
 };
 
 
 exports.getDocuments = {
-    description: 'Get a ZIP containing all course documents',
+    description: 'Get a ZIP containing documents or a file',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code'),
+            id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
         }
     },
@@ -97,7 +124,7 @@ exports.getDocuments = {
         const course = request.params.id;
 
         Storage
-        .download(course, request.params.path)
+        .download(course, path)
         .then((results) => {
 
             const isFile = results.isFile;
@@ -140,7 +167,7 @@ exports.getStudents = {
     description: 'Get students following the course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code')
+            id: Joi.string().required().description('Course code')
         }
     },
     handler: function (request, reply) {
@@ -148,11 +175,11 @@ exports.getStudents = {
 
         internals.findCourseByCode(Course, request.params.id)
         .then(course => {
-            course.getUsers({joinTableAttributes: []}).then(users =>{
-                reply(_.map(users, (u => u.get({plain:true}))));
-            });
+            course
+                .getUsers({joinTableAttributes: []})
+                .then(users => reply(Utils.removeDates(users)))
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => Error.badImplementation(reply, err));
     }
 };
 
@@ -170,24 +197,31 @@ exports.post = {
     },
     handler: function (request, reply) {
 
-        const Course = this.models.Course;
-        const User = this.models.User;
-        const Tag = this.models.Tag;
+        const Course  = this.models.Course;
+        const User    = this.models.User;
+        const Tag     = this.models.Tag;
         const Storage = this.storage;
 
-        const hasTeachers = request.payload.teachers ? true : false;
-        const hasTags = request.payload.tags ? true : false;
+        const name        = request.payload.name;
+        const code        = request.payload.code;
+        const description = request.payload.description;
+        const pteachers   = request.payload.teachers;
+        const ptags       = request.payload.tags;
+
+        const hasTeachers = pteachers ? true : false;
+        const hasTags     = ptags ? true : false;
+
         const coursePayload = {
-            name: request.payload.name,
-            code: request.payload.code,
-            description: request.payload.description
+            name: name,
+            code: code,
+            description: description
         };
 
         // If tags has been passed to the payload, return a promise
         // loading the tags, otherwise return a promise returning an empty array
         const getTags = hasTags ?
             Promise.resolve(Tag.findAll(
-                {where: {name: {$in: request.payload.tags}}}))
+                {where: {name: {$in: ptags}}}))
             : Promise.resolve([]);
 
         // If teachers has been passed to the payload, return a promise
@@ -195,7 +229,7 @@ exports.post = {
         const userExclude = ['password'];
         const getTeachers = hasTeachers ?
             Promise.resolve(User.findAll(
-                {where: {username: {$in: request.payload.teachers}},
+                {where: {username: {$in: pteachers}},
                  attributes: {exclude: userExclude}}))
             : Promise.resolve([]);
 
@@ -204,11 +238,11 @@ exports.post = {
         .all([getTags, getTeachers])
         .then(values => {
 
-                const tags = values[0];
+                const tags     = values[0];
                 const teachers = values[1];
 
-                const wrongTeachers = (hasTeachers && teachers.length !== request.payload.teachers.length);
-                const wrongTags = (hasTags && tags.length !== request.payload.tags.length);
+                const wrongTeachers = (hasTeachers && teachers.length !== pteachers.length);
+                const wrongTags     = (hasTags && tags.length !== ptags.length);
 
                 if (wrongTeachers || wrongTags)
                 {
@@ -228,13 +262,13 @@ exports.post = {
                         .then(() => {
 
                             // Build response
-                            let course = newCourse.get({plain:true});
+                            const course = newCourse.get({plain:true});
                             course.tags = _.map(tags, (t => t.get('name', {plain:true})));
                             course.teachers = _.map(teachers, (t => t.get('username', {plain:true})));
 
                             Storage.createCourse(course.code);
 
-                            return reply(course);
+                            return reply(course).code(201);
                         });
                     })
                     .catch(() => reply(Boom.conflict('Conflict')));
@@ -246,14 +280,72 @@ exports.post = {
 
 exports.postDocument = {
     description: 'Upload a file to a course',
+    payload: {
+        maxBytes: process.env.UPLOAD_MAX,
+        output: 'stream',
+        allow: 'multipart/form-data',
+        parse: true
+    },
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id'),
-            path: Joi.string() // TODO - FIXME
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().default('/')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+
+        const file = request.payload.file;
+
+        if (!file) {
+            return reply(Boom.badRequest('File is missing'));
+        }
+
+        const filename = file.hapi.filename;
+
+        const path = Path.join(request.params.path, filename);
+        const course = request.params.id;
+
+        const Storage = this.storage;
+        const Course = this.models.Course;
+
+        const upload = function() {
+            try {
+                Storage.createOrReplaceFile(course, path, file);
+                return reply('File : ' + filename + ' successfuly uploaded').code(201);
+            } catch(err) {
+                return reply(Boom.conflict(err));
+            }
+        };
+
+        return internals.checkCourse(Course, course, reply, upload);
+    }
+};
+
+
+
+exports.createFolder = {
+    description: 'Create a folder to a course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().required().invalid('/')
+        }
+    },
+    handler: function (request, reply) {
+
+        const Storage = this.storage;
+        const Course  = this.models.Course;
+        const course  = request.params.id;
+        const path    = request.params.path;
+
+        const createFolder = function() {
+            Storage
+                .createFolder(course, path)
+                .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
+                .catch((err) => reply(Boom.badData(err)));
+        }
+
+        return internals.checkCourse(Course, course, reply, createFolder);
     }
 };
 
@@ -262,14 +354,15 @@ exports.addTags = {
     description: 'Add a list of tags to the course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code'),
+            id: Joi.string().required().description('Course code'),
         },
         payload: {
             tags: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
-        const Tag = this.models.Tag;
+
+        const Tag    = this.models.Tag;
         const Course = this.models.Course;
 
         Tag
@@ -278,7 +371,7 @@ exports.addTags = {
             internals.findCourseByCode(Course, request.params.id)
             .then(course => course.addTags(tags).then(reply(course.get({plain:true}))));
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => Error.badImplementation(reply, err));
     }
 };
 
@@ -287,14 +380,14 @@ exports.addTeachers = {
     description: 'Add a list of teachers to the course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code'),
+            id: Joi.string().required().description('Course code'),
         },
         payload: {
             teachers: Joi.array().items(Joi.string())
         }
     },
     handler: function (request, reply) {
-        const User = this.models.User;
+        const User   = this.models.User;
         const Course = this.models.Course;
 
         User
@@ -303,7 +396,7 @@ exports.addTeachers = {
             internals.findCourseByCode(Course, request.params.id)
             .then(course => course.addTeachers(teachers).then(reply(course.get({plain:true}))));
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => Error.badImplementation(reply, err));
     }
 };
 
@@ -312,7 +405,7 @@ exports.patch = {
     description: 'Modify a course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code')
+            id: Joi.string().required().description('Course code')
         },
         payload: {
             name: Joi.string().min(1).max(255).description('Course name'),
@@ -321,7 +414,7 @@ exports.patch = {
         }
     },
     handler: function (request, reply) {
-        const Course = this.models.Course;
+        const Course  = this.models.Course;
         const payload = {};
 
         if (request.payload.name)
@@ -345,17 +438,17 @@ exports.delete = {
     description: 'Delete a course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code')
+            id: Joi.string().required().description('Course code')
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
         const Storage = this.storage;
 
-
         Course.destroy({
             where : {
-                code : request.params.id
+                code : { $eq: request.params.id }
             }
         })
         .then(count => {
@@ -363,7 +456,7 @@ exports.delete = {
             Storage.deleteCourse(request.params.id).then(tail);
             return reply({count: count});
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => Error.badImplementation(reply, err));
     }
 };
 
@@ -371,23 +464,27 @@ exports.deleteTags = {
     description: 'Delete a list of tags from the course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code'),
+            id: Joi.string().required().description('Course code'),
         },
         payload: {
             tags: Joi.array().items(Joi.string())
         }
     },
     handler: function (request, reply) {
-        const Tag = this.models.Tag;
+
+        const Tag    = this.models.Tag;
         const Course = this.models.Course;
+        const ptags  = request.payload.tags;
+        const id     = request.params.id;
 
         Tag
-        .findAll({where: { name: { $in: request.payload.tags } }})
+        .findAll({where: { name: { $in: ptags} }})
         .then(tags => {
-            internals.findCourseByCode(Course, request.params.id)
-            .then(course => course.remoteTags(tags).then(reply(course.get({plain:true}))));
+            internals.findCourseByCode(Course, id)
+            .then(course => course.remoteTags(tags)
+                  .then(reply(course.get({plain:true}))));
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => Error.badImplementation(reply, err));
     }
 };
 
@@ -395,48 +492,57 @@ exports.deleteTeachers = {
     description: 'Delete a list of teachers from the course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code'),
+            id: Joi.string().required().description('Course code'),
         },
         payload: {
             teachers: Joi.array().items(Joi.string())
         }
     },
     handler: function (request, reply) {
-              const User = this.models.User;
+
+        const User = this.models.User;
         const Course = this.models.Course;
 
+        const pteachers = request.payload.teachers;
+        const id = request.params.id;
+
         User
-        .findAll({where: { username: { $in: request.payload.teachers } }})
+        .findAll({where: { username: { $in: pteachers } }})
         .then(teachers => {
-            internals.findCourseByCode(Course, request.params.id)
-            .then(course => course.removeTeachers(teachers).then(reply(course.get({plain:true}))));
+            internals.findCourseByCode(Course, id)
+            .then(course => course.removeTeachers(teachers)
+                  .then(reply(course.get({plain:true}))));
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => Error.badImplementation(reply, err));
     }
 };
 
 
+/**
+ * When returning not found, files may already have been deleted.
+ * Page reloading may be necessary !
+ */
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id')
+            id: Joi.string().required().description('Course code')
+        },
+        payload: {
+            files: [Joi.string().required(), Joi.array().items(Joi.string().required())]
         }
+
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        const Storage = this.storage;
+        const path    = request.params.path;
+        const id      = request.params.id;
+
+        const files = request.payload.files;
+
+        Storage.delete(files).then(reply).catch(err => {
+            return reply(Boom.notFound('File not found'));
+        });
     }
 };
 
-
-exports.deleteFolder = {
-    description: 'Delete a document from a course',
-    validate: {
-        params: {
-            id: Joi.number().integer().required().description('Course id')
-        }
-    },
-    handler: function (request, reply) {
-        reply('Not implemented');
-    }
-};

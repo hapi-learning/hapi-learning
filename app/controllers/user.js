@@ -4,10 +4,9 @@ const Joi = require('joi');
 Joi.phone = require('joi-phone');
 const Boom = require('boom');
 
-const utilities = require('../utils/utilities.js');
+const Utils = require('../utils/sequelize');
 
 exports.get = {
-    auth: false,
     description: 'Get one user',
     validate: {
         params: {
@@ -38,19 +37,18 @@ exports.get = {
 
 
 exports.getAll = {
-    auth: false,
     description: 'Get all users',
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
+
         User.findAll({
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
             .catch(error => reply(Boom.notFound(error)))
-            .then(results => reply(utilities.clean_results(results)).code(200));
+            .then(results => reply(Utils.removeDates(results)).code(200));
     }
 };
 
@@ -63,20 +61,19 @@ const schemaUserPOST = function(){
         lastName: Joi.string().min(1).max(255).description('User last name'),
         phoneNumber: Joi.phone.e164().description('User phone number')
     });
-    
+
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
 };
 
 exports.post = {
-    auth: false,
     description: 'Add user',
     validate: {
         payload : schemaUserPOST()
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
+
         if (Array.isArray(request.payload))
         {
             /*
@@ -99,7 +96,6 @@ exports.post = {
 };
 
 exports.delete = {
-    auth: false,
     description: 'Delete user',
     validate: {
         params: {
@@ -107,7 +103,7 @@ exports.delete = {
         }
     },
     handler: function (request, reply) {
-        
+
         const User = this.models.User;
 
         User.destroy({
@@ -121,7 +117,6 @@ exports.delete = {
 };
 
 exports.put = {
-    auth: false,
     description: 'Update all info about user (except username)',
     validate: {
         params: {
@@ -136,7 +131,7 @@ exports.put = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
 
         User.update(
@@ -158,7 +153,6 @@ exports.put = {
 
 
 exports.patch = {
-    auth: false,
     description: 'Update some info about user (except username)',
     validate: {
         params: {
@@ -173,7 +167,7 @@ exports.patch = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
 
         var payload = {};
@@ -207,7 +201,6 @@ exports.patch = {
 };
 
 exports.getTags = {
-    auth: false,
     description: 'Get the user\'s tag',
     validate: {
         params: {
@@ -215,9 +208,9 @@ exports.getTags = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
+
         User.findOne({
                 where: {
                     username: request.params.username
@@ -233,7 +226,7 @@ exports.getTags = {
 };
 
 exports.getCourses = {
-    auth: false,
+
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
@@ -241,9 +234,9 @@ exports.getCourses = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
+
         User.findOne({
                 where: {
                     username: request.params.username
@@ -259,7 +252,6 @@ exports.getCourses = {
 };
 
 exports.subscribeToCourse = {
-    auth: false,
     description: 'Subscribe to a course',
     validate: {
         params: {
@@ -273,7 +265,6 @@ exports.subscribeToCourse = {
 };
 
 exports.unsubscribeToCourse = {
-    auth: false,
     description: 'Unsubscribe to a course',
     validate: {
         params: {
@@ -287,7 +278,6 @@ exports.unsubscribeToCourse = {
 };
 
 exports.addFolder = {
-    auth: false,
     description: 'Add a folder',
     validate: {
         params: {
@@ -301,7 +291,6 @@ exports.addFolder = {
 };
 
 exports.addCourseToFolder = {
-    auth: false,
     description: 'Add a course to the folder (removes from the old folder)',
     validate: {
         params: {
