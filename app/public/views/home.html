@@ -4,38 +4,18 @@
         <div class="nav navbar-header">
             <a class="navbar-brand">hapi learning</a>
         </div>
-        
+
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Courses</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="#/logout">
-                        <span class="glyphicon glyphicon-log-out"></span> Log out
-                    </a>
-                </li>
-            </ul>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#/logout">
+                            <span class="glyphicon glyphicon-log-out"></span> Log out
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-
-
-
 </nav>
 
 <div class="container-fluid">
@@ -46,36 +26,68 @@
     <div class="row">
         <connection></connection>
     </div>
--->
+    -->
 
 
 
     <div>
-        <div class="col-md-4" ng-controller="home-controller as homeCtrl">
+        <div class="col-md-2" ng-controller=" home-controller as homeCtrl ">
 
-            <h1 class="page-header">News</h1>
+            <h1 class="page-header ">John Doe  <small>39123</small></h1>
 
-            <div ng-include="'../views/news.html'"></div>
+            <div>
+
+                <ul class="nav">
+                    <li class="active">
+                        <a href="# ">
+                            <i class="glyphicon glyphicon-home "></i> Home </a>
+                    </li>
+                    <li>
+                        <a href="# ">
+                            <i class="glyphicon glyphicon-user "></i> Account Settings </a>
+                    </li>
+                    <li>
+                        <a href="# " target="_blank ">
+                            <i class="glyphicon glyphicon-th-list "></i> Courses </a>
+                    </li>
+                    <li>
+                        <a href="# ">
+                            <i class="glyphicon glyphicon-flag "></i> Help </a>
+                    </li>
+                </ul>
+
+            </div>
+
         </div>
 
-        <div class="col-md-8" ng-controller="courses-controller">
 
-            <h1 class="page-header">My courses</h1>
+        <div class="col-md-7 " ng-controller="courses-controller ">
 
-            <div ng-include="'../views/courses.html'"></div>
+            <h1 class="page-header ">My courses</h1>
+
+            <div ng-include=" '../views/courses.html' "></div>
         </div>
+
+        <div class="col-md-3 " ng-controller="home-controller as homeCtrl ">
+
+            <h1 class="page-header ">News</h1>
+
+            <div ng-include=" '../views/news.html' "></div>
+        </div>
+
+
     </div>
 
 </div>
 
-<footer class="footer">
+<footer class="footer ">
 
-    <div class="navbar navbar-default navbar-fixed-bottom">
-        <div class="container">
-            <p class="navbar-text pull-left">hapi learning</p>
+    <div class="navbar navbar-default navbar-fixed-bottom ">
+        <div class="container ">
+            <p class="navbar-text pull-left ">hapi learning</p>
 
-            <a href="https://gitlab.com/fknop/ATL3-hapi-learning" class="navbar-btn btn-default btn pull-right">
-                <span class="glyphicon glyphicon-heart"></span> Gitlab
+            <a href="https://gitlab.com/fknop/ATL3-hapi-learning " class="navbar-btn btn-default btn pull-right ">
+                <span class="glyphicon glyphicon-heart "></span> Gitlab
             </a>
         </div>
 
