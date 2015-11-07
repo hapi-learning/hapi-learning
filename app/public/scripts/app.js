@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar'])
+        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
@@ -22,7 +22,7 @@ angular.module('hapi-learning', [
                     templateUrl: '/views/admin.html',
                     controller: 'admin-controller'
                 })
-            .state('profile', {
+                .state('profile', {
                     url: '/profile',
                     templateUrl: '/views/profile.html',
                     controller: 'profile-controller'
@@ -32,5 +32,5 @@ angular.module('hapi-learning', [
         cfpLoadingBarProvider.includeSpinner = false;
         }])
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
-            bootstrap3ElementModifier.enableValidationStateIcons(true);
+        bootstrap3ElementModifier.enableValidationStateIcons(true);
         }]);
