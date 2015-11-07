@@ -5,7 +5,7 @@ const Boom  = require('boom');
 const _     = require('lodash');
 const Hoek  = require('hoek');
 const Utils = require('../utils/sequelize');
-const Error = require('../utils/error');
+const Path  = require('path');
 
 const internals = {};
 
@@ -53,12 +53,13 @@ internals.checkCourse = function(Course, id, reply, callback) {
     internals
         .findCourseByCode(Course, id)
         .then(result => {
-            if (result)
+            if (result) {
                 return callback();
-            else
+            } else {
                 return reply(Boom.badRequest('The course ' + id + ' does not exists.'));
+            }
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
 };
 
 
@@ -100,10 +101,10 @@ exports.get = {
             }
             else // If not found
             {
-                return reply(Boom.notFound('Cannot find course ' + id));
+                return reply.notFound('Cannot find course ' + id);
             }
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
 
     }
 };
@@ -143,7 +144,7 @@ exports.getDocuments = {
                     .header('Content-Disposition', contentDisposition);
             }
         })
-        .catch(err => reply(Boom.notFound('File not found')))
+        .catch(() => reply.notFound('File not found'));
     }
 };
 
@@ -177,9 +178,9 @@ exports.getStudents = {
         .then(course => {
             course
                 .getUsers({joinTableAttributes: []})
-                .then(users => reply(Utils.removeDates(users)))
+                .then(users => reply(Utils.removeDates(users)));
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -271,7 +272,7 @@ exports.post = {
                             return reply(course).code(201);
                         });
                     })
-                    .catch(() => reply(Boom.conflict('Conflict')));
+                    .catch(() => reply.conflict());
                 }
             });
     }
@@ -297,10 +298,14 @@ exports.postDocument = {
         const file = request.payload.file;
 
         if (!file) {
-            return reply(Boom.badRequest('File is missing'));
+            return reply(Boom.badRequest('File required to post a document'));
         }
 
         const filename = file.hapi.filename;
+
+        if (!filename) {
+            return reply(Boom.badRequest('Filename required to post a document'));
+        }
 
         const path = Path.join(request.params.path, filename);
         const course = request.params.id;
@@ -313,7 +318,7 @@ exports.postDocument = {
                 Storage.createOrReplaceFile(course, path, file);
                 return reply('File : ' + filename + ' successfuly uploaded').code(201);
             } catch(err) {
-                return reply(Boom.conflict(err));
+                return reply.conflict(err);
             }
         };
 
@@ -343,7 +348,7 @@ exports.createFolder = {
                 .createFolder(course, path)
                 .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
                 .catch((err) => reply(Boom.badData(err)));
-        }
+        };
 
         return internals.checkCourse(Course, course, reply, createFolder);
     }
@@ -371,7 +376,7 @@ exports.addTags = {
             internals.findCourseByCode(Course, request.params.id)
             .then(course => course.addTags(tags).then(reply(course.get({plain:true}))));
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -396,7 +401,7 @@ exports.addTeachers = {
             internals.findCourseByCode(Course, request.params.id)
             .then(course => course.addTeachers(teachers).then(reply(course.get({plain:true}))));
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -417,15 +422,19 @@ exports.patch = {
         const Course  = this.models.Course;
         const payload = {};
 
-        if (request.payload.name)
+        if (request.payload.name) {
             payload.name = request.payload.name;
+        }
 
-        if (request.payload.code)
+        if (request.payload.code) {
             payload.code = request.payload.code;
+        }
 
-        if (request.payload.description)
+        if (request.payload.description) {
             payload.description = request.payload.description;
+        }
 
+        // FIXME -- Passer request.payload directement ?
         Course
         .update(payload, { where: { code: { $eq: request.params.id } } })
         .then(values => reply({ count: values[0] }))
@@ -456,7 +465,7 @@ exports.delete = {
             Storage.deleteCourse(request.params.id).then(tail);
             return reply({count: count});
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -484,7 +493,7 @@ exports.deleteTags = {
             .then(course => course.remoteTags(tags)
                   .then(reply(course.get({plain:true}))));
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -513,7 +522,7 @@ exports.deleteTeachers = {
             .then(course => course.removeTeachers(teachers)
                   .then(reply(course.get({plain:true}))));
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -535,14 +544,11 @@ exports.deleteDocument = {
     },
     handler: function (request, reply) {
         const Storage = this.storage;
-        const path    = request.params.path;
         const id      = request.params.id;
 
         const files = request.payload.files;
 
-        Storage.delete(files).then(reply).catch(err => {
-            return reply(Boom.notFound('File not found'));
-        });
+        Storage.delete(id, files).then(reply).catch(() => reply.notFound('File not found'));
     }
 };
 

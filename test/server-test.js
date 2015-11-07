@@ -15,6 +15,7 @@ const internals = {
             labels: ['api']
         }],
         plugins: {
+            '../app/utils/error' : [{select: ['api']}],
             '../app/utils/storage': [
                 {
                     select: ['api'],

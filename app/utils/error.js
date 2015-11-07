@@ -1,9 +1,34 @@
+'use strict';
+
 const Boom = require('boom');
 
-exports.badImplementation = function(reply, error) {
-    return reply(Boom.badImplementation('An internal server error occurred : ' + error))
+exports.register = function(server, options, next) {
+
+
+    server.decorate('reply', 'badImplementation', function(error) {
+        return this.response(Boom.badImplementation('An internal server error has occured. ' + error));
+    });
+
+    server.decorate('reply', 'notImplemented', function(message) {
+        return this.response(Boom.notImplemented(message || 'Method not implemented'));
+    });
+
+    server.decorate('reply', 'notFound', function(message) {
+        return this.response(Boom.notFound(message || 'Resource not found'));
+    });
+
+    server.decorate('reply', 'conflict', function(message) {
+        message = message || 'A conflict has occured, resource may already exists or be deleted';
+        return this.response(Boom.conflict(message));
+    });
+
+    // Add more common error here
+
+    next();
 };
 
-exports.notImplemented = function(reply) {
-    return reply(Boom.notImplemented('Method not implemented'));
-}
+
+exports.register.attributes = {
+    name: 'hapi-error',
+    version: require('../../package.json').version
+};

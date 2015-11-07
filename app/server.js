@@ -29,6 +29,7 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
+            './utils/error' : [{select: ['api']}],
             './utils/storage': [
                 {
                     select: ['api'],
