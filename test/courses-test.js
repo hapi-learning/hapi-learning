@@ -395,13 +395,23 @@ describe('Controller.Course', () => {
             });
         });
 
-          it('Should return 404 course not found', done => {
+        it('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
 
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: '3e'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
                 done();
             });
         });
@@ -443,13 +453,115 @@ describe('Controller.Course', () => {
             });
         });
 
-          it('Should return 404 course not found', done => {
+        it('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/teachers'});
 
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: 'ABS'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+    });
+
+    describe('#deleteTags', () => {
+
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ATL3G/tags',
+            payload: {
+                tags: ['2e', 'NodeJS', '1e', '4e'] // 3 existing tags and 1 non existing
+            }
+        };
+
+        it('Should return the course with the without the deleted tags', done => {
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                const allTags = ['3e', 'Java'];
+                expect(response.tags).to.only.include(allTags);
+                done();
+            });
+        });
+
+        it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { tags: '3e'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+    });
+
+    describe('#removeTeachers', () => {
+
+        const Models = server.plugins.models.models;
+        const User = Models.User;
+
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ATL3G/teachers',
+            payload: {
+                teachers: ['ABS', 'ADT', 'JLC']
+            }
+        };
+
+        it('Should return the course with the new teachers', done => {
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                const allTeachers = ['SRV', 'FPL'];
+
+                const usernames = _.map(response.teachers, (t => t.username));
+
+                expect(usernames).to.only.include(allTeachers);
+                done();
+            });
+        });
+
+        it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/teachers'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: 'ABS'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
                 done();
             });
         });
