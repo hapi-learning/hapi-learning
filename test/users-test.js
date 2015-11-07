@@ -111,8 +111,7 @@ describe('Controller.User', () => {
 
                 done();
             });
-        });
-        
+        });     
         it('Should return number of created users from array', done => {
             const request = {
                 method: 'POST',
@@ -129,35 +128,35 @@ describe('Controller.User', () => {
         });
     });
     describe('#get', () => {
-        it('Should return the course with tags and titulars', done => {
+        it('Should return 404 not found', done => {
             const request = {
                 method: 'GET',
-                url: '/users/SRV'
+                url: '/users/IWillProbablyDoNotExist'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-
+                expect(response.statusCode).equal(404);
                 done();
             });
         });
-
-        it ('Should return code 400 - bad validation', done => {
+        it('Should return specified user', done => {
             const request = {
                 method: 'GET',
-                url: '/users/9SRV'
+                url: '/users/FPL'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-
+                expect(response.username).equal('FPL');
+                expect(response.email).equal('pluquos@hotmail.com');
                 done();
             });
         });
     });
 
     describe('#getAll', () => {
-        it ('Should return 3 courses', done => {
+        it ('Should return 3 users', done => {
             
             const request = {
                 method: 'GET',
@@ -166,7 +165,8 @@ describe('Controller.User', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(3);
                 done();
             });
         });

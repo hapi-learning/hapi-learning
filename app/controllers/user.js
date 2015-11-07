@@ -29,7 +29,7 @@ exports.get = {
             .catch(error => reply(Boom.badImplementation(error)))
             .then(result => {
                 if (result)
-                    return reply(result);
+                    return reply(utilities.clean_result(result));
                 else
                     return reply(Boom.notFound('User not found'));
             });
@@ -50,7 +50,7 @@ exports.getAll = {
                 }
             })
             .catch(error => reply(Boom.notFound(error)))
-            .then(results => reply(utilities.clean_results(results)));
+            .then(results => reply(utilities.clean_results(results)).code(200));
     }
 };
 
