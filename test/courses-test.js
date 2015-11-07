@@ -6,6 +6,7 @@ const fs = require('fs');
 const Path = require('path');
 const Hoek = require('hoek');
 const lab = exports.lab = Lab.script();
+const _  = require('lodash');
 
 
 const describe = lab.describe;
@@ -16,8 +17,6 @@ const expect = Code.expect;
 
 
 const server = require('./server-test');
-
-
 
 
 before((done) => {
@@ -399,6 +398,54 @@ describe('Controller.Course', () => {
           it('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+    });
+
+    describe('#addTeachers', () => {
+
+        const Models = server.plugins.models.models;
+        const User = Models.User;
+
+        const request = {
+            method: 'POST',
+            url: '/courses/ATL3G/teachers',
+            payload: {
+                teachers: ['ABS', 'ADT', 'JLC']
+            }
+        };
+
+        it('Should return the course with the new teachers', done => {
+
+             const createTeachers = new Promise((resolve, reject) => {
+                let promises = [];
+                moreUsers.forEach(t => promises.push(User.create(t)));
+                Promise.all(promises).then(resolve);
+            });
+
+            createTeachers
+            .then(() => {
+                server.inject(request, res => {
+                    const response = res.request.response.source;
+
+                    const allTeachers = ['SRV', 'FPL', 'ABS', 'ADT'];
+
+                    const usernames = _.map(response.teachers, (t => t.username));
+
+                    expect(usernames).to.only.include(allTeachers);
+                    done();
+                });
+            });
+        });
+
+          it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/teachers'});
 
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
