@@ -391,7 +391,6 @@ exports.addTags = {
 };
 
 // Teachers that does not exists will be ignored
-// NEED TESTING
 exports.addTeachers = {
     description: 'Add a list of teachers to the course',
     validate: {
@@ -502,7 +501,7 @@ exports.deleteTags = {
             id: Joi.string().required().description('Course code'),
         },
         payload: {
-            tags: Joi.array().items(Joi.string())
+            tags: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -516,8 +515,17 @@ exports.deleteTags = {
         .findAll({where: { name: { $in: ptags} }})
         .then(tags => {
             internals.findCourseByCode(Course, id)
-            .then(course => course.remoteTags(tags)
-                  .then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.removeTags(tags).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                       });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + 'does not exists.');
+                }
+            });
         })
         .catch(err => reply.badImplementation(err));
     }
@@ -531,7 +539,7 @@ exports.deleteTeachers = {
             id: Joi.string().required().description('Course code'),
         },
         payload: {
-            teachers: Joi.array().items(Joi.string())
+            teachers: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -546,8 +554,17 @@ exports.deleteTeachers = {
         .findAll({where: { username: { $in: pteachers } }})
         .then(teachers => {
             internals.findCourseByCode(Course, id)
-            .then(course => course.removeTeachers(teachers)
-                  .then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.removeTeachers(teachers).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                        });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + 'does not exists.');
+                }
+            });
         })
         .catch(err => reply.badImplementation(err));
     }
