@@ -28,7 +28,7 @@ exports.get = {
             .catch(error => reply(Boom.badImplementation(error)))
             .then(result => {
                 if (result)
-                    return reply(utilities.clean_result(result));
+                    return reply(Utils.removeDates(result));
                 else
                     return reply(Boom.notFound('User not found'));
             });
@@ -80,7 +80,7 @@ exports.post = {
             User.bulkCreate(request.payload, {validate : true})
             */
             User.bulkCreate(
-                utilities.extractUsers(request.payload), 
+                Utils.extractUsers(request.payload), 
                 {validate : true}
             )
             .then(results => (reply({count : results.length}).code(201)))
@@ -88,8 +88,8 @@ exports.post = {
         }
         else
         {
-            User.create(utilities.extractUser(request.payload))
-            .then(result => reply(utilities.clean_result(result)).code(201))
+            User.create(Utils.extractUsers(request.payload))
+            .then(result => reply(Utils.removeDates(result)).code(201))
             .catch(error => reply(Boom.conflict(error)));
         }
     }
