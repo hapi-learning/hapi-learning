@@ -171,25 +171,9 @@ exports.patch = {
 
         const User = this.models.User;
 
-        var payload = {};
-
-        if (request.payload.password)
-            payload.password = request.payload.password;
-
-        if (request.payload.email)
-            payload.email = request.payload.email;
-
-        if (request.payload.firstName)
-            payload.firstName = request.payload.firstName;
-
-        if (request.payload.lastName)
-            payload.lastName = request.payload.lastName;
-
-        if (request.payload.phoneNumber)
-            payload.phoneNumber = request.payload.phoneNumber;
-
+        // NEED TESTING
         User.update(
-                payload,
+                request.payload,
                 {
                     where: {
                         username: request.params.username

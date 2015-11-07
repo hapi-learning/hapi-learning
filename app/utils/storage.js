@@ -9,6 +9,7 @@ const Hoek  = require('hoek');
 const rm = require('rmdir');
 const Easypeazip = require('easypeazip');
 
+
 const internals = {};
 
 internals.isFolder = path => Fs.statSync(path).isDirectory();
@@ -91,11 +92,10 @@ internals.deleteFile = function (path) {
  * Initialize storage.
  */
 internals.initialize = function () {
+
     internals.initializeFolder(internals.relativeTo)
         .then(() => internals.initializeFolder(internals.courseFolder));
 };
-
-
 
 
 
@@ -229,12 +229,14 @@ exports.register = function(server, options, next) {
 
     Hoek.assert(options.root, 'option.root is required');
 
+
     internals.root = options.root;
     internals.relativeTo = Path.join(internals.root, options.storage || 'storage');
     internals.courseFolder = Path.join(internals.relativeTo, options.courses || 'courses');
     internals.documents = options.documents || 'documents';
 
     internals.initialize();
+
     const Storage = load();
     server.expose('storage', Storage);
     next();

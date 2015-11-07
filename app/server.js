@@ -37,7 +37,8 @@ let internals = {
                         root: __dirname,
                         documents: 'documents',
                         courses: 'courses',
-                        storage: 'storage'
+                        storage: 'storage',
+                        test: false
                     }
                 }],
             'hapi-auth-jwt2': [{

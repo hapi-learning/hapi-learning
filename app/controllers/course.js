@@ -22,7 +22,7 @@ internals.getCourse = function(result) {
 
         .then(values => {
             let course = result.get({plain:true});
-            course.tags = _.map(values[0], (t => t.get({plain:true})));
+            course.tags = _.map(values[0], (t => t.get('name', {plain:true})));
             course.teachers = _.map(values[1], (t => t.get({plain:true})));
 
             return course;
@@ -55,7 +55,7 @@ internals.checkCourse = function(Course, id, reply, callback) {
             if (result) {
                 return callback();
             } else {
-                return reply.badRequest('The course ' + id + ' does not exists.');
+                return reply.notFound('The course ' + id + ' does not exists.');
             }
         })
         .catch(err => reply.badImplementation(err));
@@ -109,6 +109,7 @@ exports.get = {
 };
 
 
+// WORKS - How to unit test this ?
 exports.getDocuments = {
     description: 'Get a ZIP containing documents or a file',
     validate: {
@@ -149,7 +150,6 @@ exports.getDocuments = {
 
 
 
-
 exports.getTree = {
     description: 'Get course folder tree',
     validate: {
@@ -159,9 +159,10 @@ exports.getTree = {
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        return reply.notImplemented();
     }
 };
+
 
 exports.getStudents = {
     description: 'Get students following the course',
@@ -277,7 +278,7 @@ exports.post = {
     }
 };
 
-
+// NEED TESTING
 exports.postDocument = {
     description: 'Upload a file to a course',
     payload: {
@@ -325,8 +326,7 @@ exports.postDocument = {
     }
 };
 
-
-
+// NEED TESTING
 exports.createFolder = {
     description: 'Create a folder to a course',
     validate: {
@@ -368,18 +368,30 @@ exports.addTags = {
 
         const Tag    = this.models.Tag;
         const Course = this.models.Course;
+        const id     = request.params.id;
 
         Tag
         .findAll({where: { name: { $in: request.payload.tags } }})
         .then(tags => {
             internals.findCourseByCode(Course, request.params.id)
-            .then(course => course.addTags(tags).then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.addTags(tags).then(() => {
+                       internals.getCourse(course).then(result => {
+                           return reply(result);
+                       });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + ' does not exists.');
+                }
+            });
         })
-        .catch(err => reply.badImplementation(err));
+        .catch(reply.badImplementation);
     }
 };
 
 // Teachers that does not exists will be ignored
+// NEED TESTING
 exports.addTeachers = {
     description: 'Add a list of teachers to the course',
     validate: {
@@ -387,18 +399,29 @@ exports.addTeachers = {
             id: Joi.string().required().description('Course code'),
         },
         payload: {
-            teachers: Joi.array().items(Joi.string())
+            teachers: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
         const User   = this.models.User;
         const Course = this.models.Course;
+        const id     = request.params.id;
 
         User
         .findAll({where: { username: { $in: request.payload.teachers } }})
         .then(teachers => {
             internals.findCourseByCode(Course, request.params.id)
-            .then(course => course.addTeachers(teachers).then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.addTeachers(teachers).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                        });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + ' does not exists.');
+                }
+            });
         })
         .catch(err => reply.badImplementation(err));
     }
@@ -419,25 +442,28 @@ exports.patch = {
     },
     handler: function (request, reply) {
         const Course  = this.models.Course;
-        const payload = {};
+        const id      = request.params.id;
+        const newId   = request.payload.code;
+        const Storage = this.storage;
 
-        if (request.payload.name) {
-            payload.name = request.payload.name;
-        }
+        const renameFolder = function(returnValue) {
+            Storage.renameCourse(id, newId)
+                .then(() => reply(returnValue))
+                .catch(err => reply.badImplementation(err));
+        };
 
-        if (request.payload.code) {
-            payload.code = request.payload.code;
-        }
-
-        if (request.payload.description) {
-            payload.description = request.payload.description;
-        }
-
-        // FIXME -- Passer request.payload directement ?
         Course
-        .update(payload, { where: { code: { $eq: request.params.id } } })
-        .then(values => reply({ count: values[0] }))
-        .catch(reply);
+        .update(request.payload, { where: { code: { $eq: request.params.id } } })
+        .then(values => {
+            const toReturn = { count: values[0] };
+            if (id && values[0] !== 0) {
+                return renameFolder(toReturn);
+            } else {
+                return reply(toReturn);
+            }
+
+        })
+        .catch(() => reply.conflict());
     }
 };
 
@@ -460,7 +486,7 @@ exports.delete = {
             }
         })
         .then(count => {
-            const tail = request.tail('delete course folder');
+            const tail = request.tail('Delete course folder');
             Storage.deleteCourse(request.params.id).then(tail);
             return reply({count: count});
         })
@@ -468,6 +494,7 @@ exports.delete = {
     }
 };
 
+// Need testing
 exports.deleteTags = {
     description: 'Delete a list of tags from the course',
     validate: {
@@ -496,6 +523,7 @@ exports.deleteTags = {
     }
 };
 
+// Need testing
 exports.deleteTeachers = {
     description: 'Delete a list of teachers from the course',
     validate: {
@@ -530,6 +558,7 @@ exports.deleteTeachers = {
  * When returning not found, files may already have been deleted.
  * Page reloading may be necessary !
  */
+// Need testing
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {

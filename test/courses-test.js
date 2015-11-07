@@ -2,7 +2,11 @@
 
 const Code = require('code');
 const Lab = require('lab');
+const fs = require('fs');
+const Path = require('path');
+const Hoek = require('hoek');
 const lab = exports.lab = Lab.script();
+
 
 const describe = lab.describe;
 const it = lab.it;
@@ -10,13 +14,25 @@ const before = lab.before;
 const after = lab.after;
 const expect = Code.expect;
 
+
 const server = require('./server-test');
 
+
+
+
 before((done) => {
+
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
     }).then(() => done());
+});
+
+after(done => {
+    const rm = require('rmdir');
+    rm(Path.join(__dirname, 'storage'), function() {
+        done();
+    });
 });
 
 const course = {
@@ -57,10 +73,28 @@ const users = [{
     password: 'superpassword'
 }];
 
+const moreUsers = [{
+    username: 'ABS',
+    email: 'invalid3@email.com',
+    password: 'superpassword'
+}, {
+    username: 'ADT',
+    email: 'invalid4@email.com',
+    password: 'superpassword'
+}];
+
 const tags = [{
     name: '3e',
 }, {
     name: 'Java'
+}];
+
+const moreTags = [{
+    name: '2e'
+}, {
+    name: 'NodeJS'
+}, {
+    name: '1e'
 }];
 
 describe('Controller.Course', () => {
@@ -71,7 +105,12 @@ describe('Controller.Course', () => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(422);
 
-                done();
+                fs.stat('storage/courses/ATL3', function(err, stats) {
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+
+                    done();
+                });
             });
         });
 
@@ -111,7 +150,19 @@ describe('Controller.Course', () => {
                         expect(response.tags).to.have.length(pRequest.payload.tags.length);
                         expect(response.tags).to.only.include(pRequest.payload.tags);
 
-                        done();
+                        fs.stat(Path.join(__dirname, 'storage/courses/ATL3'), function(err, stats) {
+
+                            expect(err).to.be.null();
+                            expect(stats).to.exists();
+                            expect(stats.isDirectory()).to.be.true();
+
+                            fs.stat(Path.join(__dirname, 'storage/courses/ATL3/documents'), function(err, stats) {
+                                expect(err).to.be.null();
+                                expect(stats).to.exists();
+                                expect(stats.isDirectory()).to.be.true();
+                                done();
+                            });
+                        });
                     });
                 });
         });
@@ -187,7 +238,15 @@ describe('Controller.Course', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response.count).to.equal(1);
-                done();
+
+                // Not clean ...
+                setTimeout(() => {
+                    fs.stat(Path.join(__dirname, 'storage/courses/ANL3'), function(err, stats) {
+                        expect(err).to.exists();
+                        expect(stats).to.be.undefined();
+                        done();
+                    });
+                }, 1000);
             });
         });
 
@@ -249,16 +308,41 @@ describe('Controller.Course', () => {
             url: '/courses/ATL3',
             payload: {
                 name: 'Ateliers Logiciels Gestion',
-                code: 'ATL3G',
-                description: 'Java / NodeJS 3e Gestion'
+                code: 'ATL3G'
             }
         };
+
+        it ('Should return the number of rows updated (0)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, {url : '/courses/ABCD'});
+
+            server.inject(copyRequest, res => {
+
+                const response = res.request.response.source;
+
+                expect(response.count).to.equal(0);
+
+                done();
+            });
+        });
 
         it ('Should return the number of rows updated (1)', done => {
             server.inject(request, res => {
                 const response = res.request.response.source;
+
                 expect(response.count).to.equal(1);
-                done();
+
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G'), function(err, stats) {
+                    expect(err).to.be.null();
+                    expect(stats).to.exists();
+                    expect(stats.isDirectory()).to.be.true();
+
+                    fs.stat(Path.join(__dirname, 'storage/courses/ATL3'), function(err, stats) {
+                        expect(err).to.exists();
+                        expect(stats).to.be.undefined();
+                        done();
+                    });
+                });
             });
         });
 
@@ -268,7 +352,7 @@ describe('Controller.Course', () => {
 
                 expect(response.code).to.equal(request.payload.code);
                 expect(response.name).to.equal(request.payload.name);
-                expect(response.description).to.equal(request.payload.description);
+                expect(response.description).to.equal(course.description);
                 expect(response.teachers).to.be.an.array();
                 expect(response.teachers).to.have.length(users.length);
                 expect(response.tags).to.be.an.array();
@@ -281,5 +365,46 @@ describe('Controller.Course', () => {
 
     describe('#addTags', () => {
 
+        const Models = server.plugins.models.models;
+        const Tag = Models.Tag;
+
+        const request = {
+            method: 'POST',
+            url: '/courses/ATL3G/tags',
+            payload: {
+                tags: ['2e', 'NodeJS', '1e', '4e'] // 3 existing tags and 1 non existing
+            }
+        };
+
+        it('Should return the course with the new tags', done => {
+
+             const createTags = new Promise((resolve, reject) => {
+                let promises = [];
+                moreTags.forEach(t => promises.push(Tag.create(t)));
+                Promise.all(promises).then(resolve);
+            });
+
+            createTags
+            .then(() => {
+                server.inject(request, res => {
+                    const response = res.request.response.source;
+
+                    const allTags = ['3e', 'Java', '2e', 'NodeJS', '1e'];
+                    expect(response.tags).to.only.include(allTags);
+                    done();
+                });
+            });
+        });
+
+          it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
     });
 });
