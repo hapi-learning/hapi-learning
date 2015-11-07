@@ -1,10 +1,10 @@
-<div class="container">
+<!--<div class="container" ng-controller="courses-controller">-->
 
-    <h1 class="page-header">Courses</h1>
-
+<!--    <h1 class="page-header">Courses</h1>-->
 
     <search-courses></search-courses>
     <br />
+
 
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="course in courses | filter:{name : filter.course, code : filter.code}">
@@ -49,4 +49,4 @@
         </li>
     </ul>
 
-</div>
+<!--</div>-->

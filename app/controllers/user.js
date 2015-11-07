@@ -76,9 +76,6 @@ exports.post = {
 
         if (Array.isArray(request.payload))
         {
-            /*
-            User.bulkCreate(request.payload, {validate : true})
-            */
             User.bulkCreate(
                 Utils.extractUsers(request.payload), 
                 {validate : true}

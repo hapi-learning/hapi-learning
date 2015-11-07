@@ -1,8 +1,64 @@
-<div class="container">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
 
-    <h1 class="page-header">Home sweet home :)</h1>
+        <div class="nav navbar-nav">
+            <h1>hapi learning</h1>
+        </div>
 
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#/logout">
+                        <span class="glyphicon glyphicon-log-out"></span> Log out
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+</nav>
+
+<div class="container-fluid">
+
+    <!--    <h1 class="page-header">News</h1>-->
+
+    <!--
     <div class="row">
         <connection></connection>
     </div>
+-->
+
+
+
+    <div>
+        <div class="col-md-4" ng-controller="home-controller as homeCtrl">
+
+            <h1 class="page-header">News</h1>
+
+            <div ng-include="'../views/news.html'"></div>
+        </div>
+
+        <div class="col-md-8" ng-controller="courses-controller">
+
+            <h1 class="page-header">My courses</h1>
+
+            <div ng-include="'../views/courses.html'"></div>
+        </div>
+    </div>
+
 </div>
+
+<footer class="footer">
+
+    <div class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <p class="navbar-text pull-left">hapi learning</p>
+
+            <a href="https://gitlab.com/fknop/ATL3-hapi-learning" class="navbar-btn btn-default btn pull-right">
+                <span class="glyphicon glyphicon-heart"></span> Gitlab
+            </a>
+        </div>
+
+</footer>
