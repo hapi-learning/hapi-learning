@@ -1,7 +1,6 @@
 'use strict';
 
 const Joi = require('joi');
-const Boom = require('boom');
 const _ = require('lodash');
 
 exports.get = {
@@ -31,10 +30,10 @@ exports.get = {
             }
             else
             {
-                return reply(Boom.notFound('Can not find role :' + request.params.name));
+                return reply.notFound('Cannot find role :' + request.params.name);
             }
         })
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -51,7 +50,7 @@ exports.getAll = {
             }
         })
         .then(results => reply(_.map(results, (result => result.get({plain : true})))))
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -71,7 +70,7 @@ exports.post = {
             name : request.payload.name
         })
         .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at')))
-        .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
+        .catch(() => reply.conflict());
     }
 };
 
@@ -93,6 +92,6 @@ exports.delete = {
             }
         })
         .then(count => reply({count : count}))
-        .catch(error => reply(Boom.badRequest('An internal server error occurred : ' + error)));
+        .catch(error => reply.badImplementation(error));
     }
 };

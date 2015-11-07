@@ -22,6 +22,14 @@ exports.register = function(server, options, next) {
         return this.response(Boom.conflict(message));
     });
 
+    server.decorate('reply', 'badRequest', function(message) {
+        return this.response(Boom.badRequest(message || 'Bad request'));
+    });
+
+    server.decorate('reply', 'badData', function(message) {
+        return this.response(Boom.badData(message || 'Bad data'));
+    });
+
     // Add more common error here
 
     next();

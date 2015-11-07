@@ -1,7 +1,6 @@
 'use strict';
 
 const Joi = require('joi');
-const Boom = require('boom');
 
 const Utils = require('../utils/sequelize');
 
@@ -31,10 +30,10 @@ exports.get = {
             }
             else
             {
-                return reply(Boom.notFound('Can not find tag :' + request.params.name));
+                return reply.notFound('Cannot find tag :' + request.params.name);
             }
         })
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -50,7 +49,7 @@ exports.getAll = {
             }
         })
         .then(results => reply(Utils.removeDates(results)))
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -69,7 +68,7 @@ exports.post = {
             name : request.payload.name
         })
         .then(result => reply(Utils.removeDates(result)))
-        .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
+        .catch(() => reply.conflict());
     }
 };
 
@@ -90,6 +89,6 @@ exports.delete = {
             }
         })
         .then(count => reply({count : count}))
-        .catch(error => reply(Boom.badRequest('An internal server error occurred : ' + error)));
+        .catch(err => reply.badRequest(err));
     }
 };

@@ -1,7 +1,6 @@
 'use strict';
 
 const Joi   = require('joi');
-const Boom  = require('boom');
 const _     = require('lodash');
 const Hoek  = require('hoek');
 const Utils = require('../utils/sequelize');
@@ -56,7 +55,7 @@ internals.checkCourse = function(Course, id, reply, callback) {
             if (result) {
                 return callback();
             } else {
-                return reply(Boom.badRequest('The course ' + id + ' does not exists.'));
+                return reply.badRequest('The course ' + id + ' does not exists.');
             }
         })
         .catch(err => reply.badImplementation(err));
@@ -247,7 +246,7 @@ exports.post = {
 
                 if (wrongTeachers || wrongTags)
                 {
-                    return reply(Boom.badData(wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)'));
+                    return reply.badData(wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)');
                 }
                 else
                 {
@@ -298,13 +297,13 @@ exports.postDocument = {
         const file = request.payload.file;
 
         if (!file) {
-            return reply(Boom.badRequest('File required to post a document'));
+            return reply.badRequest('File required to post a document');
         }
 
         const filename = file.hapi.filename;
 
         if (!filename) {
-            return reply(Boom.badRequest('Filename required to post a document'));
+            return reply.badRequest('Filename required to post a document');
         }
 
         const path = Path.join(request.params.path, filename);
@@ -347,7 +346,7 @@ exports.createFolder = {
             Storage
                 .createFolder(course, path)
                 .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
-                .catch((err) => reply(Boom.badData(err)));
+                .catch(err => reply.badData(err));
         };
 
         return internals.checkCourse(Course, course, reply, createFolder);

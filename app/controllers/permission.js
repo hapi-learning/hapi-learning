@@ -1,7 +1,6 @@
 'use strict';
 
 const Joi = require('joi');
-const Boom = require('boom');
 const _ = require('lodash');
 
 exports.get = {
@@ -31,10 +30,10 @@ exports.get = {
             }
             else
             {
-                return reply(Boom.notFound('Can not find permission :' + request.params.name));
+                return reply.notFound('Cannot find permission :' + request.params.name);
             }
         })
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -51,6 +50,6 @@ exports.getAll = {
             }
         })
         .then(results => reply(_.map(results, (result => result.get({plain : true})))))
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };

@@ -2,7 +2,6 @@
 
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
-const Boom = require('boom');
 
 const Utils = require('../utils/sequelize');
 
@@ -25,13 +24,15 @@ exports.get = {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .catch(error => reply(Boom.badImplementation(error)))
             .then(result => {
-                if (result)
+                if (result) {
                     return reply(Utils.removeDates(result));
-                else
-                    return reply(Boom.notFound('User not found'));
-            });
+                } else {
+                    return reply.notFound('User not found');
+                }
+            })
+            .catch(err => reply.badImplementation(err));
+
         }
 };
 
@@ -47,8 +48,8 @@ exports.getAll = {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .catch(error => reply(Boom.notFound(error)))
-            .then(results => reply(Utils.removeDates(results)).code(200));
+            .then(results => reply(Utils.removeDates(results)))
+            .catch(err => reply.notFound(err));
     }
 };
 
@@ -80,17 +81,17 @@ exports.post = {
             User.bulkCreate(request.payload, {validate : true})
             */
             User.bulkCreate(
-                Utils.extractUsers(request.payload), 
+                Utils.extractUsers(request.payload),
                 {validate : true}
             )
             .then(results => (reply({count : results.length}).code(201)))
-            .catch(error => reply(Boom.conflict(errors)));
+            .catch(() => reply.conflict());
         }
         else
         {
             User.create(Utils.extractUsers(request.payload))
             .then(result => reply(Utils.removeDates(result)).code(201))
-            .catch(error => reply(Boom.conflict(error)));
+            .catch(() => reply.conflict());
         }
     }
 };
@@ -219,7 +220,7 @@ exports.getTags = {
                     exclude: 'password'
                 }
             })
-            .catch(error => reply(Boom.badRequest(error)))
+            .catch(err => reply.badRequest(err))
             .then(result => result.getTags()
                   .then(tags => reply(tags)));
     }
@@ -245,7 +246,7 @@ exports.getCourses = {
                     exclude: 'password'
                 }
             })
-            .catch(error => reply(Boom.badRequest(error)))
+            .catch(err => reply.badRequest(err))
             .then(result => result.getCourses()
                   .then(courses => reply(courses)));
     }
