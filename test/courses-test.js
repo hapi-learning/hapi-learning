@@ -520,8 +520,6 @@ describe('Controller.Course', () => {
 
     describe('#removeTeachers', () => {
 
-        const Models = server.plugins.models.models;
-        const User = Models.User;
 
         const request = {
             method: 'DELETE',
@@ -563,6 +561,79 @@ describe('Controller.Course', () => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(400);
                 done();
+            });
+        });
+    });
+
+    describe('#createFolder', () => {
+        const request = {
+            method: 'POST',
+            url: '/courses/ATL3G/folders/subfolder',
+        };
+
+        it ('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/subfolder'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error) - bis', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders//'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+
+        it ('Should return 201 created and create the folder', done => {
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(201);
+
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/subfolder'),
+                        (err, stats) => {
+
+                    expect(err).to.be.null();
+                    expect(stats).to.exists();
+                    expect(stats.isDirectory()).to.be.true();
+
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 422 (bad data -- invalid path)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/folder/folderbis'});
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(422);
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/folder/folderbis'),
+                        (err, stats) => {
+
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+                    done();
+                });
             });
         });
     });

@@ -493,7 +493,6 @@ exports.delete = {
     }
 };
 
-// Need testing
 exports.deleteTags = {
     description: 'Delete a list of tags from the course',
     validate: {
@@ -531,7 +530,6 @@ exports.deleteTags = {
     }
 };
 
-// Need testing
 exports.deleteTeachers = {
     description: 'Delete a list of teachers from the course',
     validate: {
