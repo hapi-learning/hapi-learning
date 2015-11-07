@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace'])
+        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace', 'ui.validate'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
@@ -33,4 +33,12 @@ angular.module('hapi-learning', [
         }])
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
         bootstrap3ElementModifier.enableValidationStateIcons(true);
-        }]);
+        }])
+    .run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
+            // passing a culture into getErrorMessages('fr-fr') will get the culture specific messages
+            // otherwise the current default culture is returned.
+            defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
+                errorMessages['validator'] = 'Passwords do not match!';
+            });
+    }
+]);
