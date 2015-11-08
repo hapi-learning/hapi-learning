@@ -30,6 +30,10 @@ exports.register = function(server, options, next) {
         return this.response(Boom.badData(message || 'Bad data'));
     });
 
+    server.decorate('reply', 'forbidden', function(message) {
+        return this.response(Boom.forbidden(message));
+    });
+
     // Add more common error here
 
     next();

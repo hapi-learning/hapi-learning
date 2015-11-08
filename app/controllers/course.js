@@ -61,6 +61,10 @@ internals.checkCourse = function(Course, id, reply, callback) {
         .catch(err => reply.badImplementation(err));
 };
 
+internals.checkForbiddenPath = function(path) {
+    return path.includes('/..') || path.includes('../');
+};
+
 
 exports.getAll = {
     description: 'List all the courses',
@@ -278,7 +282,6 @@ exports.post = {
     }
 };
 
-// NEED TESTING
 exports.postDocument = {
     description: 'Upload a file to a course',
     payload: {
@@ -307,7 +310,13 @@ exports.postDocument = {
             return reply.badRequest('Filename required to post a document');
         }
 
-        const path = Path.join(request.params.path, filename);
+        const path = Path.join(encodeURI(request.params.path), encodeURI(filename));
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
         const course = request.params.id;
 
         const Storage = this.storage;
@@ -339,7 +348,12 @@ exports.createFolder = {
         const Storage = this.storage;
         const Course  = this.models.Course;
         const course  = request.params.id;
-        const path    = request.params.path;
+        const path    = encodeURI(request.params.path);
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
 
         const createFolder = function() {
             Storage
@@ -584,12 +598,31 @@ exports.deleteDocument = {
 
     },
     handler: function (request, reply) {
+        const Course  = this.models.Course;
         const Storage = this.storage;
         const id      = request.params.id;
 
         const files = request.payload.files;
 
-        Storage.delete(id, files).then(reply).catch(() => reply.notFound('File not found'));
+        if (Array.isArray(files)) {
+            _.forEach(files, (file => {
+                if (internals.checkForbiddenPath(file)) {
+                    reply.forbidden();
+                }
+            }));
+        } else {
+             if (internals.checkForbiddenPath(files)) {
+                return reply.forbidden();
+            }
+        }
+
+        const del = function() {
+            Storage.delete(id, files)
+                .then(() => reply().code(202))
+                .catch(() => reply.badImplementation());
+        };
+
+        internals.checkCourse(Course, id, reply, del);
     }
 };
 

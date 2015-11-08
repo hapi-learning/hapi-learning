@@ -624,7 +624,6 @@ describe('Controller.Course', () => {
 
         it ('Should return 422 (bad data -- invalid path)', done => {
 
-            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/folder/folderbis'});
             server.inject(request, res => {
                 expect(res.request.response.statusCode).equal(422);
                 fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/folder/folderbis'),
@@ -634,6 +633,15 @@ describe('Controller.Course', () => {
                     expect(stats).to.be.undefined();
                     done();
                 });
+            });
+        });
+
+        it ('Should return 403 forbidden path', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL3G/folders/../../ANL3/documents/folder'});
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).equal(403);
+                done();
             });
         });
     });
@@ -706,5 +714,92 @@ describe('Controller.Course', () => {
                 });
             });
         });
+
+        it ('Should return 403 forbidden path', done => {
+            const form = new FormData();
+            form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
+             streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL3G/documents/../../ANL3/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    const response = res.request.response.source;
+                    expect(response.statusCode).to.equal(403);
+                    done();
+                });
+            });
+        });
     });
+
+    describe('#deleteDocument', done => {
+
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ATL3G/documents',
+            payload: {
+                files: 'server-test.js'
+            }
+        };
+
+        it ('Should return 403 forbidden path', done => {
+            const copyRequest = Hoek.applyToDefaults(request, {
+                payload : { files: '../../ANL3/documents/server-test.js' }
+            });
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(403);
+                done();
+            });
+        });
+
+        it ('Should return 404 not found', done => {
+            const copyRequest = Hoek.applyToDefaults(request, {url : '/courses/ATL/documents'});
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad validation', done => {
+            const copyRequest = Hoek.applyToDefaults(request, {payload : []});
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(400);
+                done();
+            });
+        });
+
+        it ('Should return 202 accepted and file deleted', done => {
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).to.equal(202);
+                const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/server-test.js');
+                fs.stat(path, (err, stats) => {
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 202 accepted and ignore non existing files', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, {
+                payload: {
+                    files: ['server-test.js', 'subfolder']
+                }
+            });
+
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(202);
+                const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/subfolder');
+                fs.stat(path, (err, stats) => {
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+                    done();
+                });
+            });
+        });
+
+    });
+
 });
