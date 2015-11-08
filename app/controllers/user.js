@@ -49,7 +49,7 @@ exports.getAll = {
                 }
             })
             .then(results => reply(Utils.removeDates(results)))
-            .catch(err => reply.notFound(err));
+            .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -97,7 +97,7 @@ exports.delete = {
     description: 'Delete user',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID')
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
         }
     },
     handler: function (request, reply) {

@@ -42,6 +42,12 @@ const user = {
     phoneNumber: '+32484283748'
 };
 
+const userUpdated = {
+    email: 'Bogoss424@gmail.com',
+    password: 'ImPosayy',
+    phoneNumber: '+32484283748'
+};
+
 const users = [{
     username: 'SRV',
     email: 'SRV@caramail.com',
@@ -172,4 +178,59 @@ describe('Controller.User', () => {
         });
     });
 
+    describe('#delete', () => {
+        it('should return 1 : number of deletations', done => {
+            const request = {
+                method: 'DELETE',
+                url: '/users/Johnny'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return 0 : number of deletations', done => {
+            const request = {
+                method: 'DELETE',
+                url: '/users/Johnny'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
+    
+    describe('#put', () => {
+        it('should return 1 : number of updates', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/Johnny',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return 0 : number of updates', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/IDoNotExist',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
 });
