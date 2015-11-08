@@ -1,11 +1,10 @@
 'use strict';
 
 const Joi   = require('joi');
-const Boom  = require('boom');
 const _     = require('lodash');
 const Hoek  = require('hoek');
 const Utils = require('../utils/sequelize');
-const Error = require('../utils/error');
+const Path  = require('path');
 
 const internals = {};
 
@@ -23,7 +22,7 @@ internals.getCourse = function(result) {
 
         .then(values => {
             let course = result.get({plain:true});
-            course.tags = _.map(values[0], (t => t.get({plain:true})));
+            course.tags = _.map(values[0], (t => t.get('name', {plain:true})));
             course.teachers = _.map(values[1], (t => t.get({plain:true})));
 
             return course;
@@ -53,12 +52,17 @@ internals.checkCourse = function(Course, id, reply, callback) {
     internals
         .findCourseByCode(Course, id)
         .then(result => {
-            if (result)
+            if (result) {
                 return callback();
-            else
-                return reply(Boom.badRequest('The course ' + id + ' does not exists.'));
+            } else {
+                return reply.notFound('The course ' + id + ' does not exists.');
+            }
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
+};
+
+internals.checkForbiddenPath = function(path) {
+    return path.includes('/..') || path.includes('../');
 };
 
 
@@ -100,15 +104,16 @@ exports.get = {
             }
             else // If not found
             {
-                return reply(Boom.notFound('Cannot find course ' + id));
+                return reply.notFound('Cannot find course ' + id);
             }
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
 
     }
 };
 
 
+// WORKS - How to unit test this ?
 exports.getDocuments = {
     description: 'Get a ZIP containing documents or a file',
     validate: {
@@ -143,10 +148,9 @@ exports.getDocuments = {
                     .header('Content-Disposition', contentDisposition);
             }
         })
-        .catch(err => reply(Boom.notFound('File not found')))
+        .catch(() => reply.notFound('File not found'));
     }
 };
-
 
 
 
@@ -159,9 +163,10 @@ exports.getTree = {
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        return reply.notImplemented();
     }
 };
+
 
 exports.getStudents = {
     description: 'Get students following the course',
@@ -177,9 +182,9 @@ exports.getStudents = {
         .then(course => {
             course
                 .getUsers({joinTableAttributes: []})
-                .then(users => reply(Utils.removeDates(users)))
+                .then(users => reply(Utils.removeDates(users)));
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -246,7 +251,7 @@ exports.post = {
 
                 if (wrongTeachers || wrongTags)
                 {
-                    return reply(Boom.badData(wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)'));
+                    return reply.badData(wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)');
                 }
                 else
                 {
@@ -271,12 +276,11 @@ exports.post = {
                             return reply(course).code(201);
                         });
                     })
-                    .catch(() => reply(Boom.conflict('Conflict')));
+                    .catch(() => reply.conflict());
                 }
             });
     }
 };
-
 
 exports.postDocument = {
     description: 'Upload a file to a course',
@@ -297,12 +301,22 @@ exports.postDocument = {
         const file = request.payload.file;
 
         if (!file) {
-            return reply(Boom.badRequest('File is missing'));
+            return reply.badRequest('File required to post a document');
         }
 
         const filename = file.hapi.filename;
 
-        const path = Path.join(request.params.path, filename);
+        if (!filename) {
+            return reply.badRequest('Filename required to post a document');
+        }
+
+        const path = Path.join(encodeURI(request.params.path), encodeURI(filename));
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
         const course = request.params.id;
 
         const Storage = this.storage;
@@ -313,15 +327,13 @@ exports.postDocument = {
                 Storage.createOrReplaceFile(course, path, file);
                 return reply('File : ' + filename + ' successfuly uploaded').code(201);
             } catch(err) {
-                return reply(Boom.conflict(err));
+                return reply.conflict(err);
             }
         };
 
         return internals.checkCourse(Course, course, reply, upload);
     }
 };
-
-
 
 exports.createFolder = {
     description: 'Create a folder to a course',
@@ -336,14 +348,19 @@ exports.createFolder = {
         const Storage = this.storage;
         const Course  = this.models.Course;
         const course  = request.params.id;
-        const path    = request.params.path;
+        const path    = encodeURI(request.params.path);
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
 
         const createFolder = function() {
             Storage
                 .createFolder(course, path)
                 .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
-                .catch((err) => reply(Boom.badData(err)));
-        }
+                .catch(err => reply.badData(err));
+        };
 
         return internals.checkCourse(Course, course, reply, createFolder);
     }
@@ -364,14 +381,25 @@ exports.addTags = {
 
         const Tag    = this.models.Tag;
         const Course = this.models.Course;
+        const id     = request.params.id;
 
         Tag
         .findAll({where: { name: { $in: request.payload.tags } }})
         .then(tags => {
             internals.findCourseByCode(Course, request.params.id)
-            .then(course => course.addTags(tags).then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.addTags(tags).then(() => {
+                       internals.getCourse(course).then(result => {
+                           return reply(result);
+                       });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + ' does not exists.');
+                }
+            });
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(reply.badImplementation);
     }
 };
 
@@ -383,20 +411,31 @@ exports.addTeachers = {
             id: Joi.string().required().description('Course code'),
         },
         payload: {
-            teachers: Joi.array().items(Joi.string())
+            teachers: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
         const User   = this.models.User;
         const Course = this.models.Course;
+        const id     = request.params.id;
 
         User
         .findAll({where: { username: { $in: request.payload.teachers } }})
         .then(teachers => {
             internals.findCourseByCode(Course, request.params.id)
-            .then(course => course.addTeachers(teachers).then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.addTeachers(teachers).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                        });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + ' does not exists.');
+                }
+            });
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -415,21 +454,28 @@ exports.patch = {
     },
     handler: function (request, reply) {
         const Course  = this.models.Course;
-        const payload = {};
+        const id      = request.params.id;
+        const newId   = request.payload.code;
+        const Storage = this.storage;
 
-        if (request.payload.name)
-            payload.name = request.payload.name;
-
-        if (request.payload.code)
-            payload.code = request.payload.code;
-
-        if (request.payload.description)
-            payload.description = request.payload.description;
+        const renameFolder = function(returnValue) {
+            Storage.renameCourse(id, newId)
+                .then(() => reply(returnValue))
+                .catch(err => reply.badImplementation(err));
+        };
 
         Course
-        .update(payload, { where: { code: { $eq: request.params.id } } })
-        .then(values => reply({ count: values[0] }))
-        .catch(reply);
+        .update(request.payload, { where: { code: { $eq: request.params.id } } })
+        .then(values => {
+            const toReturn = { count: values[0] };
+            if (id && values[0] !== 0) {
+                return renameFolder(toReturn);
+            } else {
+                return reply(toReturn);
+            }
+
+        })
+        .catch(() => reply.conflict());
     }
 };
 
@@ -452,11 +498,11 @@ exports.delete = {
             }
         })
         .then(count => {
-            const tail = request.tail('delete course folder');
+            const tail = request.tail('Delete course folder');
             Storage.deleteCourse(request.params.id).then(tail);
             return reply({count: count});
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -467,7 +513,7 @@ exports.deleteTags = {
             id: Joi.string().required().description('Course code'),
         },
         payload: {
-            tags: Joi.array().items(Joi.string())
+            tags: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -481,10 +527,19 @@ exports.deleteTags = {
         .findAll({where: { name: { $in: ptags} }})
         .then(tags => {
             internals.findCourseByCode(Course, id)
-            .then(course => course.remoteTags(tags)
-                  .then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.removeTags(tags).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                       });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + 'does not exists.');
+                }
+            });
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -495,7 +550,7 @@ exports.deleteTeachers = {
             id: Joi.string().required().description('Course code'),
         },
         payload: {
-            teachers: Joi.array().items(Joi.string())
+            teachers: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -510,10 +565,19 @@ exports.deleteTeachers = {
         .findAll({where: { username: { $in: pteachers } }})
         .then(teachers => {
             internals.findCourseByCode(Course, id)
-            .then(course => course.removeTeachers(teachers)
-                  .then(reply(course.get({plain:true}))));
+            .then(course => {
+                if (course) {
+                    course.removeTeachers(teachers).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                        });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + 'does not exists.');
+                }
+            });
         })
-        .catch(err => Error.badImplementation(reply, err));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -534,15 +598,31 @@ exports.deleteDocument = {
 
     },
     handler: function (request, reply) {
+        const Course  = this.models.Course;
         const Storage = this.storage;
-        const path    = request.params.path;
         const id      = request.params.id;
 
         const files = request.payload.files;
 
-        Storage.delete(files).then(reply).catch(err => {
-            return reply(Boom.notFound('File not found'));
-        });
+        if (Array.isArray(files)) {
+            _.forEach(files, (file => {
+                if (internals.checkForbiddenPath(file)) {
+                    reply.forbidden();
+                }
+            }));
+        } else {
+             if (internals.checkForbiddenPath(files)) {
+                return reply.forbidden();
+            }
+        }
+
+        const del = function() {
+            Storage.delete(id, files)
+                .then(() => reply().code(202))
+                .catch(() => reply.badImplementation());
+        };
+
+        internals.checkCourse(Course, id, reply, del);
     }
 };
 

@@ -9,6 +9,7 @@ const Hoek  = require('hoek');
 const rm = require('rmdir');
 const Easypeazip = require('easypeazip');
 
+
 const internals = {};
 
 internals.isFolder = path => Fs.statSync(path).isDirectory();
@@ -51,35 +52,17 @@ internals.removeRecursivelyAsync = function(path) {
     });
 };
 
-// Removes folder / files in parallel
-internals.removeParallel = function(filenames) {
-    return new P((resolve, reject) => {
-        Items.parallel(filenames, function(filename, next) {
-            internals.removeRecursivelyAsync(filename).then(next);
-        }, function(err) {
-            if (err)
-                reject(err);
-            else
-                resolve();
-        });
-    });
-};
-
 
 // Returns the path of the file in the course
 internals.getDocumentPath = function(course, path) {
-    return Path.join(internals.courseFolder, course, internals.documents, path);
+    return Path.join(internals.courseFolder, encodeURI(course), internals.documents, encodeURI(path));
 };
 
 /**
  * This deletes the documents folder only if the path is '/'.
  */
 internals.deleteFolder = function (path) {
-
-    path = path.replace(/\/$/, ''); // Removes trailing slash
-    const filenames = Glob.sync(path + '/*');
-
-    return internals.removeParallel(filenames);
+    return internals.removeRecursivelyAsync(path);
 };
 
 internals.deleteFile = function (path) {
@@ -91,11 +74,10 @@ internals.deleteFile = function (path) {
  * Initialize storage.
  */
 internals.initialize = function () {
+
     internals.initializeFolder(internals.relativeTo)
         .then(() => internals.initializeFolder(internals.courseFolder));
 };
-
-
 
 
 
@@ -144,7 +126,7 @@ const load = function() {
                 else
                     internals.deleteFolder(toDelete).then(resolve);
             } catch(err) {
-                resolve();
+                resolve(); // does not exists -> continue
             }
         });
     };
@@ -229,12 +211,14 @@ exports.register = function(server, options, next) {
 
     Hoek.assert(options.root, 'option.root is required');
 
+
     internals.root = options.root;
     internals.relativeTo = Path.join(internals.root, options.storage || 'storage');
     internals.courseFolder = Path.join(internals.relativeTo, options.courses || 'courses');
     internals.documents = options.documents || 'documents';
 
     internals.initialize();
+
     const Storage = load();
     server.expose('storage', Storage);
     next();

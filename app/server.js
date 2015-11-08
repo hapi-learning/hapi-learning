@@ -29,6 +29,7 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
+            './utils/error' : [{select: ['api']}],
             './utils/storage': [
                 {
                     select: ['api'],
@@ -36,7 +37,8 @@ let internals = {
                         root: __dirname,
                         documents: 'documents',
                         courses: 'courses',
-                        storage: 'storage'
+                        storage: 'storage',
+                        test: false
                     }
                 }],
             'hapi-auth-jwt2': [{

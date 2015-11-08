@@ -20,10 +20,11 @@ exports.login = {
         const Role = this.models.Role;
 
         let where = {};
-        if (request.payload.username)
+        if (request.payload.username) {
             where.username = { $eq: request.payload.username };
-        else
+        } else {
             where.email = { $eq: request.payload.email };
+        }
 
         User.findOne({
             include: [{
@@ -43,7 +44,7 @@ exports.login = {
                     email: result.email,
                     role: result.Role.name,
                     isAdmin: (result.Role.name === 'admin')
-                }
+                };
 
                 const token = {
                     token: JWT.sign(payload, process.env.AUTH_KEY),

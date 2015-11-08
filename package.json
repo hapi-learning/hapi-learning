@@ -45,6 +45,8 @@
   },
   "devDependencies": {
     "code": "^2.0.1",
-    "lab": "^7.1.0"
+    "form-data": "^0.2.0",
+    "lab": "^7.1.0",
+    "stream-to-promise": "^1.0.4"
   }
 }
