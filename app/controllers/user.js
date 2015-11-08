@@ -78,7 +78,7 @@ exports.post = {
         if (Array.isArray(request.payload))
         {
             User.bulkCreate(
-                Utils.extractUsers(request.payload),
+                request.payload,
                 {validate : true}
             )
             .then(results => (reply({count : results.length}).code(201)))
@@ -86,7 +86,7 @@ exports.post = {
         }
         else
         {
-            User.create(Utils.extractUsers(request.payload))
+            User.create(request.payload)
             .then(result => reply(Utils.removeDates(result)).code(201))
             .catch(() => reply.conflict());
         }
