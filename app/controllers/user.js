@@ -61,7 +61,7 @@ const schemaUserPOST = function(){
         firstName: Joi.string().min(1).max(255).description('User first name'),
         lastName: Joi.string().min(1).max(255).description('User last name'),
         phoneNumber: Joi.phone.e164().description('User phone number')
-    });
+    }).options({stripUnknown : true});
 
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
 };

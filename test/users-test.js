@@ -233,4 +233,33 @@ describe('Controller.User', () => {
             });
         });
     });
+    
+    describe('#patch', () => {
+        it('should return 1 : number of updates', done => {
+            const request = {
+                method: 'PATCH',
+                url: '/users/Johnny',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return 0 : number of updates', done => {
+            const request = {
+                method: 'PATCH',
+                url: '/users/IDoNotExist',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
 });
