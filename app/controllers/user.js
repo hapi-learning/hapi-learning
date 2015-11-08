@@ -5,6 +5,27 @@ Joi.phone = require('joi-phone');
 
 const Utils = require('../utils/sequelize');
 
+const schemaUserTagsPOST = function(){
+    const tag = Joi.object().keys({
+        name: Joi.string().min(1).max(255).required().description('Tag name')
+    }).options({stripUnknown : true});
+
+    return Joi.alternatives().try(tag, Joi.array().items(tag.required()));
+};
+
+exports.addTags = {
+    description: 'Link tags to a user',
+    validate: {
+        params: {
+            username: Joi.string().min(1).max(255).required().description('User personal ID')
+        },
+        payload: schemaUserTagsPOST()
+    },
+    handler : function(request, reply) {
+        reply('Not implemented yet').code(201);
+    }
+};
+
 exports.get = {
     description: 'Get one user',
     validate: {
@@ -33,7 +54,7 @@ exports.get = {
             })
             .catch(err => reply.badImplementation(err));
 
-        }
+    }
 };
 
 
@@ -147,7 +168,6 @@ exports.put = {
     handler: updateHandler
 };
 
-
 exports.patch = {
     description: 'Update some info about user (except username)',
     validate: {
@@ -181,12 +201,12 @@ exports.getTags = {
                     username: request.params.username
                 },
                 attributes: {
-                    exclude: 'password'
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .catch(err => reply.badRequest(err))
-            .then(result => result.getTags()
-                  .then(tags => reply(tags)));
+            .catch(err => reply.notFound('User not found.'))
+            .then(result => result.getTags())
+            .then(tags => reply(tags));
     }
 };
 
@@ -207,7 +227,7 @@ exports.getCourses = {
                     username: request.params.username
                 },
                 attributes: {
-                    exclude: 'password'
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
             .catch(err => reply.badRequest(err))

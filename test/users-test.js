@@ -67,6 +67,12 @@ const users = [{
     password: 'superpassword'
 }];
 
+const tags = [
+    {name : 'Laboratory'},
+    {name : 'Theory'},
+    {name : '2G13'}
+];
+
 describe('Controller.User', () => {
     describe('#post', () => {
         it('Should return 400 response because of invalid username', done => {
@@ -325,5 +331,62 @@ describe('Controller.User', () => {
                 done();
             });
         });
+    });
+    
+    describe('#addTags', () => {
+        it('should', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/tags',
+                payload : 'Theory'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                done();
+            });
+        });
+        
+        it('should', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/tags',
+                payload : ['2G13', 'Laboratory']
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                done();
+            });
+        });
+    });
+    
+    describe('#getTags', () => {
+        it('should return every tags of specific user : 0', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/Johnny/tags'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                except(response).is.an.array();
+                except(response).length(0);
+                done();
+            });
+        });
+        it('should return every tags of specific user : 3', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/SRV/tags'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                except(response).is.an.array();
+                except(response).length(3);
+                //except(response).equal(tags);
+                done();
+            });});
     });
 });
