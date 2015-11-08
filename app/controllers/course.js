@@ -326,7 +326,6 @@ exports.postDocument = {
     }
 };
 
-// NEED TESTING
 exports.createFolder = {
     description: 'Create a folder to a course',
     validate: {
@@ -573,7 +572,6 @@ exports.deleteTeachers = {
  * When returning not found, files may already have been deleted.
  * Page reloading may be necessary !
  */
-// Need testing
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {

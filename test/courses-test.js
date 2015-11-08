@@ -637,4 +637,74 @@ describe('Controller.Course', () => {
             });
         });
     });
+
+    describe('#postDocument', () => {
+        const FormData = require('form-data');
+        const streamToPromise = require('stream-to-promise');
+
+
+
+        it ('Should return 201 created', done => {
+            const form = new FormData();
+            form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
+            streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL3G/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    expect(res.request.response.statusCode).to.equal(201);
+                    const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/server-test.js');
+                    fs.stat(path, function(err, stats) {
+                        expect(err).to.be.null();
+                        expect(stats).to.exists();
+                        expect(stats.isFile()).to.be.true();
+
+                        const content = fs.readFileSync(path);
+                        const originalContent = fs.readFileSync(Path.join(__dirname, 'server-test.js'));
+                        expect(content.length).to.equal(originalContent.length);
+                        expect(content.equals(originalContent)).to.be.true();
+
+                        done();
+                    });
+                });
+            });
+        });
+
+        it ('Should return 404 not found', done => {
+
+            const form = new FormData();
+            form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
+             streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    const response = res.request.response.source;
+                    expect(response.statusCode).to.equal(404);
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 400 bad request -- missing file', done => {
+            const form = new FormData();
+            form.append('wrongFile', fs.createReadStream(Path.join(__dirname, 'courses-test.js')));
+             streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL3G/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    const response = res.request.response.source;
+                    expect(response.statusCode).to.equal(400);
+                    done();
+                });
+            });
+        });
+    });
 });
