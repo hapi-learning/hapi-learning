@@ -38,7 +38,7 @@ angular.module('hapi-learning', [
             // passing a culture into getErrorMessages('fr-fr') will get the culture specific messages
             // otherwise the current default culture is returned.
             defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
-                errorMessages['validator'] = 'Passwords do not match!';
+                errorMessages['passwordMatch'] = 'Passwords do not match!';
             });
     }
 ]);
