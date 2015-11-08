@@ -114,6 +114,22 @@ exports.delete = {
     }
 };
 
+const updateHandler = function(request, reply) {
+
+    const User = this.models.User;
+
+    User.update(
+        request.payload,
+        {
+            where: {
+                username: request.params.username
+            }
+        }
+    )
+    .then(result => reply({count : result[0] || 0}))
+    .catch(error => reply.badImplementation(error));
+};
+
 exports.put = {
     description: 'Update all info about user (except username)',
     validate: {
@@ -123,30 +139,12 @@ exports.put = {
         payload: {
             password: Joi.string().min(1).max(255).required().description('User password'),
             email: Joi.string().min(1).max(255).required().description('User email'),
-            firstName: Joi.string().min(1).max(255).description('User first name'),
-            lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.string().min(1).max(255).description('User phone number')
+            firstName: Joi.string().min(1).max(255).required().description('User first name'),
+            lastName: Joi.string().min(1).max(255).required().description('User last name'),
+            phoneNumber: Joi.string().min(1).max(255).required().description('User phone number')
         }
     },
-    handler: function(request, reply) {
-
-        const User = this.models.User;
-
-        User.update(
-        {
-            password: request.payload.password,
-            email: request.payload.email,
-            firstName: request.payload.firstName,
-            lastName: request.payload.lastName,
-            phoneNumber: request.payload.phoneNumber,
-        },
-        {
-            where: {username: request.params.username}
-        }
-        )
-        .then(result => reply({count : result[0] || 0}))
-        .catch(error => reply(error));
-    }
+    handler: updateHandler
 };
 
 
@@ -164,22 +162,7 @@ exports.patch = {
             phoneNumber: Joi.string().min(1).max(255).description('User phone number')
         }
     },
-    handler: function(request, reply) {
-
-        const User = this.models.User;
-
-        // NEED TESTING
-        User.update(
-                request.payload,
-                {
-                    where: {
-                        username: request.params.username
-                    }
-                }
-            )
-            .then(result => reply({count : result[0] || 0}))
-            .catch(error => reply(error));
-    }
+    handler: updateHandler
 };
 
 exports.getTags = {

@@ -45,6 +45,15 @@ const user = {
 const userUpdated = {
     email: 'Bogoss424@gmail.com',
     password: 'ImPosayy',
+    firstName : 'Bo',
+    lastName : 'Gosse',
+    phoneNumber: '+32484283748'
+};
+
+const badUserPUT = {
+    email: 'Bogoss424@gmail.com',
+    firstName : 'Bo',
+    lastName : 'Gosse',
     phoneNumber: '+32484283748'
 };
 
@@ -248,9 +257,64 @@ describe('Controller.User', () => {
                 done();
             });
         });
+        it('should return 1 because PATCH is not PUT (field not required)', done => {
+            const request = {
+                method: 'PATCH',
+                url: '/users/Johnny',
+                payload : badUserPUT
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
         it('should return 0 : number of updates', done => {
             const request = {
                 method: 'PATCH',
+                url: '/users/IDoNotExist',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
+    
+    describe('#put', () => {
+        it('should return 1 : number of updates', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/Johnny',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return status code 400 because missing field', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/Johnny',
+                payload : badUserPUT
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(400);
+                done();
+            });
+        });
+        it('should return 0 : number of updates', done => {
+            const request = {
+                method: 'PUT',
                 url: '/users/IDoNotExist',
                 payload : userUpdated
             };
