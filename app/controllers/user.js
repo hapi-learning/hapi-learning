@@ -1,5 +1,6 @@
 'use strict';
 
+const Hoek = require('hoek');
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
 
@@ -34,6 +35,20 @@ internals.findCourseByCode = function(Course, id) {
         attributes: {
             exclude: ['updated_at', 'deleted_at', 'created_at']
         }
+    });
+};
+
+internals.findUserCourses = function(User, username) {
+
+    Hoek.assert(User, 'Model User required');
+    Hoek.assert(username, 'Username required');
+
+    return internals.findUser(User, username)
+    .then(result => {
+            if (result)
+                return result.getCourses();
+            else
+                return reply.notFound('User ' + request.params.username + ' not found');
     });
 };
 
@@ -300,21 +315,7 @@ exports.getCourses = {
 
         const User = this.models.User;
 
-        User.findOne({
-            where: {
-                username: request.params.username
-            },
-            attributes: {
-                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-            }
-        })
-        .catch(err => reply.badRequest(err))
-        .then(result => {
-            if (result)
-                return result.getCourses();
-            else
-                return reply.notFound('User ' + request.params.username + ' not found');
-        })
+        internals.findUserCourses(User, request.params.username)
         .then(courses => {
             if (courses)
                 return reply(courses);
@@ -369,11 +370,38 @@ exports.unsubscribeToCourse = {
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            course: Joi.number().integer().required().description('Course id')
+            crsId: Joi.string().required().description('Course id')
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+        
+        const Course = this.models.Course;
+        const User   = this.models.User;
+        
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                internals.findCourseByCode(Course, request.params.crsId)
+                .then(course => {
+                    if (course)
+                    {
+                        user.removeCourse(course);
+                        return reply();
+                    }
+                    else
+                    {
+                        return reply.notFound('Course ' + request.params.crsId + ' not found');
+                    }
+                })
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
