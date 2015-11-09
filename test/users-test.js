@@ -16,7 +16,22 @@ before((done) => {
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => done());
+    }).then(() => 
+    {
+        [
+            {"name":"Extra-course"},
+            {"name":"COBOL_1"},
+            {"name":"3G12"},
+            {"name":"Languages"},
+            {"name":"3R13"},
+            {"name": "2I12"},
+            {"name": "Theory"}, 
+            {"name": "Over"}, 
+            {"name": "Laboratory"}
+        ].forEach(tag => Models.Tag.create(tag));
+        
+        done();
+    });
 });
 
 const badUser = {
@@ -68,9 +83,8 @@ const users = [{
 }];
 
 const tags = [
-    {name : 'Laboratory'},
     {name : 'Theory'},
-    {name : '2G13'}
+    {name : '2I12'}
 ];
 
 describe('Controller.User', () => {
@@ -338,28 +352,26 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : 'Theory'
+                payload : {name : 'Laboratory'}
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
                 expect(res.request.response.statusCode).equal(200);
                 expect(response.username).equal('SRV');
                 done();
             });
         });
         
-        it('should the user SRV', done => {
+        it('should return the user SRV', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : ['2G13', 'Laboratory']
+                payload : tags
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                                console.log(response);
 
                 expect(res.request.response.statusCode).equal(200);
                 expect(response.username).equal('SRV');
@@ -369,7 +381,7 @@ describe('Controller.User', () => {
     });
     
     describe('#getTags', () => {
-        it('should return every tags of specific user : 0', done => {
+        it('should return empty array tags of specific user : 0', done => {
             const request = {
                 method: 'GET',
                 url: '/users/Johnny/tags'
@@ -392,7 +404,6 @@ describe('Controller.User', () => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
                 expect(response).length(3);
-                //expect(response).equal(tags);
                 done();
             });});
     });

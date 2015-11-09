@@ -19,9 +19,10 @@ internals.findUser = function(User, username)
     });
 };
 
-const schemaUserTagsPOST = function(){
+const schemaUserTagsPOST = function()
+{
     const tag = Joi.object().keys({
-        name: Joi.string().min(1).max(255).required().description('Tag name')
+        name : Joi.string().min(1).max(255).required().description('Tag name')
     }).options({stripUnknown : true});
 
     return Joi.alternatives().try(tag, Joi.array().items(tag.required()));
@@ -39,16 +40,38 @@ exports.addTags = {
         const Tag      = this.models.Tag;
         const User     = this.models.User;
 
-        const tags     = [].concat(request.payload);
-        Tag
-        .findAll({where: { name: { $in: tags } }})
+        // const tags = [].concat(request.payload); DO NOT WORK
+        var tags = [];
+        
+        if (Array.isArray(request.payload))
+        {
+            tags = request.payload;
+        }
+        else
+        {
+            tags.push(request.payload);
+        }
+        console.log(tags);
+
+        Tag.findAll({
+            where: { 
+                name: { 
+                    $in: tags 
+                } 
+            },
+            attributes : {
+                exclude: ['updated_at', 'deleted_at', 'created_at']
+            }
+        })
         .then(tags => {
+            console.log('SHOULD NOT BE EMPTY');
+            console.log(tags);
             internals.findUser(User, request.params.username)
             .then(user => {
                 if (user) 
                 {
                     user.addTags(tags).then(() => {
-                       reply(user.getTags());
+                       reply(Utils.removeDates(tags));
                     });
                 } 
                 else 
