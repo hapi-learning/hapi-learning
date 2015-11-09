@@ -157,13 +157,30 @@ exports.getDocuments = {
 exports.getTree = {
     description: 'Get course folder tree',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
-            id: Joi.number().integer().required().description('Course id'),
-            path: Joi.string() // TODO - FIXME
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().default('/')
+        },
+        query: {
+            recursive: Joi.boolean().default(true)
         }
     },
     handler: function (request, reply) {
-        return reply.notImplemented();
+
+        const path = request.params.path;
+
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
+        const Storage   = this.storage;
+        const id        = request.params.id;
+        const recursive = request.query.recursive
+
+        return reply(Storage.getTree(id, path, recursive));
     }
 };
 

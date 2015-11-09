@@ -202,6 +202,16 @@ const load = function() {
         });
     };
 
+    Storage.getTree = function(course, path, recursive) {
+        Hoek.assert(course, 'course is required');
+        Hoek.assert(path, 'path is required');
+
+        recursive = recursive || false;
+
+        const document = internals.getDocumentPath(course, path);
+        return require('./ls').sync(document, { recursive: recursive});
+    };
+
     return Storage;
 };
 
