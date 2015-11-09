@@ -2,6 +2,8 @@
 
 const Joi = require('joi');
 const _ = require('lodash');
+const Utils = require('../utils/sequelize');
+
 
 exports.get = {
     description: 'Returns a specific role',
@@ -69,7 +71,7 @@ exports.post = {
         Role.create({
             name : request.payload.name
         })
-        .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at')))
+        .then(tag => reply(Utils.removeDates(tag)).code(201))
         .catch(() => reply.conflict());
     }
 };

@@ -20,7 +20,7 @@
     {
         "code": "INT1",
         "name": "Introduction 1e",
-        teachers: ["MCD", "NVS"],
+        "teachers": ["MCD", "NVS"],
         "tags": ["1e"]
     },
     {

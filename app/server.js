@@ -114,19 +114,59 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
        // logging: console.log
     })
     .then(() => {
-        require('../roles.json').forEach(role => Models.Role.create(role));
-        require('../users.json').forEach(user => Models.User.create(user));
-        require('../tags.json').forEach(tag => Models.Tag.create(tag));
-        require('../permissions.json').forEach(permission => Models.Permission.create(permission));
+
+        server.start((err) => {
+            if (err) {
+                throw err;
+            } else {
+                _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
+
+
+                // INIT DATA FOR TEST PURPOSES
+
+                const Wreck = require('wreck');
+                const roles = require('../roles.json');
+                const users = require('../users.json');
+                const tags  = require('../tags.json');
+                const permissions = require('../permissions.json');
+                const teachers = require('../teachers.json');
+                const courses = require('../courses.json');
+
+
+                const post = function(url, payload) {
+                    Wreck.post(url, { payload: JSON.stringify(payload) }, () => {});
+                };
+
+                const addCourses = function() {
+                    _.forEach(courses, course => post('http://localhost:8088/courses', course));
+                };
+
+                const addTeachers = function() {
+                    _.forEach(teachers, teacher => post('http://localhost:8088/users', teacher));
+                };
+
+               /* const addUsers = function() {
+                    _.forEach(users, user => post('http://localhost:8088/users', user, addTeachers));
+                };*/
+
+                const addTags = function() {
+                    _.forEach(tags, tag => post('http://localhost:8088/tags', tag));
+                };
+
+                const addRoles = function() {
+                    _.forEach(roles, role => post('http://localhost:8088/roles', role));
+                };
+
+                addRoles();
+                addTags();
+                addTeachers();
+                setTimeout(addCourses, 1000); // just for test.
+
+
+
+
+            }
+        });
+
     });
-
-
-    server.start((err) => {
-        if (err) {
-            throw err;
-        } else {
-            _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
-        }
-    });
-
 });
