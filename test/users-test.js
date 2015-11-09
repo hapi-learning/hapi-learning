@@ -334,7 +334,7 @@ describe('Controller.User', () => {
     });
     
     describe('#addTags', () => {
-        it('should', done => {
+        it('should return the user SRV', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
@@ -343,11 +343,14 @@ describe('Controller.User', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
+                console.log(response);
+                expect(res.request.response.statusCode).equal(200);
+                expect(response.username).equal('SRV');
                 done();
             });
         });
         
-        it('should', done => {
+        it('should the user SRV', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
@@ -356,6 +359,10 @@ describe('Controller.User', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
+                                console.log(response);
+
+                expect(res.request.response.statusCode).equal(200);
+                expect(response.username).equal('SRV');
                 done();
             });
         });
@@ -370,8 +377,8 @@ describe('Controller.User', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                except(response).is.an.array();
-                except(response).length(0);
+                expect(response).to.be.an.array();
+                expect(response).length(0);
                 done();
             });
         });
@@ -383,9 +390,9 @@ describe('Controller.User', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                except(response).is.an.array();
-                except(response).length(3);
-                //except(response).equal(tags);
+                expect(response).to.be.an.array();
+                expect(response).length(3);
+                //expect(response).equal(tags);
                 done();
             });});
     });

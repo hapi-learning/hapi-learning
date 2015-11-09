@@ -5,6 +5,20 @@ Joi.phone = require('joi-phone');
 
 const Utils = require('../utils/sequelize');
 
+const internals = {};
+
+internals.findUser = function(User, username)
+{
+    return User.findOne({
+        where: {
+            username: username
+            },
+            attributes: {
+                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+            }
+    });
+};
+
 const schemaUserTagsPOST = function(){
     const tag = Joi.object().keys({
         name: Joi.string().min(1).max(255).required().description('Tag name')
@@ -22,7 +36,28 @@ exports.addTags = {
         payload: schemaUserTagsPOST()
     },
     handler : function(request, reply) {
-        reply('Not implemented yet').code(201);
+        const Tag      = this.models.Tag;
+        const User     = this.models.User;
+
+        const tags     = [].concat(request.payload);
+        Tag
+        .findAll({where: { name: { $in: tags } }})
+        .then(tags => {
+            internals.findUser(User, request.params.username)
+            .then(user => {
+                if (user) 
+                {
+                    user.addTags(tags).then(() => {
+                       reply(user.getTags());
+                    });
+                } 
+                else 
+                {
+                    return reply.notFound('The user ' + request.params.username + ' does not exists.');
+                }
+            });
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
@@ -37,14 +72,7 @@ exports.get = {
 
         const User = this.models.User;
 
-        User.findOne({
-                where: {
-                    username: request.params.username
-                },
-                attributes: {
-                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-                }
-            })
+        internals.findUser(User, request.params.username)
             .then(result => {
                 if (result) {
                     return reply(Utils.removeDates(result));
@@ -205,7 +233,16 @@ exports.getTags = {
                 }
             })
             .catch(err => reply.notFound('User not found.'))
-            .then(result => result.getTags())
+            .then(result => {
+                if (result)
+                {
+                    return result.getTags();
+                }
+                else
+                {
+                    return [];
+                }
+            })
             .then(tags => reply(tags));
     }
 };
