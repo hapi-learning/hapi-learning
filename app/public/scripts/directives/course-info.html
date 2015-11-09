@@ -1,8 +1,8 @@
 <h3>
             <span class="label label-default label-pill pull-right" ng-show="updated()"><span class="glyphicon glyphicon-eye-open"></span></span>
                 
-                <a href="#/courses/{{course.code}}">{{course.code}} − {{course.name}}</a>
-        </h3>
+            <a href="#/courses/{{course.code}}">{{course.code}} − {{course.name}}</a>
+</h3>
 
 <div>
     <label>Teachers</label>
@@ -10,8 +10,8 @@
     <br />
 
     <span ng-repeat="teacher in course.teachers">
-                    <teacher-info></teacher-info>
-            </span>
+        <teacher-info></teacher-info>
+    </span>
 </div>
 
 <br />
@@ -21,13 +21,13 @@
 
     <br />
 
+
     <span ng-repeat="tag in course.tags">
-                    <button class="btn btn-default btn-xs">#{{tag}}</button>
-            </span>
+        <button class="btn btn-default btn-xs"> #{{tag}}</button>
+    </span>
 </div>
 
 <br />
-
 
 <div>
     <button type="button" class="btn btn-success" ng-hide="subscribed()"><span class="glyphicon glyphicon-ok"></span> Subscribe</button>
