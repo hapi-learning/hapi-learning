@@ -109,8 +109,9 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     }
 
     var Models = server.plugins.models.models;
+
     Models.sequelize.sync({
-        force: true // drops all db and recreates them
+        force: false // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
@@ -122,15 +123,16 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
 
 
+
                 // INIT DATA FOR TEST PURPOSES
 
                 const Wreck = require('wreck');
-                const roles = require('../roles.json');
-                const users = require('../users.json');
-                const tags  = require('../tags.json');
-                const permissions = require('../permissions.json');
-                const teachers = require('../teachers.json');
-                const courses = require('../courses.json');
+                const roles = require('../resources/roles.json');
+                const users = require('../resources/users.json');
+                const tags  = require('../resources/tags.json');
+                const permissions = require('../resources/permissions.json');
+                const teachers = require('../resources/teachers.json');
+                const courses = require('../resources/courses.json');
 
 
                 const post = function(url, payload) {
@@ -157,13 +159,11 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                     _.forEach(roles, role => post('http://localhost:8088/roles', role));
                 };
 
+
                 addRoles();
                 addTags();
                 addTeachers();
                 setTimeout(addCourses, 1000); // just for test.
-
-
-
 
             }
         });
