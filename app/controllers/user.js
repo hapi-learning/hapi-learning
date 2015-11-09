@@ -141,7 +141,6 @@ exports.get = {
     }
 };
 
-
 exports.getAll = {
     description: 'Get all users',
     handler: function(request, reply) {
