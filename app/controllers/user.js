@@ -9,17 +9,35 @@ const internals = {};
 
 internals.findUser = function(User, username)
 {
+    Hoek.assert(User, 'Model User required');
+    Hoek.assert(username, 'username required');
+    
     return User.findOne({
         where: {
             username: username
-            },
-            attributes: {
-                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-            }
+        },
+        attributes: {
+            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+        }
     });
 };
 
-const schemaUserTagsPOST = function()
+internals.findCourseByCode = function(Course, id) {
+
+    Hoek.assert(Course, 'Model Course required');
+    Hoek.assert(id, 'Course code required');
+
+    return Course.findOne({
+        where: {
+            code: { $eq : id }
+        },
+        attributes: {
+            exclude: ['updated_at', 'deleted_at', 'created_at']
+        }
+    });
+};
+
+internals.schemaUserTagsPOST = function()
 {
     const tag = Joi.object().keys({
         name : Joi.string().min(1).max(255).required().description('Tag name')
@@ -34,7 +52,7 @@ exports.addTags = {
         params: {
             username: Joi.string().min(1).max(255).required().description('User personal ID')
         },
-        payload: schemaUserTagsPOST()
+        payload: internals.schemaUserTagsPOST()
     },
     handler : function(request, reply) {
         const Tag      = this.models.Tag;
@@ -248,25 +266,25 @@ exports.getTags = {
         const User = this.models.User;
 
         User.findOne({
-                where: {
-                    username: request.params.username
-                },
-                attributes: {
-                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-                }
-            })
-            .catch(err => reply.notFound('User not found.'))
-            .then(result => {
-                if (result)
-                {
-                    return result.getTags();
-                }
-                else
-                {
-                    return [];
-                }
-            })
-            .then(tags => reply(tags));
+            where: {
+                username: request.params.username
+            },
+            attributes: {
+                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+            }
+        })
+        .catch(err => reply.notFound('User not found.'))
+        .then(result => {
+            if (result)
+            {
+                return result.getTags();
+            }
+            else
+            {
+                return [];
+            }
+        })
+        .then(tags => reply(tags));
     }
 };
 
@@ -283,16 +301,26 @@ exports.getCourses = {
         const User = this.models.User;
 
         User.findOne({
-                where: {
-                    username: request.params.username
-                },
-                attributes: {
-                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-                }
-            })
-            .catch(err => reply.badRequest(err))
-            .then(result => result.getCourses()
-                  .then(courses => reply(courses)));
+            where: {
+                username: request.params.username
+            },
+            attributes: {
+                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+            }
+        })
+        .catch(err => reply.badRequest(err))
+        .then(result => {
+            if (result)
+                return result.getCourses();
+            else
+                return reply.notFound('User ' + request.params.username + ' not found');
+        })
+        .then(courses => {
+            if (courses)
+                return reply(courses);
+            else
+                return reply([]);
+        });
     }
 };
 
@@ -301,11 +329,38 @@ exports.subscribeToCourse = {
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            course: Joi.number().integer().required().description('Course id')
+            crsId: Joi.string().required().description('Course id')
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+        
+        const Course = this.models.Course;
+        const User   = this.models.User;
+        
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                internals.findCourseByCode(Course, request.params.crsId)
+                .then(course => {
+                    if (course)
+                    {
+                        user.addCourse(course);
+                        return reply();
+                    }
+                    else
+                    {
+                        return reply.notFound('Course ' + request.params.crsId + ' not found');
+                    }
+                })
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
