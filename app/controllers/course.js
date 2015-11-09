@@ -192,6 +192,9 @@ exports.getStudents = {
 exports.post = {
     description: 'Add a course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         payload: {
             name: Joi.string().min(1).max(255).required().description('Course name'),
             code: Joi.string().min(1).max(255).required().description('Course code'),
@@ -212,6 +215,7 @@ exports.post = {
         const description = request.payload.description;
         const pteachers   = request.payload.teachers;
         const ptags       = request.payload.tags;
+
 
         const hasTeachers = pteachers ? true : false;
         const hasTags     = ptags ? true : false;
@@ -370,6 +374,9 @@ exports.createFolder = {
 exports.addTags = {
     description: 'Add a list of tags to the course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code'),
         },
@@ -407,6 +414,9 @@ exports.addTags = {
 exports.addTeachers = {
     description: 'Add a list of teachers to the course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code'),
         },
@@ -443,6 +453,9 @@ exports.addTeachers = {
 exports.patch = {
     description: 'Modify a course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code')
         },
@@ -509,6 +522,9 @@ exports.delete = {
 exports.deleteTags = {
     description: 'Delete a list of tags from the course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code'),
         },
@@ -546,6 +562,9 @@ exports.deleteTags = {
 exports.deleteTeachers = {
     description: 'Delete a list of teachers from the course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code'),
         },
@@ -589,6 +608,9 @@ exports.deleteTeachers = {
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code')
         },
