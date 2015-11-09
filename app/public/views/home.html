@@ -10,29 +10,25 @@
 
     <!--    <div ng-include="'../views/profile.html'"></div>-->
 
-    <div>
-        <div class="col-md-2" ng-controller="home-controller as homeCtrl">
+    <div class="col-md-2" ng-controller="home-controller as homeCtrl">
 
-            <div ng-include="'../partials/userbar.html'"></div>
+        <div ng-include="'../partials/userbar.html'"></div>
 
-        </div>
-
-
-        <div class="col-md-7" ng-controller="courses-controller">
-
-            <h1 class="page-header">My courses</h1>
-
-            <div ng-include="'../partials/courses-list.html'"></div>
-        </div>
-
-        <div class="col-md-3" ng-controller="news-controller as homeCtrl">
-
-            <h1 class="page-header">News</h1>
-
-            <div ng-include="'../partials/news-resume.html'"></div>
-        </div>
+    </div>
 
 
+    <div class="col-md-7" ng-controller="courses-controller">
+
+        <h1 class="page-header">My courses</h1>
+
+        <div ng-include="'../partials/courses-list.html'"></div>
+    </div>
+
+    <div class="col-md-3" ng-controller="news-controller as homeCtrl">
+
+        <h1 class="page-header">News</h1>
+
+        <div ng-include="'../partials/news-resume.html'"></div>
     </div>
 
 </div>

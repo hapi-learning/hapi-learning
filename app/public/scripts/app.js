@@ -32,6 +32,11 @@ angular.module('hapi-learning', [
                     templateUrl: '/views/news.html',
                     controller: 'news-controller'
                 })
+                .state('login', {
+                    url: '/login',
+                    templateUrl: '/views/connection.html',
+                    controller: 'admin-controller'
+                })
         }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.includeSpinner = false;
