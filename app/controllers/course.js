@@ -177,10 +177,15 @@ exports.getTree = {
         }
 
         const Storage   = this.storage;
+        const Course    = this.models.Course;
         const id        = request.params.id;
         const recursive = request.query.recursive
 
-        return reply(Storage.getTree(id, path, recursive));
+        const tree = function() {
+            return reply(Storage.getTree(id, path, recursive));
+        };
+
+        return internals.checkCourse(Course, id, tree);
     }
 };
 

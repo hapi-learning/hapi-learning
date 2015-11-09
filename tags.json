@@ -1,9 +1,29 @@
-[{"name":"Extra-course"},
-{"name":"COBOL_1"},
-{"name":"3G12"},
-{"name":"Languages"},
-{"name":"3R13"},
-{"name": "2I12"},
-{"name": "Theory"}, 
-{"name": "Over"}, 
-{"name": "Laboratory"}]
+[
+    {
+        "name": "1e"
+    },
+    {
+        "name": "2e"
+    },
+    {
+        "name": "3e"
+    },
+    {
+        "name": "Java"
+    },
+    {
+        "name": "Gestion"
+    },
+    {
+        "name": "Réseaux"
+    },
+    {
+        "name": "Industriel"
+    },
+    {
+        "name": "Administration"
+    },
+    {
+        "name": "1e"
+    }
+]
