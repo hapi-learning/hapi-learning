@@ -18,11 +18,11 @@
   },
   "homepage": "https://gitlab.com/fknop/ATL3-hapi-learning#README",
   "dependencies": {
-    "easypeazip": "file:./plugins/easypeazip",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.0.5",
     "boom": "^3.0.0",
     "dotenv": "^1.2.0",
+    "easypeazip": "file:./plugins/easypeazip",
     "glob": "^5.0.15",
     "glue": "^2.4.0",
     "good": "^6.4.0",
@@ -41,7 +41,8 @@
     "rmdir": "^1.1.0",
     "sequelize": "^3.13.0",
     "sqlite3": "^3.1.0",
-    "vision": "^3.0.0"
+    "vision": "^3.0.0",
+    "wreck": "^7.0.0"
   },
   "devDependencies": {
     "code": "^2.0.1",

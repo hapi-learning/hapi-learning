@@ -1,0 +1,62 @@
+[
+    {
+        "code": "ANA3",
+        "name": "Analyse 3e",
+        "teachers": ["FPL"],
+        "tags": ["3e", "Gestion"]
+    },
+    {
+        "code": "DEV1",
+        "name": "Développement 1e",
+        "teachers": ["MCD", "SRV", "HAL"],
+        "tags": ["1e", "Java"]
+    },
+    {
+        "code": "DEV2",
+        "name": "Développement 2e",
+        "teachers": ["FPL", "SRV", "JLC"],
+        "tags": ["2e", "Java"]
+    },
+    {
+        "code": "INT1",
+        "name": "Introduction 1e",
+        "teachers": ["MCD", "NVS"],
+        "tags": ["1e"]
+    },
+    {
+        "code": "TMP56GATL",
+        "name": "Ateliers Logiciel 3e",
+        "teachers": ["FPL", "SRV"],
+        "tags": ["3e", "Java", "Gestion"]
+    },
+    {
+        "code": "STAGES",
+        "name": "Stages",
+        "teachers": ["DNA"],
+        "tags": ["3e"]
+    },
+    {
+        "code": "RE",
+        "name": "Ressources étudiants",
+        "teachers": ["ADT"],
+        "tags": ["Administration"]
+    },
+    {
+        "code": "SYS2",
+        "name": "Système 2e",
+        "teachers": ["MBA"],
+        "tags": ["2e"]
+    },
+    {
+        "code": "DVG2GCOB",
+        "name": "Cobol 1e",
+        "teachers": ["EFO", "HAL"],
+        "tags": ["1e", "Gestion"]
+    },
+    {
+        "code": "TMP56IRATL",
+        "name": "Ateliers Logiciels Réseaux 3e",
+        "teachers": ["NVS"],
+        "tags": ["3e", "Réseaux"]
+    }
+]

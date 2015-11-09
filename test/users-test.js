@@ -410,7 +410,6 @@ describe('Controller.User', () => {
     
     describe('#addCourse', () => {
         it('should return statusCode 200, course has been added', done => {
-            it('should return empty array tags of specific user : 0', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/courses/ATL'
@@ -421,9 +420,7 @@ describe('Controller.User', () => {
                 done();
             });
         });
-        });
         it('should return statusCode 400, wrong parameter', done => {
-            it('should return empty array tags of specific user : 0', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/courses/ATL'
@@ -435,7 +432,6 @@ describe('Controller.User', () => {
             });
         });
         it('should return statusCode 404, user not found', done => {
-            it('should return empty array tags of specific user : 0', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/courses/ATL'
@@ -447,7 +443,6 @@ describe('Controller.User', () => {
             });
         });
         it('should return statusCode 404, course not found', done => {
-            it('should return empty array tags of specific user : 0', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/courses/ATL'
@@ -460,5 +455,17 @@ describe('Controller.User', () => {
         });
     });
     
-    describe('#removeCourse', () => {});
+    describe('#removeCourse', () => {
+        it('', done => {
+            const request = {
+                method: 'DELETE',
+                url: '/users/SRV/courses/ATL'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                done();
+            });
+        });
+    });
 });

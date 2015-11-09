@@ -18,13 +18,13 @@ before((done) => {
     Models.sequelize.sync({
         force: true
     }).then(() => done());
-    
+
 });
 
 describe('Controller.Tag', () => {
 
     describe('#post()', () => {
-        
+
         it('should return error because empty tag name', done => {
 
             const request = {
@@ -41,7 +41,7 @@ describe('Controller.Tag', () => {
                 done();
             });
         });
-        
+
         it('should return the created object', done => {
 
             const request = {
@@ -54,12 +54,12 @@ describe('Controller.Tag', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(res.request.response.statusCode).to.equal(200);
+                expect(res.request.response.statusCode).to.equal(201);
                 expect(response.name).to.equal(request.payload.name);
                 done();
             });
         });
-        
+
         it('should return error because this tag already exist', done => {
 
             const request = {
@@ -76,11 +76,11 @@ describe('Controller.Tag', () => {
                 done();
             });
         });
-        
+
     });
 
     describe('#getAll()', () => {
-        
+
         it('should return all tags', done => {
 
             const request = {
@@ -96,9 +96,9 @@ describe('Controller.Tag', () => {
             });
         });
     });
-    
+
     describe('#get()', () => {
-       
+
         it('should return specific tag', done => {
 
             const request = {
@@ -112,7 +112,7 @@ describe('Controller.Tag', () => {
                 done();
             });
         });
-        
+
         it('should throw an error because of inexistant tag', done => {
 
             const request = {
@@ -127,9 +127,9 @@ describe('Controller.Tag', () => {
             });
         });
     });
-    
+
     describe('#delete()', () => {
-        
+
         it('should return 1 deleted tag', done => {
 
             const request = {
@@ -143,7 +143,7 @@ describe('Controller.Tag', () => {
                 done();
             });
         });
- 
+
         it('should return 0 deleted tag', done => {
 
             const request = {

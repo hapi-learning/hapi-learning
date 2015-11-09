@@ -61,6 +61,20 @@ internals.schemaUserTagsPOST = function()
     return Joi.alternatives().try(tag, Joi.array().items(tag.required()));
 };
 
+internals.schemaUserPOST = function(){
+    const user = Joi.object().keys({
+            username: Joi.string().min(1).max(30).required().description('User personal ID'),
+            password: Joi.string().min(1).max(255).required().description('User password'),
+            email: Joi.string().email().required().description('User email'),
+            firstName: Joi.string().min(1).max(255).description('User first name'),
+            lastName: Joi.string().min(1).max(255).description('User last name'),
+            phoneNumber: Joi.phone.e164().description('User phone number'),
+            role_id: Joi.number().integer().default(1)
+        }).options({stripUnknown : true});
+
+    return Joi.alternatives().try(user, Joi.array().items(user.required()));
+};
+
 exports.addTags = {
     description: 'Link tags to a user',
     validate: {
@@ -157,28 +171,17 @@ exports.getAll = {
     }
 };
 
-const schemaUserPOST = function(){
-    const user = Joi.object().keys({
-        username: Joi.string().min(1).max(30).required().description('User personal ID'),
-        password: Joi.string().min(1).max(255).required().description('User password'),
-        email: Joi.string().email().required().description('User email'),
-        firstName: Joi.string().min(1).max(255).description('User first name'),
-        lastName: Joi.string().min(1).max(255).description('User last name'),
-        phoneNumber: Joi.phone.e164().description('User phone number')
-    }).options({stripUnknown : true});
 
-    return Joi.alternatives().try(user, Joi.array().items(user.required()));
-};
 
 exports.post = {
     description: 'Add user',
     validate: {
-        payload : schemaUserPOST()
+        payload : internals.schemaUserPOST()
     },
     handler: function(request, reply) {
 
         const User = this.models.User;
-
+        console.log(request.payload);
         if (Array.isArray(request.payload))
         {
             User.bulkCreate(
@@ -186,13 +189,19 @@ exports.post = {
                 {validate : true}
             )
             .then(results => (reply({count : results.length}).code(201)))
-            .catch(() => reply.conflict());
+            .catch((error) => {
+                console.log(error);
+                return reply.conflict(error);
+            });
         }
         else
         {
             User.create(request.payload)
             .then(result => reply(Utils.removeDates(result)).code(201))
-            .catch(() => reply.conflict());
+            .catch((error) => {
+                console.log(error);
+                return reply.conflict(error);
+            });
         }
     }
 };

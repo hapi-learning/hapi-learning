@@ -408,9 +408,9 @@ describe('Controller.Course', () => {
 
         it ('Should return 400 bad request (validation error)', done => {
 
-            const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: '3e'}});
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { tags: '3e', teachers: '3e'}});
             server.inject(copyRequest, res => {
-                const response = res.request.response.source;
+                const response = res.request.response;
                 expect(response.statusCode).to.equal(400);
                 done();
             });

@@ -67,7 +67,7 @@ exports.post = {
         Tag.create({
             name : request.payload.name
         })
-        .then(result => reply(Utils.removeDates(result)))
+        .then(result => reply(Utils.removeDates(result)).code(201))
         .catch(() => reply.conflict());
     }
 };
