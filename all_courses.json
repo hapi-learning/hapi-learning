@@ -1,0 +1,2037 @@
+[
+    {
+        "code": "ALG",
+        "name": "Algorithmique I",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "CLR",
+            "CUV",
+            "ELV",
+            "HAL",
+            "MCD",
+            "NPX"
+        ]
+    },
+    {
+        "code": "ALM",
+        "name": "Algorithmique I",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "LBC",
+            "CLR",
+            "CUV",
+            "ELV",
+            "HAL",
+            "MCD",
+            "NPX",
+            "SRV"
+        ]
+    },
+    {
+        "code": "ANG",
+        "name": "Communication anglophone de l'informatique I",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "JDS",
+            "NPX"
+        ]
+    },
+    {
+        "code": "CAI",
+        "name": "Communication anglophone de l'informatique I",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "JDS",
+            "NPX",
+            "ABS"
+        ]
+    },
+    {
+        "code": "CPT",
+        "name": "Comptabilité",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "JDS",
+            "ABS"
+        ]
+    },
+    {
+        "code": "IND",
+        "name": "Introduction à l'informatique industrielle",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "INI",
+        "name": "Introduction à l'informatique industrielle",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "INL",
+        "name": "Introduction au logiciel",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "FPL"
+        ]
+    },
+    {
+        "code": "INO",
+        "name": "Introduction à l'ordinateur",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "NVS",
+            "CLG"
+        ]
+    },
+    {
+        "code": "INR",
+        "name": "Introduction au réseau",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "PMA",
+            "JLC"
+        ]
+    },
+    {
+        "code": "JAVL",
+        "name": "Laboratoire de Programmation Java I",
+        "tags": [
+            "Q1",
+            "labo"
+        ],
+        "teachers": [
+            "PBT",
+            "CLR",
+            "MCD",
+            "BEJ",
+            "DNA",
+            "CLG",
+            "SRV",
+            "JLC",
+            "BIS"
+        ]
+    },
+    {
+        "code": "JAV",
+        "name": "Langage Java I",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "PBT",
+            "CLR",
+            "MCD",
+            "BEJ",
+            "NPX",
+            "DNA",
+            "CLG",
+            "JLC",
+            "BIS"
+        ]
+    },
+    {
+        "code": "LGJ",
+        "name": "Langage Java I",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "PBT",
+            "CLR",
+            "MCD",
+            "BEJ",
+            "NPX",
+            "DNA",
+            "CLG",
+            "SRV",
+            "JLC"
+        ]
+    },
+    {
+        "code": "LJV",
+        "name": "Laboratoire de Programmation Java I",
+        "tags": [
+            "Q1",
+            "labo"
+        ],
+        "teachers": [
+            "PBT",
+            "CLR",
+            "MCD",
+            "BEJ",
+            "NPX",
+            "DNA",
+            "CLG",
+            "SRV",
+            "JLC"
+        ]
+    },
+    {
+        "code": "LOG",
+        "name": "Introduction au logiciel",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "FPL"
+        ]
+    },
+    {
+        "code": "MAT",
+        "name": "Mathématiques",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "BEJ",
+            "EFO",
+            "LBC",
+            "YPR",
+            "NPX",
+            "NVS",
+            "ABS"
+        ]
+    },
+    {
+        "code": "MET",
+        "name": "Méthodologie",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "CMI"
+        ]
+    },
+    {
+        "code": "ORD",
+        "name": "Introduction à l'ordinateur",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "YPR",
+            "NVS",
+            "CLG"
+        ]
+    },
+    {
+        "code": "RES",
+        "name": "Introduction au réseau",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "PMA",
+            "JLC"
+        ]
+    },
+    {
+        "code": "SYS",
+        "name": "Introduction au système",
+        "tags": [
+            "Q1"
+        ],
+        "teachers": [
+            "MCD",
+            "MBA"
+        ]
+    },
+    {
+        "code": "ALG",
+        "name": "Algorithmique II",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "LBC",
+            "CLR",
+            "CUV",
+            "ELV",
+            "MCD"
+        ]
+    },
+    {
+        "code": "ALM",
+        "name": "Algorithmique II",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "LBC",
+            "CLR",
+            "CUV",
+            "ELV",
+            "HAL",
+            "MCD",
+            "NPX",
+            "JDS",
+            "SRV"
+        ]
+    },
+    {
+        "code": "ANG",
+        "name": "Communication anglophone de l'informatique II",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "JDS",
+            "NPX"
+        ]
+    },
+    {
+        "code": "ANL",
+        "name": "Analyse I",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "FPL",
+            "PMA"
+        ]
+    },
+    {
+        "code": "CAI",
+        "name": "Communication anglophone de l'informatique II",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "JDS"
+        ]
+    },
+    {
+        "code": "COBL",
+        "name": "Laboratoire Cobol I",
+        "tags": [
+            "Q2",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EFO",
+            "HAL"
+        ]
+    },
+    {
+        "code": "COB",
+        "name": "Cobol I",
+        "tags": [
+            "Q2",
+            "G"
+        ],
+        "teachers": [
+            "HAL"
+        ]
+    },
+    {
+        "code": "DON",
+        "name": "Persistance des données I",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "NPX",
+            "CUV",
+            "ELV"
+        ]
+    },
+    {
+        "code": "JAVL",
+        "name": "Laboratoire Java II",
+        "tags": [
+            "Q2",
+            "labo"
+        ],
+        "teachers": [
+            "PBT",
+            "CLR",
+            "MCD",
+            "JLC",
+            "CLG",
+            "SRV"
+        ]
+    },
+    {
+        "code": "JAV",
+        "name": "Langage Java II",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "MCD",
+            "BEJ"
+        ]
+    },
+    {
+        "code": "LCB",
+        "name": "Laboratoire Cobol I",
+        "tags": [
+            "Q2",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EFO",
+            "HAL"
+        ]
+    },
+    {
+        "code": "LDN",
+        "name": "Laboratoire de persistance des données I",
+        "tags": [
+            "Q2",
+            "labo"
+        ],
+        "teachers": [
+            "NPX",
+            "CUV",
+            "ELV"
+        ]
+    },
+    {
+        "code": "LGJ",
+        "name": "Langage Java II",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "PBT",
+            "CLR",
+            "MCD",
+            "BEJ",
+            "NPX",
+            "DNA",
+            "CLG",
+            "SRV"
+        ]
+    },
+    {
+        "code": "LJV",
+        "name": "Laboratoire Java II",
+        "tags": [
+            "Q2",
+            "labo"
+        ],
+        "teachers": [
+            "PBT",
+            "CLR",
+            "MCD",
+            "BEJ",
+            "NPX",
+            "DNA",
+            "CLG",
+            "SRV"
+        ]
+    },
+    {
+        "code": "LMC",
+        "name": "Laboratoire microprocesseurs",
+        "tags": [
+            "Q2",
+            "labo"
+        ],
+        "teachers": [
+            "HAL",
+            "NVS",
+            "BEJ",
+            "MCD",
+            "ABS"
+        ]
+    },
+    {
+        "code": "LPH",
+        "name": "Laboratoire de physique",
+        "tags": [
+            "Q2",
+            "IR",
+            "labo"
+        ],
+        "teachers": [
+            "YPR",
+            "CLG"
+        ]
+    },
+    {
+        "code": "MICL",
+        "name": "Laboratoire microprocesseurs",
+        "tags": [
+            "Q2",
+            "labo"
+        ],
+        "teachers": [
+            "HAL",
+            "NVS",
+            "BEJ",
+            "MCD",
+            "MWA",
+            "ABS"
+        ]
+    },
+    {
+        "code": "MIC",
+        "name": "Microprocesseurs",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "HAL",
+            "BEJ"
+        ]
+    },
+    {
+        "code": "MPR",
+        "name": "Modèles et protocoles de réseaux",
+        "tags": [
+            "Q2",
+            "IR"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "PERL",
+        "name": "Laboratoire de persistance des données I",
+        "tags": [
+            "Q2",
+            "labo"
+        ],
+        "teachers": [
+            "NPX",
+            "CUV",
+            "ELV"
+        ]
+    },
+    {
+        "code": "PER",
+        "name": "Persistance des données I",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "NPX",
+            "CUV",
+            "ELV"
+        ]
+    },
+    {
+        "code": "PHYL",
+        "name": "Laboratoire de physique",
+        "tags": [
+            "Q2",
+            "IR",
+            "labo"
+        ],
+        "teachers": [
+            "YPR",
+            "CLG"
+        ]
+    },
+    {
+        "code": "PHY",
+        "name": "Physique",
+        "tags": [
+            "Q2",
+            "IR"
+        ],
+        "teachers": [
+            "CLG",
+            "YPR"
+        ]
+    },
+    {
+        "code": "STA",
+        "name": "Statistique",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "LBC",
+            "EFO",
+            "CLG"
+        ]
+    },
+    {
+        "code": "SYS",
+        "name": "Systèmes d'exploitation I",
+        "tags": [
+            "Q2"
+        ],
+        "teachers": [
+            "MBA"
+        ]
+    },
+    {
+        "code": "AMI",
+        "name": "Applications microinformatiques",
+        "tags": [
+            "Q3",
+            "I"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "ANG",
+        "name": "Anglais",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "JDS"
+        ]
+    },
+    {
+        "code": "ANLL",
+        "name": "Laboratoire d'analyse II",
+        "tags": [
+            "Q3",
+            "labo"
+        ],
+        "teachers": [
+            "ELV",
+            "FPL",
+            "NPX",
+            "CUV",
+            "PBT"
+        ]
+    },
+    {
+        "code": "ANL",
+        "name": "Analyse II",
+        "tags": [
+            "Q3"
+        ],
+        "teachers": [
+            "ELV",
+            "FPL"
+        ]
+    },
+    {
+        "code": "ATL",
+        "name": "Ateliers logiciels",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "ARO",
+            "JLC",
+            "SRV"
+        ]
+    },
+    {
+        "code": "AUT",
+        "name": "Automates programmables",
+        "tags": [
+            "Q3",
+            "I"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "CAI",
+        "name": "Anglais",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "JDS"
+        ]
+    },
+    {
+        "code": "CPPL",
+        "name": "Laboratoire C/C++ I",
+        "tags": [
+            "Q3",
+            "labo"
+        ],
+        "teachers": [
+            "NVS",
+            "MWA",
+            "BEJ",
+            "ARO"
+        ]
+    },
+    {
+        "code": "CPP",
+        "name": "Langage C/C++",
+        "tags": [
+            "Q3"
+        ],
+        "teachers": [
+            "NVS"
+        ]
+    },
+    {
+        "code": "CPT",
+        "name": "Comptabilité",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "JDS"
+        ]
+    },
+    {
+        "code": "DIN",
+        "name": "Développement internet",
+        "tags": [
+            "Q3",
+            "R"
+        ],
+        "teachers": [
+            "MWI",
+            "ARO"
+        ]
+    },
+    {
+        "code": "DON",
+        "name": "Persistance des données II",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO",
+            "NVS"
+        ]
+    },
+    {
+        "code": "DON",
+        "name": "Persistance des données II",
+        "tags": [
+            "Q3",
+            "IR"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO"
+        ]
+    },
+    {
+        "code": "DPD",
+        "name": "Droit et philosophie",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "ART"
+        ]
+    },
+    {
+        "code": "DPP",
+        "name": "Droit et philosophie",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "YPR"
+        ]
+    },
+    {
+        "code": "DRO",
+        "name": "Droit",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "ART"
+        ]
+    },
+    {
+        "code": "ECO",
+        "name": "Économie générale",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "JDS"
+        ]
+    },
+    {
+        "code": "LAL",
+        "name": "Laboratoire d'analyse II",
+        "tags": [
+            "Q3",
+            "labo"
+        ],
+        "teachers": [
+            "JDM",
+            "ELV",
+            "FPL"
+        ]
+    },
+    {
+        "code": "LANL",
+        "name": "Laboratoire LAN",
+        "tags": [
+            "Q3",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "PMA",
+            "NVS"
+        ]
+    },
+    {
+        "code": "LAN",
+        "name": "Solutions LAN - Windows",
+        "tags": [
+            "Q3",
+            "R"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "LCP",
+        "name": "Laboratoire C/C++ I",
+        "tags": [
+            "Q3",
+            "labo"
+        ],
+        "teachers": [
+            "NVS",
+            "MWA",
+            "BEJ",
+            "ARO",
+            "MBA"
+        ]
+    },
+    {
+        "code": "LDN",
+        "name": "Laboratoire de persistance des données II",
+        "tags": [
+            "Q3",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO",
+            "NVS"
+        ]
+    },
+    {
+        "code": "LLN",
+        "name": "Laboratoire LAN",
+        "tags": [
+            "Q3",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "PMA",
+            "MHI"
+        ]
+    },
+    {
+        "code": "LPH",
+        "name": "Laboratoire de physique du signal",
+        "tags": [
+            "Q3",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "LWR",
+        "name": "Réseaux sans fils et mobiles",
+        "tags": [
+            "Q3",
+            "R"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "PERL",
+        "name": "Laboratoire de persistance des données II",
+        "tags": [
+            "Q3",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO",
+            "NVS"
+        ]
+    },
+    {
+        "code": "PER",
+        "name": "Persistance des données II",
+        "tags": [
+            "Q3",
+            "G"
+        ],
+        "teachers": [
+            "ADT"
+        ]
+    },
+    {
+        "code": "PER",
+        "name": "Persistance des données II",
+        "tags": [
+            "Q3",
+            "IR"
+        ],
+        "teachers": [
+            "ADT"
+        ]
+    },
+    {
+        "code": "PHA",
+        "name": "Physique d'acquisition",
+        "tags": [
+            "Q3",
+            "I"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "PHSL",
+        "name": "Laboratoire de physique du signal",
+        "tags": [
+            "Q3",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "RSML",
+        "name": "Réseaux sans fils et mobiles",
+        "tags": [
+            "Q3",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "RSM",
+        "name": "Réseaux sans fils et mobiles",
+        "tags": [
+            "Q3",
+            "R"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "VAN",
+        "name": "Visualisation - Analyse",
+        "tags": [
+            "Q3",
+            "I"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "VIS",
+        "name": "Visualisation - Analyse",
+        "tags": [
+            "Q3",
+            "I"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "WEB",
+        "name": "Développement internet",
+        "tags": [
+            "Q3",
+            "R"
+        ],
+        "teachers": [
+            "MWI"
+        ]
+    },
+    {
+        "code": "WIR",
+        "name": "Réseaux sans fils et mobiles",
+        "tags": [
+            "Q3",
+            "R"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "XML",
+        "name": "Introduction à XML",
+        "tags": [
+            "Q3",
+            "R"
+        ],
+        "teachers": [
+            "MWI",
+            "ARO"
+        ]
+    },
+    {
+        "code": "ADI",
+        "name": "Applications distribuées I",
+        "tags": [
+            "Q4",
+            "G"
+        ],
+        "teachers": [
+            "ARO",
+            "ABS",
+            "JLC"
+        ]
+    },
+    {
+        "code": "AGRL",
+        "name": "Gestion et administration des réseaux Linux",
+        "tags": [
+            "Q4",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "MWA"
+        ]
+    },
+    {
+        "code": "AGRW",
+        "name": "Gestion et administration des réseaux Windows",
+        "tags": [
+            "Q4",
+            "R"
+        ],
+        "teachers": [
+            "MWI",
+            "EGR"
+        ]
+    },
+    {
+        "code": "AGR",
+        "name": "Administration et gestion des réseaux",
+        "tags": [
+            "Q4",
+            "I"
+        ],
+        "teachers": [
+            "PBT"
+        ]
+    },
+    {
+        "code": "AGU",
+        "name": "Gestion et administration des réseaux Unix",
+        "tags": [
+            "Q4",
+            "R"
+        ],
+        "teachers": [
+            "MWA"
+        ]
+    },
+    {
+        "code": "AGW",
+        "name": "Gestion et administration des réseaux Windows",
+        "tags": [
+            "Q4",
+            "R"
+        ],
+        "teachers": [
+            "MWI",
+            "EGR"
+        ]
+    },
+    {
+        "code": "ALG",
+        "name": "Algorithmique III",
+        "tags": [
+            "Q4"
+        ],
+        "teachers": [
+            "LBC",
+            "CLR"
+        ]
+    },
+    {
+        "code": "ANLL",
+        "name": "Laboratoire d'analyse II bis",
+        "tags": [
+            "Q4",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "ELV",
+            "PMA",
+            "NPX"
+        ]
+    },
+    {
+        "code": "ATL",
+        "name": "Ateliers logiciels II",
+        "tags": [
+            "Q4",
+            "G"
+        ],
+        "teachers": [
+            "ARO",
+            "JLC",
+            "SRV"
+        ]
+    },
+    {
+        "code": "ATL",
+        "name": "Ateliers logiciels I",
+        "tags": [
+            "Q4",
+            "IR"
+        ],
+        "teachers": [
+            "ARO",
+            "FPL",
+            "JLC",
+            "JDS"
+        ]
+    },
+    {
+        "code": "COBL",
+        "name": "Laboratoire Cobol II",
+        "tags": [
+            "Q4",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EFO",
+            "HAL"
+        ]
+    },
+    {
+        "code": "COB",
+        "name": "Cobol II",
+        "tags": [
+            "Q4",
+            "G"
+        ],
+        "teachers": [
+            "EFO"
+        ]
+    },
+    {
+        "code": "CPPL",
+        "name": "Laboratoire C/C++ II",
+        "tags": [
+            "Q4",
+            "labo"
+        ],
+        "teachers": [
+            "NVS",
+            "BEJ",
+            "MWA"
+        ]
+    },
+    {
+        "code": "DON",
+        "name": "Persistance des données III",
+        "tags": [
+            "Q4",
+            "G"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO",
+            "NVS"
+        ]
+    },
+    {
+        "code": "DON",
+        "name": "Persistance des données III",
+        "tags": [
+            "Q4",
+            "IR"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO",
+            "NVS"
+        ]
+    },
+    {
+        "code": "ERG",
+        "name": "Ergonomie du logicieL",
+        "tags": [
+            "Q4",
+            "G"
+        ],
+        "teachers": [
+            "DNA"
+        ]
+    },
+    {
+        "code": "LAL",
+        "name": "Laboratoire d'analyse II bis",
+        "tags": [
+            "Q4",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "JDM",
+            "ELV",
+            "FPL"
+        ]
+    },
+    {
+        "code": "LAN",
+        "name": "LAN",
+        "tags": [
+            "Q4",
+            "I"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "LCB",
+        "name": "Laboratoire Cobol II",
+        "tags": [
+            "Q4",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EFO"
+        ]
+    },
+    {
+        "code": "LCP",
+        "name": "Laboratoire C/C++ II",
+        "tags": [
+            "Q4",
+            "labo"
+        ],
+        "teachers": [
+            "NVS",
+            "MWA",
+            "BEJ",
+            "ARO",
+            "MBA"
+        ]
+    },
+    {
+        "code": "LDN",
+        "name": "Laboratoire de Persistance des données III",
+        "tags": [
+            "Q4",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO",
+            "NVS"
+        ]
+    },
+    {
+        "code": "LDN",
+        "name": "Laboratoire de Persistance des données II",
+        "tags": [
+            "Q4",
+            "IR",
+            "labo"
+        ],
+        "teachers": [
+            "ADT",
+            "ARO",
+            "NVS"
+        ]
+    },
+    {
+        "code": "LSS",
+        "name": "Laboratoire de systèmes d'exploitation",
+        "tags": [
+            "Q4",
+            "labo"
+        ],
+        "teachers": [
+            "MBA"
+        ]
+    },
+    {
+        "code": "LWN",
+        "name": "Laboratoire WAN",
+        "tags": [
+            "Q4",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "CIH"
+        ]
+    },
+    {
+        "code": "PERL",
+        "name": "Laboratoire de Persistance des données III",
+        "tags": [
+            "Q4",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "ADT",
+            "ABS",
+            "NVS"
+        ]
+    },
+    {
+        "code": "PERL",
+        "name": "Laboratoire de Persistance des données II",
+        "tags": [
+            "Q4",
+            "IR",
+            "labo"
+        ],
+        "teachers": [
+            "ARO",
+            "SRV",
+            "DNA",
+            "CUV"
+        ]
+    },
+    {
+        "code": "PER",
+        "name": "Persistance des données III",
+        "tags": [
+            "Q4",
+            "G"
+        ],
+        "teachers": [
+            "ADT"
+        ]
+    },
+    {
+        "code": "PER",
+        "name": "Persistance des données III",
+        "tags": [
+            "Q4",
+            "IR"
+        ],
+        "teachers": [
+            "ADT"
+        ]
+    },
+    {
+        "code": "RLI",
+        "name": "Réseaux locaux industriels",
+        "tags": [
+            "Q4",
+            "I"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "SYSL",
+        "name": "Laboratoire de systèmes d'exploitation",
+        "tags": [
+            "Q4",
+            "labo"
+        ],
+        "teachers": [
+            "MBA"
+        ]
+    },
+    {
+        "code": "SYS",
+        "name": "Systèmes d'exploitation II",
+        "tags": [
+            "Q4"
+        ],
+        "teachers": [
+            "MBA"
+        ]
+    },
+    {
+        "code": "WANL",
+        "name": "Laboratoire WAN",
+        "tags": [
+            "Q4",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "JLC",
+            "PBT"
+        ]
+    },
+    {
+        "code": "WAN",
+        "name": "Technologies WAN",
+        "tags": [
+            "Q4",
+            "R"
+        ],
+        "teachers": [
+            "NPX"
+        ]
+    },
+    {
+        "code": "ADI",
+        "name": "Applications distribuées II",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "MCD"
+        ]
+    },
+    {
+        "code": "AGR",
+        "name": "Administration et gestion des réseaux : intégration Windows - Unix",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "PBT"
+        ]
+    },
+    {
+        "code": "AIRL",
+        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
+        "tags": [
+            "Q5",
+            "I",
+            "labo"
+        ],
+        "teachers": [
+            "CIH",
+            "MWA"
+        ]
+    },
+    {
+        "code": "AIRL",
+        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
+        "tags": [
+            "Q5",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "CIH",
+            "MWA"
+        ]
+    },
+    {
+        "code": "AIR",
+        "name": "Architecture et Ingénierie des réseaux",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "CIH",
+            "MWA"
+        ]
+    },
+    {
+        "code": "AIR",
+        "name": "Architecture et Ingénierie des réseaux",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "CIH",
+            "MWA"
+        ]
+    },
+    {
+        "code": "AMI",
+        "name": "Applications de microprocesseurs",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "ANLL",
+        "name": "Laboratoire d'analyse III",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "FPL"
+        ]
+    },
+    {
+        "code": "ANLL",
+        "name": "Laboratoire d'analyse III",
+        "tags": [
+            "Q5",
+            "IR",
+            "labo"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "ANL",
+        "name": "Analyse III",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "FPL"
+        ]
+    },
+    {
+        "code": "ATC",
+        "name": "Ateliers logiciels II (C/C++)",
+        "tags": [
+            "Q5",
+            "IR"
+        ],
+        "teachers": [
+            "PBT",
+            "NVS",
+            "ARO",
+            "SRV"
+        ]
+    },
+    {
+        "code": "ATJ",
+        "name": "Ateliers logiciels III (Java)",
+        "tags": [
+            "Q5",
+            "IR"
+        ],
+        "teachers": [
+            "PBT",
+            "NVS",
+            "ARO",
+            "SRV"
+        ]
+    },
+    {
+        "code": "ATLC",
+        "name": "Ateliers logiciels II (C/C++)",
+        "tags": [
+            "Q5",
+            "IR"
+        ],
+        "teachers": [
+            "PBT",
+            "NVS",
+            "ARO",
+            "SRV"
+        ]
+    },
+    {
+        "code": "ATLJ",
+        "name": "Ateliers logiciels III (Java)",
+        "tags": [
+            "Q5",
+            "IR"
+        ],
+        "teachers": [
+            "PBT",
+            "NVS",
+            "ARO",
+            "SRV"
+        ]
+    },
+    {
+        "code": "ATL",
+        "name": "Ateliers logiciels III",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "ADT",
+            "FPL"
+        ]
+    },
+    {
+        "code": "AUT",
+        "name": "Automates programmables II",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "COBL",
+        "name": "Laboratoire de Cobol III",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EFO"
+        ]
+    },
+    {
+        "code": "COB",
+        "name": "Cobol III",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "EFO"
+        ]
+    },
+    {
+        "code": "CPRL",
+        "name": "Laboratoire de compléments réseaux",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "CPR",
+        "name": "Compléments réseaux",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "CRS",
+        "name": "Compléments réseaux",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "EBS",
+        "name": "eBusiness",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "DNA"
+        ]
+    },
+    {
+        "code": "ELI",
+        "name": "Électronique d'interfaçage",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "ESI",
+        "name": "Éléments de sécurité informatique",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "ABS"
+        ]
+    },
+    {
+        "code": "EXP",
+        "name": "Expression et communication",
+        "tags": [
+            "Q5"
+        ],
+        "teachers": [
+            "DNA"
+        ]
+    },
+    {
+        "code": "IEI",
+        "name": "Interfaçage d'équipements industriels et laboratoires",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "INT",
+        "name": "Interconnexion des réseaux",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "ITRL",
+        "name": "Laboratoire d'Interconnexion des réseaux",
+        "tags": [
+            "Q5",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "ITR",
+        "name": "Interconnexion des réseaux",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "LAL",
+        "name": "Laboratoire d'analyse III",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "FPL"
+        ]
+    },
+    {
+        "code": "LAL",
+        "name": "Laboratoire d'analyse III",
+        "tags": [
+            "Q5",
+            "IR",
+            "labo"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "LAR",
+        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
+        "tags": [
+            "Q5",
+            "I",
+            "labo"
+        ],
+        "teachers": [
+            "CIH",
+            "MWA"
+        ]
+    },
+    {
+        "code": "LAR",
+        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
+        "tags": [
+            "Q5",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "CIH",
+            "MWA"
+        ]
+    },
+    {
+        "code": "LCB",
+        "name": "Laboratoire de Cobol III",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EFO"
+        ]
+    },
+    {
+        "code": "LCR",
+        "name": "Laboratoire de compléments réseaux",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "LDN",
+        "name": "Laboratoire de persistance des données IV",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "ADT"
+        ]
+    },
+    {
+        "code": "LIR",
+        "name": "Laboratoire d'Interconnexion des réseaux",
+        "tags": [
+            "Q5",
+            "R",
+            "labo"
+        ],
+        "teachers": [
+            "MHI"
+        ]
+    },
+    {
+        "code": "ORG",
+        "name": "Organisation et gestion des entreprises",
+        "tags": [
+            "Q5"
+        ],
+        "teachers": [
+            "JDS"
+        ]
+    },
+    {
+        "code": "PERL",
+        "name": "Laboratoire de persistance des données IV",
+        "tags": [
+            "Q5",
+            "G",
+            "labo"
+        ],
+        "teachers": [
+            "ADT"
+        ]
+    },
+    {
+        "code": "SCI",
+        "name": "Éléments de sécurité informatique",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "ABS"
+        ]
+    },
+    {
+        "code": "SEC",
+        "name": "Sécurité des réseaux",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "PMA"
+        ]
+    },
+    {
+        "code": "SIM",
+        "name": "Simulation entrepreneuriale",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "JDS"
+        ]
+    },
+    {
+        "code": "SIN",
+        "name": "Services Internet",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "MWI"
+        ]
+    },
+    {
+        "code": "STR",
+        "name": "Systèmes d'exploitation : temps réel",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "ELV"
+        ]
+    },
+    {
+        "code": "SYS",
+        "name": "Système III",
+        "tags": [
+            "Q5",
+            "G"
+        ],
+        "teachers": [
+            "MBA"
+        ]
+    },
+    {
+        "code": "SYS",
+        "name": "Systèmes d'exploitation : temps réel",
+        "tags": [
+            "Q5",
+            "I"
+        ],
+        "teachers": [
+            "ELV"
+        ]
+    },
+    {
+        "code": "TEX",
+        "name": "Expression et communication",
+        "tags": [
+            "Q5"
+        ],
+        "teachers": [
+            "DNA"
+        ]
+    },
+    {
+        "code": "VEI",
+        "name": "Veille technologique",
+        "tags": [
+            "Q5"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "VIP",
+        "name": "Voice over IP",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "VOIP",
+        "name": "Voice over IP",
+        "tags": [
+            "Q5",
+            "R"
+        ],
+        "teachers": [
+            "EGR"
+        ]
+    },
+    {
+        "code": "STG",
+        "name": "Stage en entreprise",
+        "tags": [
+            "Q6"
+        ],
+        "teachers": [
+            "DNA"
+        ]
+    },
+    {
+        "code": "TFE",
+        "name": "Travail final d'études",
+        "tags": [
+            "Q6"
+        ],
+        "teachers": [
+            "DNA"
+        ]
+    }
+]
