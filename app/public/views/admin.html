@@ -1,45 +1,55 @@
-<div class="container">
+<div ng-include="'../partials/navbar.html'"></div>
 
-    <h1 class="page-header">Administration</h1>
-    
-    <div>
-        <h2>New announcement</h2>
-        
-        <br />
-        
-        <div ng-include="'../partials/create-announcement-form.html'"></div>
+<div class="container-fluid">
+
+    <div class="col-md-2" ng-controller="home-controller as homeCtrl">
+
+        <div ng-include="'../partials/userbar.html'"></div>
+
     </div>
 
-    <div>
-        <h2>New user</h2>
-        
-        <br />
+    <div class="col-md-10" ng-controller="admin-controller">
 
-        <div ng-include="'../partials/admin/create-user-form.html'"></div>
-        
-    </div>
-    
-    <br />
+        <h1 class="page-header">Administration</h1>
 
-    <div>
-        <h2>New course</h2>
+        <div>
+            <h2>New announcement</h2>
 
-        <br />
+            <br />
 
-        <div ng-include="'../partials/admin/create-course-form.html'"></div>
-    </div>
-    
-    <br />
+            <div ng-include="'../partials/create-announcement-form.html'"></div>
+        </div>
 
-    <div>
-        <h2>New tags</h2>
+        <div>
+            <h2>New user</h2>
+
+            <br />
+
+            <div ng-include="'../partials/admin/create-user-form.html'"></div>
+
+        </div>
 
         <br />
 
-        <div ng-include="'../partials/admin/create-tag-form.html'"></div>
+        <div>
+            <h2>New course</h2>
+
+            <br />
+
+            <div ng-include="'../partials/admin/create-course-form.html'"></div>
+        </div>
+
+        <br />
+
+        <div>
+            <h2>New tags</h2>
+
+            <br />
+
+            <div ng-include="'../partials/admin/create-tag-form.html'"></div>
+        </div>
+
     </div>
-    
-    
-
-
 </div>
+
+<div ng-include="'../partials/footer.html'"></div>

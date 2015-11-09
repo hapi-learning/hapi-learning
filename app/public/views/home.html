@@ -1,26 +1,6 @@
-<nav class="navbar navbar-default">
-    <div class="container">
-
-        <div class="nav navbar-header">
-            <a class="navbar-brand">hapi learning</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#/logout">
-                            <span class="glyphicon glyphicon-log-out"></span> Log out
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-</nav>
+<div ng-include="'../partials/navbar.html'"></div>
 
 <div class="container-fluid">
-
-    <!--    <h1 class="page-header">News</h1>-->
 
     <!--
     <div class="row">
@@ -28,69 +8,33 @@
     </div>
     -->
 
-    <div ng-include="'../views/profile.html'"></div>
+    <!--    <div ng-include="'../views/profile.html'"></div>-->
 
-<!--
     <div>
-        <div class="col-md-2" ng-controller=" home-controller as homeCtrl ">
+        <div class="col-md-2" ng-controller="home-controller as homeCtrl">
 
-            <h1 class="page-header ">John Doe  <small>39123</small></h1>
-
-            <div>
-
-                <ul class="nav">
-                    <li class="active">
-                        <a href="# ">
-                            <i class="glyphicon glyphicon-home "></i> Home </a>
-                    </li>
-                    <li>
-                        <a href="# ">
-                            <i class="glyphicon glyphicon-user "></i> Account Settings </a>
-                    </li>
-                    <li>
-                        <a href="# " target="_blank ">
-                            <i class="glyphicon glyphicon-th-list "></i> Courses </a>
-                    </li>
-                    <li>
-                        <a href="# ">
-                            <i class="glyphicon glyphicon-flag "></i> Help </a>
-                    </li>
-                </ul>
-
-            </div>
+            <div ng-include="'../partials/userbar.html'"></div>
 
         </div>
 
 
-        <div class="col-md-7 " ng-controller="courses-controller ">
+        <div class="col-md-7" ng-controller="courses-controller">
 
-            <h1 class="page-header ">My courses</h1>
+            <h1 class="page-header">My courses</h1>
 
-            <div ng-include=" '../views/courses.html' "></div>
+            <div ng-include="'../partials/courses-list.html'"></div>
         </div>
 
-        <div class="col-md-3 " ng-controller="home-controller as homeCtrl ">
+        <div class="col-md-3" ng-controller="news-controller as homeCtrl">
 
-            <h1 class="page-header ">News</h1>
+            <h1 class="page-header">News</h1>
 
-            <div ng-include=" '../views/news.html' "></div>
+            <div ng-include="'../partials/news-resume.html'"></div>
         </div>
 
 
     </div>
--->
 
 </div>
 
-<footer class="footer ">
-
-    <div class="navbar navbar-default navbar-fixed-bottom ">
-        <div class="container ">
-            <p class="navbar-text pull-left ">hapi learning</p>
-
-            <a href="https://gitlab.com/fknop/ATL3-hapi-learning " class="navbar-btn btn-default btn pull-right ">
-                <span class="glyphicon glyphicon-heart "></span> Gitlab
-            </a>
-        </div>
-
-</footer>
+<div ng-include="'../partials/footer.html'"></div>

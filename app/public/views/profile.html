@@ -1,59 +1,19 @@
-<div ng-controller="profile-controller as profileCtrl">
-<form name="profileForm"  >
+<div ng-include="'../partials/navbar.html'"></div>
 
-<!--
-    <fieldset class="form-group">
-        <div class="row">
-            <div class="col-xs-6">
-                <label>First name</label>
-                <input type="text" class="form-control" name="firstname" title="First name" placeholder="John" />
-            </div>
-
-            <div class="col-xs-6">
-                <label>Last name</label>
-                <input type="text" class="form-control" name="lastname" title="Last name" placeholder="Doe" />
-            </div>
-        </div>
-    </fieldset>
--->
-
-
-    <div class="form-group">
-        <label>Password (required if you change your password)</label>
-        <input type="password" class="form-control" ng-model="password" ng-minlength="8" name="password" title="Password" placeholder="●●●●●●●●" ng-required="profileForm.newPassword" />
-    </div>
-<!--
-
-
-
-    <fieldset>
-        <div class="row">
-            <div class="col-xs-6 form-group">
-                <label>New password</label>
-                <input type="password" class="form-control" ng-model="newPassword" ng-minlength="8" name="newPassword" title="New password" placeholder="●●●●●●●●" />
-            </div>
-
-            <div class="col-xs-6 form-group">
-                <label>Confirm new password</label>
-                <input type="password" class="form-control" ng-model="confirmPassword" name="confirmPassword" title="New password confirmation" placeholder="●●●●●●●●" ui-validate="{passwordMatch: '$value === newPassword'}" ui-validate-watch="'newPassword'" ng-required="profileForm.newPassword.$dirty" />
-            </div>
-        </div>
-    </fieldset>
+<div class="container-fluid">
     
-    <div>newp: {{profileForm.newPassword.$error}}</div>
+    <div class="col-md-2" ng-controller="home-controller as homeCtrl">
 
-    <fieldset class="form-group">
-        <label>Email</label>
-        <input type="email" class="form-control" ng-model="email" name="email" title="Email" placeholder="42424@heb.be" value="42424@heb.be" />
-    </fieldset>
--->
+        <div ng-include="'../partials/userbar.html'"></div>
 
-    <br />
-
-    <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Update profile" />
-        <input type="reset" class="btn btn-warning" value="Reset" />
     </div>
 
-</form>
+    <div class="col-md-10" ng-controller="profile-controller as profileCtrl">
+        
+        <h1 class="page-header">Update your profile</h1>
+        
+        <div ng-include="'../partials/profile-form.html'"></div>
     </div>
+</div>
+
+<div ng-include="'../partials/footer.html'"></div>

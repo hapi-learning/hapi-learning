@@ -1,0 +1,17 @@
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="annonce in annonces">
+        <div class="alert alert-{{annonce.priority}}">
+
+            <div class="row">
+                <div class="col-md-9">
+                    <strong>{{annonce.course}} − {{annonce.subject}}</strong>
+                </div>
+
+                <div class="col-md-3">{{annonce.createdOn | date}}</div>
+            </div>
+
+        </div>
+
+        <blockquote>{{annonce.description}}</blockquote>
+    </li>
+</ul>
