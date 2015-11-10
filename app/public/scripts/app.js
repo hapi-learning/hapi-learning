@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace', 'ui.validate'])
+        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace', 'ui.validate', 'restangular'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
@@ -40,6 +40,9 @@ angular.module('hapi-learning', [
         }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.includeSpinner = false;
+        }])
+    .config(['RestangularProvider', function (RestangularProvider) {
+        RestangularProvider.setBaseUrl('http://localhost:8088');
         }])
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
         bootstrap3ElementModifier.enableValidationStateIcons(true);

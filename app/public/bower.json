@@ -20,6 +20,7 @@
     "angular-file-upload": "~2.2.0",
     "angular-loading-bar": "~0.8.0",
     "angular-ui-ace": "bower",
-    "angular-ui-validate": "~1.2.1"
+    "angular-ui-validate": "~1.2.1",
+    "restangular": "~1.5.1"
   }
 }
