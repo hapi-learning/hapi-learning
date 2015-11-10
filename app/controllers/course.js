@@ -1,35 +1,73 @@
 'use strict';
 
-const Joi = require('joi');
-const Boom = require('boom');
-const _ = require('lodash');
+const Joi   = require('joi');
+const _     = require('lodash');
+const Hoek  = require('hoek');
+const Utils = require('../utils/sequelize');
+const Path  = require('path');
 
-let internals = {};
+const internals = {};
+
+// result is a sequelize instance
 internals.getCourse = function(result) {
 
-    // Attributes to include in titulars
-    const titularsInclude = ['id', 'username', 'email',
+    // Attributes to include in teachers
+    const teachersInclude = ['id', 'username', 'email',
                              'first_name', 'last_name'];
 
     return Promise.resolve(
         Promise
         .all([result.getTags({attributes: ['name'], joinTableAttributes: []}),
-              result.getTitulars({attributes: titularsInclude, joinTableAttributes: []})])
+              result.getTeachers({attributes: teachersInclude, joinTableAttributes: []})])
 
         .then(values => {
             let course = result.get({plain:true});
-            course.tags = _.map(values[0], (t => t.get({plain:true})));
-            course.titulars = _.map(values[1], (t => t.get({plain:true})));
+            course.tags = _.map(values[0], (t => t.get('name', {plain:true})));
+            course.teachers = _.map(values[1], (t => t.get({plain:true})));
 
             return course;
         })
     );
 };
 
+internals.findCourseByCode = function(Course, id) {
+
+    Hoek.assert(Course, 'Model Course required');
+    Hoek.assert(id, 'Course code required');
+
+    return Course.findOne({
+        where: {
+            code: { $eq : id }
+        }
+    });
+};
+
+internals.checkCourse = function(Course, id, reply, callback) {
+
+    Hoek.assert(Course, 'Model Course required');
+    Hoek.assert(id, 'Course code required');
+    Hoek.assert(callback, 'Callback required');
+    Hoek.assert(reply, 'Reply interface required');
+
+    internals
+        .findCourseByCode(Course, id)
+        .then(result => {
+            if (result) {
+                return callback();
+            } else {
+                return reply.notFound('The course ' + id + ' does not exists.');
+            }
+        })
+        .catch(err => reply.badImplementation(err));
+};
+
+internals.checkForbiddenPath = function(path) {
+    return path.includes('/..') || path.includes('../');
+};
+
 
 exports.getAll = {
     description: 'List all the courses',
-    auth: false,
     handler: function (request, reply) {
 
         const Course = this.models.Course;
@@ -51,20 +89,14 @@ exports.get = {
     description: 'Get info for one course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code')
+            id: Joi.string().required().description('Course code')
         }
     },
     handler: function (request, reply) {
         const Course = this.models.Course;
+        const id = request.params.id;
 
-        // Find course
-        Course.findOne({
-            where: {
-                code: {
-                    $eq: request.params.id
-                }
-            }
-        })
+        internals.findCourseByCode(Course, id)
         .then(result => {
             if (result) // If found
             {
@@ -72,67 +104,109 @@ exports.get = {
             }
             else // If not found
             {
-                return reply(Boom.notFound('Cannot find course ' + request.params.id));
+                return reply.notFound('Cannot find course ' + id);
             }
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => reply.badImplementation(err));
 
     }
 };
 
 
+// WORKS - How to unit test this ?
 exports.getDocuments = {
-    description: 'Get a ZIP containing all course documents',
+    description: 'Get a ZIP containing documents or a file',
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id'),
-            path: Joi.string() // TODO - FIX
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().default('/')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+
+        const Storage = this.storage;
+        const path = request.params.path;
+        const course = request.params.id;
+
+        Storage
+        .download(course, path)
+        .then((results) => {
+
+            const isFile = results.isFile;
+            const result = results.result;
+
+            if (isFile)
+            {
+                return reply.file(result, { mode: 'attachment'});
+            }
+            else
+            {
+                const pathName = path === '/' ? '' : '_' + require('path').basename(path);
+                const contentDisposition = 'attachment; filename=' + course + pathName;
+                return reply(result)
+                    .type('application/zip')
+                    .header('Content-Disposition', contentDisposition);
+            }
+        })
+        .catch(() => reply.notFound('File not found'));
     }
 };
-
 
 
 
 exports.getTree = {
     description: 'Get course folder tree',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
-            id: Joi.number().integer().required().description('Course id'),
-            path: Joi.string() // TODO - FIXME
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().default('/')
+        },
+        query: {
+            recursive: Joi.boolean().default(true)
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+
+        const path = request.params.path;
+
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
+        const Storage   = this.storage;
+        const Course    = this.models.Course;
+        const id        = request.params.id;
+        const recursive = request.query.recursive
+
+        const tree = function() {
+            return reply(Storage.getTree(id, path, recursive));
+        };
+
+        return internals.checkCourse(Course, id, tree);
     }
 };
+
 
 exports.getStudents = {
     description: 'Get students following the course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code')
+            id: Joi.string().required().description('Course code')
         }
     },
     handler: function (request, reply) {
         const Course = this.models.Course;
 
-        Course.findOne({
-            where: {
-                code: {
-                    $eq: request.params.id
-                }
-            }
-        })
+        internals.findCourseByCode(Course, request.params.id)
         .then(course => {
-            course.getUsers({joinTableAttributes: []}).then(users =>{
-                reply(_.map(users, (u => u.get({plain:true}))));
-            });
+            course
+                .getUsers({joinTableAttributes: []})
+                .then(users => reply(Utils.removeDates(users)));
         })
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -140,58 +214,70 @@ exports.getStudents = {
 exports.post = {
     description: 'Add a course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         payload: {
             name: Joi.string().min(1).max(255).required().description('Course name'),
             code: Joi.string().min(1).max(255).required().description('Course code'),
             description: Joi.string().min(1).max(255).description('Course description'),
-            titulars: Joi.array().items(Joi.string()).description('Teachers'),
+            teachers: Joi.array().items(Joi.string()).description('Teachers'),
             tags: Joi.array().items(Joi.string()).description('Tags')
         }
     },
     handler: function (request, reply) {
 
-        const Course = this.models.Course;
-        const User = this.models.User;
-        const Tag = this.models.Tag;
+        const Course  = this.models.Course;
+        const User    = this.models.User;
+        const Tag     = this.models.Tag;
+        const Storage = this.storage;
 
-        const hasTitulars = request.payload.titulars ? true : false;
-        const hasTags = request.payload.tags ? true : false;
+        const name        = request.payload.name;
+        const code        = request.payload.code;
+        const description = request.payload.description;
+        const pteachers   = request.payload.teachers;
+        const ptags       = request.payload.tags;
+
+
+        const hasTeachers = pteachers ? true : false;
+        const hasTags     = ptags ? true : false;
+
         const coursePayload = {
-            name: request.payload.name,
-            code: request.payload.code,
-            description: request.payload.description
+            name: name,
+            code: code,
+            description: description
         };
 
         // If tags has been passed to the payload, return a promise
         // loading the tags, otherwise return a promise returning an empty array
         const getTags = hasTags ?
             Promise.resolve(Tag.findAll(
-                {where: {name: {$in: request.payload.tags}}}))
+                {where: {name: {$in: ptags}}}))
             : Promise.resolve([]);
 
-        // If titulars has been passed to the payload, return a promise
-        // loading the titulars, otherwise return a promise returning an empty array
+        // If teachers has been passed to the payload, return a promise
+        // loading the teachers, otherwise return a promise returning an empty array
         const userExclude = ['password'];
-        const getTitulars = hasTitulars ?
+        const getTeachers = hasTeachers ?
             Promise.resolve(User.findAll(
-                {where: {username: {$in: request.payload.titulars}},
+                {where: {username: {$in: pteachers}},
                  attributes: {exclude: userExclude}}))
             : Promise.resolve([]);
 
-        // Loads tags and titulars to be added
+        // Loads tags and teachers to be added
         Promise
-        .all([getTags, getTitulars])
+        .all([getTags, getTeachers])
         .then(values => {
 
-                const tags = values[0];
-                const titulars = values[1];
+                const tags     = values[0];
+                const teachers = values[1];
 
-                const wrongTitulars = (hasTitulars && titulars.length !== request.payload.titulars.length);
-                const wrongTags = (hasTags && tags.length !== request.payload.tags.length);
+                const wrongTeachers = (hasTeachers && teachers.length !== pteachers.length);
+                const wrongTags     = (hasTags && tags.length !== ptags.length);
 
-                if (wrongTitulars || wrongTags)
+                if (wrongTeachers || wrongTags)
                 {
-                    return reply(Boom.badData(wrongTitulars ? 'Invalid titular(s)' : 'Invalid tag(s)'));
+                    return reply.badData(wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)');
                 }
                 else
                 {
@@ -201,49 +287,230 @@ exports.post = {
                     .create(coursePayload)
                     .then(newCourse => {
 
-                        // Add titulars and tags to the new added course
+                        // Add teachers and tags to the new added course
                         Promise
-                        .all([newCourse.addTitulars(titulars), newCourse.addTags(tags)])
+                        .all([newCourse.addTeachers(teachers), newCourse.addTags(tags)])
                         .then(() => {
 
                             // Build response
-                            let course = newCourse.get({plain:true});
+                            const course = newCourse.get({plain:true});
                             course.tags = _.map(tags, (t => t.get('name', {plain:true})));
-                            course.titulars = _.map(titulars, (t => t.get('username', {plain:true})));
+                            course.teachers = _.map(teachers, (t => t.get('username', {plain:true})));
 
-                            return reply(course);
+                            Storage.createCourse(course.code);
+
+                            return reply(course).code(201);
                         });
                     })
-                    .catch(() => reply(Boom.conflict('Conflict')));
+                    .catch(() => reply.conflict());
                 }
             });
     }
 };
 
-
 exports.postDocument = {
     description: 'Upload a file to a course',
+    payload: {
+        maxBytes: process.env.UPLOAD_MAX,
+        output: 'stream',
+        allow: 'multipart/form-data',
+        parse: true
+    },
     validate: {
         params: {
-            id: Joi.number().integer().required().description('Course id'),
-            path: Joi.string() // TODO - FIXME
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().default('/')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+
+        const file = request.payload.file;
+
+        if (!file) {
+            return reply.badRequest('File required to post a document');
+        }
+
+        const filename = file.hapi.filename;
+
+        if (!filename) {
+            return reply.badRequest('Filename required to post a document');
+        }
+
+        const path = Path.join(encodeURI(request.params.path), encodeURI(filename));
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
+        const course = request.params.id;
+
+        const Storage = this.storage;
+        const Course = this.models.Course;
+
+        const upload = function() {
+            try {
+                Storage.createOrReplaceFile(course, path, file);
+                return reply('File : ' + filename + ' successfuly uploaded').code(201);
+            } catch(err) {
+                return reply.conflict(err);
+            }
+        };
+
+        return internals.checkCourse(Course, course, reply, upload);
+    }
+};
+
+exports.createFolder = {
+    description: 'Create a folder to a course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().required().invalid('/')
+        }
+    },
+    handler: function (request, reply) {
+
+        const Storage = this.storage;
+        const Course  = this.models.Course;
+        const course  = request.params.id;
+        const path    = encodeURI(request.params.path);
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
+        const createFolder = function() {
+            Storage
+                .createFolder(course, path)
+                .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
+                .catch(err => reply.badData(err));
+        };
+
+        return internals.checkCourse(Course, course, reply, createFolder);
+    }
+};
+
+// Tags that does not exists will be ignored
+exports.addTags = {
+    description: 'Add a list of tags to the course',
+    validate: {
+        options: {
+            stripUnknown: true
+        },
+        params: {
+            id: Joi.string().required().description('Course code'),
+        },
+        payload: {
+            tags: Joi.array().items(Joi.string().required())
+        }
+    },
+    handler: function (request, reply) {
+
+        const Tag    = this.models.Tag;
+        const Course = this.models.Course;
+        const id     = request.params.id;
+
+        Tag
+        .findAll({where: { name: { $in: request.payload.tags } }})
+        .then(tags => {
+            internals.findCourseByCode(Course, request.params.id)
+            .then(course => {
+                if (course) {
+                    course.addTags(tags).then(() => {
+                       internals.getCourse(course).then(result => {
+                           return reply(result);
+                       });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + ' does not exists.');
+                }
+            });
+        })
+        .catch(reply.badImplementation);
+    }
+};
+
+// Teachers that does not exists will be ignored
+exports.addTeachers = {
+    description: 'Add a list of teachers to the course',
+    validate: {
+        options: {
+            stripUnknown: true
+        },
+        params: {
+            id: Joi.string().required().description('Course code'),
+        },
+        payload: {
+            teachers: Joi.array().items(Joi.string().required())
+        }
+    },
+    handler: function (request, reply) {
+        const User   = this.models.User;
+        const Course = this.models.Course;
+        const id     = request.params.id;
+
+        User
+        .findAll({where: { username: { $in: request.payload.teachers } }})
+        .then(teachers => {
+            internals.findCourseByCode(Course, request.params.id)
+            .then(course => {
+                if (course) {
+                    course.addTeachers(teachers).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                        });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + ' does not exists.');
+                }
+            });
+        })
+        .catch(err => reply.badImplementation(err));
     }
 };
 
 
-exports.put = {
+exports.patch = {
     description: 'Modify a course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
-            id: Joi.number().integer().required().description('Course id')
+            id: Joi.string().required().description('Course code')
+        },
+        payload: {
+            name: Joi.string().min(1).max(255).description('Course name'),
+            code: Joi.string().min(1).max(255).description('Course code'),
+            description: Joi.string().min(1).max(255).description('Course description')
         }
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        const Course  = this.models.Course;
+        const id      = request.params.id;
+        const newId   = request.payload.code;
+        const Storage = this.storage;
+
+        const renameFolder = function(returnValue) {
+            Storage.renameCourse(id, newId)
+                .then(() => reply(returnValue))
+                .catch(err => reply.badImplementation(err));
+        };
+
+        Course
+        .update(request.payload, { where: { code: { $eq: request.params.id } } })
+        .then(values => {
+            const toReturn = { count: values[0] };
+            if (id && values[0] !== 0) {
+                return renameFolder(toReturn);
+            } else {
+                return reply(toReturn);
+            }
+
+        })
+        .catch(() => reply.conflict());
     }
 };
 
@@ -252,44 +519,154 @@ exports.delete = {
     description: 'Delete a course',
     validate: {
         params: {
-            id: Joi.string().alphanum().required().description('Course code')
+            id: Joi.string().required().description('Course code')
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
+        const Storage = this.storage;
 
         Course.destroy({
             where : {
-                code : request.params.id
+                code : { $eq: request.params.id }
             }
         })
-        .then(count => reply({count: count}))
-        .catch(err => reply(Boom.badImplementation('An internal server error occurred : ' + err)));
+        .then(count => {
+            const tail = request.tail('Delete course folder');
+            Storage.deleteCourse(request.params.id).then(tail);
+            return reply({count: count});
+        })
+        .catch(err => reply.badImplementation(err));
+    }
+};
+
+exports.deleteTags = {
+    description: 'Delete a list of tags from the course',
+    validate: {
+        options: {
+            stripUnknown: true
+        },
+        params: {
+            id: Joi.string().required().description('Course code'),
+        },
+        payload: {
+            tags: Joi.array().items(Joi.string().required())
+        }
+    },
+    handler: function (request, reply) {
+
+        const Tag    = this.models.Tag;
+        const Course = this.models.Course;
+        const ptags  = request.payload.tags;
+        const id     = request.params.id;
+
+        Tag
+        .findAll({where: { name: { $in: ptags} }})
+        .then(tags => {
+            internals.findCourseByCode(Course, id)
+            .then(course => {
+                if (course) {
+                    course.removeTags(tags).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                       });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + 'does not exists.');
+                }
+            });
+        })
+        .catch(err => reply.badImplementation(err));
+    }
+};
+
+exports.deleteTeachers = {
+    description: 'Delete a list of teachers from the course',
+    validate: {
+        options: {
+            stripUnknown: true
+        },
+        params: {
+            id: Joi.string().required().description('Course code'),
+        },
+        payload: {
+            teachers: Joi.array().items(Joi.string().required())
+        }
+    },
+    handler: function (request, reply) {
+
+        const User = this.models.User;
+        const Course = this.models.Course;
+
+        const pteachers = request.payload.teachers;
+        const id = request.params.id;
+
+        User
+        .findAll({where: { username: { $in: pteachers } }})
+        .then(teachers => {
+            internals.findCourseByCode(Course, id)
+            .then(course => {
+                if (course) {
+                    course.removeTeachers(teachers).then(() => {
+                        internals.getCourse(course).then(result => {
+                            return reply(result);
+                        });
+                    });
+                } else {
+                    return reply.notFound('The course ' + id + 'does not exists.');
+                }
+            });
+        })
+        .catch(err => reply.badImplementation(err));
     }
 };
 
 
+/**
+ * When returning not found, files may already have been deleted.
+ * Page reloading may be necessary !
+ */
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
-            id: Joi.number().integer().required().description('Course id')
+            id: Joi.string().required().description('Course code')
+        },
+        payload: {
+            files: [Joi.string().required(), Joi.array().items(Joi.string().required())]
         }
+
     },
     handler: function (request, reply) {
-        reply('Not implemented');
+        const Course  = this.models.Course;
+        const Storage = this.storage;
+        const id      = request.params.id;
+
+        const files = request.payload.files;
+
+        if (Array.isArray(files)) {
+            _.forEach(files, (file => {
+                if (internals.checkForbiddenPath(file)) {
+                    reply.forbidden();
+                }
+            }));
+        } else {
+             if (internals.checkForbiddenPath(files)) {
+                return reply.forbidden();
+            }
+        }
+
+        const del = function() {
+            Storage.delete(id, files)
+                .then(() => reply().code(202))
+                .catch(() => reply.badImplementation());
+        };
+
+        internals.checkCourse(Course, id, reply, del);
     }
 };
 
-
-exports.deleteFolder = {
-    description: 'Delete a document from a course',
-    validate: {
-        params: {
-            id: Joi.number().integer().required().description('Course id')
-        }
-    },
-    handler: function (request, reply) {
-        reply('Not implemented');
-    }
-};

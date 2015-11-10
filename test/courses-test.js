@@ -2,7 +2,12 @@
 
 const Code = require('code');
 const Lab = require('lab');
+const fs = require('fs');
+const Path = require('path');
+const Hoek = require('hoek');
 const lab = exports.lab = Lab.script();
+const _  = require('lodash');
+
 
 const describe = lab.describe;
 const it = lab.it;
@@ -10,20 +15,30 @@ const before = lab.before;
 const after = lab.after;
 const expect = Code.expect;
 
+
 const server = require('./server-test');
 
+
 before((done) => {
+
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
     }).then(() => done());
 });
 
+after(done => {
+    const rm = require('rmdir');
+    rm(Path.join(__dirname, 'storage'), function() {
+        done();
+    });
+});
+
 const course = {
     name: 'Ateliers Logiciel 3e',
     code: 'ATL3',
     description: 'A course',
-    titulars: ['SRV', 'FPL'],
+    teachers: ['SRV', 'FPL'],
     tags: ['3e', 'Java']
 };
 
@@ -31,13 +46,13 @@ const courses = [{
     name: 'Analyse 3e',
     code: 'ANL3',
     description: 'Analyse',
-    titulars: ['FPL'],
+    teachers: ['FPL'],
     tags: ['3e', 'Java']
 }, {
     name: 'Analyse 2e',
     code: 'ANL2',
     description: 'ANL 2e',
-    titulars: ['FPL']
+    teachers: ['FPL']
 }];
 
 const pRequest = {
@@ -57,21 +72,44 @@ const users = [{
     password: 'superpassword'
 }];
 
+const moreUsers = [{
+    username: 'ABS',
+    email: 'invalid3@email.com',
+    password: 'superpassword'
+}, {
+    username: 'ADT',
+    email: 'invalid4@email.com',
+    password: 'superpassword'
+}];
+
 const tags = [{
     name: '3e',
 }, {
     name: 'Java'
 }];
 
+const moreTags = [{
+    name: '2e'
+}, {
+    name: 'NodeJS'
+}, {
+    name: '1e'
+}];
+
 describe('Controller.Course', () => {
     describe('#post()', () => {
-        it('should return 422 response because of invalid titulars/tags', done => {
+        it('should return 422 response because of invalid teachers/tags', done => {
 
             server.inject(pRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(422);
 
-                done();
+                fs.stat('storage/courses/ATL3', function(err, stats) {
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+
+                    done();
+                });
             });
         });
 
@@ -103,15 +141,27 @@ describe('Controller.Course', () => {
                         expect(response.name).to.equal(course.name);
                         expect(response.code).to.equal(course.code);
                         expect(response.description).to.equal(course.description);
-                        expect(response.titulars).to.be.an.array();
-                        expect(response.titulars).to.have.length(pRequest.payload.titulars.length);
-                        expect(response.titulars).to.only.include(pRequest.payload.titulars);
+                        expect(response.teachers).to.be.an.array();
+                        expect(response.teachers).to.have.length(pRequest.payload.teachers.length);
+                        expect(response.teachers).to.only.include(pRequest.payload.teachers);
 
                         expect(response.tags).to.be.an.array();
                         expect(response.tags).to.have.length(pRequest.payload.tags.length);
                         expect(response.tags).to.only.include(pRequest.payload.tags);
 
-                        done();
+                        fs.stat(Path.join(__dirname, 'storage/courses/ATL3'), function(err, stats) {
+
+                            expect(err).to.be.null();
+                            expect(stats).to.exists();
+                            expect(stats.isDirectory()).to.be.true();
+
+                            fs.stat(Path.join(__dirname, 'storage/courses/ATL3/documents'), function(err, stats) {
+                                expect(err).to.be.null();
+                                expect(stats).to.exists();
+                                expect(stats.isDirectory()).to.be.true();
+                                done();
+                            });
+                        });
                     });
                 });
         });
@@ -129,7 +179,7 @@ describe('Controller.Course', () => {
     });
 
     describe('#get', () => {
-        it('Should return the course with tags and titulars', done => {
+        it('Should return the course with tags and teachers', done => {
             const request = {
                 method: 'GET',
                 url: '/courses/ATL3'
@@ -141,26 +191,14 @@ describe('Controller.Course', () => {
                 expect(response.code).to.equal(course.code);
                 expect(response.name).to.equal(course.name);
                 expect(response.description).to.equal(course.description);
-                expect(response.titulars).to.be.an.array();
-                expect(response.titulars).to.have.length(users.length);
+                expect(response.teachers).to.be.an.array();
+                expect(response.teachers).to.have.length(users.length);
                 expect(response.tags).to.be.an.array();
                 expect(response.tags).to.have.length(tags.length);
                 done();
             });
         });
 
-        it ('Should return code 400 - bad validation', done => {
-            const request = {
-                method: 'GET',
-                url: '/courses/_ATL3'
-            };
-
-            server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.statusCode).to.equal(400);
-                done();
-            });
-        });
     });
 
     describe('#getAll', () => {
@@ -199,7 +237,15 @@ describe('Controller.Course', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response.count).to.equal(1);
-                done();
+
+                // Not clean ...
+                setTimeout(() => {
+                    fs.stat(Path.join(__dirname, 'storage/courses/ANL3'), function(err, stats) {
+                        expect(err).to.exists();
+                        expect(stats).to.be.undefined();
+                        done();
+                    });
+                }, 1000);
             });
         });
 
@@ -244,7 +290,6 @@ describe('Controller.Course', () => {
                         .then(() => {
                             server.inject(request, res => {
                                 const response = res.request.response.source;
-                                console.log(response);
                                 expect(response).to.be.an.array();
                                 expect(response).to.have.length(1);
                                 done();
@@ -254,6 +299,507 @@ describe('Controller.Course', () => {
 
 
         });
+    });
+
+    describe('#patch', () => {
+        const request = {
+            method: 'PATCH',
+            url: '/courses/ATL3',
+            payload: {
+                name: 'Ateliers Logiciels Gestion',
+                code: 'ATL3G'
+            }
+        };
+
+        it ('Should return the number of rows updated (0)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, {url : '/courses/ABCD'});
+
+            server.inject(copyRequest, res => {
+
+                const response = res.request.response.source;
+
+                expect(response.count).to.equal(0);
+
+                done();
+            });
+        });
+
+        it ('Should return the number of rows updated (1)', done => {
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                expect(response.count).to.equal(1);
+
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G'), function(err, stats) {
+                    expect(err).to.be.null();
+                    expect(stats).to.exists();
+                    expect(stats.isDirectory()).to.be.true();
+
+                    fs.stat(Path.join(__dirname, 'storage/courses/ATL3'), function(err, stats) {
+                        expect(err).to.exists();
+                        expect(stats).to.be.undefined();
+                        done();
+                    });
+                });
+            });
+        });
+
+        it ('Should return the updated course', done => {
+            server.inject({method: 'GET', url:'/courses/ATL3G'}, res => {
+                const response = res.request.response.source;
+
+                expect(response.code).to.equal(request.payload.code);
+                expect(response.name).to.equal(request.payload.name);
+                expect(response.description).to.equal(course.description);
+                expect(response.teachers).to.be.an.array();
+                expect(response.teachers).to.have.length(users.length);
+                expect(response.tags).to.be.an.array();
+                expect(response.tags).to.have.length(tags.length);
+
+                done();
+            });
+        });
+    });
+
+    describe('#addTags', () => {
+
+        const Models = server.plugins.models.models;
+        const Tag = Models.Tag;
+
+        const request = {
+            method: 'POST',
+            url: '/courses/ATL3G/tags',
+            payload: {
+                tags: ['2e', 'NodeJS', '1e', '4e'] // 3 existing tags and 1 non existing
+            }
+        };
+
+        it('Should return the course with the new tags', done => {
+
+             const createTags = new Promise((resolve, reject) => {
+                let promises = [];
+                moreTags.forEach(t => promises.push(Tag.create(t)));
+                Promise.all(promises).then(resolve);
+            });
+
+            createTags
+            .then(() => {
+                server.inject(request, res => {
+                    const response = res.request.response.source;
+
+                    const allTags = ['3e', 'Java', '2e', 'NodeJS', '1e'];
+                    expect(response.tags).to.only.include(allTags);
+                    done();
+                });
+            });
+        });
+
+        it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { tags: '3e', teachers: '3e'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+    });
+
+    describe('#addTeachers', () => {
+
+        const Models = server.plugins.models.models;
+        const User = Models.User;
+
+        const request = {
+            method: 'POST',
+            url: '/courses/ATL3G/teachers',
+            payload: {
+                teachers: ['ABS', 'ADT', 'JLC']
+            }
+        };
+
+        it('Should return the course with the new teachers', done => {
+
+             const createTeachers = new Promise((resolve, reject) => {
+                let promises = [];
+                moreUsers.forEach(t => promises.push(User.create(t)));
+                Promise.all(promises).then(resolve);
+            });
+
+            createTeachers
+            .then(() => {
+                server.inject(request, res => {
+                    const response = res.request.response.source;
+
+                    const allTeachers = ['SRV', 'FPL', 'ABS', 'ADT'];
+
+                    const usernames = _.map(response.teachers, (t => t.username));
+
+                    expect(usernames).to.only.include(allTeachers);
+                    done();
+                });
+            });
+        });
+
+        it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/teachers'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: 'ABS'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+    });
+
+    describe('#deleteTags', () => {
+
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ATL3G/tags',
+            payload: {
+                tags: ['2e', 'NodeJS', '1e', '4e'] // 3 existing tags and 1 non existing
+            }
+        };
+
+        it('Should return the course with the without the deleted tags', done => {
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                const allTags = ['3e', 'Java'];
+                expect(response.tags).to.only.include(allTags);
+                done();
+            });
+        });
+
+        it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { tags: '3e'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+    });
+
+    describe('#removeTeachers', () => {
+
+
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ATL3G/teachers',
+            payload: {
+                teachers: ['ABS', 'ADT', 'JLC']
+            }
+        };
+
+        it('Should return the course with the new teachers', done => {
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                const allTeachers = ['SRV', 'FPL'];
+
+                const usernames = _.map(response.teachers, (t => t.username));
+
+                expect(usernames).to.only.include(allTeachers);
+                done();
+            });
+        });
+
+        it('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/teachers'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: 'ABS'}});
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+    });
+
+    describe('#createFolder', () => {
+        const request = {
+            method: 'POST',
+            url: '/courses/ATL3G/folders/subfolder',
+        };
+
+        it ('Should return 404 course not found', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/subfolder'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(404);
+                done();
+            });
+
+        });
+
+        it ('Should return 400 bad request (validation error)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad request (validation error) - bis', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders//'});
+
+            server.inject(copyRequest, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).to.equal(400);
+                done();
+            });
+        });
+
+        it ('Should return 201 created and create the folder', done => {
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(201);
+
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/subfolder'),
+                        (err, stats) => {
+
+                    expect(err).to.be.null();
+                    expect(stats).to.exists();
+                    expect(stats.isDirectory()).to.be.true();
+
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 422 (bad data -- invalid path)', done => {
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(422);
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/folder/folderbis'),
+                        (err, stats) => {
+
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 403 forbidden path', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL3G/folders/../../ANL3/documents/folder'});
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).equal(403);
+                done();
+            });
+        });
+    });
+
+    describe('#postDocument', () => {
+        const FormData = require('form-data');
+        const streamToPromise = require('stream-to-promise');
+
+
+
+        it ('Should return 201 created', done => {
+            const form = new FormData();
+            form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
+            streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL3G/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    expect(res.request.response.statusCode).to.equal(201);
+                    const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/server-test.js');
+                    fs.stat(path, function(err, stats) {
+                        expect(err).to.be.null();
+                        expect(stats).to.exists();
+                        expect(stats.isFile()).to.be.true();
+
+                        const content = fs.readFileSync(path);
+                        const originalContent = fs.readFileSync(Path.join(__dirname, 'server-test.js'));
+                        expect(content.length).to.equal(originalContent.length);
+                        expect(content.equals(originalContent)).to.be.true();
+
+                        done();
+                    });
+                });
+            });
+        });
+
+        it ('Should return 404 not found', done => {
+
+            const form = new FormData();
+            form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
+             streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    const response = res.request.response.source;
+                    expect(response.statusCode).to.equal(404);
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 400 bad request -- missing file', done => {
+            const form = new FormData();
+            form.append('wrongFile', fs.createReadStream(Path.join(__dirname, 'courses-test.js')));
+             streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL3G/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    const response = res.request.response.source;
+                    expect(response.statusCode).to.equal(400);
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 403 forbidden path', done => {
+            const form = new FormData();
+            form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
+             streamToPromise(form).then(payload => {
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL3G/documents/../../ANL3/documents',
+                    payload: payload,
+                    headers: form.getHeaders()
+                }, res => {
+                    const response = res.request.response.source;
+                    expect(response.statusCode).to.equal(403);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('#deleteDocument', done => {
+
+        const request = {
+            method: 'DELETE',
+            url: '/courses/ATL3G/documents',
+            payload: {
+                files: 'server-test.js'
+            }
+        };
+
+        it ('Should return 403 forbidden path', done => {
+            const copyRequest = Hoek.applyToDefaults(request, {
+                payload : { files: '../../ANL3/documents/server-test.js' }
+            });
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(403);
+                done();
+            });
+        });
+
+        it ('Should return 404 not found', done => {
+            const copyRequest = Hoek.applyToDefaults(request, {url : '/courses/ATL/documents'});
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
+        it ('Should return 400 bad validation', done => {
+            const copyRequest = Hoek.applyToDefaults(request, {payload : []});
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(400);
+                done();
+            });
+        });
+
+        it ('Should return 202 accepted and file deleted', done => {
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).to.equal(202);
+                const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/server-test.js');
+                fs.stat(path, (err, stats) => {
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+                    done();
+                });
+            });
+        });
+
+        it ('Should return 202 accepted and ignore non existing files', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, {
+                payload: {
+                    files: ['server-test.js', 'subfolder']
+                }
+            });
+
+            server.inject(copyRequest, res => {
+                expect(res.request.response.statusCode).to.equal(202);
+                const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/subfolder');
+                fs.stat(path, (err, stats) => {
+                    expect(err).to.exists();
+                    expect(stats).to.be.undefined();
+                    done();
+                });
+            });
+        });
 
     });
+
 });

@@ -1,21 +1,22 @@
 'use strict';
 
 const Joi = require('joi');
-const Boom = require('boom');
 const _ = require('lodash');
+const Utils = require('../utils/sequelize');
+
 
 exports.get = {
     description: 'Returns a specific role',
-    auth : false,
+
     validate: {
         params: {
             name: Joi.string().min(1).max(255).required().description('Role name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Role = this.models.Role;
-        
+
         Role.findOne({
             where: {
                 name : request.params.name
@@ -31,18 +32,18 @@ exports.get = {
             }
             else
             {
-                return reply(Boom.notFound('Can not find role :' + request.params.name));
+                return reply.notFound('Cannot find role :' + request.params.name);
             }
         })
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
 exports.getAll = {
     description: 'Returns all roles',
-    auth : false,
+
     handler: function (request, reply) {
-                
+
         const Role = this.models.Role;
 
         Role.findAll({
@@ -51,40 +52,40 @@ exports.getAll = {
             }
         })
         .then(results => reply(_.map(results, (result => result.get({plain : true})))))
-        .catch(error => reply(Boom.badImplementation('An internal server error occurred : ' + error)));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
 exports.post = {
     description: 'Create a new role',
-    auth : false,
+
     validate : {
         payload : {
-            name: Joi.string().min(1).max(255).required().description('Role name') 
+            name: Joi.string().min(1).max(255).required().description('Role name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Role = this.models.Role;
-        
+
         Role.create({
             name : request.payload.name
         })
-        .then(tag => reply(_.omit(tag.get({plain : true}), 'updated_at', 'created_at')))
-        .catch(error => reply(Boom.conflict('An internal server error occurred : ' + error)));
+        .then(tag => reply(Utils.removeDates(tag)).code(201))
+        .catch(() => reply.conflict());
     }
 };
 
 exports.delete = {
     description: 'Delete a specific role',
-    auth : false,
+
     validate: {
         params : {
-            name: Joi.string().min(1).max(255).required().description('Role name') 
+            name: Joi.string().min(1).max(255).required().description('Role name')
         }
     },
     handler: function (request, reply) {
-        
+
         const Role = this.models.Role;
 
         Role.destroy({
@@ -93,6 +94,6 @@ exports.delete = {
             }
         })
         .then(count => reply({count : count}))
-        .catch(error => reply(Boom.badRequest('An internal server error occurred : ' + error)));
+        .catch(error => reply.badImplementation(error));
     }
 };

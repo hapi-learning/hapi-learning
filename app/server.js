@@ -2,6 +2,8 @@
 
 require('dotenv').load(); // Load .env file
 
+require('hoek').assert(process.env.UPLOAD_MAX);
+
 const Glue = require('glue');
 const _ = require('lodash');
 const Path = require('path');
@@ -27,6 +29,18 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
+            './utils/error' : [{select: ['api']}],
+            './utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        documents: 'documents',
+                        courses: 'courses',
+                        storage: 'storage',
+                        test: false
+                    }
+                }],
             'hapi-auth-jwt2': [{
                 select: ['api']
             }],
@@ -95,37 +109,64 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     }
 
     var Models = server.plugins.models.models;
+
     Models.sequelize.sync({
-        force: true // drops all db and recreates them
+        force: false // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
-        require('../roles.json').forEach(role => Models.Role.create(role));
-        require('../users.json').forEach(user => Models.User.create(user));
-        require('../tags.json').forEach(tag => Models.Tag.create(tag));
-        require('../roles.json').forEach(role => Models.Role.create(role));
-        require('../permissions.json').forEach(permission => Models.Permission.create(permission));
 
-            Models.Course.create({
-                name: 'Ateliers Logiciel',
-                code: 'ATL',
-                description: 'Bullshit'
-            }).then(course => {
-                course.addTitular(1).then(() => {
-                    Models.Course.findAll().then(results => {
-                        results[0].getTitulars().then(r => console.log(r));
-                    });
-                });
-            });
+        server.start((err) => {
+            if (err) {
+                throw err;
+            } else {
+                _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
+
+
+
+                // INIT DATA FOR TEST PURPOSES
+
+                const Wreck = require('wreck');
+                const roles = require('../resources/roles.json');
+                const users = require('../resources/users.json');
+                const tags  = require('../resources/tags.json');
+                const permissions = require('../resources/permissions.json');
+                const teachers = require('../resources/teachers.json');
+                const courses = require('../resources/courses.json');
+
+
+                const post = function(url, payload) {
+                    Wreck.post(url, { payload: JSON.stringify(payload) }, () => {});
+                };
+
+                const addCourses = function() {
+                    _.forEach(courses, course => post('http://localhost:8088/courses', course));
+                };
+
+                const addTeachers = function() {
+                    _.forEach(teachers, teacher => post('http://localhost:8088/users', teacher));
+                };
+
+               /* const addUsers = function() {
+                    _.forEach(users, user => post('http://localhost:8088/users', user, addTeachers));
+                };*/
+
+                const addTags = function() {
+                    _.forEach(tags, tag => post('http://localhost:8088/tags', tag));
+                };
+
+                const addRoles = function() {
+                    _.forEach(roles, role => post('http://localhost:8088/roles', role));
+                };
+
+
+                addRoles();
+                addTags();
+                addTeachers();
+                setTimeout(addCourses, 1000); // just for test.
+
+            }
         });
 
-
-    server.start((err) => {
-        if (err) {
-            throw err;
-        } else {
-            _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
-        }
     });
-
 });

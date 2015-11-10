@@ -2,6 +2,7 @@
 
 require('dotenv').load(); // Load .env file
 
+
 const Glue  = require('glue');
 
 const internals = {
@@ -15,6 +16,15 @@ const internals = {
             labels: ['api']
         }],
         plugins: {
+            '../app/utils/error' : [{select: ['api']}],
+            '../app/utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        test: true
+                    }
+                }],
             'hapi-auth-jwt2': [{select: ['api']}],
             '../app/auth': [{
                 select: ['api'],

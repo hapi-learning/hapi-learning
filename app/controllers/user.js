@@ -1,10 +1,11 @@
 'use strict';
 
 const Joi = require('joi');
-const Boom = require('boom');
+Joi.phone = require('joi-phone');
+
+const Utils = require('../utils/sequelize');
 
 exports.get = {
-    auth: false,
     description: 'Get one user',
     validate: {
         params: {
@@ -20,64 +21,83 @@ exports.get = {
                     username: request.params.username
                 },
                 attributes: {
-                    exclude: 'password'
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .catch(error => reply(Boom.badRequest(error)))
-            .then(result => reply(result));
+            .then(result => {
+                if (result) {
+                    return reply(Utils.removeDates(result));
+                } else {
+                    return reply.notFound('User not found');
+                }
+            })
+            .catch(err => reply.badImplementation(err));
+
         }
 };
 
 
 exports.getAll = {
-    auth: false,
     description: 'Get all users',
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
+
         User.findAll({
                 attributes: {
-                    exclude: 'password'
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .catch(error => reply(Boom.notFound(error)))
-            .then(results => reply(results));
+            .then(results => reply(Utils.removeDates(results)))
+            .catch(err => reply.notFound(err));
     }
 };
 
+const schemaUserPOST = function(){
+    const user = Joi.object().keys({
+        username: Joi.string().min(1).max(30).required().description('User personal ID'),
+        password: Joi.string().min(1).max(255).required().description('User password'),
+        email: Joi.string().email().required().description('User email'),
+        firstName: Joi.string().min(1).max(255).description('User first name'),
+        lastName: Joi.string().min(1).max(255).description('User last name'),
+        phoneNumber: Joi.phone.e164().description('User phone number'),
+        role_id: Joi.number().integer().default(1)
+    });
+
+    return Joi.alternatives().try(user, Joi.array().items(user.required()));
+};
+
 exports.post = {
-    auth: false,
     description: 'Add user',
     validate: {
-        payload: {
-            username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            password: Joi.string().min(1).max(255).required().description('User password'),
-            email: Joi.string().min(1).max(255).required().description('User email'),
-            firstName: Joi.string().min(1).max(255).description('User first name'),
-            lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.string().min(1).max(255).description('User phone number')
-        }
+        payload : schemaUserPOST()
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
-        User.create({
-            username : request.payload.username,
-            password: request.payload.password,
-            email: request.payload.email,
-            firstName: request.payload.firstName,
-            lastName: request.payload.lastName,
-            phoneNumber: request.payload.phoneNumber
-        })
-        .then(user => reply(user))
-        .catch(error => reply(Boom.badRequest(error)));
+
+        if (Array.isArray(request.payload))
+        {
+            /*
+            User.bulkCreate(request.payload, {validate : true})
+            */
+            User.bulkCreate(
+                Utils.extractUsers(request.payload),
+                {validate : true}
+            )
+            .then(results => (reply({count : results.length}).code(201)))
+            .catch(() => reply.conflict());
+        }
+        else
+        {
+            User.create(Utils.extractUsers(request.payload))
+            .then(result => reply(Utils.removeDates(result)).code(201))
+            .catch(() => reply.conflict());
+        }
     }
 };
 
 exports.delete = {
-    auth: false,
     description: 'Delete user',
     validate: {
         params: {
@@ -85,7 +105,7 @@ exports.delete = {
         }
     },
     handler: function (request, reply) {
-        
+
         const User = this.models.User;
 
         User.destroy({
@@ -93,13 +113,12 @@ exports.delete = {
                 username : request.params.username
             }
         })
-        .then(user => reply(user))
+        .then(count => reply({count : count}))
         .catch(error => reply(error));
     }
 };
 
 exports.put = {
-    auth: false,
     description: 'Update all info about user (except username)',
     validate: {
         params: {
@@ -114,7 +133,7 @@ exports.put = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
 
         User.update(
@@ -129,14 +148,13 @@ exports.put = {
             where: {username: request.params.username}
         }
         )
-        .then(user => reply(user))
+        .then(result => reply({count : result[0] || 0}))
         .catch(error => reply(error));
     }
 };
 
 
 exports.patch = {
-    auth: false,
     description: 'Update some info about user (except username)',
     validate: {
         params: {
@@ -151,41 +169,24 @@ exports.patch = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
 
-        var payload = {};
-
-        if (request.payload.password)
-            payload.password = request.payload.password;
-
-        if (request.payload.email)
-            payload.email = request.payload.email;
-
-        if (request.payload.firstName)
-            payload.firstName = request.payload.firstName;
-
-        if (request.payload.lastName)
-            payload.lastName = request.payload.lastName;
-
-        if (request.payload.phoneNumber)
-            payload.phoneNumber = request.payload.phoneNumber;
-
+        // NEED TESTING
         User.update(
-                payload,
+                request.payload,
                 {
                     where: {
                         username: request.params.username
                     }
                 }
             )
-            .then(user => reply(user))
+            .then(result => reply({count : result[0] || 0}))
             .catch(error => reply(error));
     }
 };
 
 exports.getTags = {
-    auth: false,
     description: 'Get the user\'s tag',
     validate: {
         params: {
@@ -193,9 +194,9 @@ exports.getTags = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
+
         User.findOne({
                 where: {
                     username: request.params.username
@@ -204,14 +205,14 @@ exports.getTags = {
                     exclude: 'password'
                 }
             })
-            .catch(error => reply(Boom.badRequest(error)))
+            .catch(err => reply.badRequest(err))
             .then(result => result.getTags()
                   .then(tags => reply(tags)));
     }
 };
 
 exports.getCourses = {
-    auth: false,
+
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
@@ -219,9 +220,9 @@ exports.getCourses = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User = this.models.User;
-        
+
         User.findOne({
                 where: {
                     username: request.params.username
@@ -230,14 +231,13 @@ exports.getCourses = {
                     exclude: 'password'
                 }
             })
-            .catch(error => reply(Boom.badRequest(error)))
+            .catch(err => reply.badRequest(err))
             .then(result => result.getCourses()
                   .then(courses => reply(courses)));
     }
 };
 
 exports.subscribeToCourse = {
-    auth: false,
     description: 'Subscribe to a course',
     validate: {
         params: {
@@ -251,7 +251,6 @@ exports.subscribeToCourse = {
 };
 
 exports.unsubscribeToCourse = {
-    auth: false,
     description: 'Unsubscribe to a course',
     validate: {
         params: {
@@ -265,7 +264,6 @@ exports.unsubscribeToCourse = {
 };
 
 exports.addFolder = {
-    auth: false,
     description: 'Add a folder',
     validate: {
         params: {
@@ -279,7 +277,6 @@ exports.addFolder = {
 };
 
 exports.addCourseToFolder = {
-    auth: false,
     description: 'Add a course to the folder (removes from the old folder)',
     validate: {
         params: {
