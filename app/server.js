@@ -132,7 +132,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 const tags  = require('../resources/tags.json');
                 const permissions = require('../resources/permissions.json');
                 const teachers = require('../resources/teachers.json');
-                const courses = require('../resources/courses.json');
+                const courses = require('../resources/all_courses.json');
 
 
                 const post = function(url, payload) {
