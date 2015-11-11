@@ -108,15 +108,17 @@ const badUser = {
     password: 'superpassword'
 };
 
-const badUsers = [{
+const badUsers = [
+    {
     username: 'SRV',
     email: '',
     password: 'superpassword'
-}, {
+    }, {
     username: 'FPL',
     email: 'pluquos@hotmail.com',
     password: 'superpassword'
-}];
+    }
+];
 
 const user = {
     username: 'Johnny',
@@ -543,10 +545,26 @@ describe('Controller.User', () => {
                 done();
             });
         });
+        
+        it('should return an array of size 1 with statusCode 200', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/SRV/courses'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).length(1);
+
+                done();
+            });
+        });
     });
     
     describe('#removeCourse', () => {
-        it('', done => {
+        it('NOT DONE YET', done => {
             const request = {
                 method: 'DELETE',
                 url: '/users/SRV/courses/ATL'
