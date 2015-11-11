@@ -72,7 +72,8 @@ exports.getAll = {
 
         const Course = this.models.Course;
 
-        Course.findAll().then(results => {
+        Course
+            .findAll().then(results => {
 
             let promises = _.map(results, (r => internals.getCourse(r)));
             // Wait for all promises to end
@@ -80,7 +81,8 @@ exports.getAll = {
                 .all(promises)
                 .then(values => reply(values));
 
-        });
+        })
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -185,7 +187,7 @@ exports.getTree = {
             return reply(Storage.getTree(id, path, recursive));
         };
 
-        return internals.checkCourse(Course, id, tree);
+        return internals.checkCourse(Course, id, reply, tree);
     }
 };
 
@@ -396,9 +398,6 @@ exports.createFolder = {
 exports.addTags = {
     description: 'Add a list of tags to the course',
     validate: {
-        options: {
-            stripUnknown: true
-        },
         params: {
             id: Joi.string().required().description('Course code'),
         },

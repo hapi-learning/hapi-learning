@@ -2,14 +2,66 @@
 
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
+const Hoek = require('hoek');
 
 const Utils = require('../utils/sequelize');
+const _ = require('lodash');
+
+const internals = {};
+
+// result is a sequelize instance
+internals.getUser = function(result) {
+
+    return Promise.resolve(
+
+        result.getTags({attributes: ['name'], joinTableAttributes: []})
+        .then(tags => {
+            const user = result.get({ plain:true });
+            user.tags = _.map(tags, (t => t.get('name', { plain:true })));
+            return user;
+        })
+    );
+};
+
+internals.findUser = function(User, username)
+{
+    Hoek.assert(User, 'Model User required');
+    Hoek.assert(username, 'username required');
+
+    return User.findOne({
+        where: {
+            username: username
+        },
+        attributes: {
+            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+        }
+    });
+};
+
+internals.findCourseByCode = function(Course, id) {
+
+    Hoek.assert(Course, 'Model Course required');
+    Hoek.assert(id, 'Course code required');
+
+    return Course.findOne({
+        where: {
+            code: { $eq : id }
+        },
+        attributes: {
+            exclude: ['updated_at', 'deleted_at', 'created_at']
+        }
+    });
+};
+
 
 exports.get = {
     description: 'Get one user',
     validate: {
         params: {
             username: Joi.string().min(1).max(255).required().description('User personal ID')
+        },
+        query: {
+            tags: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -18,7 +70,7 @@ exports.get = {
 
         User.findOne({
                 where: {
-                    username: request.params.username
+                    username: { $eq: request.params.username }
                 },
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
@@ -49,7 +101,7 @@ exports.getAll = {
                 }
             })
             .then(results => reply(Utils.removeDates(results)))
-            .catch(err => reply.notFound(err));
+            .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -97,6 +149,45 @@ exports.post = {
     }
 };
 
+exports.addTags = {
+    description: 'Link tags to a user',
+    validate: {
+        params: {
+            username: Joi.string().min(1).max(255).required().description('User personal ID')
+        },
+        payload: {
+            tags: Joi.array().items(Joi.string().required())
+        }
+    },
+    handler : function(request, reply) {
+        const Tag  = this.models.Tag;
+        const User = this.models.User;
+
+
+        const id = request.params.username;
+
+        Tag.findAll({where: { name: { $in: request.payload.tags } }})
+        .then(tags => {
+            internals.findUser(User, id)
+            .then(user => {
+                if (user)
+                {
+                    user.addTags(tags).then(() => {
+                       internals.getUser(user).then(result => {
+                           return reply(result);
+                       });
+                    });
+                }
+                else
+                {
+                    return reply.notFound('The user ' + id + ' does not exists.');
+                }
+            });
+        })
+        .catch(err => reply.badImplementation(err));
+    }
+};
+
 exports.delete = {
     description: 'Delete user',
     validate: {
@@ -110,11 +201,11 @@ exports.delete = {
 
         User.destroy({
             where : {
-                username : request.params.username
+                username : { $eq: request.params.username }
             }
         })
         .then(count => reply({count : count}))
-        .catch(error => reply(error));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -145,11 +236,11 @@ exports.put = {
             phoneNumber: request.payload.phoneNumber,
         },
         {
-            where: {username: request.params.username}
+            where: {username: { $eq: request.params.username } }
         }
         )
         .then(result => reply({count : result[0] || 0}))
-        .catch(error => reply(error));
+        .catch(err => reply.conflict(err));
     }
 };
 
@@ -177,12 +268,12 @@ exports.patch = {
                 request.payload,
                 {
                     where: {
-                        username: request.params.username
+                        username: { $eq: request.params.username }
                     }
                 }
             )
             .then(result => reply({count : result[0] || 0}))
-            .catch(error => reply(error));
+            .catch(error => reply.conflict(error));
     }
 };
 
@@ -199,15 +290,20 @@ exports.getTags = {
 
         User.findOne({
                 where: {
-                    username: request.params.username
+                    username: { $eq: request.params.username }
                 },
                 attributes: {
                     exclude: 'password'
                 }
             })
-            .catch(err => reply.badRequest(err))
-            .then(result => result.getTags()
-                  .then(tags => reply(tags)));
+            .then(result => {
+                if (result) {
+                    results.getTags().then(tags => reply(tags));
+                } else {
+                    return reply.notFound('User not found');
+                }
+            })
+            .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -225,15 +321,20 @@ exports.getCourses = {
 
         User.findOne({
                 where: {
-                    username: request.params.username
+                    username: { $eq: request.params.username }
                 },
                 attributes: {
                     exclude: 'password'
                 }
             })
-            .catch(err => reply.badRequest(err))
-            .then(result => result.getCourses()
-                  .then(courses => reply(courses)));
+            .then(result => {
+                if (result) {
+                    result.getCourses().then(courses => reply(courses));
+                } else {
+                    reply.notFound('User not found');
+                }
+            })
+            .catch(err => reply.badImplementation(err));
     }
 };
 

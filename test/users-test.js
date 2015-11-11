@@ -16,7 +16,89 @@ before((done) => {
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => done());
+    }).then(() => {
+        [
+            {"name": "admin"},
+            {"name": "teacher"},
+            {"name": "student"}
+        ].forEach(role => Models.Role.create(role));
+
+        [
+            {"name":"Extra-course"},
+            {"name":"COBOL_1"},
+            {"name":"3G12"},
+            {"name":"Languages"},
+            {"name":"3R13"},
+            {"name": "2I12"},
+            {"name": "Theory"},
+            {"name": "Over"},
+            {"name": "Laboratory"}
+        ].forEach(tag => Models.Tag.create(tag));
+
+        [
+    {
+        "code": "ANA3",
+        "name": "Analyse 3e",
+        "teachers": ["FPL"],
+        "tags": ["3e", "Gestion"]
+    },
+    {
+        "code": "DEV1",
+        "name": "Développement 1e",
+        "teachers": ["MCD", "SRV", "HAL"],
+        "tags": ["1e", "Java"]
+    },
+    {
+        "code": "DEV2",
+        "name": "Développement 2e",
+        "teachers": ["FPL", "SRV", "JLC"],
+        "tags": ["2e", "Java"]
+    },
+    {
+        "code": "INT1",
+        "name": "Introduction 1e",
+        "teachers": ["MCD", "NVS"],
+        "tags": ["1e"]
+    },
+    {
+        "code": "TMP56GATL",
+        "name": "Ateliers Logiciel 3e",
+        "teachers": ["FPL", "SRV"],
+        "tags": ["3e", "Java", "Gestion"]
+    },
+    {
+        "code": "STAGES",
+        "name": "Stages",
+        "teachers": ["DNA"],
+        "tags": ["3e"]
+    },
+    {
+        "code": "RE",
+        "name": "Ressources étudiants",
+        "teachers": ["ADT"],
+        "tags": ["Administration"]
+    },
+    {
+        "code": "SYS2",
+        "name": "Système 2e",
+        "teachers": ["MBA"],
+        "tags": ["2e"]
+    },
+    {
+        "code": "DVG2GCOB",
+        "name": "Cobol 1e",
+        "teachers": ["EFO", "HAL"],
+        "tags": ["1e", "Gestion"]
+    },
+    {
+        "code": "TMP56IRATL",
+        "name": "Ateliers Logiciels Réseaux 3e",
+        "teachers": ["NVS"],
+        "tags": ["3e", "Réseaux"]
+    }
+].forEach(course => Models.Course.create(course));
+        done();
+    });
 });
 
 const badUser = {
@@ -51,6 +133,8 @@ const users = [{
     email: 'pluquos@hotmail.com',
     password: 'superpassword'
 }];
+
+const tags = ['Theory', '2I12'];
 
 describe('Controller.User', () => {
     describe('#post', () => {
@@ -111,7 +195,7 @@ describe('Controller.User', () => {
 
                 done();
             });
-        });     
+        });
         it('Should return number of created users from array', done => {
             const request = {
                 method: 'POST',
@@ -157,7 +241,7 @@ describe('Controller.User', () => {
 
     describe('#getAll', () => {
         it ('Should return 3 users', done => {
-            
+
             const request = {
                 method: 'GET',
                 url: '/users'
@@ -167,6 +251,44 @@ describe('Controller.User', () => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
                 expect(response).to.have.length(3);
+                done();
+            });
+        });
+    });
+
+        describe('#addTags', () => {
+        it('should return the user SRV', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/tags',
+                payload : { tags: ['Laboratory'] }
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response.username).equal('SRV');
+                expect(response.tags).to.have.length(1);
+                expect(response.tags).to.only.include('Laboratory')
+                done();
+            });
+        });
+
+        it('should return the user SRV', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/tags',
+                payload : {
+                    tags: tags
+                }
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response.username).equal('SRV');
+                expect(response.tags).to.have.length(3);
+                expect(response.tags).to.only.include(tags.concat('Laboratory'));
                 done();
             });
         });
