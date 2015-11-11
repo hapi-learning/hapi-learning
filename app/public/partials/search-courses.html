@@ -8,4 +8,20 @@
         <label>Course Code</label>
         <input class="form-control" type="text" data-ng-model="filter.code" clearable />
     </form>
+
+</div>
+
+<br />
+
+<div>
+    <label>Tags</label>
+
+    <div>
+        <span data-toggle="buttons" ng-repeat="tag in tags track by $index">
+            <label class="btn btn-default">
+                <input type="checkbox" ng-click="selected()"> #{{tag.name}}
+            </label>
+        </span>
+    </div>
+
 </div>

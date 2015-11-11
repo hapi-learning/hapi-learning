@@ -35,7 +35,7 @@ before((done) => {
             {"name": "Over"}, 
             {"name": "Laboratory"}
         ].forEach(tag => Models.Tag.create(tag));
-        
+
         [
     {
         "code": "ANA3",
@@ -450,6 +450,7 @@ describe('Controller.User', () => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).equal(200);
                 expect(response.username).equal('SRV');
+                expect(response.tags).to.have.length(3);
                 done();
             });
         });
@@ -563,7 +564,6 @@ describe('Controller.User', () => {
                 expect(res.request.response.statusCode).equal(200);
                 expect(response).to.be.an.array();
                 expect(response).length(1);
-
                 done();
             });
         });

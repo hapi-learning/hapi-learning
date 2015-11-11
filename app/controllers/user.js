@@ -5,8 +5,23 @@ const Joi = require('joi');
 Joi.phone = require('joi-phone');
 
 const Utils = require('../utils/sequelize');
+const _ = require('lodash');
 
 const internals = {};
+
+// result is a sequelize instance
+internals.getUser = function(result) {
+
+    return Promise.resolve(
+
+        result.getTags({attributes: ['name'], joinTableAttributes: []})
+        .then(tags => {
+            const user = result.get({ plain:true });
+            user.tags = _.map(tags, (t => t.get('name', { plain:true })));
+            return user;
+        })
+    );
+};
 
 internals.findUser = function(User, username)
 {
@@ -161,7 +176,9 @@ exports.addTags = {
                 if (user)
                 {
                     user.addTags(tags).then(() => {
-                       reply(Utils.removeDates(user));
+                       internals.getUser(user).then(result => {
+                           return reply(result);
+                       });
                     });
                 }
                 else

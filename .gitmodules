@@ -1,3 +1,0 @@
-[submodule "plugins/hapi-pagination"]
-	path = plugins/hapi-pagination
-	url = https://github.com/fknop/hapi-pagination.git
