@@ -418,44 +418,66 @@ describe('Controller.User', () => {
         it('should return statusCode 200, course has been added', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/courses/ATL'
+                url: '/users/SRV/subscribe/ATL'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                done();
-            });
-        });
-        it('should return statusCode 400, wrong parameter', done => {
-            const request = {
-                method: 'POST',
-                url: '/users/SRV/courses/ATL'
-            };
-
-            server.inject(request, res => {
-                const response = res.request.response.source;
-                done();
-            });
-        });
-        it('should return statusCode 404, user not found', done => {
-            const request = {
-                method: 'POST',
-                url: '/users/SRV/courses/ATL'
-            };
-
-            server.inject(request, res => {
-                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
                 done();
             });
         });
         it('should return statusCode 404, course not found', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/courses/ATL'
+                url: '/users/SRV/subscribe/18381391'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+        it('should return statusCode 404, user not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/GERARD/subscribe/ATL'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+        it('should return statusCode 404, user already subscribed to this course', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/subscribe/ATL'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(409);
+                done();
+            });
+        });
+    });
+    
+    describe('#getCourses', () => {
+        it('should return an empty array with statusCode 200', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/SRV/courses'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).length(0);
+
                 done();
             });
         });

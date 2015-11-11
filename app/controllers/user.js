@@ -181,7 +181,6 @@ exports.post = {
     handler: function(request, reply) {
 
         const User = this.models.User;
-        console.log(request.payload);
         if (Array.isArray(request.payload))
         {
             User.bulkCreate(
@@ -190,7 +189,6 @@ exports.post = {
             )
             .then(results => (reply({count : results.length}).code(201)))
             .catch((error) => {
-                console.log(error);
                 return reply.conflict(error);
             });
         }
@@ -199,7 +197,6 @@ exports.post = {
             User.create(request.payload)
             .then(result => reply(Utils.removeDates(result)).code(201))
             .catch((error) => {
-                console.log(error);
                 return reply.conflict(error);
             });
         }
@@ -354,8 +351,20 @@ exports.subscribeToCourse = {
                 .then(course => {
                     if (course)
                     {
-                        user.addCourse(course);
-                        return reply();
+                        user.getCourses({where : {code : course.code}})
+                        .then(course => {
+                            if (course)
+                            {
+                                return reply.conflict('User ' + request.params.username + 
+                                                  ' has already subscribed to course ' + request.params.crsId);
+                            }
+                            else
+                            {
+                            user.addCourse(course);
+                            return reply();       
+                            }
+                        })
+                        .catch(error => reply.badImplementation(error));
                     }
                     else
                     {
