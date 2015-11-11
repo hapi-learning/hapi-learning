@@ -36,6 +36,68 @@ before((done) => {
             {"name": "Laboratory"}
         ].forEach(tag => Models.Tag.create(tag));
         
+        [
+    {
+        "code": "ANA3",
+        "name": "Analyse 3e",
+        "teachers": ["FPL"],
+        "tags": ["3e", "Gestion"]
+    },
+    {
+        "code": "DEV1",
+        "name": "Développement 1e",
+        "teachers": ["MCD", "SRV", "HAL"],
+        "tags": ["1e", "Java"]
+    },
+    {
+        "code": "DEV2",
+        "name": "Développement 2e",
+        "teachers": ["FPL", "SRV", "JLC"],
+        "tags": ["2e", "Java"]
+    },
+    {
+        "code": "INT1",
+        "name": "Introduction 1e",
+        "teachers": ["MCD", "NVS"],
+        "tags": ["1e"]
+    },
+    {
+        "code": "TMP56GATL",
+        "name": "Ateliers Logiciel 3e",
+        "teachers": ["FPL", "SRV"],
+        "tags": ["3e", "Java", "Gestion"]
+    },
+    {
+        "code": "STAGES",
+        "name": "Stages",
+        "teachers": ["DNA"],
+        "tags": ["3e"]
+    },
+    {
+        "code": "RE",
+        "name": "Ressources étudiants",
+        "teachers": ["ADT"],
+        "tags": ["Administration"]
+    },
+    {
+        "code": "SYS2",
+        "name": "Système 2e",
+        "teachers": ["MBA"],
+        "tags": ["2e"]
+    },
+    {
+        "code": "DVG2GCOB",
+        "name": "Cobol 1e",
+        "teachers": ["EFO", "HAL"],
+        "tags": ["1e", "Gestion"]
+    },
+    {
+        "code": "TMP56IRATL",
+        "name": "Ateliers Logiciels Réseaux 3e",
+        "teachers": ["NVS"],
+        "tags": ["3e", "Réseaux"]
+    }
+].forEach(course => Models.Course.create(course));
         done();
     });
 });
@@ -414,11 +476,11 @@ describe('Controller.User', () => {
             });});
     });
     
-    describe('#addCourse', () => {
+    describe('#subscribeToCourse', () => {
         it('should return statusCode 200, course has been added', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/subscribe/ATL'
+                url: '/users/SRV/subscribe/DEV1'
             };
 
             server.inject(request, res => {
@@ -454,7 +516,7 @@ describe('Controller.User', () => {
         it('should return statusCode 404, user already subscribed to this course', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/subscribe/ATL'
+                url: '/users/SRV/subscribe/DEV1'
             };
 
             server.inject(request, res => {
@@ -469,7 +531,7 @@ describe('Controller.User', () => {
         it('should return an empty array with statusCode 200', done => {
             const request = {
                 method: 'GET',
-                url: '/users/SRV/courses'
+                url: '/users/FPL/courses'
             };
 
             server.inject(request, res => {

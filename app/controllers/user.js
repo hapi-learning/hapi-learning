@@ -38,20 +38,6 @@ internals.findCourseByCode = function(Course, id) {
     });
 };
 
-internals.findUserCourses = function(User, username) {
-
-    Hoek.assert(User, 'Model User required');
-    Hoek.assert(username, 'Username required');
-
-    return internals.findUser(User, username)
-    .then(result => {
-            if (result)
-                return result.getCourses();
-            else
-                return reply.notFound('User ' + request.params.username + ' not found');
-    });
-};
-
 internals.schemaUserTagsPOST = function()
 {
     const tag = Joi.object().keys({
@@ -320,13 +306,20 @@ exports.getCourses = {
 
         const User = this.models.User;
 
-        internals.findUserCourses(User, request.params.username)
-        .then(courses => {
-            if (courses)
-                return reply(courses);
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                user.getCourses()
+                .then(courses => reply(courses))
+                .catch(error => reply.badImplementation(error));
+            }
             else
-                return reply([]);
-        });
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
@@ -347,28 +340,27 @@ exports.subscribeToCourse = {
         .then(user => {
             if (user)
             {
-                internals.findCourseByCode(Course, request.params.crsId)
-                .then(course => {
-                    if (course)
+                user.getCourses({where : {code : request.params.crsId}})
+                .then(courses => {
+                    if (courses.length > 0)
                     {
-                        user.getCourses({where : {code : course.code}})
-                        .then(course => {
-                            if (course)
-                            {
-                                return reply.conflict('User ' + request.params.username + 
-                                                  ' has already subscribed to course ' + request.params.crsId);
-                            }
-                            else
-                            {
-                            user.addCourse(course);
-                            return reply();       
-                            }
-                        })
-                        .catch(error => reply.badImplementation(error));
+                        reply.conflict('Course ' + request.params.crsId + ' already subscribed');
                     }
                     else
                     {
-                        return reply.notFound('Course ' + request.params.crsId + ' not found');
+                        Course.findOne({where : {code : request.params.crsId}})
+                        .then(course => {
+                            if (course)
+                            {
+                                user.addCourse(course);
+                                return reply(Utils.removeDates(user));
+                            }
+                            else
+                            {
+                                return reply.notFound('Course ' + request.params.crsId + ' not found');
+                            }
+                        })
+                        .catch(error => reply.badImplementation(error));
                     }
                 })
                 .catch(error => reply.badImplementation(error));
