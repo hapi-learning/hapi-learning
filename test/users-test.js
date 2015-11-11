@@ -18,6 +18,12 @@ before((done) => {
         force: true
     }).then(() => 
     {
+        [   
+            {"name": "admin"},
+            {"name": "teacher"},
+            {"name": "student"}
+        ].forEach(role => Models.Role.create(role));
+
         [
             {"name":"Extra-course"},
             {"name":"COBOL_1"},
