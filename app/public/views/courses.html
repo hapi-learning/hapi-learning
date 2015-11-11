@@ -1,52 +1,25 @@
-<!--<div class="container" ng-controller="courses-controller">-->
+<div ng-include="'../partials/navbar.html'"></div>
 
-<!--    <h1 class="page-header">Courses</h1>-->
+<div class="container-fluid">
 
-    <search-courses></search-courses>
-    <br />
+    <div class="col-md-2" ng-controller="home-controller as homeCtrl">
 
+        <div ng-include="'../partials/userbar.html'"></div>
 
-    <ul class="list-group">
-        <li class="list-group-item" ng-repeat="course in courses | filter:{name : filter.course, code : filter.code}">
-            <h3>
-                
-                <span class="label label-default label-pill pull-right" ng-show="updated()"><span class="glyphicon glyphicon-eye-open"></span></span>
-                
-                
-                <a href="#/courses/{{course.code}}">{{course.code}} − {{course.name}}</a></h3>
+    </div>
 
-            <div>
-                <label>Teachers</label>
-                
-                <br />
+    <div class="col-md-10" ng-controller="courses-controller">
 
-                <span ng-repeat="teacher in course.teachers">
-                    <teacher-info></teacher-info>
-                </span>
-            </div>
+        <h1 class="page-header">Courses</h1>
 
-            <br />
+        <search-courses></search-courses>
 
-            <div>
-                <label>Tags</label>
-                
-                <br />
+        <br />
 
-                <span ng-repeat="tag in course.tags">
-                    <button class="btn btn-default btn-xs">#{{tag}}</button>
-                </span>
-            </div>
+        <div ng-include="'../partials/courses-list.html'"></div>
 
-            <br />
+    </div>
 
+</div>
 
-            <div>
-                <button type="button" class="btn btn-success" ng-hide="subscribed()"><span class="glyphicon glyphicon-ok"></span> Subscribe</button>
-                <button type="button" class="btn btn-danger" ng-show="subscribed()"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
-            </div>
-
-            <br />
-        </li>
-    </ul>
-
-<!--</div>-->
+<div ng-include="'../partials/footer.html'"></div>

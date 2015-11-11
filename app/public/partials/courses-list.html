@@ -1,0 +1,7 @@
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="course in courses | filter:{name : filter.course, code : filter.code}">
+        <course-info></course-info>
+
+        <br />
+    </li>
+</ul>

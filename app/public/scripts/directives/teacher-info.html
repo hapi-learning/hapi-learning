@@ -1,1 +1,3 @@
-<a ng-href="mailto: {{teacher.acronyme | lowercase}}@heb.be"><button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-envelope"></span> {{teacher.name}} ({{teacher.acronyme}})</button></a>
+<a ng-href="mailto: {{teacher.email}}">
+    <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-envelope"></span> {{teacher.first_name}} {{teacher.last_name}} ({{teacher.username}})</button>
+</a>

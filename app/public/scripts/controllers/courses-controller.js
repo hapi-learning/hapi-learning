@@ -1,7 +1,18 @@
 angular.module('hapi-learning')
-    .controller('courses-controller', ['$scope', 'courses_factory', function ($scope, courses_factory) {
+    .controller('courses-controller', ['$scope', 'Restangular', function ($scope, Restangular) {
 
-        $scope.courses = courses_factory.getCourses();
+        $scope.courses = [];
+
+
+        Restangular.all('courses').getList().then(function (courses) {
+            courses.forEach(course => {
+                $scope.courses.push(course);
+                console.log(course.teachers);
+            });
+        });
+
+
+        console.log($scope.courses);
 
         $scope.subscribed = function () {
             // did the user already subscribe to the course?
