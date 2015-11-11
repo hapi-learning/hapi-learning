@@ -23,7 +23,6 @@ const ls = function(path, options) {
         nodir: options.nodir
     });
 
-
     filenames.forEach(filename => {
 
         const stat = Fs.statSync(filename);
@@ -32,12 +31,13 @@ const ls = function(path, options) {
             results.push({ [Path.basename(filename)]: ls(filename, options) });
         } else {
              const file = {
-                dir: Path.dirname(filename),
-                full: filename,
+                dir: Path.basename(Path.dirname(filename)),
                 file: Path.basename(filename),
-                name: Path.basename(filename, Path.extname(filename)),
-                size: stat.size,
-                directory: stat.isDirectory()
+                size: stat.size
+            };
+
+            if (!options.recursive) {
+                file.isDirectory = stat.isDirectory()
             };
 
             results.push(file);
