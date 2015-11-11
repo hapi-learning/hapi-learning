@@ -398,9 +398,6 @@ exports.createFolder = {
 exports.addTags = {
     description: 'Add a list of tags to the course',
     validate: {
-        options: {
-            stripUnknown: true
-        },
         params: {
             id: Joi.string().required().description('Course code'),
         },

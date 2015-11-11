@@ -52,6 +52,8 @@ const users = [{
     password: 'superpassword'
 }];
 
+const tags = ['Theory', '2I12'];
+
 describe('Controller.User', () => {
     describe('#post', () => {
         it('Should return 400 response because of invalid username', done => {
@@ -111,7 +113,7 @@ describe('Controller.User', () => {
 
                 done();
             });
-        });     
+        });
         it('Should return number of created users from array', done => {
             const request = {
                 method: 'POST',
@@ -157,7 +159,7 @@ describe('Controller.User', () => {
 
     describe('#getAll', () => {
         it ('Should return 3 users', done => {
-            
+
             const request = {
                 method: 'GET',
                 url: '/users'
@@ -167,6 +169,41 @@ describe('Controller.User', () => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
                 expect(response).to.have.length(3);
+                done();
+            });
+        });
+    });
+
+        describe('#addTags', () => {
+        it('should return the user SRV', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/tags',
+                payload : { tags: ['Laboratory'] }
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response.username).equal('SRV');
+                done();
+            });
+        });
+
+        it('should return the user SRV', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/tags',
+                payload : {
+                    tags: tags
+                }
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                expect(res.request.response.statusCode).equal(200);
+                expect(response.username).equal('SRV');
                 done();
             });
         });

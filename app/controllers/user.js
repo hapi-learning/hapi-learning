@@ -2,8 +2,42 @@
 
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
+const Hoek = require('hoek');
 
 const Utils = require('../utils/sequelize');
+
+const internals = {};
+
+internals.findUser = function(User, username)
+{
+    Hoek.assert(User, 'Model User required');
+    Hoek.assert(username, 'username required');
+
+    return User.findOne({
+        where: {
+            username: username
+        },
+        attributes: {
+            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+        }
+    });
+};
+
+internals.findCourseByCode = function(Course, id) {
+
+    Hoek.assert(Course, 'Model Course required');
+    Hoek.assert(id, 'Course code required');
+
+    return Course.findOne({
+        where: {
+            code: { $eq : id }
+        },
+        attributes: {
+            exclude: ['updated_at', 'deleted_at', 'created_at']
+        }
+    });
+};
+
 
 exports.get = {
     description: 'Get one user',
@@ -97,6 +131,43 @@ exports.post = {
             .then(result => reply(Utils.removeDates(result)).code(201))
             .catch(() => reply.conflict());
         }
+    }
+};
+
+exports.addTags = {
+    description: 'Link tags to a user',
+    validate: {
+        params: {
+            username: Joi.string().min(1).max(255).required().description('User personal ID')
+        },
+        payload: {
+            tags: Joi.array().items(Joi.string().required())
+        }
+    },
+    handler : function(request, reply) {
+        const Tag  = this.models.Tag;
+        const User = this.models.User;
+
+
+        const id = request.params.username;
+
+        Tag.findAll({where: { name: { $in: request.payload.tags } }})
+        .then(tags => {
+            internals.findUser(User, id)
+            .then(user => {
+                if (user)
+                {
+                    user.addTags(tags).then(() => {
+                       reply(Utils.removeDates(user));
+                    });
+                }
+                else
+                {
+                    return reply.notFound('The user ' + id + ' does not exists.');
+                }
+            });
+        })
+        .catch(err => reply.badImplementation(err));
     }
 };
 
