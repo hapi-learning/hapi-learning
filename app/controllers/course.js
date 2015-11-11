@@ -72,7 +72,8 @@ exports.getAll = {
 
         const Course = this.models.Course;
 
-        Course.findAll().then(results => {
+        Course
+            .findAll().then(results => {
 
             let promises = _.map(results, (r => internals.getCourse(r)));
             // Wait for all promises to end
@@ -80,7 +81,8 @@ exports.getAll = {
                 .all(promises)
                 .then(values => reply(values));
 
-        });
+        })
+        .catch(err => reply.badImplementation(err));
     }
 };
 

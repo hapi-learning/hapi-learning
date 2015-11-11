@@ -10,6 +10,9 @@ exports.get = {
     validate: {
         params: {
             username: Joi.string().min(1).max(255).required().description('User personal ID')
+        },
+        query: {
+            tags: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -18,7 +21,7 @@ exports.get = {
 
         User.findOne({
                 where: {
-                    username: request.params.username
+                    username: { $eq: request.params.username }
                 },
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
@@ -49,7 +52,7 @@ exports.getAll = {
                 }
             })
             .then(results => reply(Utils.removeDates(results)))
-            .catch(err => reply.notFound(err));
+            .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -110,11 +113,11 @@ exports.delete = {
 
         User.destroy({
             where : {
-                username : request.params.username
+                username : { $eq: request.params.username }
             }
         })
         .then(count => reply({count : count}))
-        .catch(error => reply(error));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -145,11 +148,11 @@ exports.put = {
             phoneNumber: request.payload.phoneNumber,
         },
         {
-            where: {username: request.params.username}
+            where: {username: { $eq: request.params.username } }
         }
         )
         .then(result => reply({count : result[0] || 0}))
-        .catch(error => reply(error));
+        .catch(err => reply.conflict(err));
     }
 };
 
@@ -177,12 +180,12 @@ exports.patch = {
                 request.payload,
                 {
                     where: {
-                        username: request.params.username
+                        username: { $eq: request.params.username }
                     }
                 }
             )
             .then(result => reply({count : result[0] || 0}))
-            .catch(error => reply(error));
+            .catch(error => reply.conflict(error));
     }
 };
 
@@ -199,15 +202,20 @@ exports.getTags = {
 
         User.findOne({
                 where: {
-                    username: request.params.username
+                    username: { $eq: request.params.username }
                 },
                 attributes: {
                     exclude: 'password'
                 }
             })
-            .catch(err => reply.badRequest(err))
-            .then(result => result.getTags()
-                  .then(tags => reply(tags)));
+            .then(result => {
+                if (result) {
+                    results.getTags().then(tags => reply(tags));
+                } else {
+                    return reply.notFound('User not found');
+                }
+            })
+            .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -225,15 +233,20 @@ exports.getCourses = {
 
         User.findOne({
                 where: {
-                    username: request.params.username
+                    username: { $eq: request.params.username }
                 },
                 attributes: {
                     exclude: 'password'
                 }
             })
-            .catch(err => reply.badRequest(err))
-            .then(result => result.getCourses()
-                  .then(courses => reply(courses)));
+            .then(result => {
+                if (result) {
+                    result.getCourses().then(courses => reply(courses));
+                } else {
+                    reply.notFound('User not found');
+                }
+            })
+            .catch(err => reply.badImplementation(err));
     }
 };
 

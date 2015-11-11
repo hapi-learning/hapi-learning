@@ -765,19 +765,19 @@ describe('Controller.Course', () => {
         it ('Should return the correct tree', done => {
 
                const expectedTree = [
-                {
-                    dir: 'documents',
-                    file: 'server-test.js',
-                    size: 1529,
-                    isDirectory: false
-                },
-                {
-                    dir: 'documents',
-                    file: 'subfolder',
-                    size: 4096,
-                    isDirectory: true
-                }
-            ];
+                    {
+                        dir: 'documents',
+                        file: 'server-test.js',
+                        size: 1529,
+                        isDirectory: false
+                    },
+                    {
+                        dir: 'documents',
+                        file: 'subfolder',
+                        size: 4096,
+                        isDirectory: true
+                    }
+                ];
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL3G/tree?recursive=false'})
             server.inject(copyRequest, res => {
