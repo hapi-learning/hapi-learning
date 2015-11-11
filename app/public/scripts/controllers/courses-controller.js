@@ -19,8 +19,8 @@ angular.module('hapi-learning')
             });
         });
         
-        $scope.selected = function() {
-            console.log('selected');  
+        $scope.selected = function(tag) {
+            console.log(tag.name + ' selected');
         };
 
 

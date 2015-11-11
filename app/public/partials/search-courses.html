@@ -18,8 +18,8 @@
 
     <div>
         <span data-toggle="buttons" ng-repeat="tag in tags track by $index">
-            <label class="btn btn-default">
-                <input type="checkbox" ng-click="selected()"> #{{tag.name}}
+            <label class="btn btn-default" ng-click="selected(tag)">
+                <input type="checkbox" ng-model="tags[$index]" ng-change="selected()"> #{{tag.name}}
             </label>
         </span>
     </div>
