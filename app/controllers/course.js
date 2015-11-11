@@ -185,7 +185,7 @@ exports.getTree = {
             return reply(Storage.getTree(id, path, recursive));
         };
 
-        return internals.checkCourse(Course, id, tree);
+        return internals.checkCourse(Course, id, reply, tree);
     }
 };
 

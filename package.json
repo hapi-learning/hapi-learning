@@ -23,7 +23,7 @@
     "boom": "^3.0.0",
     "dotenv": "^1.2.0",
     "easypeazip": "file:./plugins/easypeazip",
-	"hapi-pagination": "file:./plugins/hapi-pagination",
+	"hapi-pagination": "^1.0.2",
     "glob": "^5.0.15",
     "glue": "^2.4.0",
     "good": "^6.4.0",
