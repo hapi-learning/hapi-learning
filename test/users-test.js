@@ -142,19 +142,25 @@ const badUserPUT = {
     phoneNumber: '+32484283748'
 };
 
-const users = [{
+const users = [
+    {
     username: 'SRV',
     email: 'SRV@caramail.com',
     password: 'superpassword'
-}, {
+    }, {
     username: 'FPL',
     email: 'pluquos@hotmail.com',
     password: 'superpassword'
-}];
+    }, {
+    username: 'ELV',
+    email: 'elv@hotmail.com',
+    password: 'superpassword'
+    }
+];
 
 const tags = [
-    {name : 'Theory'},
-    {name : '2I12'}
+    'Theory',
+    '2I12'
 ];
 
 describe('Controller.User', () => {
@@ -227,7 +233,7 @@ describe('Controller.User', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).equal(201);
-                expect(response.count).equal(2);
+                expect(response.count).equal(3);
                 done();
             });
         });
@@ -261,7 +267,7 @@ describe('Controller.User', () => {
     });
 
     describe('#getAll', () => {
-        it ('Should return 3 users', done => {
+        it ('Should return 4 users', done => {
             
             const request = {
                 method: 'GET',
@@ -271,7 +277,7 @@ describe('Controller.User', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
-                expect(response).to.have.length(3);
+                expect(response).to.have.length(4);
                 done();
             });
         });
@@ -418,11 +424,11 @@ describe('Controller.User', () => {
     });
     
     describe('#addTags', () => {
-        it('should return the user SRV', done => {
+        it('should return the user SRV fill with Laboratory tag', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : {name : 'Laboratory'}
+                payload : { tags : ['Laboratory'] }
             };
 
             server.inject(request, res => {
@@ -433,16 +439,15 @@ describe('Controller.User', () => {
             });
         });
         
-        it('should return the user SRV', done => {
+        it('should return the user SRV filled with 2 more tags', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : tags
+                payload : { tags : tags }
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-
                 expect(res.request.response.statusCode).equal(200);
                 expect(response.username).equal('SRV');
                 done();
@@ -454,11 +459,12 @@ describe('Controller.User', () => {
         it('should return empty array tags of specific user : 0', done => {
             const request = {
                 method: 'GET',
-                url: '/users/Johnny/tags'
+                url: '/users/ELV/tags'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
+                console.log(response);
                 expect(response).to.be.an.array();
                 expect(response).length(0);
                 done();

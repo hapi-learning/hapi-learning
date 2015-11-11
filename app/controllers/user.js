@@ -12,7 +12,7 @@ internals.findUser = function(User, username)
 {
     Hoek.assert(User, 'Model User required');
     Hoek.assert(username, 'username required');
-    
+
     return User.findOne({
         where: {
             username: username
@@ -38,6 +38,7 @@ internals.findCourseByCode = function(Course, id) {
     });
 };
 
+
 internals.schemaUserTagsPOST = function()
 {
     const tag = Joi.object().keys({
@@ -61,67 +62,14 @@ internals.schemaUserPOST = function(){
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
 };
 
-exports.addTags = {
-    description: 'Link tags to a user',
-    validate: {
-        params: {
-            username: Joi.string().min(1).max(255).required().description('User personal ID')
-        },
-        payload: internals.schemaUserTagsPOST()
-    },
-    handler : function(request, reply) {
-        const Tag      = this.models.Tag;
-        const User     = this.models.User;
-
-        // const tags = [].concat(request.payload); DO NOT WORK
-        var tags = [];
-        
-        if (Array.isArray(request.payload))
-        {
-            tags = request.payload;
-        }
-        else
-        {
-            tags.push(request.payload);
-        }
-        console.log(tags);
-
-        Tag.findAll({
-            where: { 
-                name: { 
-                    $in: tags 
-                } 
-            },
-            attributes : {
-                exclude: ['updated_at', 'deleted_at', 'created_at']
-            }
-        })
-        .then(tags => {
-            console.log('SHOULD NOT BE EMPTY');
-            console.log(tags);
-            internals.findUser(User, request.params.username)
-            .then(user => {
-                if (user) 
-                {
-                    user.addTags(tags).then(() => {
-                       reply(Utils.removeDates(tags));
-                    });
-                } 
-                else 
-                {
-                    return reply.notFound('The user ' + request.params.username + ' does not exists.');
-                }
-            });
-        })
-        .catch(error => reply.badImplementation(error));
-    }
-};
-
 exports.get = {
     description: 'Get one user',
     validate: {
         params: {
             username: Joi.string().min(1).max(255).required().description('User personal ID')
+        },
+        query: {
+            tags: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -189,6 +137,43 @@ exports.post = {
     }
 };
 
+exports.addTags = {
+    description: 'Link tags to a user',
+    validate: {
+        params: {
+            username: Joi.string().min(1).max(255).required().description('User personal ID')
+        },
+        payload: {
+            tags: Joi.array().items(Joi.string().required())
+        }
+    },
+    handler : function(request, reply) {
+        const Tag  = this.models.Tag;
+        const User = this.models.User;
+
+
+        const id = request.params.username;
+
+        Tag.findAll({where: { name: { $in: request.payload.tags } }})
+        .then(tags => {
+            internals.findUser(User, id)
+            .then(user => {
+                if (user)
+                {
+                    user.addTags(tags).then(() => {
+                       reply(Utils.removeDates(user));
+                    });
+                }
+                else
+                {
+                    return reply.notFound('The user ' + id + ' does not exists.');
+                }
+            });
+        })
+        .catch(err => reply.badImplementation(err));
+    }
+};
+
 exports.delete = {
     description: 'Delete user',
     validate: {
@@ -202,11 +187,11 @@ exports.delete = {
 
         User.destroy({
             where : {
-                username : request.params.username
+                username : { $eq: request.params.username }
             }
         })
         .then(count => reply({count : count}))
-        .catch(error => reply(error));
+        .catch(err => reply.badImplementation(err));
     }
 };
 
@@ -271,26 +256,17 @@ exports.getTags = {
 
         const User = this.models.User;
 
-        User.findOne({
-            where: {
-                username: request.params.username
-            },
-            attributes: {
-                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-            }
-        })
-        .catch(err => reply.notFound('User not found.'))
-        .then(result => {
-            if (result)
-            {
-                return result.getTags();
-            }
-            else
-            {
-                return [];
-            }
-        })
-        .then(tags => reply(tags));
+            internals.findUser(User, request.params.username)
+            .then(user => {
+                if (user) {
+                    user.getTags()
+                    .then(tags => reply(tags))
+                    .catch(error => reply.badImplementation(error));
+                } else {
+                    return reply.notFound('User ' + request.params.username + ' not found');
+                }
+            })
+            .catch(err => reply.badImplementation(err));
     }
 };
 
