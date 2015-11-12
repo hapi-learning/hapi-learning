@@ -1,8 +1,8 @@
 'use strict';
 
+const Hoek = require('hoek');
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
-const Hoek = require('hoek');
 
 const Utils = require('../utils/sequelize');
 const _ = require('lodash');
@@ -53,6 +53,19 @@ internals.findCourseByCode = function(Course, id) {
     });
 };
 
+internals.schemaUserPOST = function(){
+    const user = Joi.object().keys({
+            username: Joi.string().min(1).max(30).required().description('User personal ID'),
+            password: Joi.string().min(1).max(255).required().description('User password'),
+            email: Joi.string().email().required().description('User email'),
+            firstName: Joi.string().min(1).max(255).description('User first name'),
+            lastName: Joi.string().min(1).max(255).description('User last name'),
+            phoneNumber: Joi.phone.e164().description('User phone number'),
+            role_id: Joi.number().integer().default(1)
+        }).options({stripUnknown : true});
+
+    return Joi.alternatives().try(user, Joi.array().items(user.required()));
+};
 
 exports.get = {
     description: 'Get one user',
@@ -68,14 +81,7 @@ exports.get = {
 
         const User = this.models.User;
 
-        User.findOne({
-                where: {
-                    username: { $eq: request.params.username }
-                },
-                attributes: {
-                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-                }
-            })
+        internals.findUser(User, request.params.username)
             .then(result => {
                 if (result) {
                     return reply(Utils.removeDates(result));
@@ -85,9 +91,8 @@ exports.get = {
             })
             .catch(err => reply.badImplementation(err));
 
-        }
+    }
 };
-
 
 exports.getAll = {
     description: 'Get all users',
@@ -95,56 +100,47 @@ exports.getAll = {
 
         const User = this.models.User;
 
-        User.findAll({
+        const options = {
+            limit: request.query.limit,
+            offset: (request.query.page - 1) * request.query.limit
+        };
+
+        User.findAndCountAll({
+                options,
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .then(results => reply(Utils.removeDates(results)))
+            .then(results => reply.paginate(Utils.removeDates(results.rows), results.count))
             .catch(err => reply.badImplementation(err));
     }
 };
 
-const schemaUserPOST = function(){
-    const user = Joi.object().keys({
-        username: Joi.string().min(1).max(30).required().description('User personal ID'),
-        password: Joi.string().min(1).max(255).required().description('User password'),
-        email: Joi.string().email().required().description('User email'),
-        firstName: Joi.string().min(1).max(255).description('User first name'),
-        lastName: Joi.string().min(1).max(255).description('User last name'),
-        phoneNumber: Joi.phone.e164().description('User phone number'),
-        role_id: Joi.number().integer().default(1)
-    });
 
-    return Joi.alternatives().try(user, Joi.array().items(user.required()));
-};
 
 exports.post = {
     description: 'Add user',
     validate: {
-        payload : schemaUserPOST()
+        payload : internals.schemaUserPOST()
     },
     handler: function(request, reply) {
 
         const User = this.models.User;
-
-        if (Array.isArray(request.payload))
-        {
-            /*
-            User.bulkCreate(request.payload, {validate : true})
-            */
+        if (Array.isArray(request.payload)) {
             User.bulkCreate(
-                Utils.extractUsers(request.payload),
+                request.payload,
                 {validate : true}
             )
             .then(results => (reply({count : results.length}).code(201)))
-            .catch(() => reply.conflict());
-        }
-        else
-        {
-            User.create(Utils.extractUsers(request.payload))
+            .catch((error) => {
+                return reply.conflict(error);
+            });
+        } else {
+            User.create(request.payload)
             .then(result => reply(Utils.removeDates(result)).code(201))
-            .catch(() => reply.conflict());
+            .catch((error) => {
+                return reply.conflict(error);
+            });
         }
     }
 };
@@ -170,16 +166,13 @@ exports.addTags = {
         .then(tags => {
             internals.findUser(User, id)
             .then(user => {
-                if (user)
-                {
+                if (user) {
                     user.addTags(tags).then(() => {
                        internals.getUser(user).then(result => {
                            return reply(result);
                        });
                     });
-                }
-                else
-                {
+                } else {
                     return reply.notFound('The user ' + id + ' does not exists.');
                 }
             });
@@ -192,7 +185,7 @@ exports.delete = {
     description: 'Delete user',
     validate: {
         params: {
-            id: Joi.string().min(1).max(30).required().description('User personal ID')
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
         }
     },
     handler: function (request, reply) {
@@ -209,6 +202,22 @@ exports.delete = {
     }
 };
 
+const updateHandler = function(request, reply) {
+
+    const User = this.models.User;
+
+    User.update(
+        request.payload,
+        {
+            where: {
+                username: request.params.username
+            }
+        }
+    )
+    .then(result => reply({count : result[0] || 0}))
+    .catch(error => reply.badImplementation(error));
+};
+
 exports.put = {
     description: 'Update all info about user (except username)',
     validate: {
@@ -218,32 +227,13 @@ exports.put = {
         payload: {
             password: Joi.string().min(1).max(255).required().description('User password'),
             email: Joi.string().min(1).max(255).required().description('User email'),
-            firstName: Joi.string().min(1).max(255).description('User first name'),
-            lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.string().min(1).max(255).description('User phone number')
+            firstName: Joi.string().min(1).max(255).required().description('User first name'),
+            lastName: Joi.string().min(1).max(255).required().description('User last name'),
+            phoneNumber: Joi.string().min(1).max(255).required().description('User phone number')
         }
     },
-    handler: function(request, reply) {
-
-        const User = this.models.User;
-
-        User.update(
-        {
-            password: request.payload.password,
-            email: request.payload.email,
-            firstName: request.payload.firstName,
-            lastName: request.payload.lastName,
-            phoneNumber: request.payload.phoneNumber,
-        },
-        {
-            where: {username: { $eq: request.params.username } }
-        }
-        )
-        .then(result => reply({count : result[0] || 0}))
-        .catch(err => reply.conflict(err));
-    }
+    handler: updateHandler
 };
-
 
 exports.patch = {
     description: 'Update some info about user (except username)',
@@ -259,22 +249,7 @@ exports.patch = {
             phoneNumber: Joi.string().min(1).max(255).description('User phone number')
         }
     },
-    handler: function(request, reply) {
-
-        const User = this.models.User;
-
-        // NEED TESTING
-        User.update(
-                request.payload,
-                {
-                    where: {
-                        username: { $eq: request.params.username }
-                    }
-                }
-            )
-            .then(result => reply({count : result[0] || 0}))
-            .catch(error => reply.conflict(error));
-    }
+    handler: updateHandler
 };
 
 exports.getTags = {
@@ -288,19 +263,14 @@ exports.getTags = {
 
         const User = this.models.User;
 
-        User.findOne({
-                where: {
-                    username: { $eq: request.params.username }
-                },
-                attributes: {
-                    exclude: 'password'
-                }
-            })
-            .then(result => {
-                if (result) {
-                    results.getTags().then(tags => reply(tags));
+            internals.findUser(User, request.params.username)
+            .then(user => {
+                if (user) {
+                    user.getTags()
+                    .then(tags => reply(tags))
+                    .catch(error => reply.badImplementation(error));
                 } else {
-                    return reply.notFound('User not found');
+                    return reply.notFound('User ' + request.params.username + ' not found');
                 }
             })
             .catch(err => reply.badImplementation(err));
@@ -319,22 +289,20 @@ exports.getCourses = {
 
         const User = this.models.User;
 
-        User.findOne({
-                where: {
-                    username: { $eq: request.params.username }
-                },
-                attributes: {
-                    exclude: 'password'
-                }
-            })
-            .then(result => {
-                if (result) {
-                    result.getCourses().then(courses => reply(courses));
-                } else {
-                    reply.notFound('User not found');
-                }
-            })
-            .catch(err => reply.badImplementation(err));
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                user.getCourses()
+                .then(courses => reply(courses))
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
@@ -343,11 +311,40 @@ exports.subscribeToCourse = {
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            course: Joi.number().integer().required().description('Course id')
+            crsId: Joi.string().required().description('Course id')
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+
+        const Course = this.models.Course;
+        const User   = this.models.User;
+
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user) {
+                user.getCourses({where : {code : request.params.crsId}})
+                .then(courses => {
+                    if (courses.length > 0) {
+                        reply.conflict('Course ' + request.params.crsId + ' already subscribed');
+                    } else {
+                        Course.findOne({where : {code : request.params.crsId}})
+                        .then(course => {
+                            if (course) {
+                                user.addCourse(course);
+                                return reply(Utils.removeDates(user));
+                            } else {
+                                return reply.notFound('Course ' + request.params.crsId + ' not found');
+                            }
+                        })
+                        .catch(error => reply.badImplementation(error));
+                    }
+                })
+                .catch(error => reply.badImplementation(error));
+            } else {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
@@ -356,11 +353,34 @@ exports.unsubscribeToCourse = {
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            course: Joi.number().integer().required().description('Course id')
+            crsId: Joi.string().required().description('Course id')
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+
+        const Course = this.models.Course;
+        const User   = this.models.User;
+
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user) {
+                user.getCourses({where : {code : request.params.crsId}})
+                .then(courses => {
+                    if (courses.length > 0) {
+                        user.removeCourse(courses);
+                        return reply(Utils.removeDates(user));
+                    } else {
+                        return reply.notFound('Course ' + request.params.crsId + ' is not subscribed by the user');
+                    }
+                })
+                .catch(error => reply.badImplementation(error));
+            } else {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+
+
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 

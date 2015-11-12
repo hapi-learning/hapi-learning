@@ -5,6 +5,12 @@
 Framapad : https://lite6.framapad.org/p/atl2016-e12-elearning
 Google Sheets : https://docs.google.com/spreadsheets/d/1RvT8Yisf4I6zTw3u3PwaiVU_Fisp1x2lrA5AXp8Ckrw/edit#gid=0
 
+## Live demo:
+
+http://23.239.132.192:8080/#/
+
+https://gitlab.com/fknop/ATL3-hapi-learning/hooks/23950/test to deploy it with latest master, should be automatic
+
 ## How to use
 
 ssh:
@@ -16,6 +22,7 @@ https:
 ```
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
+
 
 Install dependencies:
 
@@ -41,6 +48,9 @@ Start the node tests :
 $ npm test
 ```
 
+## Hapi-pagination
+
+Plugin hapi-pagination (not for the course) : https://github.com/fknop/hapi-pagination
 
 ## Directory Layout
 

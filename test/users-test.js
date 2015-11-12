@@ -16,7 +16,8 @@ before((done) => {
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => {
+    }).then(() =>
+    {
         [
             {"name": "admin"},
             {"name": "teacher"},
@@ -107,15 +108,17 @@ const badUser = {
     password: 'superpassword'
 };
 
-const badUsers = [{
+const badUsers = [
+    {
     username: 'SRV',
     email: '',
     password: 'superpassword'
-}, {
+    }, {
     username: 'FPL',
     email: 'pluquos@hotmail.com',
     password: 'superpassword'
-}];
+    }
+];
 
 const user = {
     username: 'Johnny',
@@ -124,17 +127,41 @@ const user = {
     phoneNumber: '+32484283748'
 };
 
-const users = [{
+const userUpdated = {
+    email: 'Bogoss424@gmail.com',
+    password: 'ImPosayy',
+    firstName : 'Bo',
+    lastName : 'Gosse',
+    phoneNumber: '+32484283748'
+};
+
+const badUserPUT = {
+    email: 'Bogoss424@gmail.com',
+    firstName : 'Bo',
+    lastName : 'Gosse',
+    phoneNumber: '+32484283748'
+};
+
+const users = [
+    {
     username: 'SRV',
     email: 'SRV@caramail.com',
     password: 'superpassword'
-}, {
+    }, {
     username: 'FPL',
     email: 'pluquos@hotmail.com',
     password: 'superpassword'
-}];
+    }, {
+    username: 'ELV',
+    email: 'elv@hotmail.com',
+    password: 'superpassword'
+    }
+];
 
-const tags = ['Theory', '2I12'];
+const tags = [
+    'Theory',
+    '2I12'
+];
 
 describe('Controller.User', () => {
     describe('#post', () => {
@@ -206,7 +233,7 @@ describe('Controller.User', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).equal(201);
-                expect(response.count).equal(2);
+                expect(response.count).equal(3);
                 done();
             });
         });
@@ -240,47 +267,190 @@ describe('Controller.User', () => {
     });
 
     describe('#getAll', () => {
-        it ('Should return 3 users', done => {
+        it ('Should return 4 users', done => {
 
             const request = {
                 method: 'GET',
                 url: '/users'
             };
 
+            const meta = {
+                totalCount: 4,
+                count: 4,
+                pageCount: 1
+            };
+
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response).to.be.an.array();
-                expect(response).to.have.length(3);
+                expect(response.results).to.be.an.array();
+                expect(response.results).to.have.length(4);
+                expect(response.meta).to.deep.equal(meta);
                 done();
             });
         });
     });
 
-        describe('#addTags', () => {
-        it('should return the user SRV', done => {
+    describe('#delete', () => {
+        it('should return 1 : number of deletations', done => {
+            const request = {
+                method: 'DELETE',
+                url: '/users/Johnny'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return 0 : number of deletations', done => {
+            const request = {
+                method: 'DELETE',
+                url: '/users/Johnny'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
+
+    describe('#put', () => {
+        it('should return 1 : number of updates', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/Johnny',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return 0 : number of updates', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/IDoNotExist',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
+
+    describe('#patch', () => {
+        it('should return 1 : number of updates', done => {
+            const request = {
+                method: 'PATCH',
+                url: '/users/Johnny',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return 1 because PATCH is not PUT (field not required)', done => {
+            const request = {
+                method: 'PATCH',
+                url: '/users/Johnny',
+                payload : badUserPUT
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return 0 : number of updates', done => {
+            const request = {
+                method: 'PATCH',
+                url: '/users/IDoNotExist',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
+
+    describe('#put', () => {
+        it('should return 1 : number of updates', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/Johnny',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(1);
+                done();
+            });
+        });
+        it('should return status code 400 because missing field', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/Johnny',
+                payload : badUserPUT
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(400);
+                done();
+            });
+        });
+        it('should return 0 : number of updates', done => {
+            const request = {
+                method: 'PUT',
+                url: '/users/IDoNotExist',
+                payload : userUpdated
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.count).equal(0);
+                done();
+            });
+        });
+    });
+
+    describe('#addTags', () => {
+        it('should return the user SRV fill with Laboratory tag', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : { tags: ['Laboratory'] }
+                payload : { tags : ['Laboratory'] }
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).equal(200);
                 expect(response.username).equal('SRV');
-                expect(response.tags).to.have.length(1);
-                expect(response.tags).to.only.include('Laboratory')
                 done();
             });
         });
 
-        it('should return the user SRV', done => {
+        it('should return the user SRV filled with 2 more tags', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : {
-                    tags: tags
-                }
+                payload : { tags : tags }
             };
 
             server.inject(request, res => {
@@ -288,10 +458,161 @@ describe('Controller.User', () => {
                 expect(res.request.response.statusCode).equal(200);
                 expect(response.username).equal('SRV');
                 expect(response.tags).to.have.length(3);
-                expect(response.tags).to.only.include(tags.concat('Laboratory'));
                 done();
             });
         });
     });
 
+    describe('#getTags', () => {
+        it('should return empty array tags of specific user : 0', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/ELV/tags'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).length(0);
+                done();
+            });
+        });
+        it('should return every tags of specific user : 3', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/SRV/tags'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).length(3);
+                done();
+            });});
+    });
+
+    describe('#subscribeToCourse', () => {
+        it('should return statusCode 200, course has been added', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/subscribe/DEV1'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                done();
+            });
+        });
+        it('should return statusCode 404, course not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/subscribe/18381391'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+        it('should return statusCode 404, user not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/GERARD/subscribe/ATL'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+        it('should return statusCode 404, user already subscribed to this course', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/subscribe/DEV1'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(409);
+                done();
+            });
+        });
+    });
+
+    describe('#getCourses', () => {
+        it('should return an empty array with statusCode 200', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/FPL/courses'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).length(0);
+
+                done();
+            });
+        });
+
+        it('should return an array of size 1 with statusCode 200', done => {
+            const request = {
+                method: 'GET',
+                url: '/users/SRV/courses'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).length(1);
+                done();
+            });
+        });
+    });
+
+    describe('#unsubscribeToCourse', () => {
+        it('Should return statusCode 200 with user', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/unsubscribe/DEV1'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                done();
+            });
+        });
+
+        it('Should return statusCode 400 : already unsubscribed', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/unsubscribe/DEV1'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+
+        it('Should return statusCode 400 : user not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/JohnnyTheBoy/unsubscribe/DEV1'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+    });
 });

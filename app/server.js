@@ -57,6 +57,7 @@ let internals = {
                 {
                     select: ['api'],
                     options: {
+                        connection: 'api',
                         name: null,
                         username: null,
                         password: null,
@@ -76,6 +77,33 @@ let internals = {
             './routes/web': [{
                 select: ['web']
             }],
+            'hapi-pagination': [
+                {
+                    select: ['api'],
+                    options: {
+                        routes: {
+                            include: ['/courses', '/users']
+                        },
+                        meta: {
+                            self: {
+                                active: false
+                            },
+                            last: {
+                                active: false
+                            },
+                            previous: {
+                                active: false
+                            },
+                            next: {
+                                active: false
+                            },
+                            first: {
+                                active: false
+                            }
+                        }
+                    }
+                }
+            ],
             vision: [{
                 select: ['api']
             }],
