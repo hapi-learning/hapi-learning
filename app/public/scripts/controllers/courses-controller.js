@@ -7,16 +7,15 @@ angular.module('hapi-learning')
 
 
         Restangular.all('courses').getList().then(function (courses) {
-            courses.forEach(course => {
-                $scope.courses.push(course);
-            });
+            for (var i = 0; i < courses.length; ++i) {
+                $scope.courses.push(courses[i]);
+            }
         });
         
         Restangular.all('tags').getList().then(function (tags) {
-            tags.forEach(tag => {
-                console.log(tag);
-                $scope.tags.push(tag);
-            });
+            for (var i = 0; i < tags.length; ++i) {
+                $scope.tags.push(tags[i]);
+            }
         });
         
         $scope.selected = function(tag) {
