@@ -44,6 +44,33 @@ const internals = {
             ],
             '../app/controllers': [{select: ['api']}],
             '../app/routes/api': [{select: ['api']}],
+            'hapi-pagination': [
+                {
+                    select: ['api'],
+                    options: {
+                        routes: {
+                            include: ['/courses', '/users']
+                        },
+                        meta: {
+                            self: {
+                                active: false
+                            },
+                            last: {
+                                active: false
+                            },
+                            previous: {
+                                active: false
+                            },
+                            next: {
+                                active: false
+                            },
+                            first: {
+                                active: false
+                            }
+                        }
+                    }
+                }
+            ]
         }
     }
 };

@@ -80,12 +80,12 @@ exports.getAll = {
 
         const User = this.models.User;
 
-        User.findAll({
+        User.findAndCountAll({
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
             })
-            .then(results => reply(Utils.removeDates(results)))
+            .then(results => reply.paginate(Utils.removeDates(results.rows), results.count))
             .catch(err => reply.badImplementation(err));
     }
 };

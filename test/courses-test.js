@@ -219,8 +219,16 @@ describe('Controller.Course', () => {
                 server.inject(post, () => {
                     server.inject(request, res => {
                         const response = res.request.response.source;
-                        expect(response).to.be.an.array();
-                        expect(response).to.have.length(3);
+                        const meta = {
+                            count: 3,
+                            totalCount: 3,
+                            pageCount: 1
+                        };
+
+                        expect(response.meta).to.deep.equal(meta);
+
+                        expect(response.results).to.be.an.array();
+                        expect(response.results).to.have.length(3);
                         done();
                     });
                 });
@@ -739,6 +747,8 @@ describe('Controller.Course', () => {
             url: '/courses/ATL3G/tree'
         };
 
+        const size = fs.statSync(Path.join(__dirname, 'server-test.js')).size;
+
 
 
         it ('Should return the correct tree', done => {
@@ -747,7 +757,7 @@ describe('Controller.Course', () => {
                     {
                         dir: 'documents',
                         file: 'server-test.js',
-                        size: 1529
+                        size: size
                     },
                     {
                         subfolder: []
@@ -768,7 +778,7 @@ describe('Controller.Course', () => {
                     {
                         dir: 'documents',
                         file: 'server-test.js',
-                        size: 1529,
+                        size: size,
                         isDirectory: false
                     },
                     {

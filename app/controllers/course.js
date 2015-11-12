@@ -73,13 +73,13 @@ exports.getAll = {
         const Course = this.models.Course;
 
         Course
-            .findAll().then(results => {
+            .findAndCountAll().then(results => {
 
-            let promises = _.map(results, (r => internals.getCourse(r)));
+            let promises = _.map(results.rows, (r => internals.getCourse(r)));
             // Wait for all promises to end
             Promise
                 .all(promises)
-                .then(values => reply(values));
+                .then(values => reply.paginate(values, results.count));
 
         })
         .catch(err => reply.badImplementation(err));
@@ -102,6 +102,7 @@ exports.get = {
         .then(result => {
             if (result) // If found
             {
+
                 internals.getCourse(result).then(course => reply(course));
             }
             else // If not found

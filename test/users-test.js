@@ -165,10 +165,17 @@ describe('Controller.User', () => {
                 url: '/users'
             };
 
+            const meta = {
+                totalCount: 3,
+                count: 3,
+                pageCount: 1
+            };
+
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response).to.be.an.array();
-                expect(response).to.have.length(3);
+                expect(response.results).to.be.an.array();
+                expect(response.results).to.have.length(3);
+                expect(response.meta).to.deep.equal(meta);
                 done();
             });
         });
