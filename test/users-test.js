@@ -472,7 +472,6 @@ describe('Controller.User', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                console.log(response);
                 expect(response).to.be.an.array();
                 expect(response).length(0);
                 done();
@@ -576,15 +575,42 @@ describe('Controller.User', () => {
         });
     });
 
-    describe('#removeCourse', () => {
-        it('NOT DONE YET', done => {
+    describe('#unsubscribeToCourse', () => {
+        it('Should return statusCode 200 with user', done => {
             const request = {
-                method: 'DELETE',
-                url: '/users/SRV/courses/ATL'
+                method: 'POST',
+                url: '/users/SRV/unsubscribe/DEV1'
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                done();
+            });
+        });
+
+        it('Should return statusCode 400 : already unsubscribed', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/unsubscribe/DEV1'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+
+        it('Should return statusCode 400 : user not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/JohnnyTheBoy/unsubscribe/DEV1'
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
                 done();
             });
         });
