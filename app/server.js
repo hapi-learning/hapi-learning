@@ -111,7 +111,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     var Models = server.plugins.models.models;
 
     Models.sequelize.sync({
-//        force: false // drops all db and recreates them
+       //force: false // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
@@ -133,6 +133,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 const permissions = require('../resources/permissions.json');
                 const teachers = require('../resources/all_teachers.json');
                 const courses = require('../resources/all_courses.json');
+                const folders = require('../resources/folders.json');
 
 
                 const post = function(url, payload) {

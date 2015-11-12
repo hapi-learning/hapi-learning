@@ -46,7 +46,13 @@ exports.register = function(server, options, next) {
         m.User.belongsToMany(m.Course, { as: 'Courses', through: 'user_courses' });
 
         // An User can create many Folders containing Courses
-        m.User.belongsToMany(m.Folder, { through: 'user_folders'});
+        //m.User.belongsToMany(m.Folder, { through: 'user_folders'});
+        sequelize.query('CREATE TABLE user_folders( ' +
+                        '   user REFERENCES User(username), ' +
+                        '   folder REFERENCES Folder(name), ' +
+                        '   PRIMARY KEY(user, folder)' +
+                        ');'
+                       ).then(() => console.log('user_folders table manually created'));
 
         // A Folder contains many Courses
         m.Folder.belongsToMany(m.Course, { through: 'user_courses_folders'});

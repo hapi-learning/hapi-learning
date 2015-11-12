@@ -287,6 +287,35 @@ exports.getTags = {
     }
 };
 
+exports.getFolders = {
+
+    description: 'Get the user\'s folders',
+    validate: {
+        params: {
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
+        }
+    },
+    handler: function(request, reply) {
+
+        const User = this.models.User;
+
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                user.getFolders()
+                .then(folders => reply(folders))
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
+    }
+};
+
 exports.getCourses = {
 
     description: 'Get the courses (subscribed)',
@@ -409,16 +438,38 @@ exports.unsubscribeToCourse = {
     }
 };
 
-exports.addFolder = {
+exports.addFolders = {
     description: 'Add a folder',
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            folder: Joi.string().min(1).max(255).required().description('New folder name')
+        },
+        payload: {
+            folders: Joi.array().items(Joi.string().required())
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+        
+        const User   = this.models.User;
+        
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                console.log(request.payload.folders);
+                user.addFolders(request.payload.folders).then(() => {
+                    internals.getUser(user).then(user => {
+                       return reply(user);
+                    });
+                })
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
