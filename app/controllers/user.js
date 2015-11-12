@@ -53,16 +53,6 @@ internals.findCourseByCode = function(Course, id) {
     });
 };
 
-
-internals.schemaUserTagsPOST = function()
-{
-    const tag = Joi.object().keys({
-        name : Joi.string().min(1).max(255).required().description('Tag name')
-    }).options({stripUnknown : true});
-
-    return Joi.alternatives().try(tag, Joi.array().items(tag.required()));
-};
-
 internals.schemaUserPOST = function(){
     const user = Joi.object().keys({
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
@@ -130,8 +120,7 @@ exports.post = {
     handler: function(request, reply) {
 
         const User = this.models.User;
-        if (Array.isArray(request.payload))
-        {
+        if (Array.isArray(request.payload)) {
             User.bulkCreate(
                 request.payload,
                 {validate : true}
@@ -140,9 +129,7 @@ exports.post = {
             .catch((error) => {
                 return reply.conflict(error);
             });
-        }
-        else
-        {
+        } else {
             User.create(request.payload)
             .then(result => reply(Utils.removeDates(result)).code(201))
             .catch((error) => {
@@ -173,16 +160,13 @@ exports.addTags = {
         .then(tags => {
             internals.findUser(User, id)
             .then(user => {
-                if (user)
-                {
+                if (user) {
                     user.addTags(tags).then(() => {
                        internals.getUser(user).then(result => {
                            return reply(result);
                        });
                     });
-                }
-                else
-                {
+                } else {
                     return reply.notFound('The user ' + id + ' does not exists.');
                 }
             });
@@ -325,31 +309,24 @@ exports.subscribeToCourse = {
         }
     },
     handler: function(request, reply) {
-        
+
         const Course = this.models.Course;
         const User   = this.models.User;
-        
+
         internals.findUser(User, request.params.username)
         .then(user => {
-            if (user)
-            {
+            if (user) {
                 user.getCourses({where : {code : request.params.crsId}})
                 .then(courses => {
-                    if (courses.length > 0)
-                    {
+                    if (courses.length > 0) {
                         reply.conflict('Course ' + request.params.crsId + ' already subscribed');
-                    }
-                    else
-                    {
+                    } else {
                         Course.findOne({where : {code : request.params.crsId}})
                         .then(course => {
-                            if (course)
-                            {
+                            if (course) {
                                 user.addCourse(course);
                                 return reply(Utils.removeDates(user));
-                            }
-                            else
-                            {
+                            } else {
                                 return reply.notFound('Course ' + request.params.crsId + ' not found');
                             }
                         })
@@ -357,9 +334,7 @@ exports.subscribeToCourse = {
                     }
                 })
                 .catch(error => reply.badImplementation(error));
-            }
-            else
-            {
+            } else {
                 return reply.notFound('User ' + request.params.username + ' not found');
             }
         })
@@ -376,33 +351,27 @@ exports.unsubscribeToCourse = {
         }
     },
     handler: function(request, reply) {
-        
+
         const Course = this.models.Course;
         const User   = this.models.User;
-        
+
         internals.findUser(User, request.params.username)
         .then(user => {
-            if (user)
-            {
+            if (user) {
                 user.getCourses({where : {code : request.params.crsId}})
                 .then(courses => {
-                    if (courses.length > 0)
-                    {
+                    if (courses.length > 0) {
                         user.removeCourse(courses);
                         return reply(Utils.removeDates(user));
-                    }
-                    else
-                    {
+                    } else {
                         return reply.notFound('Course ' + request.params.crsId + ' is not subscribed by the user');
                     }
                 })
                 .catch(error => reply.badImplementation(error));
+            } else {
+                return reply.notFound('User ' + request.params.username + ' not found');
             }
-            else
-            {
-                return reply.notFound('User ' + request.params.username + ' not found');   
-            }
-            
+
 
         })
         .catch(error => reply.badImplementation(error));
