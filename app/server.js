@@ -148,6 +148,19 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
             if (err) {
                 throw err;
             } else {
+
+                process.on('SIGINT', function() {
+                    console.log('\nStopping server...');
+                    server.stop({timeout: 10000}, err => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('Server stopped successfuly !');
+                        }
+                    });
+                });
+
+
                 _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
 
 
