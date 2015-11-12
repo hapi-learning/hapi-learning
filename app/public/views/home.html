@@ -1,8 +1,33 @@
-<div class="container">
+<div ng-include="'../partials/navbar.html'"></div>
 
-    <h1 class="page-header">Home sweet home :)</h1>
+<div class="container-fluid">
 
+    <!--
     <div class="row">
         <connection></connection>
     </div>
+    -->
+
+    <div class="col-md-2" ng-controller="home-controller as homeCtrl">
+
+        <div ng-include="'../partials/userbar.html'"></div>
+    </div>
+
+
+    <div class="col-md-7" ng-controller="courses-controller">
+
+        <h1 class="page-header">My courses</h1>
+
+        <div ng-include="'../partials/courses-list.html'"></div>
+    </div>
+
+    <div class="col-md-3" ng-controller="news-controller as homeCtrl">
+
+        <h1 class="page-header">News</h1>
+
+        <div ng-include="'../partials/news-resume.html'"></div>
+    </div>
+
 </div>
+
+<div ng-include="'../partials/footer.html'"></div>

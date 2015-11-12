@@ -9,7 +9,7 @@ angular.module('hapi-learning')
             $scope.forgot = true;
         };
         
-        $scope.back = function() {
+        $scope.backToLogin = function() {
             $scope.forgot = false;
         }
 

@@ -1,0 +1,27 @@
+<form name="announcementForm" novalidate>
+
+    <fieldset class="form-group">
+        <label>Subject (required)</label>
+        <input type="text" class="form-control" name="subject" ng-model="subject" title="Subject" placeholder="Subject" required />
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" placeholder="More information about the announcement"></textarea>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label>Priority</label>
+        <select class="form-control" id="priority" ng-options="priority for priority in ['success', 'info', 'warning', 'danger']" ng-model="priority">
+
+        </select>
+    </fieldset>
+
+    <br />
+
+    <fieldset class="form-group">
+        <input type="submit" class="btn btn-primary" value="Create new announcement" />
+        <input type="reset" class="btn btn-warning" value="Reset" />
+    </fieldset>
+
+</form>

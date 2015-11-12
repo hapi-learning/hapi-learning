@@ -1,5 +1,11 @@
-<form name="courseForm" ng-controller="admin-controller as adminCtrl" novalidate>
-    
+<style>
+    .ace_editor {
+        height: 200px;
+    }
+</style>
+
+<form name="courseForm" novalidate>
+
     <fieldset class="form-group">
         <div>
             <label>Name (required)</label>
@@ -16,7 +22,26 @@
 
     <fieldset class="form-group">
         <label>Description</label>
-        <textarea class="form-control" placeholder="Description of the course..."></textarea>
+
+        <div ui-ace="{
+            advanced: {
+              enableSnippets: true,
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true
+          }
+        }"># Course name
+            
+## Description
+
+ 
+## Important documents
+
+
+## Evaluation
+
+            
+## References / Links
+        </div>
     </fieldset>
 
     <br />
@@ -25,5 +50,5 @@
         <input type="submit" class="btn btn-primary" value="Create new course" />
         <input type="reset" class="btn btn-warning" value="Reset" />
     </fieldset>
-    
+
 </form>

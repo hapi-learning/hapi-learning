@@ -4,237 +4,271 @@
         "firstName": "Romain",
         "lastName": "Absil",
         "password": "ABS",
-        "username": "ABS"
+        "username": "ABS",
+        "role_id": 2
     },
     {
         "email": "jandre@heb.be",
         "firstName": "Jean-Marc",
         "lastName": "André",
         "password": "JMA",
-        "username": "JMA"
+        "username": "JMA",
+        "role_id": 2
     },
     {
         "email": "mapplaincourt@heb.be",
         "firstName": "Michel",
         "lastName": "Applaincourt",
         "password": "MAP",
-        "username": "MAP"
+        "username": "MAP",
+        "role_id": 2
     },
     {
         "email": "mbastreghi@heb.be",
         "firstName": "Monica",
         "lastName": "Bastreghi",
         "password": "MBA",
-        "username": "MBA"
+        "username": "MBA",
+        "role_id": 2
     },
     {
         "email": "lbeeckmans@heb.be",
         "firstName": "Laurent",
         "lastName": "Beeckmans",
         "password": "LBC",
-        "username": "LBC"
+        "username": "LBC",
+        "role_id": 2
     },
     {
         "email": "jbeleho@heb.be",
         "firstName": "Jonas",
         "lastName": "Beleho",
         "password": "BEJ",
-        "username": "BEJ"
+        "username": "BEJ",
+        "role_id": 2
     },
     {
         "email": "pbettens@heb.be",
         "firstName": "Pierre",
         "lastName": "Bettens",
         "password": "PBT",
-        "username": "PBT"
+        "username": "PBT",
+        "role_id": 2
     },
     {
         "email": "pbisschop@heb.be",
         "firstName": "Patrick",
         "lastName": "Bisschop",
         "password": "BIS",
-        "username": "BIS"
+        "username": "BIS",
+        "role_id": 2
     },
     {
         "email": "mcodutti@heb.be",
         "firstName": "Marco",
         "lastName": "Codutti",
         "password": "MCD",
-        "username": "MCD"
+        "username": "MCD",
+        "role_id": 2
     },
     {
         "email": "gcuvelier@heb.be",
         "firstName": "Geneviève",
         "lastName": "Cuvelier",
         "password": "CUV",
-        "username": "CUV"
+        "username": "CUV",
+        "role_id": 2
     },
     {
         "email": "bdelfosse@heb.be",
         "firstName": "Bénoni",
         "lastName": "Delfosse",
         "password": "BDL",
-        "username": "BDL"
+        "username": "BDL",
+        "role_id": 2
     },
     {
         "email": "adetaille@heb.be",
         "firstName": "Alain",
         "lastName": "Detaille",
         "password": "ADT",
-        "username": "ADT"
+        "username": "ADT",
+        "role_id": 2
     },
     {
         "email": "jdossogne@heb.be",
         "firstName": "Jérôme",
         "lastName": "Dossogne",
         "password": "JDS",
-        "username": "JDS"
+        "username": "JDS",
+        "role_id": 2
     },
     {
         "email": "efontaine@heb.be",
         "firstName": "Eric",
         "lastName": "Fontaine",
         "password": "EFO",
-        "username": "EFO"
+        "username": "EFO",
+        "role_id": 2
     },
     {
         "email": "egeorges@heb.be",
         "firstName": "Eric",
         "lastName": "Georges",
         "password": "EGR",
-        "username": "EGR"
+        "username": "EGR",
+        "role_id": 2
     },
     {
         "email": "mhadjili@heb.be",
         "firstName": "Mohamed",
         "lastName": "Hadjili",
         "password": "MHI",
-        "username": "MHI"
+        "username": "MHI",
+        "role_id": 2
     },
     {
         "email": "ahallal@heb.be",
         "firstName": "Amine",
         "lastName": "Hallal",
         "password": "HAL",
-        "username": "HAL"
+        "username": "HAL",
+        "role_id": 2
     },
     {
         "email": "jlechien@heb.be",
         "firstName": "Jonathan",
         "lastName": "Lechien",
         "password": "JLC",
-        "username": "JLC"
+        "username": "JLC",
+        "role_id": 2
     },
     {
         "email": "rlegrand@heb.be",
         "firstName": "René-Philippe",
         "lastName": "Legrand",
         "password": "RPL",
-        "username": "RPL"
+        "username": "RPL",
+        "role_id": 2
     },
     {
         "email": "cleignel@heb.be",
         "firstName": "Christine",
         "lastName": "Leignel",
         "password": "CLG",
-        "username": "CLG"
+        "username": "CLG",
+        "role_id": 2
     },
     {
         "email": "cleruste@heb.be",
         "firstName": "Catherine",
         "lastName": "Leruste",
         "password": "CLR",
-        "username": "CLR"
+        "username": "CLR",
+        "role_id": 2
     },
     {
         "email": "elevy@heb.be",
         "firstName": "Eytan",
         "lastName": "Levy",
         "password": "ELV",
-        "username": "ELV"
+        "username": "ELV",
+        "role_id": 2
     },
     {
         "email": "pmatsos@heb.be",
         "firstName": "Pantelis",
         "lastName": "Matsos",
         "password": "PMA",
-        "username": "PMA"
+        "username": "PMA",
+        "role_id": 2
     },
     {
         "email": "dnabet@heb.be",
         "firstName": "David",
         "lastName": "Nabet",
         "password": "DNA",
-        "username": "DNA"
+        "username": "DNA",
+        "role_id": 2
     },
     {
         "email": "npettiaux@heb.be",
         "firstName": "Nicolas",
         "lastName": "Pettiaux",
         "password": "NPX",
-        "username": "NPX"
+        "username": "NPX",
+        "role_id": 2
     },
     {
         "email": "ypierseaux@heb.be",
         "firstName": "Yves",
         "lastName": "Pierseaux",
         "password": "YPR",
-        "username": "YPR"
+        "username": "YPR",
+        "role_id": 2
     },
     {
         "email": "fpluquet@heb.be",
         "firstName": "Frédéric",
         "lastName": "Pluquet",
         "password": "FPL",
-        "username": "FPL"
+        "username": "FPL",
+        "role_id": 2
     },
     {
         "email": "arayet@heb.be",
         "firstName": "Anne",
         "lastName": "Rayet",
         "password": "ART",
-        "username": "ART"
+        "username": "ART",
+        "role_id": 2
     },
     {
         "email": "arousseau@heb.be",
         "firstName": "Anne",
         "lastName": "Rousseau",
         "password": "ARO",
-        "username": "ARO"
+        "username": "ARO",
+        "role_id": 2
     },
     {
         "email": "fservais@heb.be",
         "firstName": "Frédéric",
         "lastName": "Servais",
         "password": "SRV",
-        "username": "SRV"
+        "username": "SRV",
+        "role_id": 2
     },
     {
         "email": "gvanassche@heb.be",
         "firstName": "Gilles",
         "lastName": "Van Assche",
         "password": "GVA",
-        "username": "GVA"
+        "username": "GVA",
+        "role_id": 2
     },
     {
         "email": "nvansteenkiste@heb.be",
         "firstName": "Nicolas",
         "lastName": "Vansteenkiste",
         "password": "NVS",
-        "username": "NVS"
+        "username": "NVS",
+        "role_id": 2
     },
     {
         "email": "mwahid@heb.be",
         "firstName": "Moussa",
         "lastName": "Wahid",
         "password": "MWA",
-        "username": "MWA"
+        "username": "MWA",
+        "role_id": 2
     },
     {
         "email": "mwillemse@heb.be",
         "firstName": "Michel",
         "lastName": "Willemse",
         "password": "MWI",
-        "username": "MWI"
+        "username": "MWI",
+        "role_id": 2
     }
 ]

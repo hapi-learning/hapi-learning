@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload'])
+        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace', 'ui.validate', 'restangular'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
@@ -22,9 +22,36 @@ angular.module('hapi-learning', [
                     templateUrl: '/views/admin.html',
                     controller: 'admin-controller'
                 })
-                }])
-    .run([
-        'bootstrap3ElementModifier',
-        function (bootstrap3ElementModifier) {
-            bootstrap3ElementModifier.enableValidationStateIcons(true);
-       }]);
+                .state('profile', {
+                    url: '/profile',
+                    templateUrl: '/views/profile.html',
+                    controller: 'profile-controller'
+                })
+                .state('news', {
+                    url: '/news',
+                    templateUrl: '/views/news.html',
+                    controller: 'news-controller'
+                })
+                .state('login', {
+                    url: '/login',
+                    templateUrl: '/views/connection.html',
+                    controller: 'admin-controller'
+                })
+        }])
+    .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.includeSpinner = false;
+        }])
+    .config(['RestangularProvider', function (RestangularProvider) {
+        RestangularProvider.setBaseUrl('http://localhost:8088');
+        }])
+    .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
+        bootstrap3ElementModifier.enableValidationStateIcons(true);
+        }])
+    .run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
+            // passing a culture into getErrorMessages('fr-fr') will get the culture specific messages
+            // otherwise the current default culture is returned.
+            defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
+                errorMessages['passwordMatch'] = 'Passwords do not match!';
+            });
+    }
+]);
