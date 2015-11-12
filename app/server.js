@@ -57,6 +57,7 @@ let internals = {
                 {
                     select: ['api'],
                     options: {
+                        connection: 'api',
                         name: null,
                         username: null,
                         password: null,
@@ -78,7 +79,7 @@ let internals = {
             }],
             'hapi-pagination': [
                 {
-                    select: ['api'],
+                    select: 'api',
                     options: {
                         routes: {
                             include: ['/courses', '/users']

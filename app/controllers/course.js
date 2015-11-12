@@ -72,8 +72,13 @@ exports.getAll = {
 
         const Course = this.models.Course;
 
+        const options = {
+            limit: request.query.limit,
+            offset: (request.query.page - 1) * request.query.limit
+        };
+
         Course
-            .findAndCountAll().then(results => {
+            .findAndCountAll(options).then(results => {
 
             let promises = _.map(results.rows, (r => internals.getCourse(r)));
             // Wait for all promises to end
