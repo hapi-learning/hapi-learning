@@ -48,6 +48,9 @@ Start the node tests :
 $ npm test
 ```
 
+## Hapi-pagination
+
+Plugin hapi-pagination (not for the course) : https://github.com/fknop/hapi-pagination
 
 ## Directory Layout
 
