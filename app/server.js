@@ -79,7 +79,7 @@ let internals = {
             }],
             'hapi-pagination': [
                 {
-                    select: 'api',
+                    select: ['api'],
                     options: {
                         routes: {
                             include: ['/courses', '/users']

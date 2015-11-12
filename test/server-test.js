@@ -48,7 +48,6 @@ const internals = {
                 {
                     select: ['api'],
                     options: {
-                        connection: 'api',
                         routes: {
                             include: ['/courses', '/users']
                         },
