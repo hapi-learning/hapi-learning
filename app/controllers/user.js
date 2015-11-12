@@ -384,24 +384,26 @@ exports.unsubscribeToCourse = {
         .then(user => {
             if (user)
             {
-                internals.findCourseByCode(Course, request.params.crsId)
-                .then(course => {
-                    if (course)
+                user.getCourses({where : {code : request.params.crsId}})
+                .then(courses => {
+                    if (courses.length > 0)
                     {
-                        user.removeCourse(course);
-                        return reply();
+                        user.removeCourse(courses);
+                        return reply(Utils.removeDates(user));
                     }
                     else
                     {
-                        return reply.notFound('Course ' + request.params.crsId + ' not found');
+                        return reply.notFound('Course ' + request.params.crsId + ' is not subscribed by the user');
                     }
                 })
                 .catch(error => reply.badImplementation(error));
             }
             else
             {
-                return reply.notFound('User ' + request.params.username + ' not found');
+                return reply.notFound('User ' + request.params.username + ' not found');   
             }
+            
+
         })
         .catch(error => reply.badImplementation(error));
     }
