@@ -26,7 +26,7 @@ $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 
 Install dependencies:
 
-```
+```bash
 $ cd hapi-learning
 $ npm install
 $ cd app/public
