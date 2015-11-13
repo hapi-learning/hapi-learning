@@ -4,13 +4,13 @@
         text-align: center;
     }
     /* Default class applied to drop zones on over */
-    
+
     .nv-file-over {
         border: dotted 3px green;
     }
 </style>
 
-<div ng-controller="upload-controller" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+<div ng-controller="UploadCtrl" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
     <div class="well my-drop-zone" type="file" nv-file-over="" uploader="uploader" ng-click="fileChooser()">
         Drag and drop files to upload
     </div>
@@ -82,7 +82,7 @@
                 <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
             </div>
         </div>
-        
+
         <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
             <span class="glyphicon glyphicon-upload"></span> Upload all
         </button>

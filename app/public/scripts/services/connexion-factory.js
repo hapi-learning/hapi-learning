@@ -2,17 +2,17 @@
 
 angular.module('hapi-learning').factory('ConnexionFactory', function () {
 
-    var connection_factory = {};
+    var exports = {};
 
-    connection_factory.connect = function (user) {
+    exports.connect = function (user) {
         console.log(user.name + ' is online');
         return true; // TO-DO
     };
 
-    connection_factory.disconnect = function (user) {
+    exports.disconnect = function (user) {
         console.log(user.name + ' is offline');
         return false; // TO-DO
     };
 
-    return connection_factory;
+    return exports;
 });

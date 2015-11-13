@@ -6,11 +6,11 @@ angular
         $scope.user = {};
         $scope.connected = false;
 
-        $scope.connect = function() {
-            $scope.connected = connection_factory.connect($scope.user);
+        $scope.login = function() {
+            $scope.connected = ConnexionFactory.connect($scope.user);
         };
 
-        $scope.disconnect = function() {
-            $scope.connected = connection_factory.disconnect($scope.user);
+        $scope.logout = function() {
+            $scope.connected = ConnexionFactory.disconnect($scope.user);
         };
 }]);

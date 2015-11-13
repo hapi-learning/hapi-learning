@@ -1,5 +1,5 @@
 angular.module('hapi-learning')
-    .controller('courses-controller',
+    .controller('CoursesCtrl',
                 ['$scope', 'Restangular', 'CoursesFactory', 'TagsFactory',
                 function ($scope, Restangular, CoursesFactory, TagsFactory) {
 

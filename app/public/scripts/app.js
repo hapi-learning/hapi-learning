@@ -21,43 +21,46 @@ angular.module('hapi-learning', [
                 .state('root.home', {
                     url: '/',
                     templateUrl: '/views/home.html',
-                    controller: 'home-controller'
+                    controller: 'HomeCtrl'
                 })
                 .state('root.courses', {
                     url: '/courses',
                     templateUrl: '/views/courses.html',
-                    controller: 'courses-controller'
+                    controller: 'CoursesCtrl'
                 })
                 .state('root.admin', {
                     url: '/admin',
                     templateUrl: '/views/admin.html',
-                    controller: 'admin-controller'
+                    controller: 'AdminCtrl'
                 })
                 .state('root.profile', {
                     url: '/profile',
                     templateUrl: '/views/profile.html',
-                    controller: 'profile-controller'
+                    controller: 'ProfileCtrl'
                 })
                 .state('root.news', {
                     url: '/news',
                     templateUrl: '/views/news.html',
-                    controller: 'news-controller'
+                    controller: 'NewsCtrl'
                 })
                 .state('login', {
                     url: '/login',
                     templateUrl: '/views/login.html',
-                    controller: 'admin-controller'
+                    controller: 'LoginCtrl'
                 })
-        }])
+    }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.includeSpinner = false;
-        }])
+    }])
+
     .config(['RestangularProvider', function (RestangularProvider) {
         RestangularProvider.setBaseUrl('http://localhost:8088');
-        }])
+    }])
+
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
         bootstrap3ElementModifier.enableValidationStateIcons(true);
-        }])
+    }])
+
     .run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
             // passing a culture into getErrorMessages('fr-fr') will get the culture specific messages
             // otherwise the current default culture is returned.

@@ -1,6 +1,6 @@
 angular
     .module('hapi-learning')
-    .controller('news-controller', ['$scope', function ($scope) {
+    .controller('NewsCtrl', ['$scope', function ($scope) {
 
         $scope.annonces = [
             {

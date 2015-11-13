@@ -1,4 +1,4 @@
-<form name="connection" data-ng-submit="connect()" data-ng-hide="connected || forgot" novalidate>
+<form name="connection" data-ng-submit="login()" data-ng-hide="connected || forgot" novalidate>
 
     <fieldset class="form-group">
         <div class="input-group">
@@ -53,7 +53,7 @@
 
 </form>
 
-<form name="disconnection" data-ng-submit="disconnect()" data-ng-show="connected">
+<form name="disconnection" data-ng-submit="logout()" data-ng-show="connected">
     <h2>Disconnect</h2>
     <button class="btn btn-lg btn-warning btn-block" type="submit">Log out</button>
 </form>
