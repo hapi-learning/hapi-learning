@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').load(); // Load .env file
+
 angular.module('hapi-learning', [
         'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace', 'ui.validate', 'restangular'])
     .config(['$urlRouterProvider', '$stateProvider',
@@ -42,7 +44,7 @@ angular.module('hapi-learning', [
         cfpLoadingBarProvider.includeSpinner = false;
         }])
     .config(['RestangularProvider', function (RestangularProvider) {
-        RestangularProvider.setBaseUrl('http://localhost:8088');
+        RestangularProvider.setBaseUrl('http://' + (process.env.HOST || 'localhost') + ':8088');
         }])
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
         bootstrap3ElementModifier.enableValidationStateIcons(true);

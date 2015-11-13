@@ -20,10 +20,13 @@ angular.module('hapi-learning')
         
         $scope.selected = function(tag) {
             console.log(tag.name + ' selected');
+            
+            if ($scope.selectedTags.indexOf(tag) > -1) {
+                _.remove($scope.selectedTags, {name: tag.name});
+            } else {
+                $scope.selectedTags.push(tag);
+            }
         };
-
-
-        console.log($scope.courses);
 
         $scope.subscribed = function () {
             // did the user already subscribe to the course?
@@ -35,14 +38,11 @@ angular.module('hapi-learning')
             return true;
         };
 
-
-//        $scope.selectedTags = ['Q4', 'labo'];
-
         $scope.filterByTags = function (course) {
             var select = true;
 
             $scope.selectedTags.forEach(function (tag) {
-                select = select && (course.tags.indexOf(tag) !== -1);
+                select = select && (course.tags.indexOf(tag.name) > -1);
             });
 
             return select;
