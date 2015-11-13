@@ -6,21 +6,22 @@ angular.module('hapi-learning')
         $scope.selectedTags = [];
 
 
-        Restangular.all('courses').getList().then(function (courses) {
-            for (var i = 0; i < courses.length; ++i) {
-                $scope.courses.push(courses[i]);
-            }
+        Restangular.all('courses').customGET().then(function (object) {
+            var courses = object.results;
+            courses.forEach(function(course) {
+                $scope.courses.push(course);
+            });
         });
-        
+
         Restangular.all('tags').getList().then(function (tags) {
             for (var i = 0; i < tags.length; ++i) {
                 $scope.tags.push(tags[i]);
             }
         });
-        
+
         $scope.selected = function(tag) {
             console.log(tag.name + ' selected');
-            
+
             if ($scope.selectedTags.indexOf(tag) > -1) {
                 _.remove($scope.selectedTags, {name: tag.name});
             } else {

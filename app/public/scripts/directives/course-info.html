@@ -1,7 +1,11 @@
 <h3>
-    <span class="label label-default label-pill pull-right" ng-show="updated()"><span class="glyphicon glyphicon-eye-open"></span></span>
-                
-    <a href="#/courses/{{course.code}}">{{course.code}} − {{course.name}}</a>
+    <span class="label label-default label-pill pull-right" ng-show="updated()">
+        <span class="glyphicon glyphicon-eye-open"></span>
+    </span>
+
+    <a href="#/courses/{{course.code}}">
+        <span ng-bind="course.code"></span> - <span ng-bind="course.name"></span
+    </a>
 </h3>
 
 <div>
@@ -21,15 +25,16 @@
 
     <br />
 
-
     <span ng-repeat="tag in course.tags">
-        <button class="btn btn-default btn-xs"> #{{tag}}</button>
+        <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
     </span>
 </div>
 
 <br />
 
 <div>
-    <button type="button" class="btn btn-success" ng-hide="subscribed()"><span class="glyphicon glyphicon-ok"></span> Subscribe</button>
-    <button type="button" class="btn btn-danger" ng-show="subscribed()"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+    <button type="button" class="btn btn-success" ng-hide="subscribed()">
+        <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
+    <button type="button" class="btn btn-danger" ng-show="subscribed()">
+        <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
 </div>

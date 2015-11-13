@@ -17,11 +17,7 @@ angular.module('hapi-learning', [
                 })
                 .state('root.courses', {
                     url: '/courses',
-                    views: {
-                        '': {
-                            templateUrl: '/views/courses.html',
-                        }
-                    },
+                    templateUrl: '/views/courses.html',
                     controller: 'courses-controller'
                 })
                 .state('root.admin', {
@@ -41,7 +37,7 @@ angular.module('hapi-learning', [
                 })
                 .state('login', {
                     url: '/login',
-                    templateUrl: '/views/connection.html',
+                    templateUrl: '/views/login.html',
                     controller: 'admin-controller'
                 })
         }])
