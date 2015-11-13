@@ -1,4 +1,5 @@
-<h3>
+<div>
+    <h3>
     <span class="label label-default label-pill pull-right" ng-show="updated()">
         <span class="glyphicon glyphicon-eye-open"></span>
     </span>
@@ -8,33 +9,34 @@
     </a>
 </h3>
 
-<div>
-    <label>Teachers</label>
+    <div>
+        <label>Teachers</label>
 
-    <br />
+        <br />
 
-    <span ng-repeat="teacher in course.teachers">
-        <teacher-info></teacher-info>
+        <span ng-repeat="teacher in course.teachers">
+        <teacher-info teacher="teacher"></teacher-info>
     </span>
-</div>
-
-<br />
-
-<div>
-    <label>Tags</label>
+    </div>
 
     <br />
 
-    <span ng-repeat="tag in course.tags">
+    <div>
+        <label>Tags</label>
+
+        <br />
+
+        <span ng-repeat="tag in course.tags">
         <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
-    </span>
-</div>
+        </span>
+    </div>
 
-<br />
+    <br />
 
-<div>
-    <button type="button" class="btn btn-success" ng-hide="subscribed()">
-        <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
-    <button type="button" class="btn btn-danger" ng-show="subscribed()">
-        <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+    <div>
+        <button type="button" class="btn btn-success" ng-hide="subscribed()">
+            <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
+        <button type="button" class="btn btn-danger" ng-show="subscribed()">
+            <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+    </div>
 </div>

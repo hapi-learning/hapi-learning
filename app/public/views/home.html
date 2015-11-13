@@ -1,14 +1,14 @@
 
 <div class="container-fluid">
 
-    <div class="col-md-9" ng-controller="courses-controller">
+    <div class="col-md-8" ng-controller="courses-controller">
         <h1 class="page-header">My courses</h1>
-        <div ng-include="'../partials/courses-list.html'"></div>
+        <course-list courses="courses"></course-list>
     </div>
 
-    <div class="col-md-3" ng-controller="news-controller as homeCtrl">
+    <div class="col-md-4" ng-controller="news-controller">
         <h1 class="page-header">News</h1>
-        <div ng-include="'../partials/news-resume.html'"></div>
+        <last-news></last-news>
     </div>
 
 </div>

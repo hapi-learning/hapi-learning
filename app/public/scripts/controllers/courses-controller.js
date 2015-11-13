@@ -1,24 +1,24 @@
 angular.module('hapi-learning')
-    .controller('courses-controller', ['$scope', 'Restangular', function ($scope, Restangular) {
+    .controller('courses-controller',
+                ['$scope', 'Restangular', 'CoursesFactory', 'TagsFactory',
+                function ($scope, Restangular, CoursesFactory, TagsFactory) {
 
         $scope.courses = [];
         $scope.tags = [];
         $scope.selectedTags = [];
 
+        CoursesFactory.load(50).then(function(courses) {
+            $scope.courses = courses;
+        }).catch(function(err) { console.log(err);})
 
-        Restangular.all('courses').customGET().then(function (object) {
-            var courses = object.results;
-            courses.forEach(function(course) {
-                $scope.courses.push(course);
-            });
-        });
+        TagsFactory.load().then(function(tags) { $scope.tags = tags });
 
-        Restangular.all('tags').getList().then(function (tags) {
+     /*   Restangular.all('tags').getList().then(function (tags) {
             for (var i = 0; i < tags.length; ++i) {
                 $scope.tags.push(tags[i]);
             }
         });
-
+*/
         $scope.selected = function(tag) {
             console.log(tag.name + ' selected');
 

@@ -1,5 +1,5 @@
 angular.module('hapi-learning')
-    .controller('profile-controller', ['$scope', function ($scope, courses_factory) {
+    .controller('profile-controller', ['$scope', function ($scope) {
 
         $scope.password = '';
         $scope.newPassword = '';
