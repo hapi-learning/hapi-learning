@@ -8,6 +8,8 @@ const Glue = require('glue');
 const _ = require('lodash');
 const Path = require('path');
 
+const httpHost = 'http://' + (process.env.HOST || 'localhost');
+
 let internals = {
     manifest: {
         connections: [{
@@ -141,23 +143,23 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 };
 
                 const addCourses = function() {
-                    _.forEach(courses, course => post('http://localhost:8088/courses', course));
+                    _.forEach(courses, course => post(httpHost + ':8088/courses', course));
                 };
 
                 const addTeachers = function() {
-                    _.forEach(teachers, teacher => post('http://localhost:8088/users', teacher));
+                    _.forEach(teachers, teacher => post(httpHost + ':8088/users', teacher));
                 };
 
                /* const addUsers = function() {
-                    _.forEach(users, user => post('http://localhost:8088/users', user, addTeachers));
+                    _.forEach(users, user => post(httpHost + ':8088/users', user, addTeachers));
                 };*/
 
                 const addTags = function() {
-                    _.forEach(tags, tag => post('http://localhost:8088/tags', tag));
+                    _.forEach(tags, tag => post(httpHost + ':8088/tags', tag));
                 };
 
                 const addRoles = function() {
-                    _.forEach(roles, role => post('http://localhost:8088/roles', role));
+                    _.forEach(roles, role => post(httpHost + ':8088/roles', role));
                 };
 
 
