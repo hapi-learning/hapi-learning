@@ -1,18 +1,6 @@
 'use strict';
 
 
-/*
-const payload = {
-    id: result.id,
-    username: result.username,
-    email: result.email,
-    role: result.Role.name,
-    isAdmin: (result.Role.name === 'admin')
-};
-
-*/
-
-
 exports.register = function (server, options, next) {
 
     server.auth.strategy('jwt', 'jwt', {
@@ -20,16 +8,20 @@ exports.register = function (server, options, next) {
         validateFunc: function(decoded, request, callback) {
 
             const User = server.plugins.models.models.User;
+            const Role = server.plugins.models.models.Role;
 
             User.findOne({
                 where: {
                     id: decoded.id,
                     username: decoded.username,
                     email: decoded.email,
-                }
+                },
+                include: [{
+                    model: Role
+                }]
             }).then(result => {
                if (result && result.Role.name === decoded.role) {
-                   return callback(null, true, {scope: decoded.role});
+                   return callback(null, true, {scope: [decoded.role, decoded.username]});
                } else {
                    return callback(null, false);
                }
