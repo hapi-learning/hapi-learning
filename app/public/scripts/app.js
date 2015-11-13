@@ -7,27 +7,34 @@ angular.module('hapi-learning', [
             $urlRouterProvider.otherwise('/');
 
             $stateProvider
-                .state('home', {
+                .state('root', {
+                    templateUrl: '/views/root.html'
+                })
+                .state('root.home', {
                     url: '/',
                     templateUrl: '/views/home.html',
                     controller: 'home-controller'
                 })
-                .state('courses', {
+                .state('root.courses', {
                     url: '/courses',
-                    templateUrl: '/views/courses.html',
+                    views: {
+                        '': {
+                            templateUrl: '/views/courses.html',
+                        }
+                    },
                     controller: 'courses-controller'
                 })
-                .state('admin', {
+                .state('root.admin', {
                     url: '/admin',
                     templateUrl: '/views/admin.html',
                     controller: 'admin-controller'
                 })
-                .state('profile', {
+                .state('root.profile', {
                     url: '/profile',
                     templateUrl: '/views/profile.html',
                     controller: 'profile-controller'
                 })
-                .state('news', {
+                .state('root.news', {
                     url: '/news',
                     templateUrl: '/views/news.html',
                     controller: 'news-controller'
