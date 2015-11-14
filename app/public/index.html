@@ -50,42 +50,16 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/services/auth-storage.js"></script>
     <script src="scripts/services/login-factory.js"></script>
+    <script src="scripts/config.js"></script>
 
-    <script>
-        angular.module('hapi-learning')
-                .config(['$httpProvider', 'jwtInterceptorProvider',
-                      function($httpProvider, jwtInterceptorProvider) {
-                    jwtInterceptorProvider.tokenGetter = ['AuthStorage', function(AuthStorage) {
-                        return AuthStorage.get('token');
-                    }];
 
-                    $httpProvider.interceptors.push('jwtInterceptor');
-                }])
-    </script>
-
-   <script>
-        angular.module('hapi-learning')
-            .run(['LoginFactory', '$location', '$rootScope',
-                    function(LoginFactory, $location, $rootScope) {
-                        $rootScope.$on('$stateChangeStart',
-                            function(event, toState, toParams, fromState, fromParams) {
-                                console.log(toState);
-                                if (toState.name === 'login' && LoginFactory.getToken() !== null) {
-                                        $location.path('/');
-                                } else {
-                                    if (LoginFactory.getToken() === null) {
-                                        $location.path('/login');
-                                    }
-                                }
-                        })
-                    }]);
-    </script>
 
 
 
     <script src="scripts/services/courses-factory.js"></script>
     <script src="scripts/services/tags-factory.js"></script>
     <script src="scripts/directives/navbar.js"></script>
+    <script src="scripts/directives/profile-form.js"></script>
     <script src="scripts/directives/footer.js"></script>
     <script src="scripts/directives/last-news.js"></script>
     <script src="scripts/controllers/home-controller.js"></script>

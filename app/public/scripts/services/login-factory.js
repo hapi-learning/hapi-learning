@@ -1,21 +1,23 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('LoginFactory', ['$location', '$http', 'API', 'AuthStorage',
-                              function ($location, $http, API, AuthStorage) {
+    .factory('LoginFactory', ['$location', '$http', 'jwtHelper',
+                              'API', 'AuthStorage', 'Restangular',
+                              function ($location, $http, jwtHelper,
+                                         API, AuthStorage, Restangular) {
 
     var exports = {};
     var internals = {};
 
 
-    internals.profile = null;
+    internals.profile = {};
 
     exports.getToken = function() {
         return AuthStorage.get('token');
     };
 
     exports.getProfile = function() {
-        return internals.profile;
+        return AuthStorage.get('profile');
     };
 
     exports.login = function (user) {
@@ -30,11 +32,25 @@ angular.module('hapi-learning')
                     password: user.password
                 }
             }).then(function success(response) {
-                AuthStorage.set('token', response.token);
+                AuthStorage.set('token', response.data.token);
 
-                //TODO ASSIGN CURRENT USER
+                var username = jwtHelper.decodeToken(response.data.token).username;
 
-                resolve();
+                Restangular.one('users', username)
+                    .get()
+                    .then(function(response) {
+                        internals.profile.id = response.id;
+                        internals.profile.username = response.username;
+                        internals.profile.email = response.email;
+                        internals.profile.firstName = response.firstName;
+                        internals.profile.lastName = response.lastName;
+                        internals.profile.phoneNumber = response.phoneNumber;
+
+                        AuthStorage.set('profile', internals.profile);
+
+                        resolve();
+                    });
+
             }, function failure(response) {
                 reject(response);
             });

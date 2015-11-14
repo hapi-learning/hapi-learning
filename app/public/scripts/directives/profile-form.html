@@ -1,0 +1,51 @@
+<form name="profileForm">
+
+    <fieldset class="form-group">
+        <div class="row">
+            <div class="col-xs-6">
+                <label>First name</label>
+                <input ng-model="profile.firstName" type="text" class="form-control" name="firstname" title="First name" placeholder="John" />
+            </div>
+
+            <div class="col-xs-6">
+                <label>Last name</label>
+                <input ng-model="profile.name" type="text" class="form-control" name="lastname" title="Last name" placeholder="Doe" />
+            </div>
+        </div>
+    </fieldset>
+
+
+    <div class="form-group">
+        <label>Password (required if you change your password)</label>
+        <input type="password" class="form-control" ng-model="password" ng-minlength="8" name="password" title="Password" placeholder="●●●●●●●●" ng-required="profile.password" />
+    </div>
+
+
+
+    <fieldset>
+        <div class="row">
+            <div class="col-xs-6 form-group">
+                <label>New password</label>
+                <input type="password" class="form-control" ng-model="newPassword" ng-minlength="8" name="newPassword" title="New password" placeholder="●●●●●●●●" />
+            </div>
+
+            <div class="col-xs-6 form-group">
+                <label>Confirm new password</label>
+                <input type="password" class="form-control" ng-model="confirmPassword" name="confirmPassword" title="New password confirmation" placeholder="●●●●●●●●" ui-validate="{passwordMatch: '$value === newPassword'}" ui-validate-watch="'newPassword'" ng-required="newPassword.$dirty" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" ng-model="profile.email" name="email" placeholder="42424@heb.be" value="42424@heb.be" />
+    </fieldset>
+
+    <br />
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Update profile" />
+        <input type="reset" class="btn btn-warning" value="Reset" />
+    </div>
+
+</form>

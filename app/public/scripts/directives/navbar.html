@@ -1,5 +1,11 @@
 <nav>
-    <h1 class="page-header">John Doe  <small>39123</small></h1>
+    <h1 class="page-header">
+    <span ng-bind="profile.firstName"></span>
+    <span ng-bind="profile.lastName"></span>
+    <small><span ng-bind="profile.username"></span></small>
+
+
+    </h1>
 
     <ul class="nav">
         <li ui-sref-active="active">

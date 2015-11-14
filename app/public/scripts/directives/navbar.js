@@ -7,6 +7,8 @@ angular.module('hapi-learning')
             scope.logout = function() {
                 LoginFactory.logout();
             }
+
+            scope.profile = LoginFactory.getProfile();
         }
     };
 }]);
