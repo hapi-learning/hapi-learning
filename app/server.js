@@ -123,6 +123,9 @@ let internals = {
                         }
                     }
                 ]
+            },
+            tv: {
+                host: process.env.API_HOST || 'localhost'
             }
         }
     }
@@ -157,6 +160,8 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                         } else {
                             console.log('Server stopped successfuly !');
                         }
+
+                        process.exit();
                     });
                 });
 
