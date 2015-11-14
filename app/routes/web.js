@@ -23,8 +23,19 @@ exports.register = function (server, options, next) {
                 api: request.server.select('api').info.uri
             })
         }
-    })
+    });
 
+    server.route({
+        method: 'GET',
+        path: '/apitest',
+        handler: function(request, reply) {
+            return reply({
+                info: request.server.select('api').info,
+                server: request.server.select('api')
+            })
+        }
+    });
+    
     server.route({
         method: 'GET',
         path: '/{param*}',
