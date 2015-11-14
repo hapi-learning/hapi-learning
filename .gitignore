@@ -3,3 +3,4 @@ app/public/lib
 npm-debug.log
 database.sqlite
 test_database.sqlite
+.env

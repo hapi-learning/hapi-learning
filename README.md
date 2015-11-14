@@ -23,6 +23,21 @@ https:
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
 
+Create a .env file in the root folder and change the web/api host and port:
+
+```
+
+WEB_HOST=localhost
+WEB_PORT=8080
+API_HOST=localhost
+API_PORT=8088
+
+AUTH_KEY=9FDS954QLBNQbraF9K9yBJZ0I95CR8269FDS954QLBNQbraF9K9yBJZ0I95CR826
+UPLOAD_MAX=20970000
+TOKEN_EXP=7200
+
+```
+
 
 Install dependencies:
 

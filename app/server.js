@@ -11,8 +11,8 @@ const Path = require('path');
 let internals = {
     manifest: {
         connections: [{
-            host: process.env.HOST || 'localhost',
-            port: process.env.PORT || 8080,
+            host: process.env.WEB_HOST || 'localhost',
+            port: process.env.WEB_PORT || 8080,
             routes: {
                 cors: true,
                 files: {
@@ -21,7 +21,7 @@ let internals = {
             },
             labels: ['web']
         }, {
-            host: process.env.HOST || 'localhost',
+            host: process.env.API_HOST || 'localhost',
             port: process.env.API_PORT || 8088,
             routes: {
                 cors: true
