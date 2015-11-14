@@ -30,8 +30,8 @@ exports.register = function (server, options, next) {
         path: '/apitest',
         handler: function(request, reply) {
             return reply({
-                info: request.server.select('api').info,
-                server: request.server.select('api')
+                api: request.server.select('api').info,
+                web: request.server.select('web').info
             })
         }
     });
