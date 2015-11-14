@@ -2,12 +2,13 @@
 
 angular.module('hapi-learning')
     .factory('LoginFactory', ['$location', '$http', 'jwtHelper',
-                              'API', 'AuthStorage', 'Restangular',
+                              'AuthStorage', 'Restangular',
                               function ($location, $http, jwtHelper,
-                                         API, AuthStorage, Restangular) {
+                                         AuthStorage, Restangular) {
 
     var exports = {};
     var internals = {};
+
 
 
     internals.profile = {};
@@ -24,7 +25,7 @@ angular.module('hapi-learning')
 
         return new Promise(function(resolve, reject) {
             $http({
-                url: API + '/login',
+                url: Restangular.configuration.baseUrl + '/login',
                 skipAuthorization: true,
                 method: 'POST',
                 data: {
@@ -64,7 +65,7 @@ angular.module('hapi-learning')
         return new Promise(function(resolve, reject) {
 
             $http({
-                url: API + '/logout',
+                url: Restangular.configuration.baseUrl + '/logout',
                 method: 'POST'
             }).then(function success(response) {
                 AuthStorage.remove('token');
