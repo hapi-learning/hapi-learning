@@ -9,6 +9,9 @@ const _ = require('lodash');
 const Path = require('path');
 
 const httpHost = 'http://' + (process.env.HOST || 'localhost');
+const httpHostPortAPI = httpHost + ':' + (process.env.API_PORT || '8088');
+const httpHostPortWEB = httpHost + ':' + (process.env.PORT || '8080');
+
 
 let internals = {
     manifest: {
@@ -135,7 +138,6 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 const permissions = require('../resources/permissions.json');
                 const teachers = require('../resources/all_teachers.json');
                 const courses = require('../resources/all_courses.json');
-                const folders = require('../resources/folders.json');
 
 
                 const post = function(url, payload) {
@@ -161,8 +163,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 const addRoles = function() {
                     _.forEach(roles, role => post(httpHost + ':8088/roles', role));
                 };
-
-
+                
                 addRoles();
                 addTags();
                 addTeachers();

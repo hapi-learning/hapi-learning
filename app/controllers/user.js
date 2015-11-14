@@ -451,17 +451,19 @@ exports.addFolders = {
     handler: function(request, reply) {
         
         const User   = this.models.User;
+        const Folder = this.models.Folder;
         
         internals.findUser(User, request.params.username)
         .then(user => {
             if (user)
             {
-                console.log(request.payload.folders);
-                user.addFolders(request.payload.folders).then(() => {
-                    internals.getUser(user).then(user => {
-                       return reply(user);
-                    });
-                })
+                request.payload.folders.forEach(folder => {
+                    user.createFolder(folder)
+                    .then(() => console.log('ok'))
+                    .catch(error => console.log(error));
+                });
+                user.getFolders()
+                .then(folders => reply(folders))
                 .catch(error => reply.badImplementation(error));
             }
             else
