@@ -46,21 +46,13 @@ exports.register = function(server, options, next) {
         // An User can subscribe to many Courses (not in a Folder)
         m.User.belongsToMany(m.Course, { as: 'Courses', through: 'user_courses' });
 
-        // An User can create many Folders containing Courses
-        //m.User.belongsToMany(m.Folder, { through: 'user_folders'});
-        /*sequelize.query('CREATE TABLE IF NOT EXISTS user_folders( ' +
-                        '   user REFERENCES User(username), ' +
-                        '   folder REFERENCES Folder(id), ' +
-                        '   PRIMARY KEY(user, folder)' +
-                        ');'
-                       ).then(() => console.log('user_folders table manually created'));*/
-        
         // A user has many folders, he can not share them
-        m.User.hasMany(m.Folder);
-        //m.Folder.belongsTo(m.User);
+        m.User.hasMany(m.Folder, {foreignKey : 'userId'});
 
         // A Folder contains many Courses
         m.Folder.belongsToMany(m.Course, { through: 'user_courses_folders'});
+        // A Course can be in many Folders
+        m.Course.belongsToMany(m.Folder, { through: 'user_courses_folders'});
 
         // An User can have multiple Tags (for example 'A12' + 'gestion')
         m.User.belongsToMany(m.Tag, { through: 'user_tags' });

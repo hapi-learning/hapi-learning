@@ -453,22 +453,44 @@ exports.addFolders = {
         const User   = this.models.User;
         const Folder = this.models.Folder;
         
-        internals.findUser(User, request.params.username)
+        const username = request.params.username;
+        const folders  = request.payload.folders;
+        
+        internals.findUser(User, username)
         .then(user => {
             if (user)
             {
-                request.payload.folders.forEach(folder => {
-                    user.createFolder(folder)
-                    .then(() => console.log('ok'))
-                    .catch(error => console.log(error));
+                
+                let promises = _.map(folders, folder => {
+                    Folder.findOne({
+                        where : {
+                            name : folder,
+                            userId : user.id
+                        }
+                    });
                 });
-                user.getFolders()
-                .then(folders => reply(folders))
+                
+                Promise.all(promises)
+                .then(values => {
+                    _.forEach(values, (value, key) => {
+                        console.log(!value);
+                        if (!value)
+                        {
+                            user.createFolder({name : folders[key]})
+                            .then(() => console.log(folders[key] + ' created for user ' + username))
+                            .catch(error => reply.badImplementation(error));
+                        }
+                    });
+                    
+                    user.getFolders()
+                    .then(folders => reply(Utils.removeDates(folders)))
+                    .catch(error => reply.badImplementation(error));
+                })
                 .catch(error => reply.badImplementation(error));
             }
             else
             {
-                return reply.notFound('User ' + request.params.username + ' not found');
+                return reply.notFound('User ' + username + ' not found');
             }
         })
         .catch(error => reply.badImplementation(error));
