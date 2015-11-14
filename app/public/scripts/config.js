@@ -16,9 +16,8 @@ angular.module('hapi-learning')
                         if (toState.name === 'login' && LoginFactory.getToken() !== null) {
                                 $location.path('/');
                         } else {
-                            if (LoginFactory.getToken() === null) {
+
                                 $location.path('/login');
-                            }
                         }
                 })
             }]);
