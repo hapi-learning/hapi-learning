@@ -24,17 +24,6 @@ exports.register = function (server, options, next) {
             })
         }
     });
-
-    server.route({
-        method: 'GET',
-        path: '/apitest',
-        handler: function(request, reply) {
-            return reply({
-                api: request.server.select('api').info,
-                web: request.server.select('web').info
-            })
-        }
-    });
     
     server.route({
         method: 'GET',
