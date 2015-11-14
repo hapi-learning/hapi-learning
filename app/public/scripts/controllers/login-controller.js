@@ -1,16 +1,16 @@
 angular
     .module('hapi-learning')
-    .controller('LoginCtrl',  ['$scope', 'ConnexionFactory',
-                                           function ($scope, ConnexionFactory) {
+    .controller('LoginCtrl',  ['$scope', 'LoginFactory',
+                                           function ($scope, LoginFactory) {
 
         $scope.user = {};
         $scope.connected = false;
 
         $scope.login = function() {
-            $scope.connected = ConnexionFactory.connect($scope.user);
+            $scope.connected = LoginFactory.login($scope.user);
         };
 
         $scope.logout = function() {
-            $scope.connected = ConnexionFactory.disconnect($scope.user);
+            $scope.connected = LoginFactory.logout($scope.user);
         };
 }]);

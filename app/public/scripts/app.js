@@ -9,7 +9,9 @@ angular.module('hapi-learning', [
         'angular-loading-bar',
         'ui.ace',
         'ui.validate',
-        'restangular'])
+        'restangular',
+        'angular-storage',
+        'angular-jwt'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
@@ -53,9 +55,23 @@ angular.module('hapi-learning', [
         cfpLoadingBarProvider.includeSpinner = false;
     }])
 
-    .config(['RestangularProvider', function (RestangularProvider) {
-        RestangularProvider.setBaseUrl('http://localhost:8088');
+    .constant('API', 'http://localhost:8088')
+    .config(['RestangularProvider', 'API', function (RestangularProvider, API) {
+        RestangularProvider.setBaseUrl(API);
     }])
+
+    .config(['storeProvider', function(storeProvider) {
+        storeProvider.setStore('localStorage');
+    }])
+
+     .config(['$httpProvider', 'jwtInterceptorProvider',
+              function($httpProvider, jwtInterceptorProvider) {
+        jwtInterceptorProvider.tokenGetter = ['store', function(store) {
+            return store.get('token');
+        }];
+
+        $httpProvider.interceptors.push('jwtInterceptor');
+      });
 
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
         bootstrap3ElementModifier.enableValidationStateIcons(true);
