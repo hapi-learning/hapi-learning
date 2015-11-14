@@ -47,8 +47,7 @@ angular.module('hapi-learning', [
                 })
                 .state('login', {
                     url: '/login',
-                    templateUrl: '/views/login.html',
-                    controller: 'LoginCtrl'
+                    templateUrl: '/views/login.html'
                 })
     }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
@@ -64,14 +63,6 @@ angular.module('hapi-learning', [
         storeProvider.setStore('localStorage');
     }])
 
-     .config(['$httpProvider', 'jwtInterceptorProvider',
-              function($httpProvider, jwtInterceptorProvider) {
-        jwtInterceptorProvider.tokenGetter = ['store', function(store) {
-            return store.get('token');
-        }];
-
-        $httpProvider.interceptors.push('jwtInterceptor');
-      });
 
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
         bootstrap3ElementModifier.enableValidationStateIcons(true);

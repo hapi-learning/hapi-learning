@@ -37,16 +37,50 @@
     <script src="lib/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="lib/angular-file-upload/dist/angular-file-upload.min.js"></script>
     <script src="lib/angular-loading-bar/build/loading-bar.min.js"></script>
-    <script src="lib/aconnectionce-builds/src-min-noconflict/ace.js"></script>
-    <script src="lib/angular-ui-ace/ui-ace.js"></script>
-    <script src="lib/angular-ui-validate/dist/validate.js"></script>
+  <!--  <script src="lib/ace-builds/src-min-noconflict/ace.js"></script>-->
+    <script src="lib/angular-ui-ace/ui-ace.min.js"></script>
+    <script src="lib/angular-ui-validate/dist/validate.min.js"></script>
     <script src="lib/lodash/lodash.min.js"></script>
     <script src="lib/restangular/dist/restangular.min.js"></script>
-    <script src="lib/angular-storage/dist/angular-storage.min.js"></script>
+    <script src="lib/a0-angular-storage/dist/angular-storage.min.js"></script>
+    <script src="lib/angular-jwt/dist/angular-jwt.min.js"></script>
     <!-- End angular modules -->
 
     <!-- Application scripts -->
     <script src="scripts/app.js"></script>
+    <script src="scripts/services/auth-storage.js"></script>
+    <script src="scripts/services/login-factory.js"></script>
+
+    <script>
+        angular.module('hapi-learning')
+                .config(['$httpProvider', 'jwtInterceptorProvider',
+                      function($httpProvider, jwtInterceptorProvider) {
+                    jwtInterceptorProvider.tokenGetter = ['AuthStorage', function(AuthStorage) {
+                        return AuthStorage.get('token');
+                    }];
+
+                    $httpProvider.interceptors.push('jwtInterceptor');
+                }])
+    </script>
+
+   <script>
+        angular.module('hapi-learning')
+            .run(['LoginFactory', '$location', '$rootScope',
+                    function(LoginFactory, $location, $rootScope) {
+                        $rootScope.$on('$stateChangeStart',
+                            function(event, toState, toParams, fromState, fromParams) {
+                                console.log(toState);
+                                if (toState.name === 'login' && LoginFactory.getToken() !== null) {
+                                        $location.path('/');
+                                } else {
+                                    if (LoginFactory.getToken() === null) {
+                                        $location.path('/login');
+                                    }
+                                }
+                        })
+                    }]);
+    </script>
+
 
 
     <script src="scripts/services/courses-factory.js"></script>
@@ -58,8 +92,6 @@
     <script src="scripts/directives/teacher-info.js"></script>
     <script src="scripts/directives/course-info.js"></script>
     <script src="scripts/directives/course-list.js"></script>
-    <script src="scripts/services/login-factory.js"></script>
-    <script src="scripts/controllers/login-controller.js"></script>
     <script src="scripts/directives/login-form.js"></script>
     <script src="scripts/controllers/courses-controller.js"></script>
     <script src="scripts/directives/search-courses.js"></script>

@@ -1,50 +1,65 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('LoginFactory', ['$http', 'API', 'store', function ($http, API, store) {
+    .factory('LoginFactory', ['$location', '$http', 'API', 'AuthStorage',
+                              function ($location, $http, API, AuthStorage) {
 
     var exports = {};
     var internals = {};
 
 
-    internals.currentUser = null;
+    internals.profile = null;
 
     exports.getToken = function() {
-        return store.get('token');
+        return AuthStorage.get('token');
     };
 
-    exports.getCurrentUser = function() {
-        return internals.currentUser;
+    exports.getProfile = function() {
+        return internals.profile;
     };
 
     exports.login = function (user) {
 
+        return new Promise(function(resolve, reject) {
+            $http({
+                url: API + '/login',
+                skipAuthorization: true,
+                method: 'POST',
+                data: {
+                    username: user.name, // TODO
+                    password: user.password
+                }
+            }).then(function success(response) {
+                AuthStorage.set('token', response.token);
 
-        $http({
-            url: API + '/login',
-            skipAuthorization: true,
-            method: 'POST',
-            data: {
-                username: user.name, // TODO
-                password: user.psasword
-            }
-        }).then(function success(response) {
-            store.set('token', response.token);
-        }, function failure(response) {
+                //TODO ASSIGN CURRENT USER
 
+                resolve();
+            }, function failure(response) {
+                reject(response);
+            });
         });
+
+
     };
 
-    exports.logout = function (user) {
+    exports.logout = function () {
 
-        $http({
-            url: API + '/logout',
-            method: 'POST'
-        }).then(function success(response) {
+        return new Promise(function(resolve, reject) {
 
-        }, function failure(response) {
+            $http({
+                url: API + '/logout',
+                method: 'POST'
+            }).then(function success(response) {
+                AuthStorage.remove('token');
+                $location.path('/login');
+                resolve();
+            }, function failure(response) {
+                reject(response);
+            });
 
         });
+
     };
 
     return exports;
