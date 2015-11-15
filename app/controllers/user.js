@@ -100,13 +100,9 @@ exports.getAll = {
 
         const User = this.models.User;
 
-        const options = {
-            limit: request.query.limit,
-            offset: (request.query.page - 1) * request.query.limit
-        };
-
         User.findAndCountAll({
-                options,
+                limit: request.query.limit,
+                offset: (request.query.page - 1) * request.query.limit,
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
