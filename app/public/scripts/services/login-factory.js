@@ -42,12 +42,12 @@ angular.module('hapi-learning')
                     method: 'GET',
                 }).then(function success(response) {
                     var user = response.data;
-                    internals.profile.id = response.id;
-                    internals.profile.username = response.username;
-                    internals.profile.email = response.email;
-                    internals.profile.firstName = response.firstName;
-                    internals.profile.lastName = response.lastName;
-                    internals.profile.phoneNumber = response.phoneNumber;
+                    internals.profile.id = user.id;
+                    internals.profile.username = user.username;
+                    internals.profile.email = user.email;
+                    internals.profile.firstName = user.firstName;
+                    internals.profile.lastName = user.lastName;
+                    internals.profile.phoneNumber = user.phoneNumber;
 
                     AuthStorage.set('profile', internals.profile);
 

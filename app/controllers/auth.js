@@ -72,9 +72,15 @@ exports.me = {
     handler: function (request, reply) {
         const User = this.models.User;
 
-        const authorization = request.raw.req.headers.authorization;
-        console.log(authorization);
+        let authorization = request.headers.authorization;
+
+        // Removes useless labels
+        authorization = authorization.replace(/Bearer/gi, '').replace(/ /g, '')
         const payload = JWT.decode(authorization);
+
+        if (!payload) {
+            return reply.badImplementation('Invalid authorization header parsing');
+        };
 
         User.findOne({
             where: {
