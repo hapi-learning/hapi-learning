@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
-    <h1>
-        <span ng-bind="course.code"></span> - <span ng-bind="course.name"></span>
+    <h1 class="page-header">
+        <span ng-bind="course.code"></span>#<span ng-bind="course.name"></span>
     </h1>
 
     <div class="col-md-8">
@@ -15,9 +15,7 @@
         <label>Teachers</label>
         <br />
         <span ng-repeat="teacher in course.teachers">
-            <a ng-href="mailto:{{teacher.email}}">
-                <span ng-bind="teacher.last_name"></span>
-        </a>
+            <teacher-info teacher="teacher"></teacher-info>
         </span>
         <br />
 
@@ -30,9 +28,9 @@
         <br />
 
         <div>
-            <button type="button" class="btn btn-success" ng-hide="subscribed()">
+            <button type="button" class="btn btn-success" ng-hide="subscribed" ng-click="subscribe()">
                 <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
-            <button type="button" class="btn btn-danger" ng-show="subscribed()">
+            <button type="button" class="btn btn-danger" ng-show="subscribed"  ng-click="unsubscribe()">
                 <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
         </div>
     </div>
