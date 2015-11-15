@@ -1,2 +1,21 @@
-<h1 ng-bind="code"></h1>
-<h2 ng-bind="name"></h2>
+<h1 ng-bind="course.code"></h1>
+<h2 ng-bind="course.name"></h2>
+
+<div>
+    <label>Tags</label>
+
+    <br />
+
+    <span ng-repeat="tag in course.tags">
+        <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+    </span>
+</div>
+
+<br />
+
+<div>
+    <button type="button" class="btn btn-success" ng-hide="subscribed()">
+        <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
+    <button type="button" class="btn btn-danger" ng-show="subscribed()">
+        <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+</div>
