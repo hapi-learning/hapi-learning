@@ -3,6 +3,7 @@
 const Hoek = require('hoek');
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
+const P = require('bluebird');
 
 const Utils = require('../utils/sequelize');
 const _ = require('lodash');
@@ -434,7 +435,7 @@ exports.unsubscribeToCourse = {
     }
 };
 
-exports.addFolder = {
+exports.addFolders = {
     auth: {
         scope: ['admin', '{params.username}']
     },
@@ -471,18 +472,24 @@ exports.addFolder = {
 
                 Promise.all(promises)
                 .then(values => {
-                    _.forEach(values, (value, key) => {
-                        if (!value)
-                        {
-                            user.createFolder({name : folders[key]})
-                            .then(() => console.log('Folder : \'' + folders[key] + '\' created for user ' + username))
-                            .catch(error => reply.badImplementation(error));
-                        }
-                    });
 
-                    user.getFolders()
-                    .then(folders => reply(Utils.removeDates(folders)))
-                    .catch(error => reply.badImplementation(error));
+                    new P(function(resolve, reject) {
+                        const createFolders = [];
+                        _.forEach(values, (value, key) => {
+                            if (!value) {
+                                createFolders.push(user.createFolder({name : folders[key]}));
+                            }
+                        });
+
+                        P.all(createFolders).then(resolve).catch(reject);
+
+                    }).then(() => {
+                        user.getFolders()
+                        .then(folders => reply(Utils.removeDates(folders)))
+                        .catch(error => reply.badImplementation(error));
+                    })
+
+
                 })
                 .catch(error => reply.badImplementation(error));
             }
