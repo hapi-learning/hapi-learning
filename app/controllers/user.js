@@ -289,6 +289,35 @@ exports.getTags = {
     }
 };
 
+exports.getFolders = {
+
+    description: 'Get the user\'s folders',
+    validate: {
+        params: {
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
+        }
+    },
+    handler: function(request, reply) {
+
+        const User = this.models.User;
+
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                user.getFolders()
+                .then(folders => reply(folders))
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
+    }
+};
+
 exports.getCourses = {
     auth: {
         scope: ['admin', '{params.username}']
@@ -413,11 +442,56 @@ exports.addFolder = {
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            folder: Joi.string().min(1).max(255).required().description('New folder name')
+        },
+        payload: {
+            folders: Joi.array().items(Joi.string().required())
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+
+        const User   = this.models.User;
+        const Folder = this.models.Folder;
+
+        const username = request.params.username;
+        const folders  = request.payload.folders;
+
+        internals.findUser(User, username)
+        .then(user => {
+            if (user)
+            {
+
+                let promises = _.map(folders, folder => {
+                    return Folder.findOne({
+                        where : {
+                            name : folder,
+                            userId : user.id
+                        }
+                    });
+                });
+
+                Promise.all(promises)
+                .then(values => {
+                    _.forEach(values, (value, key) => {
+                        if (!value)
+                        {
+                            user.createFolder({name : folders[key]})
+                            .then(() => console.log('Folder : \'' + folders[key] + '\' created for user ' + username))
+                            .catch(error => reply.badImplementation(error));
+                        }
+                    });
+
+                    user.getFolders()
+                    .then(folders => reply(Utils.removeDates(folders)))
+                    .catch(error => reply.badImplementation(error));
+                })
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 

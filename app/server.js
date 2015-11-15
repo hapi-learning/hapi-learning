@@ -198,7 +198,6 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                     _.forEach(roles, role => post('http://localhost:8088/roles', role));
                 };
 
-
                 addRoles();
                 addTags();
                 addTeachers();
