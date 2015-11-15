@@ -47,7 +47,7 @@ let internals = {
             './auth': [{
                 select: ['api'],
                 options: {
-                    setDefault: false
+                    setDefault: true
                 }
             }],
             inert: [{
@@ -142,7 +142,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     var Models = server.plugins.models.models;
 
     Models.sequelize.sync({
-//        force: false // drops all db and recreates them
+        force: false // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
@@ -186,11 +186,11 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 };
 
                 const addCourses = function() {
-                    _.forEach(courses, course => post('http://' + (process.env.HOST || 'localhost') + ':8088/courses', course));
+                    _.forEach(courses, course => post('http://localhost:8088/courses', course));
                 };
 
                 const addTeachers = function() {
-                    _.forEach(teachers, teacher => post('http://' + (process.env.HOST || 'localhost') + ':8088/users', teacher));
+                    _.forEach(teachers, teacher => post('http://localhost:8088/users', teacher));
                 };
 
                /* const addUsers = function() {
@@ -198,11 +198,11 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 };*/
 
                 const addTags = function() {
-                    _.forEach(tags, tag => post('http://' + (process.env.HOST || 'localhost') + ':8088/tags', tag));
+                    _.forEach(tags, tag => post('http://localhost:8088/tags', tag));
                 };
 
                 const addRoles = function() {
-                    _.forEach(roles, role => post('http://' + (process.env.HOST || 'localhost') + ':8088/roles', role));
+                    _.forEach(roles, role => post('http://localhost:8088/roles', role));
                 };
 
 

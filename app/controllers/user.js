@@ -61,7 +61,7 @@ internals.schemaUserPOST = function(){
             firstName: Joi.string().min(1).max(255).description('User first name'),
             lastName: Joi.string().min(1).max(255).description('User last name'),
             phoneNumber: Joi.phone.e164().description('User phone number'),
-            role_id: Joi.number().integer().default(1)
+            role_id: Joi.number().integer().default(3)
         }).options({stripUnknown : true});
 
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
@@ -115,6 +115,9 @@ exports.getAll = {
 
 
 exports.post = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Add user',
     validate: {
         payload : internals.schemaUserPOST()
@@ -142,6 +145,9 @@ exports.post = {
 };
 
 exports.addTags = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Link tags to a user',
     validate: {
         params: {
@@ -178,6 +184,9 @@ exports.addTags = {
 };
 
 exports.delete = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Delete user',
     validate: {
         params: {
@@ -215,6 +224,9 @@ const updateHandler = function(request, reply) {
 };
 
 exports.put = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Update all info about user (except username)',
     validate: {
         params: {
@@ -228,10 +240,14 @@ exports.put = {
             phoneNumber: Joi.string().min(1).max(255).required().description('User phone number')
         }
     },
+
     handler: updateHandler
 };
 
 exports.patch = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Update some info about user (except username)',
     validate: {
         params: {
@@ -274,7 +290,9 @@ exports.getTags = {
 };
 
 exports.getCourses = {
-
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
@@ -302,7 +320,11 @@ exports.getCourses = {
     }
 };
 
+
 exports.subscribeToCourse = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Subscribe to a course',
     validate: {
         params: {
@@ -345,6 +367,9 @@ exports.subscribeToCourse = {
 };
 
 exports.unsubscribeToCourse = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Unsubscribe to a course',
     validate: {
         params: {
@@ -381,6 +406,9 @@ exports.unsubscribeToCourse = {
 };
 
 exports.addFolder = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Add a folder',
     validate: {
         params: {
@@ -394,6 +422,9 @@ exports.addFolder = {
 };
 
 exports.addCourseToFolder = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Add a course to the folder (removes from the old folder)',
     validate: {
         params: {
