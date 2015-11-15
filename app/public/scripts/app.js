@@ -1,57 +1,81 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'ui.router', 'ngTagsInput', 'jcs-autoValidate', 'ngFileUpload', 'angularFileUpload', 'angular-loading-bar', 'ui.ace', 'ui.validate', 'restangular'])
+        'api-provider',
+        'ui.router',
+        'ngTagsInput',
+        'jcs-autoValidate',
+        'ngFileUpload',
+        'angularFileUpload',
+        'angular-loading-bar',
+        'ui.ace',
+        'ui.validate',
+        'restangular',
+        'angular-storage',
+        'angular-jwt'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
 
             $stateProvider
-                .state('home', {
+                .state('root', {
+                    templateUrl: '/views/root.html'
+                })
+                .state('root.home', {
                     url: '/',
                     templateUrl: '/views/home.html',
-                    controller: 'home-controller'
+                    controller: 'HomeCtrl'
                 })
-                .state('courses', {
+                .state('root.courses', {
                     url: '/courses',
                     templateUrl: '/views/courses.html',
-                    controller: 'courses-controller'
+                    controller: 'CoursesCtrl'
                 })
-                .state('admin', {
+                .state('root.admin', {
                     url: '/admin',
                     templateUrl: '/views/admin.html',
-                    controller: 'admin-controller'
+                    controller: 'AdminCtrl'
                 })
-                .state('profile', {
+                .state('root.profile', {
                     url: '/profile',
                     templateUrl: '/views/profile.html',
-                    controller: 'profile-controller'
+                    controller: 'ProfileCtrl'
                 })
-                .state('news', {
+                .state('root.news', {
                     url: '/news',
                     templateUrl: '/views/news.html',
-                    controller: 'news-controller'
+                    controller: 'NewsCtrl'
                 })
                 .state('login', {
                     url: '/login',
-                    templateUrl: '/views/connection.html',
-                    controller: 'admin-controller'
+                    templateUrl: '/views/login.html'
                 })
-        }])
+    }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.includeSpinner = false;
-        }])
-    .config(['RestangularProvider', function (RestangularProvider) {
-        RestangularProvider.setBaseUrl('http://localhost:8088');
-        }])
+    }])
+
+
+
+    .config(['storeProvider', function(storeProvider) {
+        storeProvider.setStore('localStorage');
+    }])
+
+
     .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
         bootstrap3ElementModifier.enableValidationStateIcons(true);
-        }])
+    }])
+
     .run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
             // passing a culture into getErrorMessages('fr-fr') will get the culture specific messages
             // otherwise the current default culture is returned.
             defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
                 errorMessages['passwordMatch'] = 'Passwords do not match!';
             });
-    }
-]);
+    }])
+    .run(['Restangular', 'API',  function (Restangular, API) {
+        API.then(function(response) {
+            Restangular.setBaseUrl(response.data.api);
+        });
+
+    }]);

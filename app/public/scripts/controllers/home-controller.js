@@ -1,6 +1,6 @@
 angular
     .module('hapi-learning')
-    .controller('home-controller', ['$scope', function ($scope) {
+    .controller('HomeCtrl', ['$scope', function ($scope) {
 
 
 }]);

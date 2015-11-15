@@ -1,3 +1,8 @@
 <a ng-href="mailto: {{teacher.email}}">
-    <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-envelope"></span> {{teacher.first_name}} {{teacher.last_name}} ({{teacher.username}})</button>
+    <button type="button" class="btn btn-default btn-xs">
+        <span class="glyphicon glyphicon-envelope"></span>
+        <span ng-bind="teacher.first_name"></span>
+        <span ng-bind="teacher.last_name"></span>
+        (<span ng-bind="teacher.username"></span>)
+    </button>
 </a>

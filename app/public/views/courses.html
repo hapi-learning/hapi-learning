@@ -1,14 +1,8 @@
-<div ng-include="'../partials/navbar.html'"></div>
 
 <div class="container-fluid">
 
-    <div class="col-md-2" ng-controller="home-controller as homeCtrl">
 
-        <div ng-include="'../partials/userbar.html'"></div>
-
-    </div>
-
-    <div class="col-md-10" ng-controller="courses-controller">
+    <div class="col-md-12" ng-controller="CoursesCtrl">
 
         <h1 class="page-header">Courses</h1>
 
@@ -16,10 +10,9 @@
 
         <br />
 
-        <div ng-include="'../partials/courses-list.html'"></div>
+        <course-list courses="courses"></course-list>
 
     </div>
 
 </div>
 
-<div ng-include="'../partials/footer.html'"></div>

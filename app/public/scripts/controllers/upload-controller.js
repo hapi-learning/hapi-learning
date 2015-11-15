@@ -1,5 +1,5 @@
 angular.module('hapi-learning')
-    .controller('upload-controller', ['$scope', 'FileUploader', function ($scope, FileUploader) {
+    .controller('UploadCtrl', ['$scope', 'FileUploader', function ($scope, FileUploader) {
 
         var uploader = $scope.uploader = new FileUploader({
             url: 'upload.php'
@@ -8,7 +8,7 @@ angular.module('hapi-learning')
         uploader.onAfterAddingFile = function(item) {
             item.file.visible = true;
         };
-        
+
         $scope.isVisible = function(item) {
             return item.file.visible;
         }

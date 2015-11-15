@@ -16,9 +16,9 @@ before((done) => {
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => 
+    }).then(() =>
     {
-        [   
+        [
             {"name": "admin"},
             {"name": "teacher"},
             {"name": "student"}
@@ -31,8 +31,8 @@ before((done) => {
             {"name":"Languages"},
             {"name":"3R13"},
             {"name": "2I12"},
-            {"name": "Theory"}, 
-            {"name": "Over"}, 
+            {"name": "Theory"},
+            {"name": "Over"},
             {"name": "Laboratory"}
         ].forEach(tag => Models.Tag.create(tag));
 
@@ -222,7 +222,7 @@ describe('Controller.User', () => {
 
                 done();
             });
-        });     
+        });
         it('Should return number of created users from array', done => {
             const request = {
                 method: 'POST',
@@ -268,16 +268,23 @@ describe('Controller.User', () => {
 
     describe('#getAll', () => {
         it ('Should return 4 users', done => {
-            
+
             const request = {
                 method: 'GET',
                 url: '/users'
             };
 
+            const meta = {
+                totalCount: 4,
+                count: 4,
+                pageCount: 1
+            };
+
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response).to.be.an.array();
-                expect(response).to.have.length(4);
+                expect(response.results).to.be.an.array();
+                expect(response.results).to.have.length(4);
+                expect(response.meta).to.deep.equal(meta);
                 done();
             });
         });
@@ -309,7 +316,7 @@ describe('Controller.User', () => {
             });
         });
     });
-    
+
     describe('#put', () => {
         it('should return 1 : number of updates', done => {
             const request = {
@@ -338,7 +345,7 @@ describe('Controller.User', () => {
             });
         });
     });
-    
+
     describe('#patch', () => {
         it('should return 1 : number of updates', done => {
             const request = {
@@ -380,7 +387,7 @@ describe('Controller.User', () => {
             });
         });
     });
-    
+
     describe('#put', () => {
         it('should return 1 : number of updates', done => {
             const request = {
@@ -422,7 +429,7 @@ describe('Controller.User', () => {
             });
         });
     });
-    
+
     describe('#addTags', () => {
         it('should return the user SRV fill with Laboratory tag', done => {
             const request = {
@@ -438,7 +445,7 @@ describe('Controller.User', () => {
                 done();
             });
         });
-        
+
         it('should return the user SRV filled with 2 more tags', done => {
             const request = {
                 method: 'POST',
@@ -455,7 +462,7 @@ describe('Controller.User', () => {
             });
         });
     });
-    
+
     describe('#getTags', () => {
         it('should return empty array tags of specific user : 0', done => {
             const request = {
@@ -483,7 +490,7 @@ describe('Controller.User', () => {
                 done();
             });});
     });
-    
+
     describe('#subscribeToCourse', () => {
         it('should return statusCode 200, course has been added', done => {
             const request = {
@@ -534,7 +541,7 @@ describe('Controller.User', () => {
             });
         });
     });
-    
+
     describe('#getCourses', () => {
         it('should return an empty array with statusCode 200', done => {
             const request = {
@@ -551,7 +558,7 @@ describe('Controller.User', () => {
                 done();
             });
         });
-        
+
         it('should return an array of size 1 with statusCode 200', done => {
             const request = {
                 method: 'GET',
@@ -567,7 +574,7 @@ describe('Controller.User', () => {
             });
         });
     });
-    
+
     describe('#unsubscribeToCourse', () => {
         it('Should return statusCode 200 with user', done => {
             const request = {
@@ -581,7 +588,7 @@ describe('Controller.User', () => {
                 done();
             });
         });
-        
+
         it('Should return statusCode 400 : already unsubscribed', done => {
             const request = {
                 method: 'POST',
@@ -594,7 +601,7 @@ describe('Controller.User', () => {
                 done();
             });
         });
-        
+
         it('Should return statusCode 400 : user not found', done => {
             const request = {
                 method: 'POST',

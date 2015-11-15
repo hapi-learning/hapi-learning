@@ -29,7 +29,7 @@
     "good-console": "^5.1.0",
     "hapi": "^11.0.3",
     "hapi-auth-jwt2": "^5.2.0",
-    "hapi-pagination": "^1.1.0",
+    "hapi-pagination": "^1.2.2",
     "hoek": "^3.0.1",
     "inert": "^3.2.0",
     "items": "^2.0.0",
@@ -42,6 +42,7 @@
     "rmdir": "^1.1.0",
     "sequelize": "^3.13.0",
     "sqlite3": "^3.1.0",
+    "tv": "^5.0.1",
     "vision": "^3.0.0",
     "wreck": "^7.0.0"
   },

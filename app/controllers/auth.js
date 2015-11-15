@@ -35,7 +35,7 @@ exports.login = {
         .then(result => {
             if (result && Bcrypt.compareSync(request.payload.password,
                                              result.password, {
-                                                expiresIn: 60 * 60 * 2 // 2 hours
+                                                expiresIn: process.env.TOKEN_EXP || 7200
                                              }))
             {
                 const payload = {
@@ -48,7 +48,7 @@ exports.login = {
 
                 const token = {
                     token: JWT.sign(payload, process.env.AUTH_KEY),
-                    expiresIn: 60 * 60 * 2
+                    expiresIn: process.env.TOKEN_EXP || 7200
                 };
 
                 reply(JSON.stringify(token));

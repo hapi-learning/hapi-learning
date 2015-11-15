@@ -9,12 +9,22 @@ exports.register = function (server, options, next) {
 
         if (!response.isBoom)
         {
-            reply.continue();
+            return reply.continue();
         }
 
-        reply.file('404.html');
+        return reply.file('404.html');
     });
 
+    server.route({
+        method: 'GET',
+        path: '/api',
+        handler: function(request, reply) {
+            return reply({
+                api: request.server.select('api').info.uri
+            })
+        }
+    });
+    
     server.route({
         method: 'GET',
         path: '/{param*}',

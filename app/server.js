@@ -8,16 +8,11 @@ const Glue = require('glue');
 const _ = require('lodash');
 const Path = require('path');
 
-const httpHost = 'http://' + (process.env.HOST || 'localhost');
-const httpHostPortAPI = httpHost + ':' + (process.env.API_PORT || '8088');
-const httpHostPortWEB = httpHost + ':' + (process.env.PORT || '8080');
-
-
 let internals = {
     manifest: {
         connections: [{
-            host: process.env.HOST || 'localhost',
-            port: process.env.PORT || 8080,
+            host: process.env.WEB_HOST || 'localhost',
+            port: process.env.WEB_PORT || 8080,
             routes: {
                 cors: true,
                 files: {
@@ -26,7 +21,7 @@ let internals = {
             },
             labels: ['web']
         }, {
-            host: process.env.HOST || 'localhost',
+            host: process.env.API_HOST || 'localhost',
             port: process.env.API_PORT || 8088,
             routes: {
                 cors: true
@@ -62,6 +57,7 @@ let internals = {
                 {
                     select: ['api'],
                     options: {
+                        connection: 'api',
                         name: null,
                         username: null,
                         password: null,
@@ -81,6 +77,33 @@ let internals = {
             './routes/web': [{
                 select: ['web']
             }],
+            'hapi-pagination': [
+                {
+                    select: ['api'],
+                    options: {
+                        routes: {
+                            include: ['/courses', '/users']
+                        },
+                        meta: {
+                            self: {
+                                active: false
+                            },
+                            last: {
+                                active: false
+                            },
+                            previous: {
+                                active: false
+                            },
+                            next: {
+                                active: false
+                            },
+                            first: {
+                                active: false
+                            }
+                        }
+                    }
+                }
+            ],
             vision: [{
                 select: ['api']
             }],
@@ -100,6 +123,9 @@ let internals = {
                         }
                     }
                 ]
+            },
+            tv: {
+                host: process.env.API_HOST || 'localhost'
             }
         }
     }
@@ -125,6 +151,21 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
             if (err) {
                 throw err;
             } else {
+
+                process.on('SIGINT', function() {
+                    console.log('\nStopping server...');
+                    server.stop({timeout: 10000}, err => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('Server stopped successfuly !');
+                        }
+
+                        process.exit();
+                    });
+                });
+
+
                 _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
 
 
@@ -145,23 +186,23 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 };
 
                 const addCourses = function() {
-                    _.forEach(courses, course => post(httpHost + ':8088/courses', course));
+                    _.forEach(courses, course => post('http://' + (process.env.HOST || 'localhost') + ':8088/courses', course));
                 };
 
                 const addTeachers = function() {
-                    _.forEach(teachers, teacher => post(httpHost + ':8088/users', teacher));
+                    _.forEach(teachers, teacher => post('http://' + (process.env.HOST || 'localhost') + ':8088/users', teacher));
                 };
 
                /* const addUsers = function() {
-                    _.forEach(users, user => post(httpHost + ':8088/users', user, addTeachers));
+                    _.forEach(users, user => post('http://' + (process.env.HOST || 'localhost') + ':8088/users', user, addTeachers));
                 };*/
 
                 const addTags = function() {
-                    _.forEach(tags, tag => post(httpHost + ':8088/tags', tag));
+                    _.forEach(tags, tag => post('http://' + (process.env.HOST || 'localhost') + ':8088/tags', tag));
                 };
 
                 const addRoles = function() {
-                    _.forEach(roles, role => post(httpHost + ':8088/roles', role));
+                    _.forEach(roles, role => post('http://' + (process.env.HOST || 'localhost') + ':8088/roles', role));
                 };
                 
                 addRoles();

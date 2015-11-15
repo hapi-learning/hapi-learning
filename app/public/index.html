@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>hapi learning</title>
@@ -12,13 +13,13 @@
     <!-- End vendor css -->
 
 </head>
+
 <body ng-app="hapi-learning">
     <!--[if lte IE 8]>
         <p>You are using an <strong>outdated</strong> browser.
         Please <a href="http://browsehappy.com/"> upgrade your browser to improve
         your experience. </p>
     <![endif]-->
-
 
     <div ui-view></div>
 
@@ -36,24 +37,37 @@
     <script src="lib/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="lib/angular-file-upload/dist/angular-file-upload.min.js"></script>
     <script src="lib/angular-loading-bar/build/loading-bar.min.js"></script>
-    <script type="text/javascript" src="lib/ace-builds/src-min-noconflict/ace.js"></script>
-    <script type="text/javascript" src="lib/angular-ui-ace/ui-ace.js"></script>
-    <script type="text/javascript" src="lib/angular-ui-validate/dist/validate.js"></script>
-    <script type="text/javascript" src="lib/lodash/lodash.min.js"></script>
-    <script type="text/javascript" src="lib/restangular/dist/restangular.min.js"></script>
+  <!--  <script src="lib/ace-builds/src-min-noconflict/ace.js"></script>-->
+    <script src="lib/angular-ui-ace/ui-ace.min.js"></script>
+    <script src="lib/angular-ui-validate/dist/validate.min.js"></script>
+    <script src="lib/lodash/lodash.min.js"></script>
+    <script src="lib/restangular/dist/restangular.min.js"></script>
+    <script src="lib/a0-angular-storage/dist/angular-storage.min.js"></script>
+    <script src="lib/angular-jwt/dist/angular-jwt.min.js"></script>
     <!-- End angular modules -->
 
     <!-- Application scripts -->
+    <script src="submodules/api-provider/api-provider.js"></script>
     <script src="scripts/app.js"></script>
-    
-    
+    <script src="scripts/services/auth-storage.js"></script>
+    <script src="scripts/services/login-factory.js"></script>
+    <script src="scripts/config.js"></script>
+
+
+
+
+
+    <script src="scripts/services/courses-factory.js"></script>
+    <script src="scripts/services/tags-factory.js"></script>
+    <script src="scripts/directives/navbar.js"></script>
+    <script src="scripts/directives/profile-form.js"></script>
+    <script src="scripts/directives/footer.js"></script>
+    <script src="scripts/directives/last-news.js"></script>
     <script src="scripts/controllers/home-controller.js"></script>
     <script src="scripts/directives/teacher-info.js"></script>
     <script src="scripts/directives/course-info.js"></script>
-    <script src="scripts/factories/connection-factory.js"></script>
-    <script src="scripts/controllers/connection-controller.js"></script>
-    <script src="scripts/directives/connection.js"></script>
-    <script src="scripts/factories/courses-factory.js"></script>
+    <script src="scripts/directives/course-list.js"></script>
+    <script src="scripts/directives/login-form.js"></script>
     <script src="scripts/controllers/courses-controller.js"></script>
     <script src="scripts/directives/search-courses.js"></script>
     <script src="scripts/controllers/admin-controller.js"></script>
@@ -61,6 +75,7 @@
     <script src="scripts/controllers/profile-controller.js"></script>
     <script src="scripts/controllers/news-controller.js"></script>
     <!-- End application scripts -->
-    
+
 </body>
+
 </html>
