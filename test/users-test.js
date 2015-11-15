@@ -608,4 +608,52 @@ describe('Controller.User', () => {
             });
         });
     });
+    
+    describe('#addFolders', () => {
+        it('Should return statusCode 400 : user not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/JohnnyTheBoy/folders',
+                payload : { folders : ['folderOne', 'folderTwo']}
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+        it('Should return statusCode 200 and user\'s folders', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/folders',
+                payload : { folders : ['folderOne', 'folderTwo']}
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+        });
+        it('Should return statusCode 200 and user\'s folders. There is no twins', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/folders',
+                payload : { folders : ['folderOne', 'folderTwo', 'folderThree']}
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(3);
+                done();
+            });
+        });
+    });
 });

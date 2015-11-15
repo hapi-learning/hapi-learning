@@ -462,7 +462,7 @@ exports.addFolders = {
             {
                 
                 let promises = _.map(folders, folder => {
-                    Folder.findOne({
+                    return Folder.findOne({
                         where : {
                             name : folder,
                             userId : user.id
