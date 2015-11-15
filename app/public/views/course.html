@@ -5,13 +5,23 @@
     </h1>
 
     <div class="col-md-8">
-        <h2>Description</h2>
-        <div ng-bind="course.description">
-        </div>
+        <h2><small>Description</small></h2>
+        <blockquote ng-bind="course.description">
+        </blockquote>
+        <table class="table table-striped"> 
+            <tr>
+                <th>File a</th>
+                <td>date</td>
+            </tr>
+            <tr>
+                <th>File b</th>
+                <td>date</td>
+            </tr>
+        </table>
     </div>
 
     <div class="col-md-4" ng-controller="NewsCtrl">
-        
+
         <label>Teachers</label>
         <br />
         <span ng-repeat="teacher in course.teachers">
@@ -30,7 +40,7 @@
         <div>
             <button type="button" class="btn btn-success" ng-hide="subscribed" ng-click="subscribe()">
                 <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
-            <button type="button" class="btn btn-danger" ng-show="subscribed"  ng-click="unsubscribe()">
+            <button type="button" class="btn btn-danger" ng-show="subscribed" ng-click="unsubscribe()">
                 <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
         </div>
     </div>
