@@ -1,13 +1,25 @@
 angular.module('hapi-learning')
-    .controller('CourseCtrl', ['$scope', '$stateParams', 'Restangular',
-                function ($scope, $stateParams, Restangular) {
+    .controller('CourseCtrl', ['$scope', '$stateParams', 'CoursesFactory', 'TagsFactory',
+                function ($scope, $stateParams, CoursesFactory, TagsFactory) {
 
-            Restangular.one('courses', $stateParams.code)
-                .get()
-                .then(function (response) {
-                    $scope.code = response.code;
-                    $scope.name = response.name;
-                    $scope.tags = response.tags;
-                    $scope.teachers = response.teachers;
-                });
+            $scope.course = {};
+            $scope.course.teachers = [];
+            $scope.course.tags = [];
+            
+            CoursesFactory.loadSpecific($stateParams.code)
+            .then(function (course) {
+                if (course)
+                {
+                    $scope.course.name = course.name;
+                    $scope.course.description = course.description;
+                    $scope.course.code = course.code;
+                    $scope.course.teachers = course.teachers;
+                    $scope.course.tags = course.tags;
+                }
+                else
+                {
+                    console.log('Course not found');
+                }
+            })
+            .catch(function (error) {console.log(error);});
     }]);
