@@ -1,4 +1,3 @@
-const Hoek = require('hoek');
 const Catbox = require('catbox');
 
 
