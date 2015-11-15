@@ -1,21 +1,39 @@
-<h1 ng-bind="course.code"></h1>
-<h2 ng-bind="course.name"></h2>
+<div class="container-fluid">
 
-<div>
-    <label>Tags</label>
+    <h1>
+        <span ng-bind="course.code"></span> - <span ng-bind="course.name"></span>
+    </h1>
 
-    <br />
+    <div class="col-md-8">
+        <h2>Description</h2>
+        <div ng-bind="course.description">
+        </div>
+    </div>
 
-    <span ng-repeat="tag in course.tags">
-        <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
-    </span>
-</div>
+    <div class="col-md-4" ng-controller="NewsCtrl">
+        
+        <label>Teachers</label>
+        <br />
+        <span ng-repeat="teacher in course.teachers">
+            <a ng-href="mailto:{{teacher.email}}">
+                <span ng-bind="teacher.last_name"></span>
+        </a>
+        </span>
+        <br />
 
-<br />
+        <label>Tags</label>
+        <br />
 
-<div>
-    <button type="button" class="btn btn-success" ng-hide="subscribed()">
-        <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
-    <button type="button" class="btn btn-danger" ng-show="subscribed()">
-        <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+        <span ng-repeat="tag in course.tags">
+            <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+        </span>
+        <br />
+
+        <div>
+            <button type="button" class="btn btn-success" ng-hide="subscribed()">
+                <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
+            <button type="button" class="btn btn-danger" ng-show="subscribed()">
+                <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+        </div>
+    </div>
 </div>

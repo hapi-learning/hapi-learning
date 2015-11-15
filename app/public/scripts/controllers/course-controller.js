@@ -1,11 +1,21 @@
 angular.module('hapi-learning')
-    .controller('CourseCtrl', ['$scope', '$stateParams', 'CoursesFactory', 'TagsFactory',
-                function ($scope, $stateParams, CoursesFactory, TagsFactory) {
+    .controller('CourseCtrl', ['$scope', '$stateParams', 'CoursesFactory', 'LoginFactory',
+                function ($scope, $stateParams, CoursesFactory, LoginFactory) {
 
             $scope.course = {};
             $scope.subscribed = function () {
-                // did the user already subscribe to the course?
+                const courses = CoursesFactory.getSubscribedCourses();
+                
+                    console.log(courses);
+                
                 return false;
+            };
+            $scole.subscribe = function () {
+                CoursesFactory.subscribe($stateParams.code)
+                .then(function(course) {})
+                .catch(function(error) {
+                    console.log(error);
+                });
             };
                     
             CoursesFactory.loadSpecific($stateParams.code)

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('CoursesFactory', ['Restangular', function (Restangular) {
+    .factory('CoursesFactory', ['Restangular', 'LoginFactory', function (Restangular, LoginFactory) {
 
         var internals = {};
         internals.courses = [];
@@ -36,7 +36,39 @@ angular.module('hapi-learning')
                     });
             });
         };
+        
+        exports.subscribe = function (code) {
+            return new Promise(function (resolve, reject) {
+                Restangular.one('users', LoginFactory.getProfile().username)
+                .customPOST({}, "subscribe/" + code)
+                .then(function (object) {
+                    resolve(object);
+                })
+                .catch(function (err) {
+                    reject(err)
+                });
+            });
+        };
+        
+        exports.unsubscribe = function (code) {
+            
+        };
 
+        exports.getSubscribedCourses = function () {
+            if (!internals.subscribedCourses)
+            {
+                Restangular.one('users', LoginFactory.getProfile().username)
+                .getList('courses')
+                .then(function (courses) {
+                    internals.subscribedCourses = courses;
+                    return internals.subscribedCourses;
+                });
+            }
+            else
+            {
+                return internals.subscribedCourses;
+            }
+        };
 
         exports.get = function (index) {
             if (index) {
