@@ -27,6 +27,7 @@ angular.module('hapi-learning')
         exports.loadSpecific = function (code) {
             return new Promise(function (resolve, reject) {
                 Restangular.one('courses', code)
+                    .get()
                     .then(function (object) {
                         resolve(object);
                     })
