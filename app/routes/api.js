@@ -18,6 +18,7 @@ exports.register = function (server, options, next) {
 
         {method: 'POST', path: '/login',  config: Controllers.Auth.login},
         {method: 'POST', path: '/logout', config: Controllers.Auth.logout},
+        {method: 'GET',  path: '/me',     config: Controllers.Auth.me},
 
         // Users routes
         {method: 'GET',    path: '/users',                             config: Controllers.User.getAll},

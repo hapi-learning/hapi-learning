@@ -67,3 +67,29 @@ exports.logout = {
         reply('Not implemented');
     }
 };
+
+exports.me = {
+    description: 'Get current user',
+    handler: function (request, reply) {
+        const User = this.models.User;
+
+        const authorization = request.raw.headers.authorization;
+        console.log(authorization);
+        const payload = JWT.decode(authorization);
+
+        User.findOne({
+            where: {
+                username: { $eq: payload.username }
+            },
+            attributes: {
+                    exclude: ['password', 'deleted_at']
+            }
+        }).then(result => {
+            if (result) {
+                return reply(result);
+            } else {
+                return reply.badImplementation();
+            }
+        }).catch(err => reply.badImplementation(err));
+    }
+};
