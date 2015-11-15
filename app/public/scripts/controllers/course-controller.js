@@ -3,9 +3,11 @@ angular.module('hapi-learning')
                 function ($scope, $stateParams, CoursesFactory, TagsFactory) {
 
             $scope.course = {};
-            $scope.course.teachers = [];
-            $scope.course.tags = [];
-            
+            $scope.subscribed = function () {
+                // did the user already subscribe to the course?
+                return false;
+            };
+                    
             CoursesFactory.loadSpecific($stateParams.code)
             .then(function (course) {
                 if (course)
