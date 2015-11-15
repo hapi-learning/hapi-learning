@@ -23,6 +23,18 @@ angular.module('hapi-learning')
                     });
             })
         };
+        
+        exports.loadSpecific = function (code) {
+            return new Promise(function (resolve, reject) {
+                Restangular.one('courses', code)
+                    .then(function (object) {
+                        resolve(object);
+                    })
+                    .catch(function (err) {
+                        reject(err)
+                    });
+            });
+        };
 
 
         exports.get = function (index) {
