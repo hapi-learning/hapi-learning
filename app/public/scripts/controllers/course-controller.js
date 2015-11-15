@@ -3,18 +3,25 @@ angular.module('hapi-learning')
                 function ($scope, $stateParams, CoursesFactory, LoginFactory) {
 
             $scope.course = {};
-            $scope.subscribed = function () {
-                const courses = CoursesFactory.getSubscribedCourses();
-                
-                    console.log(courses);
-                
-                return false;
-            };
-            $scole.subscribe = function () {
+            $scope.subscribed = true;
+                    
+            $scope.subscribe = function () {
                 CoursesFactory.subscribe($stateParams.code)
-                .then(function(course) {})
+                .then(function(course) {
+                    $scope.subscribed = true;
+                })
                 .catch(function(error) {
-                    console.log(error);
+                    alert('already subscribed');
+                });
+            };
+    
+            $scope.unsubscribe = function () {
+                CoursesFactory.unsubscribe($stateParams.code)
+                .then(function(course) {
+                    $scope.subscribed = false;
+                })
+                .catch(function(error) {
+                    alert('Already unsubscribed');
                 });
             };
                     
