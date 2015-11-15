@@ -48,10 +48,9 @@ exports.login = {
 
                 const token = {
                     token: JWT.sign(payload, process.env.AUTH_KEY),
-                    expiresIn: process.env.TOKEN_EXP || 7200
                 };
 
-                reply(JSON.stringify(token));
+                reply(token);
             }
             else
             {
@@ -65,5 +64,37 @@ exports.logout = {
     description: 'Logout and revoke the token',
     handler: function (request, reply) {
         reply('Not implemented');
+    }
+};
+
+exports.me = {
+    description: 'Get current user',
+    handler: function (request, reply) {
+        const User = this.models.User;
+
+        let authorization = request.headers.authorization;
+
+        // Removes useless labels
+        authorization = authorization.replace(/Bearer/gi, '').replace(/ /g, '')
+        const payload = JWT.decode(authorization);
+
+        if (!payload) {
+            return reply.badImplementation('Invalid authorization header parsing');
+        };
+
+        User.findOne({
+            where: {
+                username: { $eq: payload.username }
+            },
+            attributes: {
+                    exclude: ['password', 'deleted_at']
+            }
+        }).then(result => {
+            if (result) {
+                return reply(result);
+            } else {
+                return reply.badImplementation();
+            }
+        }).catch(err => reply.badImplementation(err));
     }
 };

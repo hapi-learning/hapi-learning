@@ -18,6 +18,7 @@ exports.register = function (server, options, next) {
 
         {method: 'POST', path: '/login',  config: Controllers.Auth.login},
         {method: 'POST', path: '/logout', config: Controllers.Auth.logout},
+        {method: 'GET',  path: '/me',     config: Controllers.Auth.me},
 
         // Users routes
         {method: 'GET',    path: '/users',                             config: Controllers.User.getAll},
@@ -27,7 +28,7 @@ exports.register = function (server, options, next) {
         {method: 'GET',    path: '/users/{username}/folders',          config: Controllers.User.getFolders},
 
         {method: 'POST',   path: '/users',                             config: Controllers.User.post},
-        {method: 'POST',    path: '/users/{username}/tags',             config: Controllers.User.addTags},
+        {method: 'POST',   path: '/users/{username}/tags',             config: Controllers.User.addTags},
         {method: 'POST',   path: '/users/{username}/subscribe/{crsId}',      config: Controllers.User.subscribeToCourse},
         {method: 'POST',   path: '/users/{username}/unsubscribe/{crsId}',    config: Controllers.User.unsubscribeToCourse},
         {method: 'POST',   path: '/users/{username}/folders',         config: Controllers.User.addFolders},

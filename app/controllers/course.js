@@ -220,6 +220,9 @@ exports.getStudents = {
 
 
 exports.post = {
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     description: 'Add a course',
     validate: {
         options: {
