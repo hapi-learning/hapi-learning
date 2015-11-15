@@ -55,9 +55,8 @@ angular.module('hapi-learning')
                 }, function failure(error) {
                     reject(error);
                 });
+            });
         });
-
-
     };
 
     exports.logout = function () {
