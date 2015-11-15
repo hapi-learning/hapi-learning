@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('CoursesFactory', ['Restangular', function (Restangular) {
+    .factory('CoursesFactory', ['Restangular', 'LoginFactory', function (Restangular, LoginFactory) {
 
         var internals = {};
         internals.courses = [];
+        internals.subscribedCourses = [];
 
         var exports = {};
         exports.add = function (value) {
@@ -23,7 +24,49 @@ angular.module('hapi-learning')
                     });
             })
         };
+        
+        exports.loadSpecific = function (code) {
+            return new Promise(function (resolve, reject) {
+                Restangular.one('courses', code)
+                    .get()
+                    .then(function (object) {
+                        resolve(object);
+                    })
+                    .catch(function (err) {
+                        reject(err)
+                    });
+            });
+        };
+        
+        exports.subscribe = function (code) {
+            return new Promise(function (resolve, reject) {
+                Restangular.one('users', LoginFactory.getProfile().username)
+                .customPOST({}, "subscribe/" + code)
+                .then(function (object) {
+                    resolve(object);
+                })
+                .catch(function (err) {
+                    reject(err)
+                });
+            });
+        };
+        
+        exports.unsubscribe = function (code) {
+            return new Promise(function (resolve, reject) {
+                Restangular.one('users', LoginFactory.getProfile().username)
+                .customPOST({}, "unsubscribe/" + code)
+                .then(function (object) {
+                    resolve(object);
+                })
+                .catch(function (err) {
+                    reject(err)
+                });
+            });
+        };
 
+        exports.getSubscribedCourses = function () {
+            
+        };
 
         exports.get = function (index) {
             if (index) {

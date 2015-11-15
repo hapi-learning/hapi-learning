@@ -46,6 +46,11 @@ angular.module('hapi-learning', [
                     templateUrl: '/views/news.html',
                     controller: 'NewsCtrl'
                 })
+                .state('root.course', {
+                    url: '/courses/:code',
+                    templateUrl: '/views/course.html',
+                    controller: 'CourseCtrl'
+                })
                 .state('login', {
                     url: '/login',
                     templateUrl: '/views/login.html'
