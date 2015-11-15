@@ -166,7 +166,6 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                     });
                 });
 
-
                 _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
 
                 // INIT DATA FOR TEST PURPOSES
