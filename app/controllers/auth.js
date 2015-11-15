@@ -73,7 +73,7 @@ exports.me = {
     handler: function (request, reply) {
         const User = this.models.User;
 
-        const authorization = request.raw.headers.authorization;
+        const authorization = request.raw.req.headers.authorization;
         console.log(authorization);
         const payload = JWT.decode(authorization);
 
