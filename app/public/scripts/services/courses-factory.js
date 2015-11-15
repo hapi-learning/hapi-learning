@@ -5,6 +5,7 @@ angular.module('hapi-learning')
 
         var internals = {};
         internals.courses = [];
+        internals.subscribedCourses = [];
 
         var exports = {};
         exports.add = function (value) {
@@ -51,23 +52,20 @@ angular.module('hapi-learning')
         };
         
         exports.unsubscribe = function (code) {
-            
+            return new Promise(function (resolve, reject) {
+                Restangular.one('users', LoginFactory.getProfile().username)
+                .customPOST({}, "unsubscribe/" + code)
+                .then(function (object) {
+                    resolve(object);
+                })
+                .catch(function (err) {
+                    reject(err)
+                });
+            });
         };
 
         exports.getSubscribedCourses = function () {
-            if (!internals.subscribedCourses)
-            {
-                Restangular.one('users', LoginFactory.getProfile().username)
-                .getList('courses')
-                .then(function (courses) {
-                    internals.subscribedCourses = courses;
-                    return internals.subscribedCourses;
-                });
-            }
-            else
-            {
-                return internals.subscribedCourses;
-            }
+            
         };
 
         exports.get = function (index) {
