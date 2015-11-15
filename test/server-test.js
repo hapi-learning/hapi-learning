@@ -26,12 +26,7 @@ const internals = {
                     }
                 }],
             'hapi-auth-jwt2': [{select: ['api']}],
-            '../app/auth': [{
-                select: ['api'],
-                options: {
-                    setDefault: false
-                }
-            }],
+            '../app/auth': [{select: ['api']}],
             '../app/models': [
                 {
                     select: ['api'],

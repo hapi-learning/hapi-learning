@@ -48,10 +48,9 @@ exports.login = {
 
                 const token = {
                     token: JWT.sign(payload, process.env.AUTH_KEY),
-                    expiresIn: process.env.TOKEN_EXP || 7200
                 };
 
-                reply(JSON.stringify(token));
+                reply(token);
             }
             else
             {

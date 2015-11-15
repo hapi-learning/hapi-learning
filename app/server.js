@@ -45,12 +45,7 @@ let internals = {
             'hapi-auth-jwt2': [{
                 select: ['api']
             }],
-            './auth': [{
-                select: ['api'],
-                options: {
-                    setDefault: true
-                }
-            }],
+            './auth': [{select: ['api']}],
             inert: [{
                 select: ['api', 'web']
             }],

@@ -32,9 +32,7 @@ exports.register = function (server, options, next) {
         }
     });
 
-    if (options.setDefault) {
-        server.auth.default('jwt');
-    }
+    server.auth.default('jwt');
 
     next();
 };
