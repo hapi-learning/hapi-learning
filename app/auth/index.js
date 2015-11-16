@@ -28,16 +28,20 @@ exports.register = function (server, options, next) {
             const Role = server.plugins.models.models.Role;
             const Cache = server.plugins.cache.cache;
 
+            // Key to deleted tokens
             const deletedTokens = {
                 segment: 'DeletedTokens',
                 id: server.methods.parseAuthorization(request.headers.authorization).token
             };
 
+            // Key to invalidated tokens
             const invalidatedTokens = {
                 segment: 'InvalidatedTokens',
                 id: decoded.username
             };
 
+
+            // Check the user informations
             const checkUser = function() {
                 User.findOne({
                     where: {
@@ -57,6 +61,9 @@ exports.register = function (server, options, next) {
                 });
             };
 
+
+            // Check if the token is in the invalidated / deleted token cache
+            // If it's not, check the user information
             Cache.get(invalidatedTokens, function(err, cached) {
                 if (cached) {
                     return callback(null, false);
