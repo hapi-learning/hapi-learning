@@ -6,36 +6,6 @@ const JWT = require('jsonwebtoken');
 
 exports.register = function (server, options, next) {
 
-    server.auth.strategy('jwt', 'jwt', {
-        key: process.env.AUTH_KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
-        validateFunc: function(decoded, request, callback) {
-
-            const User = server.plugins.models.models.User;
-            const Role = server.plugins.models.models.Role;
-
-            User.findOne({
-                where: {
-                    id: decoded.id,
-                    username: decoded.username,
-                    email: decoded.email,
-                },
-                include: [{
-                    model: Role
-                }]
-            }).then(result => {
-               if (result && result.Role.name === decoded.role) {
-                   return callback(null, true, {scope: [decoded.role, decoded.username]});
-               } else {
-                   return callback(null, false);
-               }
-            });
-        },
-        verifyOptions: {
-            algorithms: [ 'HS256' ]
-        }
-    });
-
-
     server.method('parseAuthorization', function(authorization) {
         Hoek.assert(authorization, 'Authorization header is required');
 
@@ -49,6 +19,68 @@ exports.register = function (server, options, next) {
             token: authorization
         };
     });
+
+    server.auth.strategy('jwt', 'jwt', {
+        key: process.env.AUTH_KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
+        validateFunc: function(decoded, request, callback) {
+
+            const User = server.plugins.models.models.User;
+            const Role = server.plugins.models.models.Role;
+            const Cache = server.plugins.cache.cache;
+
+            const deletedTokens = {
+                segment: 'DeletedTokens',
+                id: server.methods.parseAuthorization(request.headers.authorization).token
+            };
+
+            const invalidatedTokens = {
+                segment: 'InvalidatedTokens',
+                id: decoded.username
+            };
+
+            const checkUser = function() {
+                User.findOne({
+                    where: {
+                        id: decoded.id,
+                        username: decoded.username,
+                        email: decoded.email,
+                    },
+                    include: [{
+                        model: Role
+                    }]
+                }).then(result => {
+                   if (result && result.Role.name === decoded.role) {
+                       return callback(null, true, {scope: [decoded.role, decoded.username]});
+                   } else {
+                       return callback(null, false);
+                   }
+                });
+            };
+
+            Cache.get(invalidatedTokens, function(err, cached) {
+                if (cached) {
+                    return callback(null, false);
+                } else {
+                    Cache.get(deletedTokens, function(err, cached) {
+                        if (cached) {
+                            return callback(null, false);
+                        } else {
+                            checkUser();
+                        }
+                    });
+                }
+            });
+
+
+
+        },
+        verifyOptions: {
+            algorithms: [ 'HS256' ]
+        }
+    });
+
+
+
 
     server.auth.default('jwt');
 
