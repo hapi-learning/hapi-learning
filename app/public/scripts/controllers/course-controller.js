@@ -3,6 +3,7 @@ angular.module('hapi-learning')
                 function ($scope, $stateParams, CoursesFactory, LoginFactory) {
 
             $scope.course = {};
+            $scope.available = false;
             $scope.subscribed = true;
                     
             $scope.subscribe = function () {
