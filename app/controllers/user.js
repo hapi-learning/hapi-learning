@@ -3,6 +3,7 @@
 const Hoek = require('hoek');
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
+const P = require('bluebird');
 
 const Utils = require('../utils/sequelize');
 const _ = require('lodash');
@@ -61,7 +62,7 @@ internals.schemaUserPOST = function(){
             firstName: Joi.string().min(1).max(255).description('User first name'),
             lastName: Joi.string().min(1).max(255).description('User last name'),
             phoneNumber: Joi.phone.e164().description('User phone number'),
-            role_id: Joi.number().integer().default(1)
+            role_id: Joi.number().integer().default(3)
         }).options({stripUnknown : true});
 
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
@@ -100,13 +101,9 @@ exports.getAll = {
 
         const User = this.models.User;
 
-        const options = {
-            limit: request.query.limit,
-            offset: (request.query.page - 1) * request.query.limit
-        };
-
         User.findAndCountAll({
-                options,
+                limit: request.query.limit,
+                offset: (request.query.page - 1) * request.query.limit,
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
@@ -119,6 +116,9 @@ exports.getAll = {
 
 
 exports.post = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Add user',
     validate: {
         payload : internals.schemaUserPOST()
@@ -146,6 +146,9 @@ exports.post = {
 };
 
 exports.addTags = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Link tags to a user',
     validate: {
         params: {
@@ -182,6 +185,9 @@ exports.addTags = {
 };
 
 exports.delete = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Delete user',
     validate: {
         params: {
@@ -219,6 +225,9 @@ const updateHandler = function(request, reply) {
 };
 
 exports.put = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Update all info about user (except username)',
     validate: {
         params: {
@@ -232,10 +241,14 @@ exports.put = {
             phoneNumber: Joi.string().min(1).max(255).required().description('User phone number')
         }
     },
+
     handler: updateHandler
 };
 
 exports.patch = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Update some info about user (except username)',
     validate: {
         params: {
@@ -277,8 +290,39 @@ exports.getTags = {
     }
 };
 
-exports.getCourses = {
+exports.getFolders = {
 
+    description: 'Get the user\'s folders',
+    validate: {
+        params: {
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
+        }
+    },
+    handler: function(request, reply) {
+
+        const User = this.models.User;
+
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                user.getFolders()
+                .then(folders => reply(folders))
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + request.params.username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
+    }
+};
+
+exports.getCourses = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
@@ -306,7 +350,11 @@ exports.getCourses = {
     }
 };
 
+
 exports.subscribeToCourse = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Subscribe to a course',
     validate: {
         params: {
@@ -349,6 +397,9 @@ exports.subscribeToCourse = {
 };
 
 exports.unsubscribeToCourse = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Unsubscribe to a course',
     validate: {
         params: {
@@ -384,20 +435,77 @@ exports.unsubscribeToCourse = {
     }
 };
 
-exports.addFolder = {
+exports.addFolders = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Add a folder',
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            folder: Joi.string().min(1).max(255).required().description('New folder name')
+        },
+        payload: {
+            folders: Joi.array().items(Joi.string().required())
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+
+        const User   = this.models.User;
+        const Folder = this.models.Folder;
+
+        const username = request.params.username;
+        const folders  = request.payload.folders;
+
+        internals.findUser(User, username)
+        .then(user => {
+            if (user)
+            {
+
+                let promises = _.map(folders, folder => {
+                    return Folder.findOne({
+                        where : {
+                            name : folder,
+                            userId : user.id
+                        }
+                    });
+                });
+
+                Promise.all(promises)
+                .then(values => {
+
+                    new P(function(resolve, reject) {
+                        const createFolders = [];
+                        _.forEach(values, (value, key) => {
+                            if (!value) {
+                                createFolders.push(user.createFolder({name : folders[key]}));
+                            }
+                        });
+
+                        P.all(createFolders).then(resolve).catch(reject);
+
+                    }).then(() => {
+                        user.getFolders()
+                        .then(folders => reply(Utils.removeDates(folders)))
+                        .catch(error => reply.badImplementation(error));
+                    })
+
+
+                })
+                .catch(error => reply.badImplementation(error));
+            }
+            else
+            {
+                return reply.notFound('User ' + username + ' not found');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 
 exports.addCourseToFolder = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Add a course to the folder (removes from the old folder)',
     validate: {
         params: {

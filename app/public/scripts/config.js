@@ -1,14 +1,19 @@
 angular.module('hapi-learning')
-        .config(['$httpProvider', 'jwtInterceptorProvider',
-              function($httpProvider, jwtInterceptorProvider) {
-            jwtInterceptorProvider.tokenGetter = ['AuthStorage', function(AuthStorage) {
-                return AuthStorage.get('token');
-            }];
+    .config(['$httpProvider', 'jwtInterceptorProvider',
+          function($httpProvider, jwtInterceptorProvider) {
+        jwtInterceptorProvider.tokenGetter = ['AuthStorage', function(AuthStorage) {
+            return AuthStorage.get('token');
+        }];
 
-            $httpProvider.interceptors.push('jwtInterceptor');
-        }])
-
-angular.module('hapi-learning')
+        $httpProvider.interceptors.push('jwtInterceptor');
+    }])
+    .run(['AuthStorage', 'jwtHelper', function(AuthStorage, jwtHelper) {
+        // Removes an old token if expired
+        var token = AuthStorage.get('token');
+        if (token && jwtHelper.isTokenExpired(token)) {
+            AuthStorage.remove('token');
+        }
+    }])
     .run(['LoginFactory', '$location', '$rootScope',
             function(LoginFactory, $location, $rootScope) {
                 $rootScope.$on('$stateChangeStart',
@@ -20,4 +25,6 @@ angular.module('hapi-learning')
                                 $location.path('/login');
                         }
                 })
-            }]);
+            }])
+
+

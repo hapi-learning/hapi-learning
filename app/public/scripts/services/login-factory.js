@@ -2,12 +2,13 @@
 
 angular.module('hapi-learning')
     .factory('LoginFactory', ['$location', '$http', 'jwtHelper',
-                              'API', 'AuthStorage', 'Restangular',
+                              'AuthStorage', 'Restangular',
                               function ($location, $http, jwtHelper,
-                                         API, AuthStorage, Restangular) {
+                                         AuthStorage, Restangular) {
 
     var exports = {};
     var internals = {};
+
 
 
     internals.profile = {};
@@ -24,7 +25,7 @@ angular.module('hapi-learning')
 
         return new Promise(function(resolve, reject) {
             $http({
-                url: API + '/login',
+                url: Restangular.configuration.baseUrl + '/login',
                 skipAuthorization: true,
                 method: 'POST',
                 data: {
@@ -36,27 +37,26 @@ angular.module('hapi-learning')
 
                 var username = jwtHelper.decodeToken(response.data.token).username;
 
-                Restangular.one('users', username)
-                    .get()
-                    .then(function(response) {
-                        internals.profile.id = response.id;
-                        internals.profile.username = response.username;
-                        internals.profile.email = response.email;
-                        internals.profile.firstName = response.firstName;
-                        internals.profile.lastName = response.lastName;
-                        internals.profile.phoneNumber = response.phoneNumber;
+                $http({
+                    url: Restangular.configuration.baseUrl + '/me',
+                    method: 'GET',
+                }).then(function success(response) {
+                    var user = response.data;
+                    internals.profile.id = user.id;
+                    internals.profile.username = user.username;
+                    internals.profile.email = user.email;
+                    internals.profile.firstName = user.firstName;
+                    internals.profile.lastName = user.lastName;
+                    internals.profile.phoneNumber = user.phoneNumber;
 
-                        AuthStorage.set('profile', internals.profile);
+                    AuthStorage.set('profile', internals.profile);
 
-                        resolve();
-                    });
-
-            }, function failure(response) {
-                reject(response);
+                    resolve();
+                }, function failure(error) {
+                    reject(error);
+                });
             });
         });
-
-
     };
 
     exports.logout = function () {
@@ -64,7 +64,7 @@ angular.module('hapi-learning')
         return new Promise(function(resolve, reject) {
 
             $http({
-                url: API + '/logout',
+                url: Restangular.configuration.baseUrl + '/logout',
                 method: 'POST'
             }).then(function success(response) {
                 AuthStorage.remove('token');

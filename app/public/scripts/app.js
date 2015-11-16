@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning', [
+        'api-provider',
         'ui.router',
         'ngTagsInput',
         'jcs-autoValidate',
@@ -45,6 +46,11 @@ angular.module('hapi-learning', [
                     templateUrl: '/views/news.html',
                     controller: 'NewsCtrl'
                 })
+                .state('root.course', {
+                    url: '/courses/:code',
+                    templateUrl: '/views/course.html',
+                    controller: 'CourseCtrl'
+                })
                 .state('login', {
                     url: '/login',
                     templateUrl: '/views/login.html'
@@ -54,10 +60,7 @@ angular.module('hapi-learning', [
         cfpLoadingBarProvider.includeSpinner = false;
     }])
 
-    .constant('API', 'http://localhost:8088')
-    .config(['RestangularProvider', 'API', function (RestangularProvider, API) {
-        RestangularProvider.setBaseUrl(API);
-    }])
+
 
     .config(['storeProvider', function(storeProvider) {
         storeProvider.setStore('localStorage');
@@ -74,5 +77,10 @@ angular.module('hapi-learning', [
             defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
                 errorMessages['passwordMatch'] = 'Passwords do not match!';
             });
-    }
-]);
+    }])
+    .run(['Restangular', 'API',  function (Restangular, API) {
+        API.then(function(response) {
+            Restangular.setBaseUrl(response.data.api);
+        });
+
+    }]);

@@ -10,9 +10,11 @@ const before = lab.before;
 const after = lab.after;
 const expect = Code.expect;
 
-const server = require('./server-test');
+let server;
+const internals = {};
 
 before((done) => {
+    server = require('./server-test');
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
@@ -98,7 +100,29 @@ before((done) => {
         "tags": ["3e", "Réseaux"]
     }
 ].forEach(course => Models.Course.create(course));
-        done();
+
+     Models.User.create({
+        username: 'admin',
+        password: 'admin',
+        role_id: 1,
+        email: 'admin@admin.com',
+        firstName: 'admin',
+        lastName: 'admin'
+    }).then(user => {
+            server.inject({
+                method: 'POST',
+                url: '/login',
+                payload: {
+                    username: 'admin',
+                    password: 'admin'
+                }
+            }, (res) => {
+                internals.headers = {
+                    Authorization: res.request.response.source.token
+                };
+                done();
+            });
+        });
     });
 });
 
@@ -169,7 +193,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users',
-                payload : badUser
+                payload : badUser,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -182,7 +207,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users',
-                payload : badUsers
+                payload : badUsers,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -195,7 +221,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users',
-                payload : user
+                payload : user,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -213,7 +240,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users',
-                payload : user
+                payload : user,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -227,7 +255,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users',
-                payload : users
+                payload : users,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -242,7 +271,8 @@ describe('Controller.User', () => {
         it('Should return 404 not found', done => {
             const request = {
                 method: 'GET',
-                url: '/users/IWillProbablyDoNotExist'
+                url: '/users/IWillProbablyDoNotExist',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -254,7 +284,8 @@ describe('Controller.User', () => {
         it('Should return specified user', done => {
             const request = {
                 method: 'GET',
-                url: '/users/FPL'
+                url: '/users/FPL',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -267,23 +298,25 @@ describe('Controller.User', () => {
     });
 
     describe('#getAll', () => {
-        it ('Should return 4 users', done => {
+        it ('Should return 5 users', done => {
 
+            // 4 users + admin
             const request = {
                 method: 'GET',
-                url: '/users'
+                url: '/users',
+                headers: internals.headers
             };
 
             const meta = {
-                totalCount: 4,
-                count: 4,
+                totalCount: 5,
+                count: 5,
                 pageCount: 1
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response.results).to.be.an.array();
-                expect(response.results).to.have.length(4);
+                expect(response.results).to.have.length(5);
                 expect(response.meta).to.deep.equal(meta);
                 done();
             });
@@ -294,7 +327,8 @@ describe('Controller.User', () => {
         it('should return 1 : number of deletations', done => {
             const request = {
                 method: 'DELETE',
-                url: '/users/Johnny'
+                url: '/users/Johnny',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -306,7 +340,8 @@ describe('Controller.User', () => {
         it('should return 0 : number of deletations', done => {
             const request = {
                 method: 'DELETE',
-                url: '/users/Johnny'
+                url: '/users/Johnny',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -322,7 +357,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PUT',
                 url: '/users/Johnny',
-                payload : userUpdated
+                payload : userUpdated,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -335,7 +371,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PUT',
                 url: '/users/IDoNotExist',
-                payload : userUpdated
+                payload : userUpdated,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -351,7 +388,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PATCH',
                 url: '/users/Johnny',
-                payload : userUpdated
+                payload : userUpdated,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -364,7 +402,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PATCH',
                 url: '/users/Johnny',
-                payload : badUserPUT
+                payload : badUserPUT,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -377,7 +416,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PATCH',
                 url: '/users/IDoNotExist',
-                payload : userUpdated
+                payload : userUpdated,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -393,7 +433,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PUT',
                 url: '/users/Johnny',
-                payload : userUpdated
+                payload : userUpdated,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -406,7 +447,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PUT',
                 url: '/users/Johnny',
-                payload : badUserPUT
+                payload : badUserPUT,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -419,7 +461,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'PUT',
                 url: '/users/IDoNotExist',
-                payload : userUpdated
+                payload : userUpdated,
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -435,7 +478,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : { tags : ['Laboratory'] }
+                payload : { tags : ['Laboratory'] },
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -450,7 +494,8 @@ describe('Controller.User', () => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/tags',
-                payload : { tags : tags }
+                payload : { tags : tags },
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -467,7 +512,8 @@ describe('Controller.User', () => {
         it('should return empty array tags of specific user : 0', done => {
             const request = {
                 method: 'GET',
-                url: '/users/ELV/tags'
+                url: '/users/ELV/tags',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -480,7 +526,8 @@ describe('Controller.User', () => {
         it('should return every tags of specific user : 3', done => {
             const request = {
                 method: 'GET',
-                url: '/users/SRV/tags'
+                url: '/users/SRV/tags',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -495,7 +542,8 @@ describe('Controller.User', () => {
         it('should return statusCode 200, course has been added', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/subscribe/DEV1'
+                url: '/users/SRV/subscribe/DEV1',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -507,7 +555,8 @@ describe('Controller.User', () => {
         it('should return statusCode 404, course not found', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/subscribe/18381391'
+                url: '/users/SRV/subscribe/18381391',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -519,7 +568,8 @@ describe('Controller.User', () => {
         it('should return statusCode 404, user not found', done => {
             const request = {
                 method: 'POST',
-                url: '/users/GERARD/subscribe/ATL'
+                url: '/users/GERARD/subscribe/ATL',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -531,7 +581,8 @@ describe('Controller.User', () => {
         it('should return statusCode 404, user already subscribed to this course', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/subscribe/DEV1'
+                url: '/users/SRV/subscribe/DEV1',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -546,7 +597,8 @@ describe('Controller.User', () => {
         it('should return an empty array with statusCode 200', done => {
             const request = {
                 method: 'GET',
-                url: '/users/FPL/courses'
+                url: '/users/FPL/courses',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -562,7 +614,8 @@ describe('Controller.User', () => {
         it('should return an array of size 1 with statusCode 200', done => {
             const request = {
                 method: 'GET',
-                url: '/users/SRV/courses'
+                url: '/users/SRV/courses',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -579,7 +632,8 @@ describe('Controller.User', () => {
         it('Should return statusCode 200 with user', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/unsubscribe/DEV1'
+                url: '/users/SRV/unsubscribe/DEV1',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -592,7 +646,8 @@ describe('Controller.User', () => {
         it('Should return statusCode 400 : already unsubscribed', done => {
             const request = {
                 method: 'POST',
-                url: '/users/SRV/unsubscribe/DEV1'
+                url: '/users/SRV/unsubscribe/DEV1',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -605,12 +660,64 @@ describe('Controller.User', () => {
         it('Should return statusCode 400 : user not found', done => {
             const request = {
                 method: 'POST',
-                url: '/users/JohnnyTheBoy/unsubscribe/DEV1'
+                url: '/users/JohnnyTheBoy/unsubscribe/DEV1',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+    });
+
+    describe('#addFolders', () => {
+        it('Should return statusCode 400 : user not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/JohnnyTheBoy/folders',
+                payload : { folders : ['folderOne', 'folderTwo']},
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+        it('Should return statusCode 200 and user\'s folders', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/folders',
+                payload : { folders : ['folderOne', 'folderTwo']},
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+        });
+        it('Should return statusCode 200 and user\'s folders. There is no twins', done => {
+            const request = {
+                method: 'POST',
+                url: '/users/SRV/folders',
+                payload : { folders : ['folderOne', 'folderTwo', 'folderThree']},
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(3);
                 done();
             });
         });
