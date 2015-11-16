@@ -18,13 +18,20 @@ exports.register = function (server, options, next) {
     server.route({
         method: 'GET',
         path: '/api',
-        handler: function(request, reply) {
-            return reply({
-                api: request.server.select('api').info.uri
-            })
+        config: {
+            cache: {
+                expiresIn: 1000 * 60 * 5, // 5 minutes
+                privacy: 'private'
+            },
+            handler: function(request, reply) {
+                return reply({
+                    api: request.server.select('api').info.uri
+                })
+            }
         }
+
     });
-    
+
     server.route({
         method: 'GET',
         path: '/{param*}',
