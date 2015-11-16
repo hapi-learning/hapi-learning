@@ -99,6 +99,14 @@ exports.login = {
     }
 };
 
+/**
+ * Invalidate the token.
+ * Add the token to the "invalidated tokens" cache.
+ * If another token of the user is already in the cache
+ * the former is added to the "deleted tokens" cache.
+ * The invalidated tokens cache can still be retrieved with a login.
+ * The deleted tokens cannot be retrieved.
+ */
 exports.logout = {
     description: 'Logout and revoke the token',
     handler: function (request, reply) {
@@ -149,20 +157,20 @@ exports.logout = {
     }
 };
 
+/**
+ * Parses the token and returns
+ * the user informations.
+ */
 exports.me = {
     description: 'Get current user',
     handler: function (request, reply) {
-        const User = this.models.User;
 
+        const User = this.models.User;
         const payload = request.server.methods.parseAuthorization(request.headers.authorization).decoded;
 
         User.findOne({
-            where: {
-                username: { $eq: payload.username }
-            },
-            attributes: {
-                    exclude: ['password', 'deleted_at']
-            }
+            where: { username: { $eq: payload.username } },
+            attributes: { exclude: ['password', 'deleted_at'] }
         }).then(result => {
             if (result) {
                 return reply(result);
