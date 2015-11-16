@@ -138,7 +138,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     var Models = server.plugins.models.models;
 
     Models.sequelize.sync({
-        force: true // drops all db and recreates them
+        force: false // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
