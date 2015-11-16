@@ -16,12 +16,12 @@ const after = lab.after;
 const expect = Code.expect;
 
 
-const server = require('./server-test');
+let server;
 
 const internals = {};
 
 before((done) => {
-
+    server = require('./server-test');
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
@@ -411,8 +411,7 @@ describe('Controller.Course', () => {
 
     describe('#addTags', () => {
 
-        const Models = server.plugins.models.models;
-        const Tag = Models.Tag;
+
 
         const request = {
             method: 'POST',
@@ -423,6 +422,8 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the new tags', done => {
+            const Models = server.plugins.models.models;
+            const Tag = Models.Tag;
             request.headers = internals.headers;
              const createTags = new Promise((resolve, reject) => {
                 let promises = [];
@@ -467,8 +468,7 @@ describe('Controller.Course', () => {
 
     describe('#addTeachers', () => {
 
-        const Models = server.plugins.models.models;
-        const User = Models.User;
+
 
         const request = {
             method: 'POST',
@@ -479,8 +479,10 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the new teachers', done => {
+            const Models = server.plugins.models.models;
+            const User = Models.User;
             request.headers = internals.headers;
-             const createTeachers = new Promise((resolve, reject) => {
+            const createTeachers = new Promise((resolve, reject) => {
                 let promises = [];
                 moreUsers.forEach(t => promises.push(User.create(t)));
                 Promise.all(promises).then(resolve);

@@ -78,7 +78,6 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
         console.log('server.register error :');
         throw err;
     }
-
     module.exports = server;
 });
 

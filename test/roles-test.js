@@ -11,11 +11,11 @@ const before = lab.before;
 const after = lab.after;
 const expect = Code.expect;
 
-const server = require('./server-test');
-
+let server;
 const internals = {};
 
 before((done) => {
+    server = require('./server-test');
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true

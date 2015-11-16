@@ -2,8 +2,8 @@
 
 exports.register = function (server, options, next) {
 
-    const Cache = server.plugins.cache.cache;
-    const Storage = server.plugins.storage.storage;
+    const Cache       = server.plugins.cache.cache;
+    const Storage     = server.plugins.storage.storage;
     const Controllers = server.plugins.controllers.controllers;
     const Models      = server.plugins.models.models;
 
