@@ -65,7 +65,16 @@ angular.module('hapi-learning')
         };
 
         exports.getSubscribedCourses = function () {
-            
+            return new Promise(function (resolve, reject) {
+                Restangular.one('users', LoginFactory.getProfile().username)
+                    .getList('courses')
+                    .then(function (object) {
+                        resolve(object);
+                    })
+                    .catch(function (error) {
+                        reject(error);
+                    });
+            });
         };
 
         exports.get = function (index) {
