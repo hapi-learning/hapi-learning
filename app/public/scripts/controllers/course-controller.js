@@ -36,9 +36,10 @@ angular.module('hapi-learning')
                     
                     CoursesFactory.getSubscribed()
                     .then(function(courses) {
-                        $scope.subscribed = _.find(courses, function(course) {
-                            return course.code = $stateParams.code;
-                        });
+                        console.log(_.find(courses, 'code', $stateParams.code));
+
+                        $scope.subscribed = _.find(courses, 'code', $stateParams.code);
+                        
                         $scope.available = true;
                     })
                     .catch(function (error) {console.log(error);});
