@@ -11,9 +11,12 @@ const before = lab.before;
 const after = lab.after;
 const expect = Code.expect;
 
-const server = require('./server-test');
+let server;
+
+const internals = {};
 
 before((done) => {
+    server = require('./server-test');
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
@@ -22,20 +25,48 @@ before((done) => {
         Models.Permission.create({"type":2,"description":"COURS READ"});
         Models.Permission.create({"type":3,"description":"COURS UPDATE"});
         Models.Permission.create({"type":4,"description":"COURS DELETE"});
-        done()
+
+        Models.Role.create({
+            name: 'admin'
+        }).then(() => {
+             Models.User.create({
+                username: 'admin',
+                password: 'admin',
+                role_id: 1,
+                email: 'admin@admin.com',
+                firstName: 'admin',
+                lastName: 'admin'
+            }).then(user => {
+                    server.inject({
+                        method: 'POST',
+                        url: '/login',
+                        payload: {
+                            username: 'admin',
+                            password: 'admin'
+                        }
+                    }, (res) => {
+                        internals.headers = {
+                            Authorization: res.request.response.source.token
+                        };
+                        done();
+                    });
+            });
+        });
+
     });
-    
+
 });
 
 describe('Controller.Permission', () => {
 
     describe('#getAll()', () => {
-        
+
         it('should return every permissions', done => {
 
             const request = {
                 method: 'GET',
-                url: '/permissions'
+                url: '/permissions',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -46,14 +77,15 @@ describe('Controller.Permission', () => {
             });
         });
     });
-    
+
     describe('#get()', () => {
-       
+
         it('should return specific permission', done => {
 
             const request = {
                 method: 'GET',
-                url: '/permissions/1'
+                url: '/permissions/1',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -63,12 +95,13 @@ describe('Controller.Permission', () => {
                 done();
             });
         });
-        
+
         it('should throw an error because of inexistant permission', done => {
 
             const request = {
                 method: 'GET',
-                url: '/permissions/2000000'
+                url: '/permissions/2000000',
+                headers: internals.headers
             };
 
             server.inject(request, res => {

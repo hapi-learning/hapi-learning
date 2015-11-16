@@ -11,13 +11,42 @@ const before = lab.before;
 const after = lab.after;
 const expect = Code.expect;
 
-const server = require('./server-test');
+let server;
+const internals = {};
 
 before((done) => {
+    server = require('./server-test');
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => done());
+    }).then(() => {
+         Models.Role.create({
+            name: 'admin'
+        }).then(() => {
+             Models.User.create({
+                username: 'admin',
+                password: 'admin',
+                role_id: 1,
+                email: 'admin@admin.com',
+                firstName: 'admin',
+                lastName: 'admin'
+            }).then(user => {
+                    server.inject({
+                        method: 'POST',
+                        url: '/login',
+                        payload: {
+                            username: 'admin',
+                            password: 'admin'
+                        }
+                    }, (res) => {
+                        internals.headers = {
+                            Authorization: res.request.response.source.token
+                        };
+                        done();
+                    });
+            });
+        });
+    });
 
 });
 
@@ -32,7 +61,8 @@ describe('Controller.Role', () => {
                 url: '/roles',
                 payload: {
                     name: ''
-                }
+                },
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -49,7 +79,8 @@ describe('Controller.Role', () => {
                 url: '/roles',
                 payload: {
                     name: 'guest'
-                }
+                },
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -67,7 +98,8 @@ describe('Controller.Role', () => {
                 url: '/roles',
                 payload: {
                     name: 'guest'
-                }
+                },
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -85,13 +117,14 @@ describe('Controller.Role', () => {
 
             const request = {
                 method: 'GET',
-                url: '/roles'
+                url: '/roles',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
-                expect(response).to.have.length(1);
+                expect(response).to.have.length(2);
                 done();
             });
         });
@@ -103,7 +136,8 @@ describe('Controller.Role', () => {
 
             const request = {
                 method: 'GET',
-                url: '/roles/guest'
+                url: '/roles/guest',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -117,7 +151,8 @@ describe('Controller.Role', () => {
 
             const request = {
                 method: 'GET',
-                url: '/roles/IWillProbablyNeverExist'
+                url: '/roles/IWillProbablyNeverExist',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -134,7 +169,8 @@ describe('Controller.Role', () => {
 
             const request = {
                 method: 'DELETE',
-                url: '/roles/guest'
+                url: '/roles/guest',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -148,7 +184,8 @@ describe('Controller.Role', () => {
 
             const request = {
                 method: 'DELETE',
-                url: '/roles/IWillProbablyNeverExist'
+                url: '/roles/IWillProbablyNeverExist',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
