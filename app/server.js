@@ -149,14 +149,14 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
             } else {
 
                 process.on('SIGINT', function() {
-                    console.log('\nStopping server...');
+                    console.log('Stopping server...');
+                    server.plugins.cache.cache.stop();
                     server.stop({timeout: 10000}, err => {
                         if (err) {
                             console.log(err);
                         } else {
                             console.log('Server stopped successfuly !');
                         }
-
                     });
                 });
 

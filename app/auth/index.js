@@ -1,5 +1,8 @@
 'use strict';
 
+const Hoek = require('hoek');
+const JWT = require('jsonwebtoken');
+
 
 exports.register = function (server, options, next) {
 
@@ -30,6 +33,21 @@ exports.register = function (server, options, next) {
         verifyOptions: {
             algorithms: [ 'HS256' ]
         }
+    });
+
+
+    server.method('parseAuthorization', function(authorization) {
+        Hoek.assert(authorization, 'Authorization header is required');
+
+        // Removes useless labels
+        authorization = authorization.replace(/Bearer/gi, '').replace(/ /g, '')
+
+        const payload = JWT.decode(authorization);
+
+        return {
+            decoded: JWT.decode(authorization),
+            token: authorization
+        };
     });
 
     server.auth.default('jwt');
