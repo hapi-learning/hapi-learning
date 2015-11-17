@@ -1,9 +1,9 @@
 angular.module('hapi-learning')
-    .directive('subscribe', ['$stateParams', 'CoursesFactory', function ($stateParams, CoursesFactory) {
+    .directive('subscribe', ['CoursesFactory', function (CoursesFactory) {
         return {
             restrict: 'E',
             scope : {
-                code : '='
+                code : '@code'
             },
             templateUrl: 'scripts/directives/subscribe.html',
             link: function (scope, elem, attrs) {
@@ -28,7 +28,6 @@ angular.module('hapi-learning')
                 
                 CoursesFactory.getSubscribed()
                 .then(function(courses) {
-                    console.log(attrs.code);
                     scope.subscribed = _.find(courses, 'code', attrs.code);
                     scope.available = true;
                 })
