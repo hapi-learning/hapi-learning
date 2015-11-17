@@ -2,13 +2,16 @@ angular.module('hapi-learning')
     .directive('subscribe', ['$stateParams', 'CoursesFactory', function ($stateParams, CoursesFactory) {
         return {
             restrict: 'E',
+            scope : {
+                code : '='
+            },
             templateUrl: 'scripts/directives/subscribe.html',
             link: function (scope, elem, attrs) {
                 scope.subscribed = false;
                 scope.available = false;
                 
                 scope.subscribe = function () {
-                    CoursesFactory.subscribe($stateParams.code)
+                    CoursesFactory.subscribe(attrs.code)
                     .then(function(course) {
                         scope.subscribed = true;
                     })
@@ -16,17 +19,17 @@ angular.module('hapi-learning')
                 };
     
                 scope.unsubscribe = function () {
-                    CoursesFactory.unsubscribe($stateParams.code)
+                    CoursesFactory.unsubscribe(attrs.code)
                     .then(function(course) {
                         scope.subscribed = false;
                     })
                     .catch(function (error) {console.log(error);});
                 };
                 
-                
                 CoursesFactory.getSubscribed()
                 .then(function(courses) {
-                    scope.subscribed = _.find(courses, 'code', $stateParams.code);
+                    console.log(attrs.code);
+                    scope.subscribed = _.find(courses, 'code', attrs.code);
                     scope.available = true;
                 })
                 .catch(function (error) {console.log(error);});
