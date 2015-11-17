@@ -138,7 +138,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     var Models = server.plugins.models.models;
 
     Models.sequelize.sync({
-        force: false // drops all db and recreates them
+//        force: true // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
@@ -151,7 +151,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 process.on('SIGINT', function() {
                     console.log('Stopping server...');
                     server.plugins.cache.cache.stop();
-                    server.stop({timeout: 10000}, err => {
+                    server.stop({timeout: 10}, err => {
                         if (err) {
                             console.log(err);
                         } else {

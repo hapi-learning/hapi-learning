@@ -1,45 +1,47 @@
 <style>
-/* make sidebar nav vertical */ 
-	@media (min-width: 768px) {
-	  .sidebar-nav .navbar .navbar-collapse {
-		padding: 0;
-		max-height: none;
-	  }
-	  .sidebar-nav .navbar ul {
-		float: none;
-	  }
-	  .sidebar-nav .navbar ul:not {
-		display: block;
-
-	  }
-	  .sidebar-nav .navbar li {
-		float: none;
-		display: block;
-	  }
-	  .sidebar-nav .navbar li a {
-		padding-top: 12px;
-		padding-bottom: 12px;
-	  }
-	}
-	@media (min-width: 768px) {
-	  /* uncomment if you would like the menu to be fixed */
-	  /* .navbar {
-		  position: fixed;
-		  width: 170px;
-		  z-index: 2;
-	  } */
-	}
-	@media (min-width: 992px) {
-	  .navbar {
-		  width: 212px;
-	  }
-	}
-	@media (min-width: 1200px) {
-	  .navbar {
-		  width: 262px;
-	  }
-	}
-	.sidebar-nav .navbar-header{ float: none; }
+    /* make sidebar nav vertical */
+    
+    @media (max-width: 992px) {
+        .sidebar-nav .navbar .navbar-collapse {
+            padding: 0;
+            max-height: none;
+        }
+        .navbar-collapse.collapse {
+            display: none!important;
+        }
+        .navbar-toggle {
+            display: block;
+        }
+        /* since 3.1.0 */
+        .navbar-collapse.collapse.in {
+            display: block!important;
+        }
+        .collapsing {
+            overflow: hidden!important;
+        }
+    }
+    
+    .sidebar-nav .navbar ul {
+        float: none;
+    }
+    
+    .sidebar-nav .navbar ul:not {
+        display: block;
+    }
+    
+    .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+    }
+    
+    .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+    
+    .sidebar-nav .navbar-header {
+        float: none;
+    }
 </style>
 
 <div class="sidebar-nav">
@@ -48,51 +50,52 @@
         <span ng-bind="profile.lastName"></span>
         <small><span ng-bind="profile.username"></span></small>
     </h1>
-              <div class="navbar navbar-default" role="navigation">
-                <div class="navbar-header">
-                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </button>
-                  <span class="visible-xs navbar-brand">hapi learning</span>
-                </div>
-                <div class="navbar-collapse collapse sidebar-navbar-collapse">
-                    <div class="visible-xs visible-sm">
-                        <div>
-                        <h3>
+    <div class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="visible-xs visible-sm navbar-brand">hapi learning</span>
+        </div>
+        <div class="navbar-collapse collapse sidebar-navbar-collapse">
+            <div class="visible-xs visible-sm">
+                <div>
+                    <h3>
                         <span ng-bind="profile.firstName"></span>
-        <span ng-bind="profile.lastName"></span>
-                            </h3>
-                            </div>
-                    <div>
-        <small><span ng-bind="profile.username"></span></small>
-                        </div>
-                    </div>
-
-                  <ul class="nav navbar-nav">
-                    <li ui-sref-active="active">
-                        <a ui-sref="root.home">
-                            <i class="glyphicon glyphicon-home"></i> Home </a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="root.profile">
-                            <i class="glyphicon glyphicon-user"></i> Account Settings </a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="root.courses">
-                            <i class="glyphicon glyphicon-th-list"></i> Courses </a>
-                    </li>
-                    <li>
-                        <a href="#" ng-click="logout()">
-                            <i class="glyphicon glyphicon-log-out"></i> Logout </a>
-                    </li>
-                  </ul>
-                </div><!--/.nav-collapse -->
-              </div>
+                        <span ng-bind="profile.lastName"></span>
+                    </h3>
+                </div>
+                <div>
+                    <small><span ng-bind="profile.username"></span></small>
+                </div>
             </div>
-          </div>
+
+            <ul class="nav navbar-nav">
+                <li ui-sref-active="active">
+                    <a ui-sref="root.home">
+                        <i class="glyphicon glyphicon-home"></i> Home </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="root.profile">
+                        <i class="glyphicon glyphicon-user"></i> Account Settings </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="root.courses">
+                        <i class="glyphicon glyphicon-th-list"></i> Courses </a>
+                </li>
+                <li>
+                    <a href="#" ng-click="logout()">
+                        <i class="glyphicon glyphicon-log-out"></i> Logout </a>
+                </li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</div>
+</div>
 
 <!--
 <div id="sidebar-nav" class="navbar-collapse collapse">
