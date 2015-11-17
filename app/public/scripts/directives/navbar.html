@@ -19,6 +19,10 @@
         .collapsing {
             overflow: hidden!important;
         }
+        .h3, h3 {
+            padding-bottom: 10px;
+            padding-left: 20px;
+        }
     }
     
     .sidebar-nav .navbar ul {
@@ -62,15 +66,17 @@
         </div>
         <div class="navbar-collapse collapse sidebar-navbar-collapse">
             <div class="visible-xs visible-sm">
-                <div>
+               
                     <h3>
+                        <div>
                         <span ng-bind="profile.firstName"></span>
                         <span ng-bind="profile.lastName"></span>
-                    </h3>
-                </div>
+                            </div>
+                    
                 <div>
                     <small><span ng-bind="profile.username"></span></small>
                 </div>
+                    </h3>
             </div>
 
             <ul class="nav navbar-nav">
