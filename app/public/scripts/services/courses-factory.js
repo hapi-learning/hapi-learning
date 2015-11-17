@@ -24,7 +24,7 @@ angular.module('hapi-learning')
                     });
             })
         };
-        
+
         exports.loadSpecific = function (code) {
             return new Promise(function (resolve, reject) {
                 Restangular.one('courses', code)
@@ -37,20 +37,20 @@ angular.module('hapi-learning')
                     });
             });
         };
-        
+
         exports.subscribe = function (code) {
             return new Promise(function (resolve, reject) {
                 Restangular.one('users', LoginFactory.getProfile().username)
                     .customPOST({}, "subscribe/" + code)
                     .then(function (object) {
-                    resolve(object);
+                        resolve(object);
                     })
                     .catch(function (err) {
                         reject(err)
                     });
             });
         };
-        
+
         exports.unsubscribe = function (code) {
             return new Promise(function (resolve, reject) {
                 Restangular.one('users', LoginFactory.getProfile().username)
