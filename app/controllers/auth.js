@@ -133,7 +133,7 @@ exports.logout = {
                 if (err) {
                     return reply.badImplementation(err);
                 } else {
-                    return reply();
+                    return reply().code(204);
                 }
             });
         };

@@ -12,8 +12,6 @@ exports.register = function (server, options, next) {
         // Removes useless labels
         authorization = authorization.replace(/Bearer/gi, '').replace(/ /g, '')
 
-        const payload = JWT.decode(authorization);
-
         return {
             decoded: JWT.decode(authorization),
             token: authorization
@@ -85,9 +83,6 @@ exports.register = function (server, options, next) {
             algorithms: [ 'HS256' ]
         }
     });
-
-
-
 
     server.auth.default('jwt');
 
