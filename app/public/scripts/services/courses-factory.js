@@ -13,16 +13,27 @@ angular.module('hapi-learning')
         };
 
         exports.load = function (limit, page) {
-            return new Promise(function (resolve, reject) {
-                Restangular.all('courses')
-                    .customGET('', { limit: limit, page: page })
-                    .then(function (object) {
-                        resolve(object.results);
-                    })
-                    .catch(function (err) {
-                        reject(err)
-                    });
-            })
+            
+            if (internals.courses.length === 0)
+            {
+                return new Promise(function (resolve, reject) {
+                    Restangular.all('courses')
+                        .customGET('', { limit: limit, page: page })
+                        .then(function (object) {
+                            internals.courses = object.results;
+                            resolve(object.results);
+                        })
+                        .catch(function (err) {
+                            reject(err)
+                        });
+                    }); 
+            }
+            else
+            {
+                return new Promise(function (resolve, reject) {
+                    resolve(internals.courses);
+                });
+            }
         };
 
         exports.loadSpecific = function (code) {
@@ -43,6 +54,8 @@ angular.module('hapi-learning')
                 Restangular.one('users', LoginFactory.getProfile().username)
                     .customPOST({}, "subscribe/" + code)
                     .then(function (object) {
+                        //_.fill(internals.subscribedCourses, object); // object doit être le cours
+                        internals.subscribedCourses = [];
                         resolve(object);
                     })
                     .catch(function (err) {
@@ -56,6 +69,7 @@ angular.module('hapi-learning')
                 Restangular.one('users', LoginFactory.getProfile().username)
                 .customPOST({}, "unsubscribe/" + code)
                 .then(function (object) {
+                    _.remove(internals.subscribedCourses, function(course) {return course.code === code});
                     resolve(object);
                 })
                 .catch(function (err) {
@@ -65,16 +79,27 @@ angular.module('hapi-learning')
         };
 
         exports.getSubscribed = function () {
-            return new Promise(function (resolve, reject) {
-                Restangular.one('users', LoginFactory.getProfile().username)
-                    .getList('courses')
-                    .then(function (object) {
-                        resolve(object);
-                    })
-                    .catch(function (error) {
-                        reject(error);
-                    });
-            });
+            
+            if(internals.subscribedCourses.length === 0)
+            {
+                return new Promise(function (resolve, reject) {
+                    Restangular.one('users', LoginFactory.getProfile().username)
+                        .getList('courses')
+                        .then(function (object) {
+                            internals.subscribedCourses = object;
+                            resolve(object);
+                        })
+                        .catch(function (error) {
+                            reject(error);
+                        });
+                });
+            }
+            else
+            {
+                return new Promise(function (resolve, reject) {
+                    resolve(internals.subscribedCourses);
+                });
+            }
         };
 
         exports.get = function (index) {
