@@ -4,7 +4,7 @@
         <span class="glyphicon glyphicon-eye-open"></span>
     </span>
 
-    <a href="#/courses/{{course.code}}">
+    <a ui-sref="root.course({code: course.code})">
         <span ng-bind="course.code"></span> - <span ng-bind="course.name"></span>
     </a>
         </h3>

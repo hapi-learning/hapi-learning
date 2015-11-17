@@ -21,6 +21,8 @@
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.0.5",
     "boom": "^3.0.0",
+    "catbox": "^7.0.0",
+    "catbox-memory": "^2.0.1",
     "dotenv": "^1.2.0",
     "easypeazip": "file:./plugins/easypeazip",
     "glob": "^5.0.15",
@@ -42,6 +44,7 @@
     "rmdir": "^1.1.0",
     "sequelize": "^3.13.0",
     "sqlite3": "^3.1.0",
+    "tv": "^5.0.1",
     "vision": "^3.0.0",
     "wreck": "^7.0.0"
   },

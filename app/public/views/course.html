@@ -1,0 +1,68 @@
+<div class="container-fluid">
+
+    <h1 class="page-header">
+        <span ng-bind="course.code"></span> − <span ng-bind="course.name"></span>
+        
+<!--
+        <span class="pull-right">
+            <button type="button" class="btn btn-success" ng-hide="subscribed" ng-click="subscribe()">
+                <span class="glyphicon glyphicon-ok"></span> Subscribe</button>
+            <button type="button" class="btn btn-danger" ng-show="subscribed" ng-click="unsubscribe()">
+                <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+        </span>
+-->
+
+    </h1>
+
+    <div class="col-md-8">
+        <h2><small>Description</small></h2>
+        <blockquote ng-bind="course.description">
+        </blockquote>
+
+        <h2><small>Files</small></h2>
+        <table class="table table-striped">
+            <tr>
+                <th>File a</th>
+                <td>date</td>
+            </tr>
+            <tr>
+                <th>File b</th>
+                <td>date</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-4" ng-controller="NewsCtrl">
+
+        <div ng-show="available">
+            <button type="button" class="btn btn-success" ng-hide="subscribed" ng-click="subscribe()">
+                <span class="glyphicon glyphicon-ok"></span> Subscribe</button>
+            <button type="button" class="btn btn-danger" ng-show="subscribed" ng-click="unsubscribe()">
+                <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
+        </div>
+
+        <br />
+
+        <div>
+
+            <label>Teachers</label>
+            <br />
+            <span ng-repeat="teacher in course.teachers">
+                <teacher-info teacher="teacher"></teacher-info>
+            </span>
+        </div>
+        <br />
+        
+        <div>
+            <label>Tags</label>
+            <br />
+
+            <span ng-repeat="tag in course.tags">
+                <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+            </span>
+
+        </div>
+
+
+    </div>
+</div>

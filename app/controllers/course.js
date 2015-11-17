@@ -68,6 +68,10 @@ internals.checkForbiddenPath = function(path) {
 
 exports.getAll = {
     description: 'List all the courses',
+    cache: {
+        expiresIn: 15 * 1000, // 15 secondes (avoid abusive request)
+        privacy: 'private'
+    },
     handler: function (request, reply) {
 
         const Course = this.models.Course;
@@ -150,7 +154,7 @@ exports.getDocuments = {
             else
             {
                 const pathName = path === '/' ? '' : '_' + require('path').basename(path);
-                const contentDisposition = 'attachment; filename=' + course + pathName;
+                const contentDisposition = 'attachment; filename=' + course + pathName + '.zip';
                 return reply(result)
                     .type('application/zip')
                     .header('Content-Disposition', contentDisposition);
@@ -220,6 +224,9 @@ exports.getStudents = {
 
 
 exports.post = {
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     description: 'Add a course',
     validate: {
         options: {
@@ -245,7 +252,6 @@ exports.post = {
         const description = request.payload.description;
         const pteachers   = request.payload.teachers;
         const ptags       = request.payload.tags;
-
 
         const hasTeachers = pteachers ? true : false;
         const hasTags     = ptags ? true : false;

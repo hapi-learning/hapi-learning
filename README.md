@@ -23,6 +23,21 @@ https:
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
 
+Create a .env file in the root folder and change the web/api host and port:
+
+```
+
+WEB_HOST=localhost
+WEB_PORT=8080
+API_HOST=localhost
+API_PORT=8088
+
+AUTH_KEY=9FDS954QLBNQbraF9K9yBJZ0I95CR8269FDS954QLBNQbraF9K9yBJZ0I95CR826
+UPLOAD_MAX=20970000
+TOKEN_EXP=7200
+
+```
+
 
 Install dependencies:
 
@@ -47,6 +62,15 @@ Start the node tests :
 ```
 $ npm test
 ```
+
+To use the API alone (8088 by default), you need to be authentificated and set the
+Authorization header with the token. Here is a valid token (for now) :
+```
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NywidXNlcm5hbWUiOiJQQlQiLCJlbWFpbCI6InBiZXR0ZW5zQGhlYi5iZSIsInJvbGUiOiJ0ZWFjaGVyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTQ0NzU4OTkxMH0.x09NtCt3es8GflRc-ocA99EcqZY0ZFb00DwbTa4QAWI
+```
+
+You can set headers in firefox with plugins/modules.
+
 
 ## Hapi-pagination
 
