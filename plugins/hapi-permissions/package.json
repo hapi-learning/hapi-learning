@@ -1,0 +1,16 @@
+{
+  "name": "hapi-permissions",
+  "version": "1.0.0",
+  "description": "Hapi plugins to handle custom permissions after authorization",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Florian Knop <florian_knop@hotmail.com> (https://github.com/fknop)",
+  "license": "ISC",
+  "dependencies": {
+    "boom": "^3.0.0",
+    "hoek": "^3.0.4",
+    "lodash": "^3.10.1"
+  }
+}
