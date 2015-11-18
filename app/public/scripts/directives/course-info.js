@@ -3,7 +3,7 @@ angular.module('hapi-learning')
         return {
             restrict: 'E',
             scope : {
-                course : '=course'
+                course : '='
             },
             templateUrl: 'scripts/directives/course-info.html',
             link: function(scope, elem, attrs) {

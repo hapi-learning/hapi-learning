@@ -68,10 +68,6 @@ internals.checkForbiddenPath = function(path) {
 
 exports.getAll = {
     description: 'List all the courses',
-    cache: {
-        expiresIn: 15 * 1000, // 15 secondes (avoid abusive request)
-        privacy: 'private'
-    },
     handler: function (request, reply) {
 
         const Course = this.models.Course;

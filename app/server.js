@@ -157,6 +157,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                         } else {
                             console.log('Server stopped successfuly !');
                         }
+                        process.exit();
                     });
                 });
 

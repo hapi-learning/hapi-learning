@@ -7,7 +7,9 @@ const Utils = require('../utils/sequelize');
 
 exports.get = {
     description: 'Returns a specific role',
-
+    auth: {
+        scope: ['admin']
+    },
     validate: {
         params: {
             name: Joi.string().min(1).max(255).required().description('Role name')
@@ -40,8 +42,11 @@ exports.get = {
 };
 
 exports.getAll = {
-    description: 'Returns all roles',
 
+    description: 'Returns all roles',
+    auth: {
+        scope: ['admin']
+    },
     handler: function (request, reply) {
 
         const Role = this.models.Role;
@@ -58,7 +63,9 @@ exports.getAll = {
 
 exports.post = {
     description: 'Create a new role',
-
+    auth: {
+        scope: ['admin']
+    },
     validate : {
         payload : {
             name: Joi.string().min(1).max(255).required().description('Role name')
@@ -78,7 +85,9 @@ exports.post = {
 
 exports.delete = {
     description: 'Delete a specific role',
-
+    auth: {
+        scope: ['admin']
+    },
     validate: {
         params : {
             name: Joi.string().min(1).max(255).required().description('Role name')
