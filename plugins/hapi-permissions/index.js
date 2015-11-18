@@ -15,6 +15,7 @@ internals.validatePermissions = function(permissions) {
         Hoek.assert(Array.isArray(permission.acl), 'acl must be an array');
         _.each(permission.acl, function(acl) {
             Hoek.assert(typeof acl === 'string', 'acl must be an array of strings only');
+            Hoek.assert(_.includes(['C', 'R', 'U', 'D'], acl), 'acl must be one of C, R, U, D');
         });
     });
 };
