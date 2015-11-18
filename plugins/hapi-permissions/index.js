@@ -10,41 +10,49 @@ internals.validatePermissions = function(permissions) {
 
     Hoek.assert(Array.isArray(permissions), 'permissions must be an array');
 
-    _.forEach(permissions, function(permission) {
+    _.each(permissions, function(permission) {
         Hoek.assert(typeof permission.name === 'string', 'name must be a string');
         Hoek.assert(Array.isArray(permission.acl), 'acl must be an array');
-        _.forEach(permission.acl, function(acl) {
+        _.each(permission.acl, function(acl) {
             Hoek.assert(typeof acl === 'string', 'acl must be an array of strings only');
         });
     });
 };
 
-internals.checkPermission = function(permissions) {
+internals.checkPermission = function(request, permissions) {
 
-    _.forEach(permissions, function(permission) {
-      //  const routePermissions = internals.routes
-    // TODO - map with route path -> permission instead of array in internals.route
-    });
+    const path = request.route.path;
+    if (internals.settings.has(path)) {
+        const settings = internals.settings.get(path);
 
-    return true;
+        _.each(permissions, function(permission, index) {
+            const aclRequired = settings[index].acl;
+            const acl = permission.acl;
+
+
+            return _.eq(aclRequired, _.intersection(acl, aclRequired));
+        });
+    } else {
+        return true; // The route is not concerned by permission
+    }
 };
 
 exports.register = function(server, options, next) {
 
     // Initialization
-    internals.routes = [];
+    internals.settings = new Map();
     const routingTable = server.table(); // Routing table for all the connections
 
     // Get the routing table for each connection.
     // Take route configuration
     // Check the validity of the configuration
     // Push to the internals settings the configuration
-    _.forEach(routingTable, function(connection) {
+    _.each(routingTable, function(connection) {
 
         // Routing table for one connection
         const table = connection.table;
 
-        _.forEach(table, function(item) {
+        _.each(table, function(item) {
             const settings = item.settings;
 
             if (settings.plugins.permissions) {
@@ -54,12 +62,8 @@ exports.register = function(server, options, next) {
                 // Validate permissions array
                 internals.validatePermissions(pluginSettings);
 
-                // Push to array
-                internals.routes.push({
-                    path: item.path,
-                    method: item.method,
-                    settings: pluginSettings
-                });
+                // Add to map
+                internals.settings.set(item.path, pluginSettings);
             }
         });
 
@@ -74,7 +78,7 @@ exports.register = function(server, options, next) {
         internals.validatePermissions(permissions);
 
         // If invalid permissions -> forbidden, otherwise continue
-        if (!internalscheckPermissions(permissions)) {
+        if (!internalscheckPermissions(request, permissions)) {
             return reply(Boom.forbidden('Cannot execute action'));
         } else {
             return reply.continue();
