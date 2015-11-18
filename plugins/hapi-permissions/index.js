@@ -78,7 +78,7 @@ exports.register = function(server, options, next) {
         internals.validatePermissions(permissions);
 
         // If invalid permissions -> forbidden, otherwise continue
-        if (!internalscheckPermissions(request, permissions)) {
+        if (!internals.checkPermissions(request, permissions)) {
             return reply(Boom.forbidden('Cannot execute action'));
         } else {
             return reply.continue();
