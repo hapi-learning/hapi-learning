@@ -3,27 +3,6 @@ angular.module('hapi-learning')
                 function ($scope, $stateParams, CoursesFactory, LoginFactory) {
 
             $scope.course = {};
-            $scope.subscribed = false;
-            $scope.available = false;
-
-                    
-            $scope.subscribe = function () {
-                CoursesFactory.subscribe($stateParams.code)
-                .then(function(course) {
-                    $scope.subscribed = true;
-                })
-                .catch(function (error) {console.log(error);});
-
-            };
-    
-            $scope.unsubscribe = function () {
-                CoursesFactory.unsubscribe($stateParams.code)
-                .then(function(course) {
-                    $scope.subscribed = false;
-                })
-                .catch(function (error) {console.log(error);});
-
-            };
                     
             CoursesFactory.loadSpecific($stateParams.code)
             .then(function (course) {
@@ -34,16 +13,6 @@ angular.module('hapi-learning')
                     $scope.course.code = course.code;
                     $scope.course.teachers = course.teachers;
                     $scope.course.tags = course.tags;
-                    
-                    CoursesFactory.getSubscribed()
-                    .then(function(courses) {
-                        console.log(_.find(courses, 'code', $stateParams.code));
-
-                        $scope.subscribed = _.find(courses, 'code', $stateParams.code);
-                        
-                        $scope.available = true;
-                    })
-                    .catch(function (error) {console.log(error);});
                 }
                 else
                 {

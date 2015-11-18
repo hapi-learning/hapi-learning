@@ -2,9 +2,13 @@ angular.module('hapi-learning')
     .directive('courseInfo', function () {
         return {
             restrict: 'E',
+            scope : {
+                course : '=course'
+            },
             templateUrl: 'scripts/directives/course-info.html',
             link: function(scope, elem, attrs) {
-                scope.course = scope.$eval(attrs.course);
+                //console.log(attrs.course);
+                //scope.course = scope.$eval(attrs.course);
             }
         };
     });
