@@ -13,7 +13,7 @@ angular.module('hapi-learning')
         };
 
         exports.load = function (limit, page) {
-            
+
             if (internals.courses.length === 0)
             {
                 return new Promise(function (resolve, reject) {
@@ -26,7 +26,7 @@ angular.module('hapi-learning')
                         .catch(function (err) {
                             reject(err)
                         });
-                    }); 
+                    });
             }
             else
             {
@@ -79,7 +79,7 @@ angular.module('hapi-learning')
         };
 
         exports.getSubscribed = function () {
-            
+
             if(internals.subscribedCourses.length === 0)
             {
                 return new Promise(function (resolve, reject) {

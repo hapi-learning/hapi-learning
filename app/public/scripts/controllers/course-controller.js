@@ -1,9 +1,17 @@
 angular.module('hapi-learning')
-    .controller('CourseCtrl', ['$scope', '$stateParams', 'CoursesFactory', 'LoginFactory',
-                function ($scope, $stateParams, CoursesFactory, LoginFactory) {
+    .controller('CourseCtrl', ['$scope', '$stateParams',
+                               'CoursesFactory', 'LoginFactory',
+                               'FilesFactory',
+                function ($scope, $stateParams,
+                          CoursesFactory, LoginFactory,
+                          FilesFactory) {
 
             $scope.course = {};
-                    
+
+            $scope.getTree = function(path) {
+                return FilesFactory.getTree($scope.course.code, path);
+            };
+
             CoursesFactory.loadSpecific($stateParams.code)
             .then(function (course) {
                 if (course)

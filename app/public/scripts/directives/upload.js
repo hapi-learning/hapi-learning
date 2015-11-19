@@ -1,3 +1,5 @@
+
+// Import restangular for now because it stores the base url
 angular.module('hapi-learning')
     .directive('upload', ['FileUploader', 'Restangular', function (FileUploader, Restangular) {
         return {
