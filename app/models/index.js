@@ -6,17 +6,20 @@ const Path      = require('path');
 const _         = require('lodash');
 
 
-exports.register = function(server, options, next) {
+exports.register = function(server, options, next) 
+{
     let models = {};
     const sequelize = new Sequelize(
-    options.name || null,
-    options.username || null,
-    options.password || null, {
-        host: options.host || null,
-        dialect: options.dialect || null,
-        storage: options.storage || null,
-        logging: options.logging
-    });
+    
+        options.name || null,
+        options.username || null,
+        options.password || null, {
+            host: options.host || null,
+            dialect: options.dialect || null,
+            storage: options.storage || null,
+            logging: options.logging
+        }
+    );
 
     models.sequelize = sequelize;
 
