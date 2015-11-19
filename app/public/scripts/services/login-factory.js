@@ -68,6 +68,7 @@ angular.module('hapi-learning')
                 method: 'POST'
             }).then(function success(response) {
                 AuthStorage.remove('token');
+                AuthStorage.remove('profile');
                 $location.path('/login');
                 resolve();
             }, function failure(response) {

@@ -154,7 +154,7 @@ exports.getDocuments = {
             else
             {
                 const pathName = path === '/' ? '' : '_' + require('path').basename(path);
-                const contentDisposition = 'attachment; filename=' + course + pathName;
+                const contentDisposition = 'attachment; filename=' + course + pathName + '.zip';
                 return reply(result)
                     .type('application/zip')
                     .header('Content-Disposition', contentDisposition);
@@ -252,7 +252,6 @@ exports.post = {
         const description = request.payload.description;
         const pteachers   = request.payload.teachers;
         const ptags       = request.payload.tags;
-
 
         const hasTeachers = pteachers ? true : false;
         const hasTags     = ptags ? true : false;
