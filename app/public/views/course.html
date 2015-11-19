@@ -1,47 +1,37 @@
-<div class="container-fluid">
+
+
+
+    <div class="container-fluid" ng-controller="CourseCtrl">
 
     <h1 class="page-header">
         <span ng-bind="course.code"></span> − <span ng-bind="course.name"></span>
-        
-<!--
-        <span class="pull-right">
-            <button type="button" class="btn btn-success" ng-hide="subscribed" ng-click="subscribe()">
-                <span class="glyphicon glyphicon-ok"></span> Subscribe</button>
-            <button type="button" class="btn btn-danger" ng-show="subscribed" ng-click="unsubscribe()">
-                <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
-        </span>
--->
-
     </h1>
 
     <div class="col-md-8">
-        <h2><small>Description</small></h2>
-        <blockquote ng-bind="course.description">
-        </blockquote>
+        <nav>
+            <ul class="nav nav-tabs">
+                <li ui-sref-active="active" >
+                    <a ui-sref="root.course.main({code: course.code})">
+                        <span class="glyphicon glyphicon-book"></span>
+                        Course Home
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="root.course.files({code: course.code, path: 'documents'})">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                        Documents
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-        <h2><small>Files</small></h2>
-        <table class="table table-striped">
-            <tr>
-                <th>File a</th>
-                <td>date</td>
-            </tr>
-            <tr>
-                <th>File b</th>
-                <td>date</td>
-            </tr>
-        </table>
+        <br/>
+
+        <div ui-view></div>
     </div>
-
     <div class="col-md-4">
 
-        <!--<div ng-show="available">
-            <button type="button" class="btn btn-success" ng-hide="subscribed" ng-click="subscribe()">
-                <span class="glyphicon glyphicon-ok"></span> Subscribe</button>
-            <button type="button" class="btn btn-danger" ng-show="subscribed" ng-click="unsubscribe()">
-                <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
-        </div>-->
         <subscribe code="{{course.code}}"></subscribe>
-
         <br />
 
         <div>
@@ -53,7 +43,7 @@
             </span>
         </div>
         <br />
-        
+
         <div>
             <label>Tags</label>
             <br />

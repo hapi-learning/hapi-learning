@@ -18,4 +18,6 @@ angular.module('hapi-learning')
             });
         };
 
+        return exports;
+
     }]);
