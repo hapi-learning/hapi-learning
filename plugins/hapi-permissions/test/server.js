@@ -53,6 +53,42 @@ server.route([{
         },
         handler: function(request, reply) { return reply(); }
     }
+}, {
+    method: 'GET',
+    path: '/C',
+    config: {
+        plugins: {
+            permissions: [{
+                name: 'C',
+                acl: ['C', 'R', 'U']
+            }]
+        },
+        handler: function(request, reply) { return reply(); }
+    }
+}, {
+    method: 'PUT',
+    path: '/D',
+    config: {
+        plugins: {
+            permissions: [{
+                name: 'D',
+                acl: ['U']
+            }]
+        },
+        handler: function(request, reply) { return reply(); }
+    }
+}, {
+    method: 'DELETE',
+    path: '/E',
+    config: {
+        plugins: {
+            permissions: [{
+                name: 'E',
+                acl: ['D']
+            }]
+        },
+        handler: function(request, reply) { return reply(); }
+    }
 }]);
 
 server.ext('onPreAuth', function(request, reply) {
@@ -65,6 +101,5 @@ server.register(require('../'), function(err) {
         throw err;
     }
 
-    server.start(function() {});
-
+    module.exports = server;
 });
