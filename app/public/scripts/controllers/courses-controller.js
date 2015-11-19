@@ -48,5 +48,12 @@ angular.module('hapi-learning')
 
             return select;
         };
+                    
+        $scope.search = function(course) {
+            var $scope.course = angular.lowercase($scope.course) || '';
+            
+            return (angular.lowercase(course.name).indexOf($scope.course) !== -1 ||
+                    angular.lowercase(course.code).indexOf($scope.course) !== -1);  
+        };
 
     }]);

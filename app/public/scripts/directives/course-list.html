@@ -1,8 +1,9 @@
 
 <ul class="list-group">
-    <li class="list-group-item" ng-repeat="course in courses | filter: {name: filter.course, code: filter.code} | filter: filterByTags">
+    <li class="list-group-item" ng-repeat="course in courses | filter: search | filter: filterByTags">
 
         <course-info course="course"></course-info>
+        <div ng-bind="search"></div>
         <br />
     </li>
 </ul>
