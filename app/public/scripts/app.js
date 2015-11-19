@@ -12,7 +12,8 @@ angular.module('hapi-learning', [
         'ui.validate',
         'restangular',
         'angular-storage',
-        'angular-jwt'])
+        'angular-jwt',
+        'ngLoadingSpinner'])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
