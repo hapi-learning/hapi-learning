@@ -15,7 +15,7 @@ angular.module('hapi-learning')
                     {
                         $scope.course = {};
                         $scope.course.name = course.name;
-                        $scope.course.description = course.description;
+                        $scope.course.description = course.description || 'This page is empty.'
                         $scope.course.code = course.code;
                         $scope.course.teachers = course.teachers;
                         $scope.course.tags = course.tags;

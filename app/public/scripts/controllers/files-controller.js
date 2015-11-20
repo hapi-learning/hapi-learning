@@ -6,7 +6,6 @@ angular.module('hapi-learning')
                           CoursesFactory, LoginFactory,
                           FilesFactory) {
 
-            $scope.course = {};
 
             $scope.getTree = function(path) {
                 return FilesFactory.getTree($scope.course.code, path);
