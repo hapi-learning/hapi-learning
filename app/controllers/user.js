@@ -10,6 +10,22 @@ const _ = require('lodash');
 
 const internals = {};
 
+internals.updateHandler = function(request, reply) {
+
+    const User = this.models.User;
+
+    User.update(
+        request.payload,
+        {
+            where: {
+                username: request.params.username
+            }
+        }
+    )
+    .then(result => reply({count : result[0] || 0}))
+    .catch(error => reply.badImplementation(error));
+};
+
 internals.schemaUserPOST = function(){
     const user = Joi.object().keys({
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
@@ -164,21 +180,7 @@ exports.delete = {
     }
 };
 
-const updateHandler = function(request, reply) {
 
-    const User = this.models.User;
-
-    User.update(
-        request.payload,
-        {
-            where: {
-                username: request.params.username
-            }
-        }
-    )
-    .then(result => reply({count : result[0] || 0}))
-    .catch(error => reply.badImplementation(error));
-};
 
 exports.put = {
     auth: {
@@ -198,7 +200,7 @@ exports.put = {
         }
     },
 
-    handler: updateHandler
+    handler: internals.updateHandler
 };
 
 exports.patch = {
@@ -218,7 +220,7 @@ exports.patch = {
             phoneNumber: Joi.string().min(1).max(255).description('User phone number')
         }
     },
-    handler: updateHandler
+    handler: internals.updateHandler
 };
 
 exports.getTags = {
@@ -294,7 +296,13 @@ exports.getCourses = {
             if (user)
             {
                 user.getCourses()
-                .then(courses => reply(courses))
+                .then(results => {
+                    const promises = _.map(results, c => Utils.getCourse(c));
+
+                    Promise.all(promises).then(courses => {
+                       return reply(courses);
+                    });
+                })
                 .catch(error => reply.badImplementation(error));
             }
             else
