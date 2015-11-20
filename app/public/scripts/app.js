@@ -64,22 +64,23 @@ angular.module('hapi-learning', [
                     controller: 'NewsCtrl'
                 })
                 .state('root.course', {
-                    templateUrl: '/views/course.html'
-                })
-                .state('root.course.main', {
+                    templateUrl: '/views/course.html',
+                    abstract: true,
                     url: '/courses/:code',
-                    templateUrl: '/views/course-main.html',
                     controller: 'CourseCtrl'
                 })
+                .state('root.course.main', {
+                    url: '/home',
+                    templateUrl: '/views/course-main.html'
+                })
                 .state('root.course.files', {
-                    url: '/courses/:code/documents/{path:FilePath}',
-                    templateUrl: '/views/course-files.html',
-                    controller: 'FilesCtrl'
+                    url: '/documents{path:FilePath}',
+                    templateUrl: '/views/course-files.html'
                 })
                 .state('login', {
                     url: '/login',
                     templateUrl: '/views/login.html'
-                })
+                });
     }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
         cfpLoadingBarProvider.includeSpinner = false;
@@ -100,7 +101,8 @@ angular.module('hapi-learning', [
             // passing a culture into getErrorMessages('fr-fr') will get the culture specific messages
             // otherwise the current default culture is returned.
             defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
-                errorMessages['passwordMatch'] = 'Passwords do not match!';
+                errorMessages.passwordMatch = 'Passwords do not match!';
+               // errorMessages['passwordMatch'] = 'Passwords do not match!';
             });
     }])
     .run(['Restangular', 'API', 'UM_CONFIG', function (Restangular, API, UM_CONFIG) {

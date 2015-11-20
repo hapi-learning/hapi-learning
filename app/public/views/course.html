@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-controller="CourseCtrl">
+<div class="container-fluid">
 
     <h1 class="page-header">
         <span ng-bind="course.code"></span> − <span ng-bind="course.name"></span>
@@ -14,7 +14,7 @@
                     </a>
                 </li>
                 <li ui-sref-active="active">
-                    <a ui-sref="root.course.files({code: course.code, path: 'abcd/ABCD'})">
+                    <a ui-sref="root.course.files({code: course.code, path: '/'})">
                         <span class="glyphicon glyphicon-folder-open"></span>
                         Documents
                     </a>
