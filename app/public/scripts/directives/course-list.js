@@ -5,20 +5,47 @@ angular.module('hapi-learning')
         return {
             restrict: 'E',
             scope: {
-                courses: '='
+                courses: '=',
+                subscribed: '='
             },
             templateUrl: 'scripts/directives/course-list.html',
             link: function(scope, elem, attrs) {
                 scope.courses = [];
                 
-                CoursesFactory.load()
+                scope.$watch('subscribed', function(value) {
+                    
+                    if (value)
+                    {
+                        CoursesFactory.getSubscribed()
+                            .then(function(courses) {
+                            if (courses)
+                            {
+                                scope.courses = courses;
+                            }
+                        })
+                        .catch(function(error) {console.log(error);});   
+                    }
+                    else
+                    {
+                        CoursesFactory.load()
+                            .then(function(courses) {
+                            if (courses)
+                            {
+                                scope.courses = courses;
+                            }
+                        })
+                        .catch(function(error) {console.log(error);});   
+                    }
+                });
+                
+               /* CoursesFactory.load()
                 .then(function(courses) {
                     if (courses)
                     {
                         scope.courses = courses;
                     }
                 })
-                .catch(function(error) {console.log(error);});
+                .catch(function(error) {console.log(error);});*/
             }
         };
     }]);

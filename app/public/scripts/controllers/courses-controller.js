@@ -36,11 +36,6 @@ angular.module('hapi-learning')
             }
         };
 
-        $scope.subscribed = function () {
-            // did the user already subscribe to the course?
-            return false;
-        };
-
         $scope.updated = function () {
             // course updated since user last connection?
             return true;
