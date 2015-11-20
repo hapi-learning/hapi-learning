@@ -30,7 +30,7 @@ angular.module('hapi-learning')
                 };
 
                 scope.$watch('code', function(value) {
-                    if (code) {
+                    if (scope.code) {
                         CoursesFactory.getSubscribed()
                         .then(function(courses) {
 
