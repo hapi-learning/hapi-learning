@@ -5,22 +5,29 @@
     </h1>
 
     <div class="col-md-8">
-        <h2-small>Description</h2-small>
-        
-        <blockquote ng-bind="course.description"></blockquote>
+        <nav>
+            <ul class="nav nav-tabs">
+                <li ui-sref-active="active" >
+                    <a ui-sref="root.course.main({code: course.code})">
+                        <span class="glyphicon glyphicon-book"></span>
+                        Course Home
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="root.course.documents({code: course.code, path: ''})">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                        Documents
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-        <h2-small>Files</h2-small>
-
-<!--
-        <div ng-include="'../partials/admin/create-course-form.html'"></div>
--->
-
+        <br/>
+        <div ui-view></div>
     </div>
-
     <div class="col-md-4">
 
         <subscribe code="{{course.code}}"></subscribe>
-
         <br />
 
         <div>

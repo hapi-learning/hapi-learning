@@ -28,8 +28,7 @@ angular.module('hapi-learning')
                 {
                     resolve(internals.tags);
                 }
-                
-            })
+            });
         };
 
         exports.get = function (index) {

@@ -1,0 +1,14 @@
+a, a:hover, a:active, a:focus {
+    outline: 0;
+}
+
+
+
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus{
+    background-color: #fcfcfc;
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+}

@@ -10,48 +10,20 @@ const _ = require('lodash');
 
 const internals = {};
 
-// result is a sequelize instance
-internals.getUser = function(result) {
+internals.updateHandler = function(request, reply) {
 
-    return Promise.resolve(
+    const User = this.models.User;
 
-        result.getTags({attributes: ['name'], joinTableAttributes: []})
-        .then(tags => {
-            const user = result.get({ plain:true });
-            user.tags = _.map(tags, (t => t.get('name', { plain:true })));
-            return user;
-        })
-    );
-};
-
-internals.findUser = function(User, username)
-{
-    Hoek.assert(User, 'Model User required');
-    Hoek.assert(username, 'username required');
-
-    return User.findOne({
-        where: {
-            username: username
-        },
-        attributes: {
-            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+    User.update(
+        request.payload,
+        {
+            where: {
+                username: request.params.username
+            }
         }
-    });
-};
-
-internals.findCourseByCode = function(Course, id) {
-
-    Hoek.assert(Course, 'Model Course required');
-    Hoek.assert(id, 'Course code required');
-
-    return Course.findOne({
-        where: {
-            code: { $eq : id }
-        },
-        attributes: {
-            exclude: ['updated_at', 'deleted_at', 'created_at']
-        }
-    });
+    )
+    .then(result => reply({count : result[0] || 0}))
+    .catch(error => reply.badImplementation(error));
 };
 
 internals.schemaUserPOST = function(){
@@ -82,7 +54,7 @@ exports.get = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
             .then(result => {
                 if (result) {
                     return reply(Utils.removeDates(result));
@@ -167,11 +139,11 @@ exports.addTags = {
 
         Tag.findAll({where: { name: { $in: request.payload.tags } }})
         .then(tags => {
-            internals.findUser(User, id)
+            Utils.findUser(User, id)
             .then(user => {
                 if (user) {
                     user.addTags(tags).then(() => {
-                       internals.getUser(user).then(result => {
+                       Utils.getUser(user).then(result => {
                            return reply(result);
                        });
                     });
@@ -208,21 +180,7 @@ exports.delete = {
     }
 };
 
-const updateHandler = function(request, reply) {
 
-    const User = this.models.User;
-
-    User.update(
-        request.payload,
-        {
-            where: {
-                username: request.params.username
-            }
-        }
-    )
-    .then(result => reply({count : result[0] || 0}))
-    .catch(error => reply.badImplementation(error));
-};
 
 exports.put = {
     auth: {
@@ -242,7 +200,7 @@ exports.put = {
         }
     },
 
-    handler: updateHandler
+    handler: internals.updateHandler
 };
 
 exports.patch = {
@@ -262,7 +220,7 @@ exports.patch = {
             phoneNumber: Joi.string().min(1).max(255).description('User phone number')
         }
     },
-    handler: updateHandler
+    handler: internals.updateHandler
 };
 
 exports.getTags = {
@@ -276,7 +234,7 @@ exports.getTags = {
 
         const User = this.models.User;
 
-            internals.findUser(User, request.params.username)
+            Utils.findUser(User, request.params.username)
             .then(user => {
                 if (user) {
                     user.getTags()
@@ -302,7 +260,7 @@ exports.getFolders = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user)
             {
@@ -333,12 +291,18 @@ exports.getCourses = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user)
             {
                 user.getCourses()
-                .then(courses => reply(courses))
+                .then(results => {
+                    const promises = _.map(results, c => Utils.getCourse(c));
+
+                    Promise.all(promises).then(courses => {
+                       return reply(courses);
+                    });
+                })
                 .catch(error => reply.badImplementation(error));
             }
             else
@@ -367,7 +331,7 @@ exports.subscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user) {
                 user.getCourses({where : {code : request.params.crsId}})
@@ -412,7 +376,7 @@ exports.unsubscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user) {
                 user.getCourses({where : {code : request.params.crsId}})
@@ -456,7 +420,7 @@ exports.addFolders = {
         const username = request.params.username;
         const folders  = request.payload.folders;
 
-        internals.findUser(User, username)
+        Utils.findUser(User, username)
         .then(user => {
             if (user)
             {

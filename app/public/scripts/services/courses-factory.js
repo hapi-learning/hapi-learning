@@ -1,7 +1,10 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('CoursesFactory', ['Restangular', 'LoginFactory', function (Restangular, LoginFactory) {
+    .factory('CoursesFactory', ['Restangular',
+                                'LoginFactory',
+                                '$q',
+            function (Restangular, LoginFactory, $q) {
 
         var internals = {};
         internals.courses = [];
@@ -18,14 +21,12 @@ angular.module('hapi-learning')
             for every request.
         **/
         exports.load = function (limit, page) {
-            return new Promise(function (resolve, reject) {
-                
+            return $q(function (resolve, reject) {
                 if (internals.courses.length === 0)
                 {
                     Restangular.all('courses')
                     .customGET('', { limit: limit, page: page })
                     .then(function (object) {
-                        console.log('fetch all courses');
                         internals.courses = object.results;
                         resolve(object.results);
                     })
@@ -44,16 +45,14 @@ angular.module('hapi-learning')
             Load a specific course
         **/
         exports.loadSpecific = function (code) {
-            return new Promise(function (resolve, reject) {
+            return $q(function (resolve, reject) {
                 Restangular.one('courses', code)
                     .get()
                     .then(function (object) {
-                                            console.log('fetch specific courses');
-
                         resolve(object);
                     })
                     .catch(function (err) {
-                        reject(err)
+                        reject(err);
                     });
             });
         };
@@ -66,19 +65,20 @@ angular.module('hapi-learning')
             /!\ WIP : Does not return course atm, so subscribed course is clear.
         **/
         exports.subscribe = function (code) {
-            return new Promise(function (resolve, reject) {
-                Restangular.one('users', LoginFactory.getProfile().username)
-                    .customPOST({}, "subscribe/" + code)
-                    .then(function (object) {
-                    console.log('subscribing to');
-                    console.log(object);
-                        //_.fill(internals.subscribedCourses, object); // object doit être le cours
-                        internals.subscribedCourses = [];
-                        resolve(object);
-                    })
-                    .catch(function (err) {
-                        reject(err)
-                    });
+            return $q(function (resolve, reject) {
+                LoginFactory.getProfile().then(function(profile) {
+                    Restangular.one('users', profile.username)
+                        .customPOST({}, 'subscribe/' + code)
+                        .then(function (object) {
+                            //_.fill(internals.subscribedCourses, object); // object doit être le cours
+                            internals.subscribedCourses = [];
+                            resolve(object);
+                        })
+                        .catch(function (err) {
+                            reject(err);
+                        });
+                }).catch(function(error) {});
+
             });
         };
 
@@ -88,17 +88,19 @@ angular.module('hapi-learning')
             from local subscribed courses.
         **/
         exports.unsubscribe = function (code) {
-            return new Promise(function (resolve, reject) {
-                Restangular.one('users', LoginFactory.getProfile().username)
-                .customPOST({}, "unsubscribe/" + code)
-                .then(function (object) {
-                    console.log('unsubscribing from');
-                    console.log(object);
-                    _.remove(internals.subscribedCourses, function(course) {return course.code === code});
-                    resolve(object);
-                })
-                .catch(function (err) {
-                    reject(err)
+            return $q(function (resolve, reject) {
+                LoginFactory.getProfile().then(function(profile) {
+                    Restangular.one('users', profile.username)
+                    .customPOST({}, 'unsubscribe/' + code)
+                    .then(function (object) {
+                        _.remove(internals.subscribedCourses, function(course) {
+                            return course.code === code;
+                        });
+                        resolve(object);
+                    })
+                    .catch(function (err) {
+                        reject(err);
+                    });
                 });
             });
         };
@@ -108,24 +110,22 @@ angular.module('hapi-learning')
             If they are already loaded, (internals.subscribedCourse) it will not.
         **/
         exports.getSubscribed = function () {
-            return new Promise(function (resolve, reject) {
-                if(internals.subscribedCourses.length === 0)
-                {
-                    Restangular.one('users', LoginFactory.getProfile().username)
-                    .getList('courses')
-                    .then(function (object) {
-                                            console.log('subscribed courses fetching');
+            return $q(function(resolve, reject) {
+                if (internals.subscribedCourses.length === 0) {
+                    LoginFactory.getProfile().then(function(profile) {
 
-                        internals.subscribedCourses = object;
-                        resolve(object);
-                    })
-                    .catch(function (error) {
-                        reject(error);
-                    });
-                }
-                else
-                {
-                    console.log('subscribed courses already fetched');
+                        Restangular.one('users', profile.username)
+                            .getList('courses')
+                            .then(function(object) {
+                                internals.subscribedCourses = object;
+                                resolve(internals.subscribedCourses);
+                            })
+                            .catch(function(error) {
+                                reject(error);
+                            });
+                    }).catch(function(error) {});
+
+                } else {
                     resolve(internals.subscribedCourses);
                 }
             });

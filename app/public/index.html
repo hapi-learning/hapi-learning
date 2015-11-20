@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="lib/ng-tags-input/ng-tags-input.css">
     <link rel="stylesheet" href="lib/ng-tags-input/ng-tags-input.bootstrap.css">
-    <link rel="stylesheet" href="lib/angular-loading-bar/build/loading-bar.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="lib/angular-loading-bar/build/loading-bar.min.css" media="all" />
+    <link rel="stylesheet" href="lib/angular-loading/angular-loading.css" />
+    <link rel="stylesheet" href="styles/main.css" />
     <!-- End vendor css -->
 
 </head>
@@ -37,29 +39,33 @@
     <script src="lib/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="lib/angular-file-upload/dist/angular-file-upload.min.js"></script>
     <script src="lib/angular-loading-bar/build/loading-bar.min.js"></script>
-    <!--  <script src="lib/ace-builds/src-min-noconflict/ace.js"></script>-->
+    <script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
     <script src="lib/angular-ui-ace/ui-ace.min.js"></script>
     <script src="lib/angular-ui-validate/dist/validate.min.js"></script>
     <script src="lib/lodash/lodash.min.js"></script>
     <script src="lib/restangular/dist/restangular.min.js"></script>
     <script src="lib/a0-angular-storage/dist/angular-storage.min.js"></script>
     <script src="lib/angular-jwt/dist/angular-jwt.min.js"></script>
+    <script src="lib/spin.js/spin.js"></script>
+    <script src="lib/angular-spinner/angular-spinner.js"></script>
+
+    <script src="lib/angular-loading-spinner/angular-loading-spinner.js"></script>
     <!-- End angular modules -->
 
     <!-- Application scripts -->
-    <script src="submodules/api-provider/api-provider.js"></script>
+    <script src="submodules/api/api.js"></script>
+
+    <script src="submodules/user-management/scripts/um.js"></script>
+    <script src="submodules/user-management/scripts/directives/login-form.js"></script>
+
     <script src="scripts/app.js"></script>
-    <script src="scripts/services/auth-storage.js"></script>
-    <script src="scripts/services/login-factory.js"></script>
-    <script src="scripts/config.js"></script>
-
-
-
 
 
     <script src="scripts/services/courses-factory.js"></script>
+    <script src="scripts/services/files-factory.js"></script>
     <script src="scripts/services/tags-factory.js"></script>
     <script src="scripts/directives/navbar.js"></script>
+    <script src="scripts/directives/upload.js"></script>
     <script src="scripts/directives/profile-form.js"></script>
     <script src="scripts/directives/footer.js"></script>
     <script src="scripts/directives/last-news.js"></script>
@@ -67,13 +73,11 @@
     <script src="scripts/directives/teacher-info.js"></script>
     <script src="scripts/directives/course-info.js"></script>
     <script src="scripts/directives/course-list.js"></script>
-    <script src="scripts/directives/login-form.js"></script>
     <script src="scripts/controllers/courses-controller.js"></script>
     <script src="scripts/directives/search-courses.js"></script>
     <script src="scripts/directives/subscribe.js"></script>
     <script src="scripts/directives/h2-small.js"></script>
     <script src="scripts/controllers/admin-controller.js"></script>
-    <script src="scripts/controllers/upload-controller.js"></script>
     <script src="scripts/controllers/profile-controller.js"></script>
     <script src="scripts/controllers/news-controller.js"></script>
     <script src="scripts/controllers/course-controller.js"></script>

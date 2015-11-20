@@ -20,18 +20,27 @@ internals.validatePermissions = function(permissions) {
     });
 };
 
-internals.checkPermission = function(request, permissions) {
-
+internals.checkPermissions = function(request, permissions) {
     const path = request.route.path;
     if (internals.settings.has(path)) {
         const settings = internals.settings.get(path);
+        _.each(settings, function(setting, index) {
 
-        _.each(permissions, function(permission, index) {
-            const aclRequired = settings[index].acl;
-            const acl = permission.acl;
+            // All the resource required
+            const tmp = _.filter(permissions, function(item) {
+                return item.name === setting.name;
+            });
+
+            _.each(tmp, function(item) {
+                const aclRequied = item.acl;
+                const acl = permission.acl;
+
+            });
 
 
-            return _.eq(aclRequired, _.intersection(acl, aclRequired));
+
+
+         //   return _.eq(aclRequired, _.intersection(acl, aclRequired));
         });
     } else {
         return true; // The route is not concerned by permission
