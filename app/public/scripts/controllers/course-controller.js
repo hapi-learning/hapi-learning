@@ -5,7 +5,6 @@ angular.module('hapi-learning')
                 function ($scope, $stateParams,
                           CoursesFactory, LoginFactory, $state) {
 
-
             $scope.updateCourse = false;
 
             if (!$scope.course && !$scope.updateCourse) {
