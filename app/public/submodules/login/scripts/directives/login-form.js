@@ -3,7 +3,7 @@ angular.module('hapi-learning.login')
                              function($state, $stateParams, LoginFactory, CONFIG) {
     return {
         restrict: 'A',
-        templateUrl: 'scripts/directives/login-form.html',
+        templateUrl: './login-form.html',
         link: function(scope, elem, attrs) {
 
             scope.user = {};
