@@ -2,7 +2,7 @@
 
 angular.module('hapi-learning', [
         'hapi-learning.api',
-        'hapi-learning.um'
+        'hapi-learning.um',
         'ui.router',
         'ngTagsInput',
         'jcs-autoValidate',
@@ -88,8 +88,9 @@ angular.module('hapi-learning', [
                 errorMessages['passwordMatch'] = 'Passwords do not match!';
             });
     }])
-    .run(['Restangular', 'API',  function (Restangular, API) {
+    .run(['Restangular', 'API', 'UM_CONFIG', function (Restangular, API, UM_CONFIG) {
         API.then(function(response) {
+            UM_CONFIG.API_PREFIX = response.data.api;
             Restangular.setBaseUrl(response.data.api);
         });
 
