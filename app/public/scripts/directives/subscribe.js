@@ -26,12 +26,14 @@ angular.module('hapi-learning')
                     .catch(function (error) {console.log(error);});
                 };
                 
-                CoursesFactory.getSubscribed()
-                .then(function(courses) {
-                    scope.subscribed = _.find(courses, 'code', attrs.code);
-                    scope.available = true;
-                })
-                .catch(function (error) {console.log(error);});
+				scope.$watch('code', function(value) {
+                	CoursesFactory.getSubscribed()
+                	.then(function(courses) {
+                	    scope.subscribed = _.find(courses, 'code', value);
+                	    scope.available = true;
+                	})
+                	.catch(function (error) {console.log(error);});
+				});
             }
         };
     }]);
