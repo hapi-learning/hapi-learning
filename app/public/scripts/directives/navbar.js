@@ -4,11 +4,14 @@ angular.module('hapi-learning')
         restrict: 'A',
         templateUrl: 'scripts/directives/navbar.html',
         link: function(scope, elem, attrs) {
+
             scope.logout = function() {
                 LoginFactory.logout();
             }
 
-            scope.profile = LoginFactory.getProfile();
+            LoginFactory.getProfile().then(function(profile) {
+                scope.profile = profile;
+            });
         }
     };
 }]);
