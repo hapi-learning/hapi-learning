@@ -8,7 +8,6 @@ angular
 
         CoursesFactory.getSubscribed().then(function(courses) {
             $scope.subscribedCourses = courses;
-            console.log(courses);
         }).catch(function(error) {
             console.log(error);
         });

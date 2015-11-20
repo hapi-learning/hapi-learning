@@ -10,50 +10,6 @@ const _ = require('lodash');
 
 const internals = {};
 
-// result is a sequelize instance
-internals.getUser = function(result) {
-
-    return Promise.resolve(
-
-        result.getTags({attributes: ['name'], joinTableAttributes: []})
-        .then(tags => {
-            const user = result.get({ plain:true });
-            user.tags = _.map(tags, (t => t.get('name', { plain:true })));
-            return user;
-        })
-    );
-};
-
-internals.findUser = function(User, username)
-{
-    Hoek.assert(User, 'Model User required');
-    Hoek.assert(username, 'username required');
-
-    return User.findOne({
-        where: {
-            username: username
-        },
-        attributes: {
-            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-        }
-    });
-};
-
-internals.findCourseByCode = function(Course, id) {
-
-    Hoek.assert(Course, 'Model Course required');
-    Hoek.assert(id, 'Course code required');
-
-    return Course.findOne({
-        where: {
-            code: { $eq : id }
-        },
-        attributes: {
-            exclude: ['updated_at', 'deleted_at', 'created_at']
-        }
-    });
-};
-
 internals.schemaUserPOST = function(){
     const user = Joi.object().keys({
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
@@ -82,7 +38,7 @@ exports.get = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
             .then(result => {
                 if (result) {
                     return reply(Utils.removeDates(result));
@@ -167,11 +123,11 @@ exports.addTags = {
 
         Tag.findAll({where: { name: { $in: request.payload.tags } }})
         .then(tags => {
-            internals.findUser(User, id)
+            Utils.findUser(User, id)
             .then(user => {
                 if (user) {
                     user.addTags(tags).then(() => {
-                       internals.getUser(user).then(result => {
+                       Utils.getUser(user).then(result => {
                            return reply(result);
                        });
                     });
@@ -276,7 +232,7 @@ exports.getTags = {
 
         const User = this.models.User;
 
-            internals.findUser(User, request.params.username)
+            Utils.findUser(User, request.params.username)
             .then(user => {
                 if (user) {
                     user.getTags()
@@ -302,7 +258,7 @@ exports.getFolders = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user)
             {
@@ -333,7 +289,7 @@ exports.getCourses = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user)
             {
@@ -367,7 +323,7 @@ exports.subscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user) {
                 user.getCourses({where : {code : request.params.crsId}})
@@ -412,7 +368,7 @@ exports.unsubscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user) {
                 user.getCourses({where : {code : request.params.crsId}})
@@ -456,7 +412,7 @@ exports.addFolders = {
         const username = request.params.username;
         const folders  = request.payload.folders;
 
-        internals.findUser(User, username)
+        Utils.findUser(User, username)
         .then(user => {
             if (user)
             {

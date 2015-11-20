@@ -2,7 +2,7 @@ angular.module('hapi-learning')
     .directive('courseInfo', function () {
         return {
             restrict: 'E',
-            scope : {
+            scope: {
                 course : '='
             },
             templateUrl: 'scripts/directives/course-info.html',
