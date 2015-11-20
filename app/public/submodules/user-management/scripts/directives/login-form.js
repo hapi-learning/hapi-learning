@@ -1,9 +1,9 @@
 angular.module('hapi-learning.um')
     .directive('loginForm', ['$state', '$stateParams', 'LoginFactory', 'UM_CONFIG',
-                             function($state, $stateParams, LoginFactory, UM_CONFIG) {
+                function($state, $stateParams, LoginFactory, UM_CONFIG) {
     return {
         restrict: 'A',
-        templateUrl: './login-form.html',
+        templateUrl: 'submodules/user-management/scripts/directives/login-form.html',
         link: function(scope, elem, attrs) {
 
             scope.user = {};
