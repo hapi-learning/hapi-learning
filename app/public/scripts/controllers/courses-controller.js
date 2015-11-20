@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning')
     .controller('CoursesCtrl',
                 ['$scope', 'Restangular', 'CoursesFactory', 'TagsFactory',
@@ -10,9 +12,13 @@ angular.module('hapi-learning')
 
         CoursesFactory.load(50).then(function(courses) {
             $scope.courses = courses;
-        }).catch(function(err) { console.log(err);})
+        }).catch(function(err) {
+            console.log(err);
+        });
 
-        TagsFactory.load().then(function(tags) { $scope.tags = tags });
+        TagsFactory.load().then(function(tags) {
+            $scope.tags = tags;
+        });
 
      /*   Restangular.all('tags').getList().then(function (tags) {
             for (var i = 0; i < tags.length; ++i) {

@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning')
     .directive('navbar', ['LoginFactory', function(LoginFactory) {
     return {
@@ -7,7 +9,7 @@ angular.module('hapi-learning')
 
             scope.logout = function() {
                 LoginFactory.logout();
-            }
+            };
 
             LoginFactory.getProfile().then(function(profile) {
                 scope.profile = profile;

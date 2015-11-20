@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning')
     .directive('filesExplorer', ['FilesFactory', function (FilesFactory) {
         return {
@@ -11,4 +13,4 @@ angular.module('hapi-learning')
             controller: 'CourseCtrl',
             controllerAs: 'ctrl'
         };
-    });
+    }]);

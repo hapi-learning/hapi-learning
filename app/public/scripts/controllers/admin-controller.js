@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning')
     .controller('AdminCtrl', ['$scope', function ($scope) {
 
@@ -11,6 +13,6 @@ angular.module('hapi-learning')
 
         $scope.backToLogin = function() {
             $scope.forgot = false;
-        }
+        };
 
     }]);

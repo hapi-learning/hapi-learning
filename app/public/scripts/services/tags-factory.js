@@ -18,7 +18,7 @@ angular.module('hapi-learning')
                     .getList()
                     .then(resolve)
                     .catch(reject);
-            })
+            });
         };
 
         exports.get = function (index) {

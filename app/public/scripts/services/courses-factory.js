@@ -27,7 +27,7 @@ angular.module('hapi-learning')
                             resolve(object.results);
                         })
                         .catch(function (err) {
-                            reject(err)
+                            reject(err);
                         });
                     });
             }
@@ -47,7 +47,7 @@ angular.module('hapi-learning')
                         resolve(object);
                     })
                     .catch(function (err) {
-                        reject(err)
+                        reject(err);
                     });
             });
         };
@@ -57,7 +57,7 @@ angular.module('hapi-learning')
 
                 LoginFactory.getProfile().then(function(profile) {
                     Restangular.one('users', profile.username)
-                        .customPOST({}, "subscribe/" + code)
+                        .customPOST({}, 'subscribe/' + code)
                         .then(function (object) {
                             //_.fill(internals.subscribedCourses, object); // object doit être le cours
 
@@ -66,7 +66,7 @@ angular.module('hapi-learning')
                             resolve(object);
                         })
                         .catch(function (err) {
-                            reject(err)
+                            reject(err);
                         });
                 }).catch(function(error) {});
 
@@ -78,13 +78,15 @@ angular.module('hapi-learning')
 
                 LoginFactory.getProfile().then(function(profile) {
                     Restangular.one('users', profile.username)
-                    .customPOST({}, "unsubscribe/" + code)
+                    .customPOST({}, 'unsubscribe/' + code)
                     .then(function (object) {
-                        _.remove(internals.subscribedCourses, function(course) {return course.code === code});
+                        _.remove(internals.subscribedCourses, function(course) {
+                            return course.code === code;
+                        });
                         resolve(object);
                     })
                     .catch(function (err) {
-                        reject(err)
+                        reject(err);
                     });
 
                 }).catch(function(error) {});
@@ -106,7 +108,7 @@ angular.module('hapi-learning')
                             .catch(function(error) {
                                 reject(error);
                             });
-                    }).catch(function(error) {})
+                    }).catch(function(error) {});
 
                 } else {
                     resolve(internals.subscribedCourses);

@@ -1,3 +1,4 @@
+'use strict';
 
 // Import restangular for now because it stores the base url
 angular.module('hapi-learning')
@@ -23,7 +24,7 @@ angular.module('hapi-learning')
                             url: path
                         });
                     }
-                }
+                };
             },
             link: function(scope, elem, attrs) {
 

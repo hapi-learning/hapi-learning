@@ -73,9 +73,9 @@ angular.module('hapi-learning', [
                     url: '/home',
                     templateUrl: '/views/course-main.html'
                 })
-                .state('root.course.files', {
-                    url: '/documents{path:FilePath}',
-                    templateUrl: '/views/course-files.html'
+                .state('root.course.documents', {
+                    url: '/documents{path:.*}',
+                    templateUrl: '/views/course-documents.html'
                 })
                 .state('login', {
                     url: '/login',
