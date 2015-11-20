@@ -1,4 +1,4 @@
-angular.module('api-provider', [])
+angular.module('hapi-learning.api', [])
        .factory('API', ['$http', function($http) {
            return $http.get('/api');
        }]);

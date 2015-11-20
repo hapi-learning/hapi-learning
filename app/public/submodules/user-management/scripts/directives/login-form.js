@@ -1,6 +1,6 @@
-angular.module('hapi-learning.login')
-    .directive('loginForm', ['$state', '$stateParams', 'LoginFactory', 'CONFIG',
-                             function($state, $stateParams, LoginFactory, CONFIG) {
+angular.module('hapi-learning.um')
+    .directive('loginForm', ['$state', '$stateParams', 'LoginFactory', 'UM_CONFIG',
+                             function($state, $stateParams, LoginFactory, UM_CONFIG) {
     return {
         restrict: 'A',
         templateUrl: './login-form.html',
@@ -16,7 +16,7 @@ angular.module('hapi-learning.login')
                 LoginFactory
                     .login(scope.user)
                     .then(function() {
-                        $state.go(CONFIG.AFTER_LOGIN_STATE);
+                        $state.go(UM_CONFIG.AFTER_LOGIN_STATE);
                     })
                     .catch(function() {
                         scope.invalidCredentials = true;

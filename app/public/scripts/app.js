@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('hapi-learning', [
-        'api-provider',
+        'hapi-learning.api',
+        'hapi-learning.um'
         'ui.router',
         'ngTagsInput',
         'jcs-autoValidate',
