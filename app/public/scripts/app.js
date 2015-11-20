@@ -15,6 +15,21 @@ angular.module('hapi-learning', [
         'angular-storage',
         'angular-jwt',
         'ngLoadingSpinner'])
+
+    .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
+        $urlMatcherFactoryProvider.type('FilePath', {
+            encode: function(value) {
+                return value ? value.toString() : value;
+            },
+            decode: function(value) {
+                return value ? value.toString() : value;
+            },
+            is: function(value) {
+                return this.pattern.test(value);
+            },
+            pattern: /[^\0]+/
+        });
+    }])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
             $urlRouterProvider.otherwise('/');
@@ -57,7 +72,7 @@ angular.module('hapi-learning', [
                     controller: 'CourseCtrl'
                 })
                 .state('root.course.files', {
-                    url: '/courses/:code/documents/{path:.*}',
+                    url: '/courses/:code/documents/{path:FilePath}',
                     templateUrl: '/views/course-files.html',
                     controller: 'FilesCtrl'
                 })
