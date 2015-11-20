@@ -6,6 +6,8 @@ angular.module('hapi-learning')
         $scope.courses = [];
         $scope.tags = [];
         $scope.selectedTags = [];
+
+
         CoursesFactory.load(50).then(function(courses) {
             $scope.courses = courses;
         }).catch(function(err) { console.log(err);})

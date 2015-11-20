@@ -1,7 +1,10 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('CoursesFactory', ['Restangular', 'LoginFactory', function (Restangular, LoginFactory) {
+    .factory('CoursesFactory', ['Restangular',
+                                'LoginFactory',
+                                '$q',
+            function (Restangular, LoginFactory, $q) {
 
         var internals = {};
         internals.courses = [];
@@ -80,26 +83,21 @@ angular.module('hapi-learning')
 
         exports.getSubscribed = function () {
 
-            if(internals.subscribedCourses.length === 0)
-            {
-                return new Promise(function (resolve, reject) {
+            return $q(function(resolve, reject) {
+                if (internals.subscribedCourses.length === 0) {
                     Restangular.one('users', LoginFactory.getProfile().username)
                         .getList('courses')
-                        .then(function (object) {
+                        .then(function(object) {
                             internals.subscribedCourses = object;
-                            resolve(object);
+                            resolve(internals.subscribedCourses);
                         })
-                        .catch(function (error) {
+                        .catch(function(error) {
                             reject(error);
                         });
-                });
-            }
-            else
-            {
-                return new Promise(function (resolve, reject) {
+                } else {
                     resolve(internals.subscribedCourses);
-                });
-            }
+                }
+            });
         };
 
         exports.get = function (index) {
