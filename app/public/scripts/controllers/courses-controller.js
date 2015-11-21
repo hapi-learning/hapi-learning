@@ -19,13 +19,7 @@ angular.module('hapi-learning')
         TagsFactory.load().then(function(tags) {
             $scope.tags = tags;
         });
-
-     /*   Restangular.all('tags').getList().then(function (tags) {
-            for (var i = 0; i < tags.length; ++i) {
-                $scope.tags.push(tags[i]);
-            }
-        });
-*/
+                    
         $scope.selected = function(tag) {
             console.log(tag.name + ' selected');
 
