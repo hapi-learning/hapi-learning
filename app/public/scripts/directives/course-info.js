@@ -9,7 +9,7 @@ angular.module('hapi-learning')
             },
             templateUrl: 'scripts/directives/course-info.html',
             link: function(scope, elem, attrs) {
-                
+
                 scope.updated = function() {
                     return true;
                 };
