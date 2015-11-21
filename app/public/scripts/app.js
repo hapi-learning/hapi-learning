@@ -35,6 +35,10 @@ angular.module('hapi-learning', [
             $urlRouterProvider.otherwise('/');
 
             $stateProvider
+                .state('login', {
+                    url: '/login',
+                    templateUrl: '/views/login.html'
+                })
                 .state('root', {
                     templateUrl: '/views/root.html'
                 })
@@ -76,10 +80,6 @@ angular.module('hapi-learning', [
                 .state('root.course.documents', {
                     url: '/documents{path:.*}',
                     templateUrl: '/views/course-documents.html'
-                })
-                .state('login', {
-                    url: '/login',
-                    templateUrl: '/views/login.html'
                 });
     }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
