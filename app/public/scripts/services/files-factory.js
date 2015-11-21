@@ -60,7 +60,23 @@ angular.module('hapi-learning')
                 var disposition = results.headers('Content-Disposition')
                 var contentType = results.headers('Content-Type');
                 var filename = disposition.substr(21);
-                var file = new Blob([results.data], { type: contentType });
+
+                var file;
+
+                if (contentType === 'application/zip') {
+                    var strToBytes = function (str) {
+                        var bytes = new Uint8Array(str.length);
+                        for (var i=0; i<str.length; i++) {
+                            bytes[i] = str.charCodeAt(i);
+                        }
+                        return bytes;
+                    };
+
+                    file = new Blob([strToBytes(results.data)], {type: contentType });
+                } else {
+                    file = new Blob([results.data], { type: contentType });
+                }
+
                 saveAs(file, filename, true);
 
             }).catch(function(err) {
