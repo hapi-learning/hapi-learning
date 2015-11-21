@@ -8,17 +8,17 @@ const _         = require('lodash');
 
 exports.register = function(server, options, next) {
     let models = {};
-    const sequelize = new Sequelize(
-    options.name || null,
-    options.username || null,
-    options.password || null, {
-        host: options.host || null,
-        dialect: options.dialect || null,
-        storage: options.storage || null,
-        logging: options.logging
-    });
 
-    models.sequelize = sequelize;
+    models.sequelize = new Sequelize(
+        options.name || null,
+        options.username || null,
+        options.password || null, {
+            host: options.host || null,
+            dialect: options.dialect || null,
+            storage: options.storage || null,
+            logging: options.logging
+        }
+    );
 
     const files = Fs.readdirSync(__dirname);
 
@@ -28,7 +28,7 @@ exports.register = function(server, options, next) {
 
             const name = model.charAt(0).toUpperCase() + model.slice(1);
 
-            models[name] = sequelize.import(model);
+            models[name] = models.sequelize.import(model);
         }
     });
 
@@ -66,6 +66,20 @@ exports.register = function(server, options, next) {
         // A user can have specifics additional permissions.
         m.User.belongsToMany(m.Permission, { through: 'user_permissions' });
 
+        // A user(TEACHER ONLY) can post many news
+        m.User.hasMany(m.News, {foreignKey : 'userId'});
+        
+        // A news can be related to a course
+        m.Course.hasMany(
+            m.News, 
+            { 
+                foreignKey: {
+                    name: 'crsId',
+                    allowNull: true
+                }
+            }
+        );
+        
     })(models);
 
 
