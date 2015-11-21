@@ -113,8 +113,7 @@ exports.logout = {
 
         const Cache = this.cache;
 
-        const auth = request.server.methods.parseAuthorization(request.headers.authorization);
-        const payload = auth.decoded;
+        const payload = request.decoded;
 
         const key = {
             segment: 'InvalidatedTokens',
@@ -125,7 +124,7 @@ exports.logout = {
         // Math.abs in case of the expiration date expires just after the
         // token validation and just before this handler
         const ttl = Math.abs(((payload.iat + 7200) * 1000) - Date.now());
-        const token = auth.token;
+        const token = request.token;
 
         const cacheToken = function() {
             // Invalidate the token by adding it to the cache.
@@ -166,7 +165,7 @@ exports.me = {
     handler: function (request, reply) {
 
         const User = this.models.User;
-        const payload = request.server.methods.parseAuthorization(request.headers.authorization).decoded;
+        const payload = request.decoded;
 
         User.findOne({
             where: { username: { $eq: payload.username } },

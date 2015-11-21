@@ -15,8 +15,8 @@ angular.module('hapi-learning')
             internals.courses.push(value);
         };
 
-        /** 
-            Courses fetching, return asynchronous promise fill with them. 
+        /**
+            Courses fetching, return asynchronous promise fill with them.
             Results are going to be saved in factory to avoid server fetching
             for every request.
         **/
@@ -38,13 +38,14 @@ angular.module('hapi-learning')
                 {
                     resolve(internals.courses);
                 }
-            }); 
+            });
         };
 
         /**
             Load a specific course
         **/
         exports.loadSpecific = function (code) {
+
             return $q(function (resolve, reject) {
                 Restangular.one('courses', code)
                     .get()
@@ -61,7 +62,7 @@ angular.module('hapi-learning')
             Try to subscribe a course to a user (/users/{id}/subscribe/{courseId}).
             It should return the subscribed course if success. This will be added
             to local subscribed courses.
-            
+
             /!\ WIP : Does not return course atm, so subscribed course is clear.
         **/
         exports.subscribe = function (code) {
@@ -105,7 +106,7 @@ angular.module('hapi-learning')
             });
         };
 
-        /** 
+        /**
             Load every courses subscribed by current user (GET /users/{id}/courses).
             If they are already loaded, (internals.subscribedCourse) it will not.
         **/
