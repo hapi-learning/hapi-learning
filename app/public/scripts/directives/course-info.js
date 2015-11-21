@@ -9,8 +9,10 @@ angular.module('hapi-learning')
             },
             templateUrl: 'scripts/directives/course-info.html',
             link: function(scope, elem, attrs) {
-                //console.log(attrs.course);
-                //scope.course = scope.$eval(attrs.course);
+                
+                scope.updated = function() {
+                    return true;
+                };
             }
         };
     });
