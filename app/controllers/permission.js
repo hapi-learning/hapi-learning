@@ -4,6 +4,9 @@ const Joi = require('joi');
 const _ = require('lodash');
 
 exports.get = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Returns a specific permission',
 
     validate : {
@@ -38,6 +41,9 @@ exports.get = {
 };
 
 exports.getAll = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Returns every permissions',
 
      handler: function (request, reply) {

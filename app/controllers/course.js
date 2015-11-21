@@ -8,40 +8,6 @@ const Path  = require('path');
 
 const internals = {};
 
-// result is a sequelize instance
-internals.getCourse = function(result) {
-
-    // Attributes to include in teachers
-    const teachersInclude = ['id', 'username', 'email',
-                             'first_name', 'last_name'];
-
-    return Promise.resolve(
-        Promise
-        .all([result.getTags({attributes: ['name'], joinTableAttributes: []}),
-              result.getTeachers({attributes: teachersInclude, joinTableAttributes: []})])
-
-        .then(values => {
-            let course = result.get({plain:true});
-            course.tags = _.map(values[0], (t => t.get('name', {plain:true})));
-            course.teachers = _.map(values[1], (t => t.get({plain:true})));
-
-            return course;
-        })
-    );
-};
-
-internals.findCourseByCode = function(Course, id) {
-
-    Hoek.assert(Course, 'Model Course required');
-    Hoek.assert(id, 'Course code required');
-
-    return Course.findOne({
-        where: {
-            code: { $eq : id }
-        }
-    });
-};
-
 internals.checkCourse = function(Course, id, reply, callback) {
 
     Hoek.assert(Course, 'Model Course required');
@@ -49,7 +15,7 @@ internals.checkCourse = function(Course, id, reply, callback) {
     Hoek.assert(callback, 'Callback required');
     Hoek.assert(reply, 'Reply interface required');
 
-    internals
+    Utils
         .findCourseByCode(Course, id)
         .then(result => {
             if (result) {
@@ -68,10 +34,6 @@ internals.checkForbiddenPath = function(path) {
 
 exports.getAll = {
     description: 'List all the courses',
-    cache: {
-        expiresIn: 15 * 1000, // 15 secondes (avoid abusive request)
-        privacy: 'private'
-    },
     handler: function (request, reply) {
 
         const Course = this.models.Course;
@@ -84,7 +46,7 @@ exports.getAll = {
         Course
             .findAndCountAll(options).then(results => {
 
-            let promises = _.map(results.rows, (r => internals.getCourse(r)));
+            let promises = _.map(results.rows, (r => Utils.getCourse(r)));
             // Wait for all promises to end
             Promise
                 .all(promises)
@@ -107,12 +69,12 @@ exports.get = {
         const Course = this.models.Course;
         const id = request.params.id;
 
-        internals.findCourseByCode(Course, id)
+        Utils.findCourseByCode(Course, id)
         .then(result => {
             if (result) // If found
             {
 
-                internals.getCourse(result).then(course => reply(course));
+                Utils.getCourse(result).then(course => reply(course));
             }
             else // If not found
             {
@@ -212,7 +174,7 @@ exports.getStudents = {
     handler: function (request, reply) {
         const Course = this.models.Course;
 
-        internals.findCourseByCode(Course, request.params.id)
+        Utils.findCourseByCode(Course, request.params.id)
         .then(course => {
             course
                 .getUsers({joinTableAttributes: []})
@@ -426,11 +388,11 @@ exports.addTags = {
         Tag
         .findAll({where: { name: { $in: request.payload.tags } }})
         .then(tags => {
-            internals.findCourseByCode(Course, request.params.id)
+            Utils.findCourseByCode(Course, request.params.id)
             .then(course => {
                 if (course) {
                     course.addTags(tags).then(() => {
-                       internals.getCourse(course).then(result => {
+                       Utils.getCourse(course).then(result => {
                            return reply(result);
                        });
                     });
@@ -465,11 +427,11 @@ exports.addTeachers = {
         User
         .findAll({where: { username: { $in: request.payload.teachers } }})
         .then(teachers => {
-            internals.findCourseByCode(Course, request.params.id)
+            Utils.findCourseByCode(Course, request.params.id)
             .then(course => {
                 if (course) {
                     course.addTeachers(teachers).then(() => {
-                        internals.getCourse(course).then(result => {
+                        Utils.getCourse(course).then(result => {
                             return reply(result);
                         });
                     });
@@ -575,11 +537,11 @@ exports.deleteTags = {
         Tag
         .findAll({where: { name: { $in: ptags} }})
         .then(tags => {
-            internals.findCourseByCode(Course, id)
+            Utils.findCourseByCode(Course, id)
             .then(course => {
                 if (course) {
                     course.removeTags(tags).then(() => {
-                        internals.getCourse(course).then(result => {
+                        Utils.getCourse(course).then(result => {
                             return reply(result);
                        });
                     });
@@ -616,11 +578,11 @@ exports.deleteTeachers = {
         User
         .findAll({where: { username: { $in: pteachers } }})
         .then(teachers => {
-            internals.findCourseByCode(Course, id)
+            Utils.findCourseByCode(Course, id)
             .then(course => {
                 if (course) {
                     course.removeTeachers(teachers).then(() => {
-                        internals.getCourse(course).then(result => {
+                        Utils.getCourse(course).then(result => {
                             return reply(result);
                         });
                     });

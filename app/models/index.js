@@ -32,7 +32,7 @@ exports.register = function(server, options, next) {
         }
     });
 
-    (function setAssociations(m) {
+    void (function setAssociations(m) {
 
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });

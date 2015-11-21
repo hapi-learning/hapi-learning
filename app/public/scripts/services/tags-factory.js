@@ -13,12 +13,22 @@ angular.module('hapi-learning')
 
         exports.load = function () {
             return new Promise(function (resolve, reject) {
-                Restangular
+                if (internals.tags.length === 0)
+                {
+                    Restangular
                     .all('tags')
                     .getList()
-                    .then(resolve)
+                    .then(function(tags) {
+                        internals.tags = tags;
+                        resolve(tags);
+                    })
                     .catch(reject);
-            })
+                }
+                else
+                {
+                    resolve(internals.tags);
+                }
+            });
         };
 
         exports.get = function (index) {

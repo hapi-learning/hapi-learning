@@ -1,13 +1,8 @@
 <div>
     <h3>
-    <span class="label label-default label-pill pull-right" ng-show="updated()">
-        <span class="glyphicon glyphicon-eye-open"></span>
-    </span>
-
-    <a ui-sref="root.course({code: course.code})">
-        <span ng-bind="course.code"></span> - <span ng-bind="course.name"></span>
-    </a>
-        </h3>
+        <updated code="course.code"></updated>
+        <course-link course="course"></course-link>
+    </h3>
 
     <div>
         <label>Teachers</label>
@@ -33,10 +28,5 @@
 
     <br />
 
-    <div>
-        <button type="button" class="btn btn-success" ng-hide="subscribed()">
-            <span class="glyphicon glyphicon-ok"></span> Subscribe</button>
-        <button type="button" class="btn btn-danger" ng-show="subscribed()">
-            <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
-    </div>
+    <subscribe code="course.code"></subscribe>
 </div>

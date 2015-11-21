@@ -26,10 +26,12 @@ exports.register = function (server, options, next) {
             const Role = server.plugins.models.models.Role;
             const Cache = server.plugins.cache.cache;
 
+            const token = server.methods.parseAuthorization(request.headers.authorization).token;
+
             // Key to deleted tokens
             const deletedTokens = {
                 segment: 'DeletedTokens',
-                id: server.methods.parseAuthorization(request.headers.authorization).token
+                id: token
             };
 
             // Key to invalidated tokens
@@ -52,6 +54,8 @@ exports.register = function (server, options, next) {
                     }]
                 }).then(result => {
                    if (result && result.Role.name === decoded.role) {
+                       request.decoded = decoded;
+                       request.token = token;
                        return callback(null, true, {scope: [decoded.role, decoded.username]});
                    } else {
                        return callback(null, false);
