@@ -117,8 +117,8 @@ angular.module('hapi-learning.um', [
             AuthStorage.remove('token');
         }
     }])
-    .run(['LoginFactory', '$state', 'UM_CONFIG', '$rootScope', '$timeout',
-        function(LoginFactory, $state, UM_CONFIG, $rootScope, $timeout) {
+    .run(['LoginFactory', '$state', 'UM_CONFIG', '$rootScope',
+        function(LoginFactory, $state, UM_CONFIG, $rootScope) {
             $rootScope.$on('$stateChangeStart',
                 function(event, toState, toParams, fromState, fromParams) {
                     // Redirects to the after login state when connected
