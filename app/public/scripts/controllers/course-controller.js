@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .controller('CourseCtrl', ['$scope', '$stateParams',
-                               'CoursesFactory', 'LoginFactory',
-                               'FilesFactory', '$state',
-                function ($scope, $stateParams,
-                          CoursesFactory, LoginFactory, FilesFactory, $state) {
+    .controller('CourseCtrl', [
+        '$scope', '$stateParams',
+        'CoursesFactory', 'LoginFactory',
+        'FilesFactory', '$state',
+
+        function ($scope, $stateParams,
+                  CoursesFactory, LoginFactory, FilesFactory, $state) {
 
             // If stateParams changed, update course
             if ($scope.course && $stateParams.code !== $scope.course.code) {
