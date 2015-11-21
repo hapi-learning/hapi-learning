@@ -47,8 +47,8 @@ angular.module('hapi-learning')
 
         exports.getDownloadPath = function(course, path) {
             //path = internals.replacePath(path);
-            path = path.replace('%2F', '/')
-            var url = Restangular.configuration.baseUrl + '/courses/' + course + '/documents' + path
+            path = path.replace('%2F', '/');
+            var url = Restangular.configuration.baseUrl + '/courses/' + course + '/documents' + path;
             return url;
         };
 
@@ -62,8 +62,7 @@ angular.module('hapi-learning')
                 responseType: 'arraybuffer'
             }).then(function(results) {
 
-                console.log(results.data);
-                var disposition = results.headers('Content-Disposition')
+                var disposition = results.headers('Content-Disposition');
                 var contentType = results.headers('Content-Type');
                 var filename = disposition.substr(21); // get filename
 
