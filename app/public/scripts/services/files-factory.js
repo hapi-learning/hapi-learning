@@ -1,7 +1,10 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('FilesFactory', ['Restangular' , '$q', '$http', function(Restangular, $q, $http) {
+    .factory('FilesFactory', [
+        'Restangular',
+        '$q',
+        '$http', function(Restangular, $q, $http) {
 
         var internals = {};
         var exports = {};
@@ -51,18 +54,19 @@ angular.module('hapi-learning')
 
         exports.download = function(course, path) {
 
-          //  path = internals.replacePath(path);
+            var url = exports.getDownloadPath(course, path);
+            $http.get(url).then(function(results) {
 
-            return $q(function(resolve, reject) {
-                $http({
-                    method: 'GET',
-                    url: exports.getDownloadPath(course, path),
-                }).then(function() {
-                    resolve();
-                }).catch(function() {
-                    reject();
-                });
+                var disposition = results.headers('Content-Disposition')
+                var contentType = results.headers('Content-Type');
+                var filename = disposition.substr(21);
+                var file = new Blob([results.data], { type: contentType });
+                saveAs(file, filename, true);
+
+            }).catch(function(err) {
+                console.log(err);
             });
+
         };
 
         return exports;

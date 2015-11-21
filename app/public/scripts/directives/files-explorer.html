@@ -17,9 +17,9 @@
                 <span class="glyphicon glyphicon-cloud-upload"></span> Upload
             </button>
 
-            <a target="_blank" ng-href="{{download()}}" class="col-md-3 pull-right btn btn-default" style="margin-right: 5px">
+            <button ng-click="download()" class="col-md-3 pull-right btn btn-default" style="margin-right: 5px">
                 <span class="glyphicon glyphicon-cloud-download"></span> Download
-            </a>
+            </button>
    </div>
 
     <br/>
@@ -41,7 +41,11 @@
                 <td class="col-md-1"><span class="glyphicon glyphicon-folder-open"></span></td>
                 <td class="col-md-6"><a ng-click="goToRelativePath(file.name)">{{file.name}}</a></td>
                 <td class="col-md-1"></td>
-                <td class="col-md-1"><span class="glyphicon glyphicon-floppy-save"></span></td>
+                <td class="col-md-1">
+                    <a ng-click="downloadFile(file.name)">
+                        <span class="glyphicon glyphicon-floppy-save"></span>
+                    </a>
+                </td>
                 <td class="col-md-3">{{file.lastUpdated}}</td>
             </tr>
             <!-- File -->
@@ -49,7 +53,11 @@
                 <td class="col-md-1"><span class="glyphicon glyphicon-file"></span></td>
                 <td class="col-md-6">{{file.name}}</td>
                 <td class="col-md-1">{{file.size}} o</td>
-                <td class="col-md-1"><span class="glyphicon glyphicon-floppy-save"></span></td>
+                <td class="col-md-1">
+                    <a ng-click="downloadFile(file.name)">
+                        <span class="glyphicon glyphicon-floppy-save"></span>
+                    </a>
+                </td>
                 <td class="col-md-3">{{file.lastUpdated}}</td>
 
             </tr>
