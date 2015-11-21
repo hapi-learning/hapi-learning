@@ -5,6 +5,8 @@
         .sidebar-nav .navbar .navbar-collapse {
             padding: 0;
             max-height: none;
+            border-color: transparent;
+            background-color: transparent;
         }
         .navbar-collapse.collapse {
             display: none!important;
@@ -22,6 +24,13 @@
         .h3, h3 {
             padding-bottom: 10px;
             padding-left: 20px;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .sidebar-nav .navbar-default {
+            border-color: transparent;
+            background-color: transparent;
         }
     }
     
@@ -66,8 +75,8 @@
         </div>
         <div class="navbar-collapse collapse sidebar-navbar-collapse">
             <div class="visible-xs visible-sm">
-               
-                    <h3>
+
+                <h3>
                         <div>
                         <span ng-bind="profile.firstName"></span>
                         <span ng-bind="profile.lastName"></span>
@@ -79,7 +88,7 @@
                     </h3>
             </div>
 
-            <ul class="nav navbar-nav">
+            <ul class="nav">
                 <li ui-sref-active="active">
                     <a ui-sref="root.home">
                         <i class="glyphicon glyphicon-home"></i> Home </a>
