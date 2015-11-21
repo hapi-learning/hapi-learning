@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .controller('CoursesCtrl',
-                ['$scope', 'Restangular', 'CoursesFactory', 'TagsFactory',
-                function ($scope, Restangular, CoursesFactory, TagsFactory) {
+    .controller('CoursesCtrl', [
+        '$scope',
+        'Restangular',
+        'CoursesFactory',
+        'TagsFactory',
+
+    function ($scope, Restangular, CoursesFactory, TagsFactory) {
 
         $scope.courses = [];
         $scope.tags = [];
@@ -20,12 +24,6 @@ angular.module('hapi-learning')
             $scope.tags = tags;
         });
 
-     /*   Restangular.all('tags').getList().then(function (tags) {
-            for (var i = 0; i < tags.length; ++i) {
-                $scope.tags.push(tags[i]);
-            }
-        });
-*/
         $scope.selected = function(tag) {
             console.log(tag.name + ' selected');
 

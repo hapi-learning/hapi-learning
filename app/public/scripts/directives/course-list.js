@@ -5,7 +5,6 @@ angular.module('hapi-learning')
         return {
             restrict: 'E',
             scope: {
-                courses: '=',
                 subscribed: '='
             },
             templateUrl: 'scripts/directives/course-list.html',
@@ -37,15 +36,6 @@ angular.module('hapi-learning')
                         .catch(function(error) {console.log(error);});   
                     }
                 });
-                
-               /* CoursesFactory.load()
-                .then(function(courses) {
-                    if (courses)
-                    {
-                        scope.courses = courses;
-                    }
-                })
-                .catch(function(error) {console.log(error);});*/
             }
         };
     }]);
