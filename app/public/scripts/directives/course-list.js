@@ -14,6 +14,10 @@ angular.module('hapi-learning')
                 scope.courses = [];
                 scope.tags = [];
                 scope.selectedTags = [];
+                scope.courseFilter = {
+                    name : '',
+                    code : '' 
+                };
 
                 scope.selected = function(tag) {
                     console.log(tag.name + ' selected');
