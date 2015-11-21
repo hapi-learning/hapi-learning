@@ -17,10 +17,10 @@
     <input type="file" class="file" id="fileSelect" nv-file-select uploader="uploader" multiple />
     <br/>
 
-
+<!--
     <h3>Upload queue</h3>
     <p>Queue length: {{ uploader.queue.length }}</p>
-
+-->
     <table class="table">
         <thead>
             <tr>
@@ -28,7 +28,6 @@
                 <th ng-show="uploader.isHTML5">Size</th>
                 <th ng-show="uploader.isHTML5">Progress</th>
                 <th>Status</th>
-                <th>Visibility</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -49,14 +48,7 @@
                     <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
                 </td>
 
-                <td nowrap>
-                    <button type="button" class="btn btn-primary btn-xs" ng-click="toggleFileVisible(item)" ng-show="isVisible(item)">
-                        <span class="glyphicon glyphicon-eye-open"></span> Visible
-                    </button>
-                    <button type="button" class="btn btn-warning btn-xs" ng-click="toggleFileVisible(item)" ng-show="!isVisible(item)">
-                        <span class="glyphicon glyphicon-eye-close"></span> Invisible
-                    </button>
-                </td>
+
 
                 <td nowrap>
                     <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()"
