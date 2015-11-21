@@ -22,18 +22,10 @@ angular.module('hapi-learning')
 
             CoursesFactory.loadSpecific($stateParams.code)
             .then(function (course) {
-                if (course)
-                {
-                    $scope.course = {
-                        name : course.name,
-                        description : course.description || 'This page is empty.',
-                        code : course.code,
-                        teachers : course.teachers,
-                        tags : course.tags
-                    };
-                }
-                else
-                {
+                if (course) {
+                    $scope.course = course;
+                    $scope.course.description = course.description || 'This page is empty';
+                } else {
                     $state.go('root.home');
                 }
             })
