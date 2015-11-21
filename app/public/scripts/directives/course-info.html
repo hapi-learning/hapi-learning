@@ -1,11 +1,8 @@
 <div>
     <h3>
-    <updated code="course.code"></updated>
-
-    <a ui-sref="root.course.main({code: course.code})">
-        <span ng-bind="course.code"></span> - <span ng-bind="course.name"></span>
-    </a>
-        </h3>
+        <updated code="course.code"></updated>
+        <course-link course="course"></course-link>
+    </h3>
 
     <div>
         <label>Teachers</label>
