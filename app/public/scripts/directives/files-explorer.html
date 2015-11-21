@@ -1,3 +1,60 @@
 <div>
 
+   <div class="row">
+       <div class="col-md-5">
+            <a ng-disabled="parentDir === null" ng-click="parentDir === null || goToAbsolute()"
+               class="btn btn-success">
+                <span class="glyphicon glyphicon-arrow-left"></span> Parent directory
+            </a>
+        </div>
+
+            <button class="col-md-3 pull-right btn btn-danger" ng-show="uploading" ng-click="uploading = false">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Finish upload
+            </button>
+
+            <button class="col-md-3 pull-right btn btn-default" ng-show="!uploading" ng-click="uploading = true">
+                <span class="glyphicon glyphicon-cloud-upload"></span> Upload
+            </button>
+
+            <button class="col-md-3 pull-right btn btn-default" style="margin-right: 5px">
+                <span class="glyphicon glyphicon-cloud-download"></span> Download
+            </button>
+   </div>
+
+    <br/>
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td class="col-md-1"></td>
+                <td class="col-md-6">Name</td>
+                <td class="col-md-1">Size</td>
+                <td class="col-md-1">Download</td>
+                <td class="col-md-3">Last updated</td>
+            </tr>
+        </thead>
+        <tbody ng-repeat="file in files">
+            <!-- Directory -->
+            <tr ng-if="file.isDirectory">
+                <td class="col-md-1"><span class="glyphicon glyphicon-folder-open"></span></td>
+                <td class="col-md-6"><a ng-click="goToRelativePath(file.file)">{{file.file}}</a></td>
+                <td class="col-md-1"></td>
+                <td class="col-md-1"><span class="glyphicon glyphicon-floppy-save"></span></td>
+                <td class="col-md-3">Not known</td>
+            </tr>
+            <!-- File -->
+            <tr ng-if="!file.isDirectory">
+                <td class="col-md-1"><span class="glyphicon glyphicon-file"></span></td>
+                <td class="col-md-6">{{file.file}}</td>
+                <td class="col-md-1">{{file.size}} o</td>
+                <td class="col-md-1"><span class="glyphicon glyphicon-floppy-save"></span></td>
+                <td class="col-md-3">Not known</td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <upload ng-if="uploading" path="path"></upload>
+
 </div>

@@ -8,8 +8,11 @@ angular.module('hapi-learning')
 
         internals.get = function(course, path, recursive) {
             return $q(function(resolve, reject) {
+
+
                 Restangular
-                    .all('course', course)
+                    .one('courses', course)
+                    .all('tree')
                     .customGET(path, { recursive: recursive })
                     .then(function(results) {
                         resolve(results);

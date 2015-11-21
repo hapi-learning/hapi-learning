@@ -209,7 +209,11 @@ const load = function() {
         recursive = recursive || false;
 
         const document = internals.getDocumentPath(course, path);
-        return require('./ls').sync(document, { recursive: recursive});
+        const relativeTo = Path.join(internals.courseFolder, encodeURI(course), internals.documents);
+        return require('./ls').sync(document, {
+            recursive: recursive,
+            relativeTo: relativeTo
+        });
     };
 
     return Storage;
