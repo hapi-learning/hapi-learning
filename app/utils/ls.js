@@ -19,20 +19,26 @@ const ls = function(path, options) {
     options = options || {};
     options = Hoek.applyToDefaults(internals.defaults, options);
 
-    const results = [];
+    const results = {};
+    results.dir = Path.relative(options.relativeTo, Path.dirname(path));
+
+    if (results.dir === '..') {
+        results.dir = null;
+    }
 
     const filenames = Glob.sync(Path.join(path, '*'), {
         nodir: options.nodir
     });
 
 
+    const files = [];
 
     filenames.forEach(filename => {
 
         const stat = Fs.statSync(filename);
 
         if (stat.isDirectory() && options.recursive) {
-            results.push({
+            files.push({
                 dir: Path.relative(options.relativeTo, Path.dirname(filename)),
                 name: Path.basename(filename),
                 files: ls(filename, options),
@@ -41,7 +47,7 @@ const ls = function(path, options) {
         } else {
              const file = {
                 dir: Path.relative(options.relativeTo, Path.dirname(filename)),
-                file: Path.basename(filename),
+                name: Path.basename(filename),
                 size: stat.size,
                 lastUpdated: stat.mtime
             };
@@ -52,9 +58,11 @@ const ls = function(path, options) {
                 file.isDirectory = false;
             }
 
-            results.push(file);
+            files.push(file);
         }
     });
+
+    results.files = files;
 
     return results;
 };

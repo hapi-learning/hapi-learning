@@ -14,14 +14,14 @@ angular.module('hapi-learning')
             link: function(scope, elem, attrs, ctrl) {
 
                 scope.path = $stateParams.path;
-                scope.files = [];
+                scope.files = {};
                 scope.uploading = false;
 
                 scope.getList = function(path) {
                     return $q(function(resolve, reject) {
                         FilesFactory.getList(scope.code, path).then(function(files) {
-                            scope.files = files;
-                            console.log(files);
+                            scope.files.dir = files.dir;
+                            scope.files.files = files.files;
                             resolve();
 
                         }).catch(reject);
@@ -32,8 +32,8 @@ angular.module('hapi-learning')
 
                 };
 
-                scope.download = function(path) {
-
+                scope.download = function() {
+                    return FilesFactory.getDownloadPath(scope.code, $stateParams.path);
                 };
 
                 scope.goToAbsolutePath = function(path) {
@@ -51,6 +51,15 @@ angular.module('hapi-learning')
                         code: scope.code,
                         path: $stateParams.path + tmp + path
                     });
+                };
+
+                scope.goToParent = function() {
+                    var path = scope.files.dir;
+                    console.log(scope.files.dir);
+                    if (path !== '') {
+                        path = '/' + path;
+                    }
+                    scope.goToAbsolutePath(path);
                 };
 
 
