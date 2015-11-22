@@ -171,8 +171,7 @@ const load = function() {
     // Returns a promise
     Storage.createFolder = function (course, path) {
         const folder = internals.getDocumentPath(course, path, true);
-        console.log('folder', decodeURI(folder));
-        return Fs.mkdirAsync(decodeURI(folder));
+        return Fs.mkdirAsync(folder);
     };
 
     Storage.renameFile = function(course, oldPath, newPath) {
@@ -201,7 +200,6 @@ const load = function() {
                 }
 
             } catch(err) {
-                console.log(err);
                 reject(err);
             }
         });

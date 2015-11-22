@@ -24,6 +24,7 @@ angular.module('hapi-learning')
 
 
                 scope.getList = function(path) {
+
                     scope.fetching = true;
                     return $q(function(resolve, reject) {
                         FilesFactory.getList(scope.code, path).then(function(files) {
@@ -46,13 +47,8 @@ angular.module('hapi-learning')
                 };
 
                 scope.createFolder = function(path) {
-                    // check folder name validity - TODO
 
-                    path = encodeURI(decodeURI(path).trim()); // Removes %20
-
-                    var prefix = $stateParams.path;
-
-                    path = prefix + '/' + path;
+                    path = $stateParams.path + '/' + path;
 
                     FilesFactory.createFolder(scope.code, path).then(function() {
                         scope.cleanFolderName();
@@ -97,11 +93,17 @@ angular.module('hapi-learning')
                     scope.goToAbsolutePath(path);
                 };
 
-                scope.$watch('code', function(value) {
-                    if (value) {
-                        scope.getList($stateParams.path);
-                    }
-                });
+                if (scope.code) {
+                    scope.getList($stateParams.path);
+                } else {
+                    // The code can be undefined because of asynchronous calls
+                    scope.$watch('code', function(value) {
+
+                        if (value) {
+                            scope.getList($stateParams.path);
+                        }
+                    });
+                }
             }
         };
     }]);
