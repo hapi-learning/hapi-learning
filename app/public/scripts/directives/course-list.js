@@ -14,6 +14,10 @@ angular.module('hapi-learning')
                 scope.courses = [];
                 scope.tags = [];
                 scope.selectedTags = [];
+                scope.courseFilter = {
+                    name : '',
+                    code : '' 
+                };
 
                 scope.selected = function(tag) {
                     console.log(tag.name + ' selected');
@@ -35,6 +39,10 @@ angular.module('hapi-learning')
                     return select;
                 };
 
+                /**
+                    Listener on 'subscribe' scope value :
+                    it loads all or part of courses.
+                **/
                 scope.$watch('subscribed', function(value) {
 
                     if (value === true)

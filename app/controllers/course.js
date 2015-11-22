@@ -111,7 +111,8 @@ exports.getDocuments = {
 
             if (isFile)
             {
-                return reply.file(result, { mode: 'attachment'});
+                return reply.file(result, { mode: 'attachment'})
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition');
             }
             else
             {
@@ -119,6 +120,7 @@ exports.getDocuments = {
                 const contentDisposition = 'attachment; filename=' + course + pathName + '.zip';
                 return reply(result)
                     .type('application/zip')
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition')
                     .header('Content-Disposition', contentDisposition);
             }
         })

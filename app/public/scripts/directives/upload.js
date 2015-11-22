@@ -41,6 +41,7 @@ angular.module('hapi-learning')
                 };
 
                 scope.fileChooser = function () {
+                    console.log('test');
                     angular.element('#fileSelect').trigger('click');
                 };
             }
