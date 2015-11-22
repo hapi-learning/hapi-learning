@@ -97,8 +97,10 @@ angular.module('hapi-learning')
                     scope.goToAbsolutePath(path);
                 };
 
-                scope.$watch('code', function() {
-                    scope.getList($stateParams.path);
+                scope.$watch('code', function(value) {
+                    if (value) {
+                        scope.getList($stateParams.path);
+                    }
                 });
             }
         };
