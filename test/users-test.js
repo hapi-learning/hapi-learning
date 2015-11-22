@@ -549,6 +549,7 @@ describe('Controller.User', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).equal(200);
+                expect(response.code).equal('DEV1');
                 done();
             });
         });

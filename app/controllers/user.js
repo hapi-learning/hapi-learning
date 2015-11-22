@@ -362,7 +362,7 @@ exports.subscribeToCourse = {
                         .then(course => {
                             if (course) {
                                 user.addCourse(course);
-                                return reply(Utils.removeDates(user));
+                                return reply(Utils.removeDates(course));
                             } else {
                                 return reply.notFound('Course ' + request.params.crsId + ' not found');
                             }
