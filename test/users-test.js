@@ -630,7 +630,7 @@ describe('Controller.User', () => {
     });
 
     describe('#unsubscribeToCourse', () => {
-        it('Should return statusCode 200 with user', done => {
+        it('Should return statusCode 200 with subscribed course', done => {
             const request = {
                 method: 'POST',
                 url: '/users/SRV/unsubscribe/DEV1',
@@ -640,6 +640,7 @@ describe('Controller.User', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).equal(200);
+                expect(response.code).equal('DEV1');
                 done();
             });
         });

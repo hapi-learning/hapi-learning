@@ -398,11 +398,21 @@ exports.unsubscribeToCourse = {
         Utils.findUser(User, request.params.username)
         .then(user => {
             if (user) {
-                user.getCourses({where : {code : request.params.crsId}})
+                user.getCourses({where : {code : request.params.crsId}, joinTableAttributes: []})
                 .then(courses => {
                     if (courses.length > 0) {
-                        user.removeCourse(courses);
-                        return reply(Utils.removeDates(user));
+                        user.removeCourse(courses)
+                        .then(count => {
+                            if (count > 0)
+                            {
+                                return reply(Utils.removeDates(courses)[0]);
+                            }
+                            else
+                            {
+                                return reply.notFound('Course ' + request.params.crsId + ' can not be subscribed');
+                            }
+                        })
+                        .catch(error => reply.badImplementation(error));
                     } else {
                         return reply.notFound('Course ' + request.params.crsId + ' is not subscribed by the user');
                     }
