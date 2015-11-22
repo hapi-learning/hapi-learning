@@ -164,7 +164,7 @@ const load = function() {
 
 
     Storage.createOrReplaceFile = function (course, path, datafile) {
-        const file = internals.getDocumentPath(course, path);
+        const file = internals.getDocumentPath(course, path, true);
         datafile.pipe(Fs.createWriteStream(file));
     };
 

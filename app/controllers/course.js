@@ -314,7 +314,7 @@ exports.postDocument = {
             return reply.badRequest('Filename required to post a document');
         }
 
-        const path = Path.join(encodeURI(request.params.path), encodeURI(filename));
+        const path = Path.join(request.params.path, filename);
 
         // needs a better verification, but will do it for now.
         if (internals.checkForbiddenPath(path)) {

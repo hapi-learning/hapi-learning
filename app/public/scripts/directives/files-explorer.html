@@ -21,7 +21,6 @@
     }
 
     .error-message {
-        text-align: center;
         font-size: 15px;
     }
 </style>
@@ -36,13 +35,18 @@
        </div>
     </div>
 
-    <div class="row" ng-if="uploadError">
-       <div class="col-md-12 alert alert-danger alert-dismissible error-message"
+    <div ng-if="uploadError">
+       <div class="alert alert-danger alert-dismissible error-message"
             ng-click="cleanUploadError()" aria-label="close">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-           <span><strong>Uploading error</strong> - cannot upload folders / check if your files are valid</span>
+            <span><strong>Uploading error!</strong><br/>
+            <ul>
+                <li>The file cannot be a folder (use create folder button)</li>
+                <li>The file must be less than 20Mb</li>
+            </ul>
+            </span>
        </div>
     </div>
 

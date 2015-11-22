@@ -119,10 +119,10 @@ let internals = {
                         }
                     }
                 ]
-            },
+            }/*,
             tv: {
                 host: process.env.API_HOST || 'localhost'
-            }
+            }*/
         }
     }
 };
