@@ -86,6 +86,25 @@ exports.getAll = {
 };
 
 
+exports.getTeachers = {
+    description: 'Get only teachers',
+    handler: function(request, reply) {
+
+        const User = this.models.User;
+
+        User.findAndCountAll({
+                where: {role_id: 2},
+                limit: request.query.limit,
+                offset: (request.query.page - 1) * request.query.limit,
+                attributes: {
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+                }
+            })
+            .then(results => reply.paginate(Utils.removeDates(results.rows), results.count))
+            .catch(err => reply.badImplementation(err));
+    }
+};
+
 
 exports.post = {
     auth: {

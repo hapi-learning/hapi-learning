@@ -23,21 +23,23 @@ exports.register = function (server, options, next) {
         {method: 'GET',  path: '/me',     config: Controllers.Auth.me},
 
         // Users routes
-        {method: 'GET',    path: '/users',                             config: Controllers.User.getAll},
-        {method: 'GET',    path: '/users/{username}',                  config: Controllers.User.get},
-        {method: 'GET',    path: '/users/{username}/tags',             config: Controllers.User.getTags},
-        {method: 'GET',    path: '/users/{username}/courses',          config: Controllers.User.getCourses},
-        {method: 'GET',    path: '/users/{username}/folders',          config: Controllers.User.getFolders},
+        {method: 'GET',    path: '/users',                                   config: Controllers.User.getAll},
+        {method: 'GET',    path: '/users/{username}',                        config: Controllers.User.get},
+        {method: 'GET',    path: '/users/{username}/tags',                   config: Controllers.User.getTags},
+        {method: 'GET',    path: '/users/{username}/courses',                config: Controllers.User.getCourses},
+        {method: 'GET',    path: '/users/{username}/folders',                config: Controllers.User.getFolders},
+        
+        {method: 'GET',    path: '/teachers',                                config: Controllers.User.getTeachers},
 
-        {method: 'POST',   path: '/users',                             config: Controllers.User.post},
-        {method: 'POST',   path: '/users/{username}/tags',             config: Controllers.User.addTags},
+        {method: 'POST',   path: '/users',                                   config: Controllers.User.post},
+        {method: 'POST',   path: '/users/{username}/tags',                   config: Controllers.User.addTags},
         {method: 'POST',   path: '/users/{username}/subscribe/{crsId}',      config: Controllers.User.subscribeToCourse},
         {method: 'POST',   path: '/users/{username}/unsubscribe/{crsId}',    config: Controllers.User.unsubscribeToCourse},
-        {method: 'POST',   path: '/users/{username}/folders',         config: Controllers.User.addFolders},
+        {method: 'POST',   path: '/users/{username}/folders',                config: Controllers.User.addFolders},
         {method: 'POST',   path: '/users/{username}/folders/{name}/{crsId}', config: Controllers.User.addCourseToFolder},
-        {method: 'PUT',    path: '/users/{username}',                  config: Controllers.User.put},
-        {method: 'PATCH',  path: '/users/{username}',                  config: Controllers.User.patch},
-        {method: 'DELETE', path: '/users/{username}',                  config: Controllers.User.delete},
+        {method: 'PUT',    path: '/users/{username}',                        config: Controllers.User.put},
+        {method: 'PATCH',  path: '/users/{username}',                        config: Controllers.User.patch},
+        {method: 'DELETE', path: '/users/{username}',                        config: Controllers.User.delete},
 
         // Roles routes
         {method: 'GET',    path: '/roles',       config: Controllers.Role.getAll},
