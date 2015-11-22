@@ -24,11 +24,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th width="40%">Name</th>
-                <th ng-show="uploader.isHTML5">Size</th>
-                <th ng-show="uploader.isHTML5">Progress</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th class="col-md-5">Name</th>
+                <th class="col-md-2" ng-show="uploader.isHTML5">Size</th>
+                <th class="col-md-2" ng-show="uploader.isHTML5">Progress</th>
+                <th class="col-md-1">Status</th>
+                <th class="col-md-2">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -38,7 +38,8 @@
                 <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
                 <td ng-show="uploader.isHTML5">
                     <div class="progress" style="margin-bottom: 0;">
-                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                        <div class="progress-bar"
+                             role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
                     </div>
                 </td>
 
