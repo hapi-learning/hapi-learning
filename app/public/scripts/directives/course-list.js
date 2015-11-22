@@ -39,6 +39,10 @@ angular.module('hapi-learning')
                     return select;
                 };
 
+                /**
+                    Listener on 'subscribe' scope value :
+                    it loads all or part of courses.
+                **/
                 scope.$watch('subscribed', function(value) {
 
                     if (value === true)

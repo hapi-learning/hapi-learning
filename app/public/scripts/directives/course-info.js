@@ -5,12 +5,12 @@ angular.module('hapi-learning')
         return {
             restrict: 'E',
             scope: {
-                course : '='
+                course: '='
             },
             templateUrl: 'scripts/directives/course-info.html',
-            link: function(scope, elem, attrs) {
+            link: function (scope, elem, attrs) {
 
-                scope.updated = function() {
+                scope.updated = function () {
                     return true;
                 };
             }

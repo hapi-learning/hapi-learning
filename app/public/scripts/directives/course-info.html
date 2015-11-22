@@ -19,9 +19,8 @@
         <label>Tags</label>
 
         <br />
-
         <span ng-repeat="tag in course.tags">
-            <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+            <tag-button tag="tag"></tag-button>
         </span>
     </div>
 
