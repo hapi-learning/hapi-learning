@@ -292,7 +292,8 @@ exports.postDocument = {
         maxBytes: process.env.UPLOAD_MAX,
         output: 'stream',
         allow: 'multipart/form-data',
-        parse: true
+        parse: true,
+        timeout: 60000
     },
     validate: {
         params: {
