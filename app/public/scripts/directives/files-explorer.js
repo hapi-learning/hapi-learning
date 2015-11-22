@@ -18,6 +18,7 @@ angular.module('hapi-learning')
                 scope.uploading = false;
                 scope.fetching = null;
 
+                scope.folderName = '';
                 scope.creatingFolder = false;
                 scope.folderError = null;
 
