@@ -8,11 +8,11 @@
         font-size: 18px;
     }
 
-    .save-file, .file-name {
+    .save-file, .folder-name {
         cursor: pointer;
     }
 
-    .file-name {
+    .file-name, folder-name {
         font-size: 15px;
     }
 
@@ -108,7 +108,7 @@
                     </td>
                 <td class="col-md-6">
                     <a ng-click="goToRelativePath(file.name)">
-                        <span class="file-name">{{file.name}}</span>
+                        <span class="folder-name">{{file.name}}</span>
                     </a>
                 </td>
                 <td class="col-md-1"></td>

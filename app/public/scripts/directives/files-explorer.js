@@ -89,7 +89,6 @@ angular.module('hapi-learning')
 
                 scope.goToParent = function() {
                     var path = scope.files.dir;
-                    console.log(scope.files.dir);
                     if (path !== '') {
                         path = '/' + path;
                     }
