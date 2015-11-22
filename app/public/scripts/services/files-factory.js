@@ -24,8 +24,7 @@ angular.module('hapi-learning')
 
         internals.getUrl = function(course, path) {
             path = internals.replacePath(path);
-            var url = Restangular.configuration.baseUrl + '/courses/' + course + '/documents/' + path;
-            return url;
+            return Restangular.configuration.baseUrl + '/courses/' + course + '/documents/' + path;
         };
 
 
@@ -45,6 +44,12 @@ angular.module('hapi-learning')
                         reject(err);
                     });
             });
+        };
+
+        exports.getUploadPath = function(course, path) {
+            path = internals.replacePath(path);
+            path = encodeURIComponent(path);
+            return Restangular.configuration.baseUrl + '/courses/' + course + '/documents/' + path;
         };
 
         exports.getList = function(course, path) {

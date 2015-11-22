@@ -2,8 +2,8 @@
 
 angular.module('hapi-learning')
     .directive('filesExplorer', [
-        'FilesFactory', '$q', '$state', '$stateParams',
-        function (FilesFactory, $q, $state, $stateParams) {
+        '$rootScope', 'FilesFactory', '$q', '$state', '$stateParams',
+        function ($rootScope, FilesFactory, $q, $state, $stateParams) {
 
         return {
             restrict: 'E',
@@ -22,6 +22,9 @@ angular.module('hapi-learning')
                 scope.creatingFolder = false;
                 scope.folderError = null;
 
+                scope.getUploadPath = function() {
+                    return FilesFactory.getUploadPath(scope.code, $stateParams.path);
+                };
 
                 scope.getList = function(path) {
 
@@ -93,7 +96,19 @@ angular.module('hapi-learning')
                     scope.goToAbsolutePath(path);
                 };
 
-                if (scope.code) {
+                // Looks good with setTimeout.
+                setTimeout(function() {
+                   scope.getList($stateParams.path);
+                });
+
+
+                $rootScope.$on('upload-complete', function() {
+                    scope.getList($stateParams.path);
+                });
+
+                // Set this back if bug appears again.
+
+              /*  if (scope.code) {
                     scope.getList($stateParams.path);
                 } else {
                     // The code can be undefined because of asynchronous calls
@@ -103,7 +118,7 @@ angular.module('hapi-learning')
                             scope.getList($stateParams.path);
                         }
                     });
-                }
+                }*/
             }
         };
     }]);

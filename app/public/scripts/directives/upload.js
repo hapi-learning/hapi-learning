@@ -2,7 +2,8 @@
 
 // Import restangular for now because it stores the base url
 angular.module('hapi-learning')
-    .directive('upload', ['FileUploader', 'Restangular', function (FileUploader, Restangular) {
+    .directive('upload', ['$rootScope', 'FileUploader', 'Restangular', 'AuthStorage',
+                          function ($rootScope, FileUploader, Restangular, AuthStorage) {
         return {
             restrict: 'E',
             scope : {
@@ -14,35 +15,35 @@ angular.module('hapi-learning')
             compile: function() {
                 return {
                     pre: function(scope, elem, attrs) {
-                        var path = Restangular.configuration.baseUrl + '/';
-
-                        if (attrs.path) {
-                            path += attrs.path;
-                        }
-
+                        console.log(scope.path);
                         scope.uploader = new FileUploader({
-                            url: path
+                            url: scope.path,
+                            headers: {
+                                Authorization: AuthStorage.get('token')
+                            }
                         });
+
+
+                        scope.uploader.onErrorItem = function(item, response, status, headers) {
+                            console.log('error');
+                        };
+
+                        scope.uploader.onCompleteAll = function(item, response, status, headers) {
+                            $rootScope.$emit('upload-complete');
+                        };
+
+                        scope.isVisible = function(item) {
+                            return item.file.visible;
+                        };
+
+                        scope.toggleFileVisible = function(item) {
+                            item.file.visible = !item.file.visible;
+                        };
+
+                        scope.fileChooser = function () {
+                            angular.element('#fileSelect').trigger('click');
+                        };
                     }
-                };
-            },
-            link: function(scope, elem, attrs) {
-
-                scope.uploader.onAfterAddingFile = function(item) {
-                    item.file.visible = true;
-                };
-
-                scope.isVisible = function(item) {
-                    return item.file.visible;
-                };
-
-                scope.toggleFileVisible = function(item) {
-                    item.file.visible = !item.file.visible;
-                };
-
-                scope.fileChooser = function () {
-                    console.log('test');
-                    angular.element('#fileSelect').trigger('click');
                 };
             }
         };
