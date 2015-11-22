@@ -16,14 +16,16 @@ angular.module('hapi-learning')
                 scope.path = $stateParams.path;
                 scope.files = {};
                 scope.uploading = false;
+                scope.fetching = null;
 
                 scope.getList = function(path) {
+                    scope.fetching = true;
                     return $q(function(resolve, reject) {
                         FilesFactory.getList(scope.code, path).then(function(files) {
                             scope.files.dir = files.dir;
                             scope.files.files = files.files;
+                            scope.fetching = false;
                             resolve();
-
                         }).catch(reject);
                     });
                 };

@@ -2,7 +2,8 @@
 
    <div class="row">
        <div class="col-md-5">
-            <a ng-disabled="files.dir === null" ng-click="files.dir === null || goToParent()"
+            <a ng-disabled="fetching || files.dir === null"
+               ng-click="fetching || files.dir === null || goToParent()"
                class="btn btn-success">
                 <span class="glyphicon glyphicon-arrow-left"></span> Parent directory
             </a>
