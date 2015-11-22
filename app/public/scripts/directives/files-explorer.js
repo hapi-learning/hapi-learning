@@ -18,6 +18,10 @@ angular.module('hapi-learning')
                 scope.uploading = false;
                 scope.fetching = null;
 
+                scope.creatingFolder = false;
+                scope.folderError = null;
+
+
                 scope.getList = function(path) {
                     scope.fetching = true;
                     return $q(function(resolve, reject) {
@@ -32,6 +36,27 @@ angular.module('hapi-learning')
 
                 scope.upload = function() {
 
+                };
+
+                scope.cleanFolderName = function() {
+                    scope.folderName = "";
+                    scope.creatingFolder = false;
+                    scope.folderError = null;
+                };
+
+                scope.createFolder = function(path) {
+                    // check folder name validity - TODO
+
+                    var prefix = $stateParams.path;
+
+                    path = prefix + '/' + path;
+
+                    FilesFactory.createFolder(scope.code, path).then(function() {
+                        scope.cleanFolderName();
+                        scope.getList($stateParams.path);
+                    }).catch(function(error) {
+                        scope.folderError = 'Invalid folder name';
+                    });
                 };
 
                 scope.download = function() {

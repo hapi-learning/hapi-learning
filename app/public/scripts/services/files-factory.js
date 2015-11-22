@@ -19,6 +19,14 @@ angular.module('hapi-learning')
             return path;
         };
 
+        internals.getUrl = function(course, path) {
+            //path = internals.replacePath(path);
+            path = path.replace('%2F', '/');
+            var url = Restangular.configuration.baseUrl + '/courses/' + course + '/documents' + path;
+            return url;
+        };
+
+
         internals.get = function(course, path, recursive) {
             return $q(function(resolve, reject) {
 
@@ -45,16 +53,28 @@ angular.module('hapi-learning')
             return internals.get(course, path, true);
         };
 
-        exports.getDownloadPath = function(course, path) {
-            //path = internals.replacePath(path);
-            path = path.replace('%2F', '/');
-            var url = Restangular.configuration.baseUrl + '/courses/' + course + '/documents' + path;
-            return url;
+
+        exports.createFolder = function(course, path) {
+
+            return $q(function(resolve, reject) {
+                path = internals.replacePath(path);
+                Restangular
+                    .one('courses', course)
+                    .all('folders')
+                    .customPOST(null, path)
+                    .then(function(response) {
+                        resolve();
+                    })
+                    .catch(function(error) {
+                        reject(error);
+                    });
+            });
         };
+
 
         exports.download = function(course, path) {
 
-            var url = exports.getDownloadPath(course, path);
+            var url = internals.getUrl(course, path);
 
             $http({
                 url: url,

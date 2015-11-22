@@ -27,6 +27,7 @@
     "a0-angular-storage": "~0.0.13",
     "angular-ui-bootstrap": "~0.14.3",
     "angular-loading-spinner": "~0.0.3",
-    "angular-spinner": "~0.8.0"
+    "angular-spinner": "~0.8.0",
+    "font-awesome": "fontawesome#~4.4.0"
   }
 }
