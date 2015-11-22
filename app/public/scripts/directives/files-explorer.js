@@ -20,7 +20,8 @@ angular.module('hapi-learning')
 
                 scope.folderName = '';
                 scope.creatingFolder = false;
-                scope.folderError = null;
+                scope.folderError = false;
+                scope.uploadError = false;
 
                 scope.getUploadPath = function() {
                     return FilesFactory.getUploadPath(scope.code, $stateParams.path);
@@ -39,10 +40,6 @@ angular.module('hapi-learning')
                     });
                 };
 
-                scope.upload = function() {
-
-                };
-
                 scope.cleanFolderName = function() {
                     scope.folderName = "";
                     scope.creatingFolder = false;
@@ -57,8 +54,12 @@ angular.module('hapi-learning')
                         scope.cleanFolderName();
                         scope.getList($stateParams.path);
                     }).catch(function(error) {
-                        scope.folderError = 'Invalid folder name';
+                        scope.folderError = true;
                     });
+                };
+
+                scope.cleanUploadError = function() {
+                    scope.uploadError = false;
                 };
 
                 scope.download = function() {
@@ -104,6 +105,10 @@ angular.module('hapi-learning')
 
                 $rootScope.$on('upload-complete', function() {
                     scope.getList($stateParams.path);
+                });
+
+                $rootScope.$on('upload-error', function() {
+                    scope.uploadError = true;
                 });
 
                 // Set this back if bug appears again.

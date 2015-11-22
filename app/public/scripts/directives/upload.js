@@ -23,9 +23,8 @@ angular.module('hapi-learning')
                             }
                         });
 
-
                         scope.uploader.onErrorItem = function(item, response, status, headers) {
-                            console.log('error');
+                            $rootScope.$emit('upload-error');
                         };
 
                         scope.uploader.onCompleteAll = function(item, response, status, headers) {

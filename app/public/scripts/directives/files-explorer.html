@@ -30,9 +30,19 @@
 <div>
 
 
-    <div class="row" ng-show="folderError">
+    <div class="row" ng-if="folderError">
        <div class="col-md-12 alert alert-danger error-message">
-            <span ng-bind="folderError"></span>
+            <span>Invalid folder name</span>
+       </div>
+    </div>
+
+    <div class="row" ng-if="uploadError">
+       <div class="col-md-12 alert alert-danger alert-dismissible error-message"
+            ng-click="cleanUploadError()" aria-label="close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+           <span><strong>Uploading error</strong> - cannot upload folders / check if your files are valid</span>
        </div>
     </div>
 
