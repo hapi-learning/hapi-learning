@@ -48,14 +48,18 @@ angular.module('hapi-learning')
                 scope.createFolder = function(path) {
                     // check folder name validity - TODO
 
+                    path = encodeURI(decodeURI(path).trim());
+
                     var prefix = $stateParams.path;
 
                     path = prefix + '/' + path;
 
+                    console.log(path);
                     FilesFactory.createFolder(scope.code, path).then(function() {
                         scope.cleanFolderName();
                         scope.getList($stateParams.path);
                     }).catch(function(error) {
+                        console.log(error);
                         scope.folderError = 'Invalid folder name';
                     });
                 };
