@@ -22,6 +22,7 @@ angular.module('hapi-learning')
                 scope.creatingFolder = false;
                 scope.folderError = false;
                 scope.uploadError = false;
+                scope.editing = false;
 
                 scope.getUploadPath = function() {
                     return FilesFactory.getUploadPath(scope.code, $stateParams.path);

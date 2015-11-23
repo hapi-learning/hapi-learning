@@ -245,17 +245,18 @@ const load = function() {
       // Returns a promise
     Storage.updateFolder = function (course, path, name, hidden) {
 
-        const oldFolder = internals.getDocumentPath(course, path, true);
-        const newFolder = internals.getDocumentPath(course, name, true);
-
-        let directory = Path.dirname(path);
-        if (directory === '.') {
-            directory = '/';
-        }
 
         return new P(function(resolve, reject) {
 
-            internals.findOne({
+            const oldFolder = internals.getDocumentPath(course, path, true);
+            const newFolder = internals.getDocumentPath(course, Path.dirname(path) + '/' + name, true);
+
+            let directory = Path.dirname(path);
+            if (directory === '.') {
+                directory = '/';
+            };
+
+            internals.File.findOne({
                 where: {
                     name: Path.basename(path),
                     directory: directory,
@@ -269,23 +270,27 @@ const load = function() {
                         result.set('hidden', hidden);
                     }
 
+                    const rename = function() {
+                        return Fs.renameAsync(oldFolder, newFolder);
+                    };
+
                     if (name) {
                         result.set('name', name);
                         internals.File.update({
-                            directory: name,
+                            directory: Path.dirname(path) + '/' + name
                         }, {
                             where: {
                                 directory: directory,
                                 course_code: course
                             }
                         }).then(function() {
-                            Fs.renameAsync(oldFolder, newFolder).then(function() {
+                            rename().then(function() {
                                 result.save();
                                 resolve();
                             }).catch(reject);
                         }).catch(reject);
                     } else {
-                        Fs.renameAsync(oldFolder, newFolder).then(function() {
+                        rename().then(function() {
                             result.save();
                             resolve();
                         }).catch(reject);
@@ -294,7 +299,7 @@ const load = function() {
                 } else {
                     reject(404);
                 }
-            });
+            }).catch(() => reject(500));
 
 
         });

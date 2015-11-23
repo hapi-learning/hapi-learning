@@ -18,14 +18,6 @@ const internals = {
         plugins: {
             '../app/cache': [{select: ['api']}],
             '../app/utils/error' : [{select: ['api']}],
-            '../app/utils/storage': [
-                {
-                    select: ['api'],
-                    options: {
-                        root: __dirname,
-                        test: true
-                    }
-                }],
             'hapi-auth-jwt2': [{select: ['api']}],
             '../app/auth': [{select: ['api']}],
             '../app/models': [
@@ -38,6 +30,14 @@ const internals = {
                     }
                 }
             ],
+            '../app/utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        test: true
+                    }
+                }],
             '../app/controllers': [{select: ['api']}],
             '../app/routes/api': [{select: ['api']}],
             'hapi-pagination': [

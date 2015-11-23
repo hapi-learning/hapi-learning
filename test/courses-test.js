@@ -805,6 +805,34 @@ describe('Controller.Course', () => {
         });
     });
 
+    describe('#updateFolder', () => {
+        it ('Should rename the folder', done => {
+
+            const request = {
+                method: 'PATCH',
+                url: '/courses/ATL3G/folders/subfolder',
+                payload: {
+                    name: 'subfolderrenamed'
+                },
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(200);
+
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/subfolderrenamed'),
+                        (err, stats) => {
+
+                    expect(err).to.be.null();
+                    expect(stats).to.exists();
+                    expect(stats.isDirectory()).to.be.true();
+
+                    done();
+                });
+            });
+        })
+    });
+
     /*describe('#getTree', () => {
         const request = {
             method: 'GET',

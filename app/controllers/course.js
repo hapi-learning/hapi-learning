@@ -334,7 +334,6 @@ exports.postDocument = {
             Storage.createOrReplaceFile(course, path, file, hidden).then(function() {
                 return reply('File : ' + filename + ' successfuly uploaded').code(201);
             }).catch(function(err) {
-                console.log(err);
                 return reply.conflict(err);
             });
         };
@@ -371,7 +370,7 @@ exports.createFolder = {
             Storage
                 .createFolder(course, path, request.query.hidden)
                 .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
-                .catch(err => { console.log(err); reply.badData(err); });
+                .catch(err => reply.badData(err));
         };
 
         return internals.checkCourse(Course, course, reply, createFolder);
@@ -407,9 +406,17 @@ exports.updateFolder = {
 
         const updateFolder = function() {
             Storage
-                .createFolder(course, path, name, hidden)
+                .updateFolder(course, path, name, hidden)
                 .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly updated').code(200))
-                .catch(err => reply.badData(err));
+                .catch(err => {
+                    if (err === 404) {
+                        return reply.notFound('Folder not found');
+                    } else if (err === 500) {
+                        return reply.badImplementation();
+                    } else {
+                        return reply.badData(err)
+                    }
+            });
         };
 
         return internals.checkCourse(Course, course, reply, updateFolder);
