@@ -1,59 +1,8 @@
+'use strict';
+
 angular.module('hapi-learning')
-    .controller('CoursesCtrl',
-                ['$scope', 'Restangular', 'CoursesFactory', 'TagsFactory',
-                function ($scope, Restangular, CoursesFactory, TagsFactory) {
+    .controller('CoursesCtrl', ['$scope',
+    function ($scope) {
 
-        $scope.courses = [];
-        $scope.tags = [];
-        $scope.selectedTags = [];
-
-        CoursesFactory.load(50).then(function(courses) {
-            $scope.courses = courses;
-        }).catch(function(err) { console.log(err);})
-
-        TagsFactory.load().then(function(tags) { $scope.tags = tags });
-
-     /*   Restangular.all('tags').getList().then(function (tags) {
-            for (var i = 0; i < tags.length; ++i) {
-                $scope.tags.push(tags[i]);
-            }
-        });
-*/
-        $scope.selected = function(tag) {
-            console.log(tag.name + ' selected');
-
-            if ($scope.selectedTags.indexOf(tag) > -1) {
-                _.remove($scope.selectedTags, {name: tag.name});
-            } else {
-                $scope.selectedTags.push(tag);
-            }
-        };
-
-        $scope.subscribed = function () {
-            // did the user already subscribe to the course?
-            return false;
-        };
-
-        $scope.updated = function () {
-            // course updated since user last connection?
-            return true;
-        };
-
-        $scope.filterByTags = function (course) {
-            var select = true;
-
-            $scope.selectedTags.forEach(function (tag) {
-                select = select && (course.tags.indexOf(tag.name) > -1);
-            });
-
-            return select;
-        };
-                    
-        $scope.search = function(course) {
-            var $scope.course = angular.lowercase($scope.course) || '';
-            
-            return (angular.lowercase(course.name).indexOf($scope.course) !== -1 ||
-                    angular.lowercase(course.code).indexOf($scope.course) !== -1);  
-        };
 
     }]);

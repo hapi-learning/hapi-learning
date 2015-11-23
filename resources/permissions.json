@@ -1,12 +1,14 @@
-[{"type":1,"description":"COURS CREATE"},
-{"type":2,"description":"COURS READ"},
-{"type":3,"description":"COURS UPDATE"},
-{"type":4,"description":"COURS DELETE"},
-{"type":5,"description":"ROLE CREATE"},
-{"type":6,"description":"ROLE READ"},
-{"type":7,"description":"ROLE UPDATE"},
-{"type":8,"description":"ROLE DELETE"},
-{"type":9,"description":"USER CREATE"},
-{"type":10,"description":"USER READ"},
-{"type":11,"description":"USER UPDATE"},
-{"type":12,"description":"USER DELETE"}]
+[{"type": 1, "description":"COURS CREATE"},
+{"type": 2, "description":"COURS READ"},
+{"type": 3, "description":"COURS UPDATE"},
+{"type": 4, "description":"COURS DELETE"},
+{"type": 5, "description":"ROLE CREATE"},
+{"type": 6, "description":"ROLE READ"},
+{"type": 7, "description":"ROLE UPDATE"},
+{"type": 8, "description":"ROLE DELETE"},
+{"type": 9, "description":"USER CREATE"},
+{"type": 10, "description":"USER READ"},
+{"type": 11, "description":"USER UPDATE"},
+{"type": 12, "description":"USER DELETE"}]
+
+

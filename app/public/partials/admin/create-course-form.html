@@ -44,6 +44,32 @@
         </div>
     </fieldset>
 
+        
+    <fieldset class="form-group">
+        <div>
+            <label>Teachers</label>
+            <tags-input class="ti-input-sm" name="teachers" ng-model="teachers" title="Teachers short names" placeholder="Add a teacher" add-from-autocomplete-only="true" display-property="username">
+                <auto-complete min-length="0" source="loadTeachers($query)" template="teacher-template"></auto-complete>
+            </tags-input>
+        </div>
+    </fieldset>
+
+    <script type="text/ng-template" id="teacher-template">
+        <div class="row">
+            
+            <div class="col-md-1">
+                <span ng-bind-html="$highlight($getDisplayText())"></span>
+            </div>
+            
+            <div class="col-md-11">
+                <span ng-bind="data.firstName"></span>
+                <span ng-bind="data.lastName"></span>
+            </div>
+            
+        </div>
+    </script>
+
+
     <br />
 
     <fieldset class="form-group">
