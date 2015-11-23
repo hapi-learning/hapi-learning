@@ -23,6 +23,9 @@
     .error-message {
         font-size: 15px;
     }
+
+    .btn-edit {
+    }
 </style>
 
 
@@ -106,21 +109,28 @@
         <thead>
             <tr>
                 <td class="col-md-1"></td>
-                <td class="col-md-6">Name</td>
+                <td class="col-md-5">Name</td>
                 <td class="col-md-1">Size</td>
                 <td class="col-md-1">Download</td>
-                <td class="col-md-3">Last updated</td>
+                <td class="col-md-2">Last updated</td>
+                <td class="col-md-2">Edit</td>
             </tr>
         </thead>
         <tbody ng-repeat="file in files.files">
+
+
             <!-- Directory -->
             <tr ng-if="file.isDirectory">
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-folder-open type-icon"></span>
                     </td>
-                <td class="col-md-6">
-                    <a ng-click="goToRelativePath(file.name)">
-                        <span class="folder-name">{{file.name}}</span>
+                <td class="col-md-5">
+                    <a ng-click="fileExplorer.$visible || goToRelativePath(file.name)"
+                        ng-disabled="fileExplorer.$visible">
+                        <span class="folder-name" editable-text="file.name"
+                              e-name="name" e-form="fileExplorer"  e-required>
+                            {{file.name}}
+                        </span>
                     </a>
                 </td>
                 <td class="col-md-1"></td>
@@ -129,8 +139,57 @@
                         <span class="glyphicon glyphicon-floppy-save save-file"></span>
                     </a>
                 </td>
-                <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
+                <td class="col-md-2" am-time-ago="file.lastUpdated"></td>
+                <td class="col-md-2">
+
+                    <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
+                          class="form-buttons form-inline" shown="inserted == file">
+
+                    <div class="input-group">
+                        <div class="input-group-btn">
+
+                            <!-- Confirm -->
+                            <button class="btn btn-success btn-edit" ng-disabled="fileExplorer.$waiting">
+                                <span class="glyphicon glyphicon-ok">
+
+                                </span>
+                            </button>
+
+                            <!-- Cancel -->
+                            <button class="btn btn-warning btn-edit"
+                                    ng-disabled="fileExplorer.$waiting"
+                                    ng-click="fileExplorer.$cancel()">
+                                <span class="glyphicon glyphicon-remove">
+
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+
+                    <div class="input-group" ng-show="!fileExplorer.$visible">
+                        <div class="input-group-btn">
+
+                            <!-- Edit -->
+                            <button class="btn btn-primary btn-edit" ng-click="fileExplorer.$show()">
+                                <span class="glyphicon glyphicon-pencil">
+
+                                </span>
+                            </button>
+
+                            <!-- Delete -->
+                            <button class="btn btn-danger btn-edit" ng-click="removeUser($index)">
+                                <span class="glyphicon glyphicon-minus">
+
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </td>
             </tr>
+
+
             <!-- File -->
             <tr ng-if="!file.isDirectory">
                 <td class="col-md-1">
@@ -143,10 +202,12 @@
                         <span class="glyphicon glyphicon-floppy-save save-file"></span>
                     </a>
                 </td>
-                <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
+                <td class="col-md-2" am-time-ago="file.lastUpdated"></td>
 
             </tr>
         </tbody>
+
+
     </table>
 
     <upload ng-if="uploading" path="getUploadPath()"></upload>
