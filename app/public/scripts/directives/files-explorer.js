@@ -2,8 +2,8 @@
 
 angular.module('hapi-learning')
     .directive('filesExplorer', [
-        'FilesFactory', '$q', '$state', '$stateParams',
-        function (FilesFactory, $q, $state, $stateParams) {
+        '$rootScope', 'FilesFactory', '$q', '$state', '$stateParams',
+        function ($rootScope, FilesFactory, $q, $state, $stateParams) {
 
         return {
             restrict: 'E',
@@ -20,10 +20,15 @@ angular.module('hapi-learning')
 
                 scope.folderName = '';
                 scope.creatingFolder = false;
-                scope.folderError = null;
+                scope.folderError = false;
+                scope.uploadError = false;
 
+                scope.getUploadPath = function() {
+                    return FilesFactory.getUploadPath(scope.code, $stateParams.path);
+                };
 
                 scope.getList = function(path) {
+
                     scope.fetching = true;
                     return $q(function(resolve, reject) {
                         FilesFactory.getList(scope.code, path).then(function(files) {
@@ -35,10 +40,6 @@ angular.module('hapi-learning')
                     });
                 };
 
-                scope.upload = function() {
-
-                };
-
                 scope.cleanFolderName = function() {
                     scope.folderName = "";
                     scope.creatingFolder = false;
@@ -46,20 +47,19 @@ angular.module('hapi-learning')
                 };
 
                 scope.createFolder = function(path) {
-                    // check folder name validity - TODO
 
-                    path = encodeURI(decodeURI(path).trim()); // Removes %20
-
-                    var prefix = $stateParams.path;
-
-                    path = prefix + '/' + path;
+                    path = $stateParams.path + '/' + path;
 
                     FilesFactory.createFolder(scope.code, path).then(function() {
                         scope.cleanFolderName();
                         scope.getList($stateParams.path);
                     }).catch(function(error) {
-                        scope.folderError = 'Invalid folder name';
+                        scope.folderError = true;
                     });
+                };
+
+                scope.cleanUploadError = function() {
+                    scope.uploadError = false;
                 };
 
                 scope.download = function() {
@@ -97,11 +97,27 @@ angular.module('hapi-learning')
                     scope.goToAbsolutePath(path);
                 };
 
-                scope.$watch('code', function(value) {
-                    if (value) {
-                        scope.getList($stateParams.path);
-                    }
+                $rootScope.$on('upload-complete', function() {
+                    scope.getList($stateParams.path);
                 });
+
+                $rootScope.$on('upload-error', function() {
+                    scope.uploadError = true;
+                });
+
+                // Set this back if bug appears again.
+
+                if (scope.code) {
+                    scope.getList($stateParams.path);
+                } else {
+                    // The code can be undefined because of asynchronous calls
+                    scope.$watch('code', function(value) {
+
+                        if (value) {
+                            scope.getList($stateParams.path);
+                        }
+                    });
+                }
             }
         };
     }]);

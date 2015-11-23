@@ -164,15 +164,14 @@ const load = function() {
 
 
     Storage.createOrReplaceFile = function (course, path, datafile) {
-        const file = internals.getDocumentPath(course, path);
+        const file = internals.getDocumentPath(course, path, true);
         datafile.pipe(Fs.createWriteStream(file));
     };
 
     // Returns a promise
     Storage.createFolder = function (course, path) {
         const folder = internals.getDocumentPath(course, path, true);
-        console.log('folder', decodeURI(folder));
-        return Fs.mkdirAsync(decodeURI(folder));
+        return Fs.mkdirAsync(folder);
     };
 
     Storage.renameFile = function(course, oldPath, newPath) {
@@ -201,7 +200,6 @@ const load = function() {
                 }
 
             } catch(err) {
-                console.log(err);
                 reject(err);
             }
         });

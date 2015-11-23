@@ -10,7 +10,10 @@ angular.module('hapi-learning')
         var exports = {};
 
         internals.replacePath = function(path) {
-            path = path.replace('%2F', '/');
+
+            // ui router does not replace %2F by / ...
+            // (but does replace %20 by space)
+            path = path.replace(/%2F/g, '/');
 
             if (path[0] === '/') {
                 path = path.substr(1);
@@ -20,10 +23,8 @@ angular.module('hapi-learning')
         };
 
         internals.getUrl = function(course, path) {
-            //path = internals.replacePath(path);
-            path = path.replace('%2F', '/');
-            var url = Restangular.configuration.baseUrl + '/courses/' + course + '/documents' + path;
-            return url;
+            path = internals.replacePath(path);
+            return Restangular.configuration.baseUrl + '/courses/' + course + '/documents/' + path;
         };
 
 
@@ -35,7 +36,7 @@ angular.module('hapi-learning')
                 Restangular
                     .one('courses', course)
                     .all('tree')
-                    .customGET(path, { recursive: recursive })
+                    .customGET(encodeURIComponent(path), { recursive: recursive })
                     .then(function(results) {
                         resolve(results);
                     })
@@ -43,6 +44,12 @@ angular.module('hapi-learning')
                         reject(err);
                     });
             });
+        };
+
+        exports.getUploadPath = function(course, path) {
+            path = internals.replacePath(path);
+            path = encodeURIComponent(path);
+            return Restangular.configuration.baseUrl + '/courses/' + course + '/documents/' + path;
         };
 
         exports.getList = function(course, path) {
@@ -61,7 +68,7 @@ angular.module('hapi-learning')
                 Restangular
                     .one('courses', course)
                     .all('folders')
-                    .customPOST(null, path)
+                    .customPOST(null, encodeURIComponent(path))
                     .then(function(response) {
                         resolve();
                     })
