@@ -35,24 +35,4 @@ angular.module('hapi-learning')
                 $state.go('root.home');
             });
         };
-
-        $scope.beginEdit = function() {
-            $scope.editing = true;
-            $rootScope.$emit('course-begin-edit');
-        };
-
-        $scope.cancelEdit = function() {
-            $scope.editing = false;
-            $rootScope.$emit('course-cancel-edit');
-        };
-
-        $scope.confirmEdit = function() {
-            $scope.editing = false;
-            $rootScope.$emit('course-confirm-edit');
-        };
-
-
-
-
-
     }]);

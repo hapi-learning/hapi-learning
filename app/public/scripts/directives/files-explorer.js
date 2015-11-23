@@ -22,7 +22,6 @@ angular.module('hapi-learning')
                 scope.creatingFolder = false;
                 scope.folderError = false;
                 scope.uploadError = false;
-                scope.editing = false;
 
                 scope.getUploadPath = function() {
                     return FilesFactory.getUploadPath(scope.code, $stateParams.path);
@@ -106,17 +105,6 @@ angular.module('hapi-learning')
                     scope.uploadError = true;
                 });
 
-                $rootScope.$on('course-begin-edit', function() {
-                    scope.editing = true;
-                });
-
-                $rootScope.$on('course-confirm-edit', function() {
-                    scope.editing = false;
-                });
-
-                $rootScope.$on('course-cancel-edit', function() {
-                    scope.editing = false;
-                });
 
                 // Set this back if bug appears again.
 
