@@ -29,7 +29,7 @@ internals.newsWrongUser = {
 internals.newsWrongCourse = {
     subject : 'subject',
     content : 'content',
-    username : 'Bell',
+    username : 'abell2r',
     code : 'SYS23'  
 };
 internals.newsCourseUnrelated = {
@@ -163,6 +163,36 @@ describe('Controller.News', () => {
                 expect(res.request.response.statusCode).equal(201);
                 expect(response.user).equal(internals.newsCourseUnrelated.username);
                 expect(response.course).equal(undefined);
+                done();
+            });
+        });
+        
+        it('should return statusCode 404 : user not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/news',
+                payload : internals.newsWrongUser,
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
+        
+         it('should return statusCode 404 : course not found', done => {
+            const request = {
+                method: 'POST',
+                url: '/news',
+                payload : internals.newsWrongCourse,
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
                 done();
             });
         });

@@ -62,7 +62,7 @@ exports.post = {
     handler: function (request, reply) {
 
         const User = this.models.User;
-        const Cours = this.models.Cours;
+        const Course = this.models.Course;
         const News = this.models.News;
 
         const username = request.payload.username;
@@ -70,21 +70,45 @@ exports.post = {
         const subject = request.payload.subject;
         const content = request.payload.content;
 
-        
+
         Utils.findUser(User, username)
             .then(user => {
-                if (user)
+                if (user) 
                 {
-                    News.create({
-                        subject : subject,
-                        content : content,
-                        user : username,
-                        course : code
-                    })
-                    .then(news => reply(Utils.removeDates(news)).code(201))
-                    .catch((error) => reply.conflict(error));
-                }
-                else
+                    if (code)
+                    {
+                        Utils.findCourseByCode(Course, code)
+                        .then(course => {
+                            if (course)
+                            {
+                                News.create({
+                                    subject: subject,
+                                    content: content,
+                                    user: username,
+                                    course: code
+                                })
+                                .then(news => reply(Utils.removeDates(news)).code(201))
+                                .catch((error) => reply.conflict(error));
+                            }
+                            else
+                            {
+                                return reply.notFound('Course ' + code + ' not found'); 
+                            }
+                        })
+                        .catch((error) => reply.conflict(error));
+                    }
+                    else
+                    {
+                        News.create({
+                            subject: subject,
+                            content: content,
+                            user: username
+                        })
+                        .then(news => reply(Utils.removeDates(news)).code(201))
+                        .catch((error) => reply.conflict(error));
+                    }
+                } 
+                else 
                 {
                     return reply.notFound('User ' + username + ' not found');
                 }
