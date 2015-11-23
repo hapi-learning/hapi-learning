@@ -71,9 +71,9 @@ angular.module('hapi-learning')
                 .customOperation('patch', encodeURIComponent(path), null, null, {
                     name: newName,
                     hidden: hidden
-                }).then(function(response) {
+                }).then(function() {
                     d.resolve();
-                }).catch(function(error) {
+                }).catch(function() {
                     d.reject('Invalid name');
                 });
 
@@ -88,11 +88,30 @@ angular.module('hapi-learning')
                     .one('courses', course)
                     .all('folders')
                     .customPOST(null, encodeURIComponent(path))
-                    .then(function(response) {
+                    .then(function() {
                         resolve();
                     })
                     .catch(function(error) {
                         reject(error);
+                    });
+            });
+        };
+
+        exports.deleteDocument = function(course, path) {
+            return $q(function(resolve, reject) {
+                path = internals.replacePath(path);
+                console.log(path);
+                Restangular
+                    .one('courses', course)
+                    .all('documents')
+                    .customOperation('remove', null, null, null, {
+                        files: path
+                    })
+                    .then(function() {
+                        resolve();
+                    }).catch(function(err) {
+                        console.log(err);
+                        reject();
                     });
             });
         };

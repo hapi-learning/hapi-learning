@@ -99,12 +99,22 @@ angular.module('hapi-learning')
 
 
                 scope.updateFolder = function(data, oldName) {
-
                     var path = $stateParams.path + '/' + oldName;
-
-
                     return FilesFactory.updateFolder(scope.code, path, data.name, false);
                 };
+
+                scope.removeFile = function(index) {
+                    var name = scope.files.files[index].name;
+                    var path = $stateParams.path + '/' + name;
+
+                    FilesFactory.deleteDocument(scope.code, path)
+                        .then(function() {
+                            scope.getList($stateParams.path);
+                        }).catch(function() {
+                            console.log('error - cannot delete');
+                        });
+
+                }
 
                 $rootScope.$on('upload-complete', function() {
                     scope.getList($stateParams.path);
