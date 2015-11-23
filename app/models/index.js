@@ -34,6 +34,10 @@ exports.register = function(server, options, next) {
 
     void (function setAssociations(m) {
 
+
+        // A course has many files
+        m.Course.hasMany(m.File);
+
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
 
@@ -68,18 +72,18 @@ exports.register = function(server, options, next) {
 
         // A user(TEACHER ONLY) can post many news
         m.User.hasMany(m.News, {foreignKey : 'userId'});
-        
+
         // A news can be related to a course
         m.Course.hasMany(
-            m.News, 
-            { 
+            m.News,
+            {
                 foreignKey: {
                     name: 'crsId',
                     allowNull: true
                 }
             }
         );
-        
+
     })(models);
 
 
