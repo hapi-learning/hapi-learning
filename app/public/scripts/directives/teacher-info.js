@@ -7,6 +7,6 @@ angular.module('hapi-learning')
             templateUrl: 'scripts/directives/teacher-info.html',
             scope: {
                 teacher: '='
-            },
+            }
         };
     });

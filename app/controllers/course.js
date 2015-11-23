@@ -111,7 +111,8 @@ exports.getDocuments = {
 
             if (isFile)
             {
-                return reply.file(result, { mode: 'attachment'});
+                return reply.file(result, { mode: 'attachment'})
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition');
             }
             else
             {
@@ -119,6 +120,7 @@ exports.getDocuments = {
                 const contentDisposition = 'attachment; filename=' + course + pathName + '.zip';
                 return reply(result)
                     .type('application/zip')
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition')
                     .header('Content-Disposition', contentDisposition);
             }
         })
@@ -290,7 +292,8 @@ exports.postDocument = {
         maxBytes: process.env.UPLOAD_MAX,
         output: 'stream',
         allow: 'multipart/form-data',
-        parse: true
+        parse: true,
+        timeout: 60000
     },
     validate: {
         params: {
@@ -312,7 +315,7 @@ exports.postDocument = {
             return reply.badRequest('Filename required to post a document');
         }
 
-        const path = Path.join(encodeURI(request.params.path), encodeURI(filename));
+        const path = Path.join(request.params.path, filename);
 
         // needs a better verification, but will do it for now.
         if (internals.checkForbiddenPath(path)) {
@@ -350,7 +353,8 @@ exports.createFolder = {
         const Storage = this.storage;
         const Course  = this.models.Course;
         const course  = request.params.id;
-        const path    = encodeURI(request.params.path);
+
+        const path = request.params.path;
 
         // needs a better verification, but will do it for now.
         if (internals.checkForbiddenPath(path)) {

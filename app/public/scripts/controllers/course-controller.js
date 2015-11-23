@@ -34,8 +34,6 @@ angular.module('hapi-learning')
             });
         }
 
-        $scope.getTree = function(path) {
-            return FilesFactory.getTree($scope.course.code, path);
-        };
+
 
     }]);

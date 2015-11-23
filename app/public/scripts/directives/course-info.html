@@ -8,10 +8,9 @@
         <label>Teachers</label>
 
         <br />
-
         <span ng-repeat="teacher in course.teachers">
-        <teacher-info teacher="teacher"></teacher-info>
-    </span>
+            <teacher-info teacher="teacher"></teacher-info>
+        </span>
     </div>
 
     <br />
@@ -20,9 +19,8 @@
         <label>Tags</label>
 
         <br />
-
         <span ng-repeat="tag in course.tags">
-        <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+            <tag-button tag="tag"></tag-button>
         </span>
     </div>
 

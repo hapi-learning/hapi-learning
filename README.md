@@ -63,15 +63,6 @@ Start the node tests :
 $ npm test
 ```
 
-To use the API alone (8088 by default), you need to be authentificated and set the
-Authorization header with the token. Here is a valid token (for now) :
-```
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NywidXNlcm5hbWUiOiJQQlQiLCJlbWFpbCI6InBiZXR0ZW5zQGhlYi5iZSIsInJvbGUiOiJ0ZWFjaGVyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTQ0NzU4OTkxMH0.x09NtCt3es8GflRc-ocA99EcqZY0ZFb00DwbTa4QAWI
-```
-
-You can set headers in firefox with plugins/modules.
-
-
 ## Hapi-pagination
 
 Plugin hapi-pagination (not for the course) : https://github.com/fknop/hapi-pagination

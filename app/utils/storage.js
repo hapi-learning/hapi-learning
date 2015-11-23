@@ -54,8 +54,12 @@ internals.removeRecursivelyAsync = function(path) {
 
 
 // Returns the path of the file in the course
-internals.getDocumentPath = function(course, path) {
-    return Path.join(internals.courseFolder, encodeURI(course), internals.documents, encodeURI(path));
+internals.getDocumentPath = function(course, path, doNotEncode) {
+    if (doNotEncode) {
+        return Path.join(internals.courseFolder, encodeURI(course), internals.documents, path);
+    } else {
+        return Path.join(internals.courseFolder, encodeURI(course), internals.documents, encodeURI(path));
+    }
 };
 
 /**
@@ -160,13 +164,13 @@ const load = function() {
 
 
     Storage.createOrReplaceFile = function (course, path, datafile) {
-        const file = internals.getDocumentPath(course, path);
+        const file = internals.getDocumentPath(course, path, true);
         datafile.pipe(Fs.createWriteStream(file));
     };
 
     // Returns a promise
     Storage.createFolder = function (course, path) {
-        const folder = internals.getDocumentPath(course, path);
+        const folder = internals.getDocumentPath(course, path, true);
         return Fs.mkdirAsync(folder);
     };
 
@@ -196,7 +200,6 @@ const load = function() {
                 }
 
             } catch(err) {
-                console.log(err);
                 reject(err);
             }
         });
@@ -208,8 +211,12 @@ const load = function() {
 
         recursive = recursive || false;
 
-        const document = internals.getDocumentPath(course, path);
-        return require('./ls').sync(document, { recursive: recursive});
+        const document = internals.getDocumentPath(course, path, true);
+        const relativeTo = Path.join(internals.courseFolder, encodeURI(course), internals.documents);
+        return require('./ls').sync(document, {
+            recursive: recursive,
+            relativeTo: relativeTo
+        });
     };
 
     return Storage;

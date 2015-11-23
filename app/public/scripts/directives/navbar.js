@@ -7,6 +7,8 @@ angular.module('hapi-learning')
         templateUrl: 'scripts/directives/navbar.html',
         link: function(scope, elem, attrs) {
 
+            scope.profile = null;
+            
             scope.logout = function() {
                 LoginFactory.logout();
             };
