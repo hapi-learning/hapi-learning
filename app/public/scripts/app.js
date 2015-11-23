@@ -15,7 +15,8 @@ angular.module('hapi-learning', [
         'angular-storage',
         'angular-jwt',
         'ngLoadingSpinner',
-        'angularMoment'])
+        'angularMoment',
+        'angular.filter'])
 
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.type('FilePath', {

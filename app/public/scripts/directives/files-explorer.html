@@ -137,7 +137,7 @@
                     <span class="glyphicon glyphicon-file type-icon"></span>
                 </td>
                 <td class="col-md-6 file-name">{{file.name}}</td>
-                <td class="col-md-1">{{file.size}} o</td>
+                <td class="col-md-1">{{file.size | byteFmt: 2}} </td>
                 <td class="col-md-1">
                     <a ng-click="downloadFile(file.name)">
                         <span class="glyphicon glyphicon-floppy-save save-file"></span>
