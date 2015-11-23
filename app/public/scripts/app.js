@@ -14,7 +14,8 @@ angular.module('hapi-learning', [
         'restangular',
         'angular-storage',
         'angular-jwt',
-        'ngLoadingSpinner'])
+        'ngLoadingSpinner',
+        'angularMoment'])
 
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.type('FilePath', {
@@ -105,10 +106,15 @@ angular.module('hapi-learning', [
                // errorMessages['passwordMatch'] = 'Passwords do not match!';
             });
     }])
+
     .run(['Restangular', 'API', 'UM_CONFIG', function (Restangular, API, UM_CONFIG) {
         API.then(function(response) {
             UM_CONFIG.API_PREFIX = response.data.api;
             Restangular.setBaseUrl(response.data.api);
         });
 
-    }]);
+    }])
+
+    .run(function(amMoment) {
+        amMoment.changeLocale('en');
+    });

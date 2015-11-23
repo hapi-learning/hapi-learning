@@ -129,7 +129,7 @@
                         <span class="glyphicon glyphicon-floppy-save save-file"></span>
                     </a>
                 </td>
-                <td class="col-md-3">{{file.lastUpdated}}</td>
+                <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
             </tr>
             <!-- File -->
             <tr ng-if="!file.isDirectory">
@@ -143,7 +143,7 @@
                         <span class="glyphicon glyphicon-floppy-save save-file"></span>
                     </a>
                 </td>
-                <td class="col-md-3">{{file.lastUpdated}}</td>
+                <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
 
             </tr>
         </tbody>
