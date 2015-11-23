@@ -28,7 +28,7 @@ exports.register = function (server, options, next) {
         {method: 'GET',    path: '/users/{username}/tags',                   config: Controllers.User.getTags},
         {method: 'GET',    path: '/users/{username}/courses',                config: Controllers.User.getCourses},
         {method: 'GET',    path: '/users/{username}/folders',                config: Controllers.User.getFolders},
-        
+
         {method: 'GET',    path: '/teachers',                                config: Controllers.User.getTeachers},
 
         {method: 'POST',   path: '/users',                                   config: Controllers.User.post},
@@ -70,7 +70,8 @@ exports.register = function (server, options, next) {
         {method: 'POST',   path: '/courses/{id}/teachers',          config: Controllers.Course.addTeachers},
         {method: 'POST',   path: '/courses/{id}/documents',         config: Controllers.Course.postDocument},
         {method: 'POST',   path: '/courses/{id}/documents/{path*}', config: Controllers.Course.postDocument},
-        {method: 'POST',   path: '/courses/{id}/folders/{path*}' ,   config: Controllers.Course.createFolder},
+        {method: 'POST',   path: '/courses/{id}/folders/{path*}' ,  config: Controllers.Course.createFolder},
+        {method: 'PATCH',  path: '/courses/{id}/folders/{path*}',   config: Controllers.Course.updateFolder},
         {method: 'PATCH',  path: '/courses/{id}',                   config: Controllers.Course.patch},
         {method: 'DELETE', path: '/courses/{id}',                   config: Controllers.Course.delete},
         {method: 'DELETE', path: '/courses/{id}/documents',         config: Controllers.Course.deleteDocument},

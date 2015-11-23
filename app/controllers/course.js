@@ -299,6 +299,9 @@ exports.postDocument = {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
+        },
+        query: {
+            hidden: Joi.boolean().default(false)
         }
     },
     handler: function (request, reply) {
@@ -323,12 +326,12 @@ exports.postDocument = {
         }
 
         const course = request.params.id;
-
+        const hidden = request.query.hidden;
         const Storage = this.storage;
         const Course = this.models.Course;
 
         const upload = function() {
-            Storage.createOrReplaceFile(course, path, file).then(function() {
+            Storage.createOrReplaceFile(course, path, file, hidden).then(function() {
                 return reply('File : ' + filename + ' successfuly uploaded').code(201);
             }).catch(function(err) {
                 console.log(err);
@@ -346,6 +349,9 @@ exports.createFolder = {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().required().invalid('/')
+        },
+        query: {
+            hidden: Joi.boolean().default(false)
         }
     },
     handler: function (request, reply) {
@@ -363,12 +369,50 @@ exports.createFolder = {
 
         const createFolder = function() {
             Storage
-                .createFolder(course, path)
+                .createFolder(course, path, request.query.hidden)
                 .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
-                .catch(err => reply.badData(err));
+                .catch(err => { console.log(err); reply.badData(err); });
         };
 
         return internals.checkCourse(Course, course, reply, createFolder);
+    }
+};
+
+exports.updateFolder = {
+    description: 'Create a folder to a course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().required().invalid('/')
+        },
+        payload: {
+            name: Joi.string().optional(),
+            hidden: Joi.boolean().optional()
+        }
+    },
+    handler: function (request, reply) {
+
+        const Storage = this.storage;
+        const Course  = this.models.Course;
+        const course  = request.params.id;
+
+        const path = request.params.path;
+        const name = request.payload.name;
+        const hidden = request.payload.hidden;
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
+        const updateFolder = function() {
+            Storage
+                .createFolder(course, path, name, hidden)
+                .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly updated').code(200))
+                .catch(err => reply.badData(err));
+        };
+
+        return internals.checkCourse(Course, course, reply, updateFolder);
     }
 };
 

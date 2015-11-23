@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
             field: 'name',
             set: function(val) {
                 this.setDataValue('name', val);
-                const ext = Path.extname(val);
+                let ext = Path.extname(val);
                 if (ext.length === 0) {
                     ext = null;
                 }
@@ -46,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
         size: {
             type: DataTypes.BIGINT,
             unique: false,
-            allowNull: false,
+            allowNull: true,
             field: 'size'
         }
     }, {

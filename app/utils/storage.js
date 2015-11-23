@@ -187,7 +187,8 @@ const load = function() {
             internals.File.findOne({
                 where: {
                     name: datafile.hapi.filename,
-                    directory: Path.dirname(path)
+                    directory: Path.dirname(path),
+                    course_code: course
                 }
             }).then(result => {
 
@@ -218,9 +219,83 @@ const load = function() {
     };
 
     // Returns a promise
-    Storage.createFolder = function (course, path) {
-        const folder = internals.getDocumentPath(course, path, true);
-        return Fs.mkdirAsync(folder);
+    Storage.createFolder = function (course, path, hidden) {
+
+        return new P(function(resolve, reject) {
+            const folder = internals.getDocumentPath(course, path, true);
+            let directory = Path.dirname(path);
+            if (directory === '.') {
+                directory = '/';
+            }
+            Fs.mkdirAsync(folder).then(function() {
+                internals.File.create({
+                    name: Path.basename(path),
+                    directory: directory,
+                    type: 'd',
+                    size: null,
+                    ext: null,
+                    course_code: course,
+                    hidden: hidden
+                }).then(resolve).catch(reject);
+            }).catch(reject);
+
+        });
+    };
+
+      // Returns a promise
+    Storage.updateFolder = function (course, path, name, hidden) {
+
+        const oldFolder = internals.getDocumentPath(course, path, true);
+        const newFolder = internals.getDocumentPath(course, name, true);
+
+        let directory = Path.dirname(path);
+        if (directory === '.') {
+            directory = '/';
+        }
+
+        return new P(function(resolve, reject) {
+
+            internals.findOne({
+                where: {
+                    name: Path.basename(path),
+                    directory: directory,
+                    course_code: course,
+                }
+            }).then(function(result) {
+                if (result) {
+
+                    // Against undefined
+                    if (typeof hidden !== 'undefined' && hidden !== null) {
+                        result.set('hidden', hidden);
+                    }
+
+                    if (name) {
+                        result.set('name', name);
+                        internals.File.update({
+                            directory: name,
+                        }, {
+                            where: {
+                                directory: directory,
+                                course_code: course
+                            }
+                        }).then(function() {
+                            Fs.renameAsync(oldFolder, newFolder).then(function() {
+                                result.save();
+                                resolve();
+                            }).catch(reject);
+                        }).catch(reject);
+                    } else {
+                        result.save();
+                        resolve();
+                    }
+
+                } else {
+                    reject(404);
+                }
+            });
+
+
+        });
     };
 
     Storage.renameFile = function(course, oldPath, newPath) {
