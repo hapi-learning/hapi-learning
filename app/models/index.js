@@ -75,19 +75,23 @@ exports.register = function(server, options, next) {
         // A user can have specifics additional permissions.
         m.User.belongsToMany(m.Permission, { through: 'user_permissions' });
 
-        // A user(TEACHER ONLY) can post many news
-        m.User.hasMany(m.News, {foreignKey : 'userId'});
+
+        m.News.belongsTo(m.User, {
+            foreignKey : {
+                name : 'user',
+                allowNull : false
+            },
+            targetKey : 'username'
+        });
 
         // A news can be related to a course
-        m.Course.hasMany(
-            m.News,
-            {
-                foreignKey: {
-                    name: 'crsId',
-                    allowNull: true
-                }
-            }
-        );
+        m.News.belongsTo(m.Course, {
+            foreignKey : {
+                name : 'course',
+                allowNull : true
+            },
+            targetKey : 'code'
+        });
 
     })(models);
 

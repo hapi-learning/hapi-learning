@@ -12,11 +12,6 @@ internals.removeDatesArray = function(sequelizeObjects) {
     return _.map(sequelizeObjects, (sequelizeObject => internals.removeDates(sequelizeObject)));
 };
 
-// Extract a course from join object
-internals.extractCourse = function(sequelizeCourse) {
-    return _.pick(sequelizeCourse, ['id', 'name', 'code', 'description']);
-};
-
 // result is a sequelize instance
 internals.getCourse = function(result) {
 

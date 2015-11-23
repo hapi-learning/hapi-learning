@@ -77,6 +77,13 @@ exports.register = function (server, options, next) {
         {method: 'DELETE', path: '/courses/{id}/documents',         config: Controllers.Course.deleteDocument},
         {method: 'DELETE', path: '/courses/{id}/tags',              config: Controllers.Course.deleteTags},
         {method: 'DELETE', path: '/courses/{id}/teachers',          config: Controllers.Course.deleteTeachers},
+        
+        // News routes
+        {method: 'GET',    path: '/news',                        config: Controllers.News.getAll},
+        {method: 'GET',    path: '/news/{id}',                        config: Controllers.News.get},
+        {method: 'POST',    path: '/news',                        config: Controllers.News.post}
+
+
     ]);
 
     next();
