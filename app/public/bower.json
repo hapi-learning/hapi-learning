@@ -31,6 +31,7 @@
     "font-awesome": "fontawesome#~4.4.0",
     "angular-moment": "~0.10.3",
     "moment": "~2.10.6",
-    "angular-filter": "~0.5.8"
+    "angular-filter": "~0.5.8",
+    "angular-xeditable": "~0.1.9"
   }
 }
