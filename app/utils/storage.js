@@ -280,7 +280,7 @@ const load = function() {
                             directory: Path.dirname(path) + '/' + name
                         }, {
                             where: {
-                                directory: directory,
+                                directory: path,
                                 course_code: course
                             }
                         }).then(function() {
