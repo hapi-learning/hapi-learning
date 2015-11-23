@@ -15,7 +15,7 @@
 
 =======
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="course in courses | filter: courseFilter | filter: filterByTags">
+        <li class="list-group-item" ng-repeat="course in courses | filter: search | filter: filterByTags">
             <course-info course="course"></course-info>
         </li>
     </ul>
