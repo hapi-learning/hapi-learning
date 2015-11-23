@@ -60,6 +60,25 @@ angular.module('hapi-learning')
             return internals.get(course, path, true);
         };
 
+        exports.updateFolder = function(course, path, newName, hidden) {
+
+            var d = $q.defer();
+
+            path = internals.replacePath(path);
+            Restangular
+                .one('courses', course)
+                .all('folders')
+                .customOperation('patch', encodeURIComponent(path), null, null, {
+                    name: newName,
+                    hidden: hidden
+                }).then(function(response) {
+                    d.resolve();
+                }).catch(function(error) {
+                    d.reject('Invalid name');
+                });
+
+            return d.promise;
+        };
 
         exports.createFolder = function(course, path) {
 

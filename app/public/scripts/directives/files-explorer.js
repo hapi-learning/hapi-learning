@@ -97,6 +97,15 @@ angular.module('hapi-learning')
                     scope.goToAbsolutePath(path);
                 };
 
+
+                scope.updateFolder = function(data, oldName) {
+
+                    var path = $stateParams.path + '/' + oldName;
+
+
+                    return FilesFactory.updateFolder(scope.code, path, data.name, false);
+                };
+
                 $rootScope.$on('upload-complete', function() {
                     scope.getList($stateParams.path);
                 });

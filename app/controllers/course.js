@@ -409,13 +409,21 @@ exports.updateFolder = {
                 .updateFolder(course, path, name, hidden)
                 .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly updated').code(200))
                 .catch(err => {
-                    if (err === 404) {
-                        return reply.notFound('Folder not found');
-                    } else if (err === 500) {
-                        return reply.badImplementation();
-                    } else {
-                        return reply.badData(err)
+                    switch(err) {
+                        case 404:
+                            return reply.notFound('Folder not found');
+                            break;
+                        case 409:
+                            return reply.conflict();
+                            break;
+                        case 422:
+                            return reply.badData();
+                            break;
+                        case 500:
+                        default:
+                            return reply.badImplementation();
                     }
+
             });
         };
 

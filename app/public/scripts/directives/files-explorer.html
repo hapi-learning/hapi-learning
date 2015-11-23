@@ -143,20 +143,21 @@
                 <td class="col-md-2">
 
                     <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
-                          class="form-buttons form-inline" shown="inserted == file">
+                          class="form-buttons form-inline" onbeforesave="updateFolder($data, file.name)">
 
                     <div class="input-group">
                         <div class="input-group-btn">
 
                             <!-- Confirm -->
-                            <button class="btn btn-success btn-edit" ng-disabled="fileExplorer.$waiting">
+                            <button type="submit" class="btn btn-success btn-edit"
+                                    ng-disabled="fileExplorer.$waiting">
                                 <span class="glyphicon glyphicon-ok">
 
                                 </span>
                             </button>
 
                             <!-- Cancel -->
-                            <button class="btn btn-warning btn-edit"
+                            <button type="button" class="btn btn-warning btn-edit"
                                     ng-disabled="fileExplorer.$waiting"
                                     ng-click="fileExplorer.$cancel()">
                                 <span class="glyphicon glyphicon-remove">
@@ -178,7 +179,7 @@
                             </button>
 
                             <!-- Delete -->
-                            <button class="btn btn-danger btn-edit" ng-click="removeUser($index)">
+                            <button class="btn btn-danger btn-edit" <!--ng-click="removeUser($index)-->">
                                 <span class="glyphicon glyphicon-minus">
 
                                 </span>

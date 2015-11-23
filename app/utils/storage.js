@@ -256,50 +256,73 @@ const load = function() {
                 directory = '/';
             };
 
-            internals.File.findOne({
-                where: {
-                    name: Path.basename(path),
-                    directory: directory,
-                    course_code: course,
-                }
-            }).then(function(result) {
-                if (result) {
 
-                    // Against undefined
-                    if (typeof hidden !== 'undefined' && hidden !== null) {
-                        result.set('hidden', hidden);
+            const doRename = function() {
+
+                internals.File.findOne({
+                    where: {
+                        name: Path.basename(path),
+                        directory: directory,
+                        course_code: course,
                     }
+                }).then(function(result) {
+                    if (result) {
 
-                    const rename = function() {
-                        return Fs.renameAsync(oldFolder, newFolder);
-                    };
+                        // Against undefined
+                        if (typeof hidden !== 'undefined' && hidden !== null) {
+                            result.set('hidden', hidden);
+                        }
 
-                    if (name) {
-                        result.set('name', name);
-                        internals.File.update({
-                            directory: Path.dirname(path) + '/' + name
-                        }, {
-                            where: {
-                                directory: path,
-                                course_code: course
-                            }
-                        }).then(function() {
+                        const rename = function() {
+                            return Fs.renameAsync(oldFolder, newFolder);
+                        };
+
+                        if (name) {
+                            result.set('name', name);
+                            internals.File.update({
+                                directory: Path.dirname(path) + '/' + name
+                            }, {
+                                where: {
+                                    directory: path,
+                                    course_code: course
+                                }
+                            }).then(function() {
+                                rename().then(function() {
+                                    result.save();
+                                    resolve();
+                                });
+                            }).catch(() => reject(500));
+                        } else {
                             rename().then(function() {
                                 result.save();
                                 resolve();
-                            }).catch(reject);
-                        }).catch(reject);
-                    } else {
-                        rename().then(function() {
-                            result.save();
-                            resolve();
-                        }).catch(reject);
-                    }
+                            });
+                        }
 
-                } else {
-                    reject(404);
+                    } else {
+                        reject(404);
+                    }
+                }).catch(() => reject(500));
+
+            }
+
+            // Check if folder already exists
+            internals.File.findOne({
+                where: {
+                    name: name,
+                    directory: directory,
+                    course_code: course
                 }
-            }).catch(() => reject(500));
+            }).then(function(result) {
+                if (result) {
+                    reject(409);
+                } else {
+                    return doRename();
+                }
+            }).catch(function() {
+                reject(500);
+            });
+
 
 
         });
