@@ -2,16 +2,18 @@
 
 angular.module('hapi-learning')
     .controller('CourseCtrl', [
-        '$scope', '$stateParams',
+        '$rootScope', '$scope', '$stateParams',
         'CoursesFactory', 'LoginFactory',
         'FilesFactory', '$state',
 
-    function ($scope, $stateParams,
+    function ($rootScope, $scope, $stateParams,
               CoursesFactory, LoginFactory,
               FilesFactory, $state) {
 
         $scope.update = false;
         $scope.course = null;
+        $scope.editing = false;
+
 
         // If stateParams changed, update course
         if ($scope.course && $stateParams.code !== $scope.course.code) {
@@ -32,7 +34,24 @@ angular.module('hapi-learning')
             .catch(function (error) {
                 $state.go('root.home');
             });
-        }
+        };
+
+        $scope.beginEdit = function() {
+            $scope.editing = true;
+            $rootScope.$emit('course-begin-edit');
+        };
+
+        $scope.cancelEdit = function() {
+            $scope.editing = false;
+            $rootScope.$emit('course-cancel-edit');
+        };
+
+        $scope.confirmEdit = function() {
+            $scope.editing = false;
+            $rootScope.$emit('course-confirm-edit');
+        };
+
+
 
 
 

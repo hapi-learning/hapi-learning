@@ -1,3 +1,11 @@
+<style>
+    .edit-button {
+        margin-right: 5px;
+        margin-left: 10px;
+    }
+</style>
+
+
 <div class="container-fluid">
 
     <h1 class="page-header">
@@ -27,9 +35,28 @@
     </div>
     <div class="col-md-4">
 
-        <subscribe code="course.code"></subscribe>
-        <br />
+        <div class="row">
+            <div ng-if="editing">
+                <button class="col-md-3 btn btn-success edit-button" ng-click="confirmEdit()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </button>
 
+                <button class="col-md-3 btn btn-danger edit-button" ng-click="cancelEdit()">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+            <div ng-if="!editing">
+                <button class="col-md-3 btn btn-primary edit-button" ng-click="beginEdit()">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+            </div>
+
+        </div>
+        <br/>
+        <div ng-if="editing" >
+            <subscribe code="course.code"></subscribe>
+        </div>
+        <br/>
         <div>
 
             <label>Teachers</label>

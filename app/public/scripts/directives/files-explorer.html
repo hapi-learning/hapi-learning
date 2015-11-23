@@ -119,9 +119,15 @@
                     <span class="glyphicon glyphicon-folder-open type-icon"></span>
                     </td>
                 <td class="col-md-6">
-                    <a ng-click="goToRelativePath(file.name)">
-                        <span class="folder-name">{{file.name}}</span>
-                    </a>
+
+                    <div ng-if="editing">
+                        <input class="form-control" type="text" ng-model="file.name"/>
+                    </div>
+                    <div ng-if="!editing">
+                        <a ng-click="goToRelativePath(file.name)">
+                            <span class="folder-name">{{file.name}}</span>
+                        </a>
+                    </div>
                 </td>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">
