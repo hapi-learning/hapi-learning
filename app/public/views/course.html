@@ -24,6 +24,7 @@
         </nav>
 
         <br/>
+        
         <div ui-view></div>
     </div>
 
@@ -32,19 +33,22 @@
             <subscribe code="course.code"></subscribe>
         </div>
         <br/>
-        
-        <div>
 
+        <div>
             <label>Teachers</label>
+
             <br />
+
             <span ng-repeat="teacher in course.teachers">
                 <teacher-info teacher="teacher"></teacher-info>
             </span>
         </div>
+
         <br />
 
         <div>
             <label>Tags</label>
+
             <br />
 
             <span ng-repeat="tag in course.tags">
