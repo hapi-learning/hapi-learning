@@ -97,12 +97,6 @@ angular.module('hapi-learning')
                     scope.goToAbsolutePath(path);
                 };
 
-                // Looks good with setTimeout.
-                setTimeout(function() {
-                   scope.getList($stateParams.path);
-                });
-
-
                 $rootScope.$on('upload-complete', function() {
                     scope.getList($stateParams.path);
                 });
@@ -113,7 +107,7 @@ angular.module('hapi-learning')
 
                 // Set this back if bug appears again.
 
-              /*  if (scope.code) {
+                if (scope.code) {
                     scope.getList($stateParams.path);
                 } else {
                     // The code can be undefined because of asynchronous calls
@@ -123,7 +117,7 @@ angular.module('hapi-learning')
                             scope.getList($stateParams.path);
                         }
                     });
-                }*/
+                }
             }
         };
     }]);
