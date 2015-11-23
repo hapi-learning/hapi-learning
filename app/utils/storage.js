@@ -83,6 +83,21 @@ internals.initialize = function () {
         .then(() => internals.initializeFolder(internals.courseFolder));
 };
 
+internals.createFile = function(data) {
+     return internals.File.create(data);
+};
+
+internals.replaceFile = function(file, data) {
+    // Directory and type do not change.
+
+    return new P(function(resolve, reject) {
+        file.set('name', data.name); // ext is set in the name setter
+        file.set('hidden', data.hidden);
+        file.set('size', data.size);
+        file.save();
+        resolve();
+    });
+};
 
 
 const load = function() {
@@ -163,9 +178,43 @@ const load = function() {
     };
 
 
-    Storage.createOrReplaceFile = function (course, path, datafile) {
-        const file = internals.getDocumentPath(course, path, true);
-        datafile.pipe(Fs.createWriteStream(file));
+
+    Storage.createOrReplaceFile = function (course, path, datafile, hidden) {
+        return new P(function (resolve, reject) {
+            const file = internals.getDocumentPath(course, path, true);
+            datafile.pipe(Fs.createWriteStream(file));
+
+            internals.File.findOne({
+                where: {
+                    name: datafile.hapi.filename,
+                    directory: Path.dirname(path)
+                }
+            }).then(result => {
+
+                 // undefined or null
+                if (!hidden) {
+                    hidden = false;
+                }
+
+                const stat = Fs.statSync(file);
+
+                const data = {
+                    name: datafile.hapi.filename,
+                    directory: Path.dirname(path),
+                    type: 'f',
+                    size: stat.size,
+                    ext: Path.extname(path),
+                    course_code: course,
+                    hidden: hidden
+                };
+
+                if (result) {
+                    return internals.replaceFile(result, data).then(resolve);
+                } else {
+                    return internals.createFile(data).then(resolve).catch(reject);
+                }
+            }).catch(reject);
+        });
     };
 
     // Returns a promise
@@ -228,6 +277,8 @@ exports.register = function(server, options, next) {
 
     Hoek.assert(options.root, 'option.root is required');
 
+    internals.File = server.plugins.models.models.File;
+
 
     internals.root = options.root;
     internals.relativeTo = Path.join(internals.root, options.storage || 'storage');
@@ -244,6 +295,7 @@ exports.register = function(server, options, next) {
 exports.register.attributes = {
     name: 'storage',
     version: require('../../package.json').version,
+    dependencies: 'models'
 };
 
 

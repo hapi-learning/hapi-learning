@@ -328,12 +328,12 @@ exports.postDocument = {
         const Course = this.models.Course;
 
         const upload = function() {
-            try {
-                Storage.createOrReplaceFile(course, path, file);
+            Storage.createOrReplaceFile(course, path, file).then(function() {
                 return reply('File : ' + filename + ' successfuly uploaded').code(201);
-            } catch(err) {
+            }).catch(function(err) {
+                console.log(err);
                 return reply.conflict(err);
-            }
+            });
         };
 
         return internals.checkCourse(Course, course, reply, upload);

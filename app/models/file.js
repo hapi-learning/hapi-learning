@@ -1,5 +1,7 @@
 'use strict';
 
+const Path = require('path');
+
 
 module.exports = function(sequelize, DataTypes) {
     return sequelize.define('File', {
@@ -7,7 +9,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             unique: false,
             allowNull: false,
-            field: 'name'
+            field: 'name',
+            set: function(val) {
+                this.setDataValue('name', val);
+                const ext = Path.extname(val);
+                if (ext.length === 0) {
+                    ext = null;
+                }
+                this.setDataValue('ext', ext);
+            }
         },
         directory: {
             type: DataTypes.STRING,

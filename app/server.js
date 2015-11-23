@@ -31,17 +31,6 @@ let internals = {
         plugins: {
            './cache': [{select: ['api']}],
             './utils/error' : [{select: ['api']}],
-            './utils/storage': [
-                {
-                    select: ['api'],
-                    options: {
-                        root: __dirname,
-                        documents: 'documents',
-                        courses: 'courses',
-                        storage: 'storage',
-                        test: false
-                    }
-                }],
             'hapi-auth-jwt2': [{
                 select: ['api']
             }],
@@ -64,6 +53,17 @@ let internals = {
                     }
                 }
             ],
+            './utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        documents: 'documents',
+                        courses: 'courses',
+                        storage: 'storage',
+                        test: false
+                    }
+                }],
             './controllers': [{
                 select: ['api']
             }],
@@ -138,7 +138,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     var Models = server.plugins.models.models;
 
     Models.sequelize.sync({
-//        force: true // drops all db and recreates them
+  //      force: false // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
