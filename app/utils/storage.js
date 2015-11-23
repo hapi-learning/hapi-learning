@@ -285,8 +285,10 @@ const load = function() {
                             }).catch(reject);
                         }).catch(reject);
                     } else {
-                        result.save();
-                        resolve();
+                        Fs.renameAsync(oldFolder, newFolder).then(function() {
+                            result.save();
+                            resolve();
+                        }).catch(reject);
                     }
 
                 } else {
