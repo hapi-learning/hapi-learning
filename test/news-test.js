@@ -198,9 +198,51 @@ describe('Controller.News', () => {
         });
     });
     describe('#get', () => {
-        it('should', done => {});
+        it('should return statusCode 200 and specific news', done => {
+            const request = {
+                method: 'GET',
+                url: '/news/1',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response.user).equal(internals.newsCourseRelated.username);
+                expect(response.course).equal(internals.newsCourseRelated.code);
+                done();
+            });
+        });
+        
+        it('should return statusCode 404', done => {
+            const request = {
+                method: 'GET',
+                url: '/news/3999999',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response.statusCode).equal(404);
+                done();
+            });
+        });
     });
     describe('#getAll', () => {
-        it('should', done => {});
+        it('should return statusCode 200 and every news', done => {
+            const request = {
+                method: 'GET',
+                url: '/news',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).equal(200);
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+        });
     });
 });
