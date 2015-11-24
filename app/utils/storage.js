@@ -480,15 +480,19 @@ const load = function() {
                     course_code: course
                 }
             }).then(function(results) {
-                if (results.length === 0) {
-                    reject(404);
+                console.log('PATH', path);
+                let directory;
+                if (path === '/') {
+                    directory = null
                 } else {
-                    resolve({
-                        dir: path,
-                        files: results
-                    });
+                    directory = internals.replaceDirectory(path);
                 }
-            });
+                console.log('DIRECTORY', directory);
+                resolve({
+                    dir: directory,
+                    files: results
+                });
+            }).catch(reject);
         });
     };
 

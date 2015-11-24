@@ -31,9 +31,9 @@ angular.module('hapi-learning')
 
                     scope.fetching = true;
                     return $q(function(resolve, reject) {
-                        FilesFactory.getList(scope.code, path).then(function(files) {
-                            scope.files.dir = files.dir;
-                            scope.files.files = files.files;
+                        FilesFactory.getList(scope.code, path).then(function(results) {
+                            scope.files.dir = results.dir;
+                            scope.files.files = results.files;
                             scope.fetching = false;
                             resolve();
                         }).catch(reject);
@@ -91,9 +91,10 @@ angular.module('hapi-learning')
 
                 scope.goToParent = function() {
                     var path = scope.files.dir;
-                    if (path !== '') {
-                        path = '/' + path;
+                    if (path === '/') {
+                        path = '';
                     }
+
                     scope.goToAbsolutePath(path);
                 };
 

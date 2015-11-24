@@ -36,7 +36,7 @@ angular.module('hapi-learning')
                 Restangular
                     .one('courses', course)
                     .all('tree')
-                    .customGET(encodeURIComponent(path), { recursive: recursive })
+                    .customGET(encodeURIComponent(path))
                     .then(function(results) {
                         resolve(results);
                     })
@@ -53,11 +53,7 @@ angular.module('hapi-learning')
         };
 
         exports.getList = function(course, path) {
-            return internals.get(course, path, false);
-        };
-
-        exports.getTree = function(course, path) {
-            return internals.get(course, path, true);
+            return internals.get(course, path);
         };
 
         exports.updateFolder = function(course, path, newName, hidden) {

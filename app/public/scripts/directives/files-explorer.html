@@ -122,7 +122,7 @@
 
 
             <!-- Directory -->
-            <tr ng-if="file.isDirectory">
+            <tr ng-if="file.type === 'd'">
 
                 <!-- ICON -->
                 <td class="col-md-1">
@@ -151,7 +151,7 @@
                 </td>
 
                 <!-- LAST UPDATED -->
-                <td class="col-md-1" am-time-ago="file.lastUpdated"></td>
+                <td class="col-md-1" am-time-ago="file.updated_at"></td>
 
                 <!-- EDIT -->
                 <td class="col-md-3">
@@ -202,7 +202,7 @@
 
 
             <!-- File -->
-            <tr ng-if="!file.isDirectory">
+            <tr ng-if="file.type === 'f'">
 
                 <!-- ICON -->
                 <td class="col-md-1">
@@ -223,7 +223,7 @@
                 </td>
 
                 <!-- LAST UPDATED -->
-                <td class="col-md-1" am-time-ago="file.lastUpdated"></td>
+                <td class="col-md-1" am-time-ago="file.updated_at"></td>
                 <td class="col-md-3"></td>
             </tr>
         </tbody>

@@ -139,9 +139,6 @@ exports.getTree = {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
-        },
-        query: {
-            recursive: Joi.boolean().default(true)
         }
     },
     handler: function (request, reply) {
@@ -158,7 +155,15 @@ exports.getTree = {
         const recursive = request.query.recursive
 
         const tree = function() {
-            return reply(Storage.getTree(id, path, recursive));
+            Storage.getList(id, path).then(function(results) {
+                return reply(results);
+            }).catch(function(err) {
+                if (err === 404) {
+                    return reply.notFound('Folder not found');
+                } else {
+                    return reply.badImplementation(err);
+                }
+            });
         };
 
         return internals.checkCourse(Course, id, reply, tree);

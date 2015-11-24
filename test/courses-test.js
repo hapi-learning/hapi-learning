@@ -847,76 +847,46 @@ describe('Controller.Course', () => {
         })
     });
 
-    /*describe('#getTree', () => {
-        const request = {
-            method: 'GET',
-            url: '/courses/ATL3G/tree'
-        };
+    describe('#getTree', () => {
 
         const stat = fs.statSync(Path.join(__dirname, 'server-test.js'));
 
-
-
         it ('Should return the correct tree', done => {
 
-               const expectedTree = {
-                   dir: null,
-                   files: [
-                    {
-                        dir: '',
-                        name: 'server-test.js',
-                        size: stat.size,
-                        lastUpdated: stat.mtime,
-                        isDirectory: false
-                    },
-                    {
-                        dir: '',
-                        name: 'subfolder',
-                        files: {
-                            dir: '',
-                            files: []
-                        },
-                        isDirectory: true
-                    }
-                ]};
-
-            request.headers = internals.headers;
+            const request = {
+                method: 'GET',
+                url: '/courses/ATL3G/tree',
+                headers: internals.headers
+            };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).to.equal(200);
-                expect(response).to.deep.equal(expectedTree);
+                expect(response.dir).to.equal('/');
+
+                const files = response.files;
+
+                expect(files).to.be.an.array();
+                expect(files).to.have.length(2);
+
+                expect(files[0].directory).to.equal('/');
+                expect(files[0].name).to.equal('subfolderrenamed');
+                expect(files[0].type).to.equal('d');
+                expect(files[0].size).to.be.null();
+                expect(files[0].ext).to.be.null();
+
+                expect(files[1].directory).to.equal('/');
+                expect(files[1].name).to.equal('server-test.js');
+                expect(files[1].ext).to.equal('.js');
+                expect(files[1].type).to.equal('f');
+                expect(files[1].size).to.be.a.number();
+
+
                 done();
             });
         });
 
-        it ('Should return the correct tree', done => {
-
-               const expectedTree = [
-                    {
-                        dir: 'documents',
-                        file: 'server-test.js',
-                        size: size,
-                        isDirectory: false
-                    },
-                    {
-                        dir: 'documents',
-                        file: 'subfolder',
-                        size: 4096,
-                        isDirectory: true
-                    }
-                ];
-
-            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL3G/tree?recursive=false'})
-            copyRequest.headers = internals.headers;
-            server.inject(copyRequest, res => {
-                const response = res.request.response.source;
-                expect(res.request.response.statusCode).to.equal(200);
-                expect(response).to.deep.equal(expectedTree);
-                done();
-            });
-        });
-    });*/
+    });
 
     describe('#deleteDocument', () => {
 
