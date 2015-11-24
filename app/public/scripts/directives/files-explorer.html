@@ -1,25 +1,27 @@
-
 <style>
     .save-file {
         color: black;
     }
-
-    .type-icon, .save-file {
+    
+    .type-icon,
+    .save-file {
         font-size: 18px;
     }
-
-    .save-file, .folder-name {
+    
+    .save-file,
+    .folder-name {
         cursor: pointer;
     }
-
-    .file-name, folder-name {
+    
+    .file-name,
+    folder-name {
         font-size: 15px;
     }
-
+    
     .header-button {
         margin-right: 5px;
     }
-
+    
     .error-message {
         font-size: 15px;
     }
@@ -30,14 +32,13 @@
 
 
     <div class="row" ng-if="folderError">
-       <div class="col-md-12 alert alert-danger error-message">
+        <div class="col-md-12 alert alert-danger error-message">
             <span>Invalid folder name</span>
-       </div>
+        </div>
     </div>
 
     <div ng-if="uploadError">
-       <div class="alert alert-danger alert-dismissible error-message"
-            ng-click="cleanUploadError()" aria-label="close">
+        <div class="alert alert-danger alert-dismissible error-message" ng-click="cleanUploadError()" aria-label="close">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -47,108 +48,128 @@
                 <li>The file must be less than 20Mb</li>
             </ul>
             </span>
-       </div>
+        </div>
     </div>
 
-   <div class="row">
-       <div class="col-md-2">
-            <a ng-disabled="files.dir === null"
-               ng-click="(fetching || files.dir === null) || goToParent()"
-               class="btn btn-success">
+    <div class="row">
+        <div class="col-md-2 col-lg-1">
+            <a ng-disabled="files.dir === null" ng-click="(fetching || files.dir === null) || goToParent()" class="btn btn-success">
                 <span class="glyphicon glyphicon-arrow-left"></span> Parent directory
             </a>
         </div>
 
-
-
-        <button class="col-md-2 pull-right btn btn-danger header-button"
-               ng-show="uploading" ng-click="uploading = false">
-            <span class="glyphicon glyphicon-floppy-remove"></span> Finish upload
-        </button>
-
-        <button class="col-md-2 pull-right btn btn-default header-button"
-                ng-show="!uploading" ng-click="uploading = true">
-            <span class="glyphicon glyphicon-cloud-upload"></span> Upload
-        </button>
-
-        <button ng-click="download()" class="col-md-2 pull-right btn btn-default header-button">
-            <span class="glyphicon glyphicon-cloud-download"></span> Download
-        </button>
-
-        <button ng-show="!creatingFolder" ng-click="creatingFolder = true"
-                class="col-md-2 pull-right btn btn-default header-button">
-            <span class="glyphicon glyphicon-plus"></span> Create folder
-        </button>
-
-        <div ng-show="creatingFolder" class="col-md-4 pull-right">
+        <!--
+        <div ng-show="creatingFolder" class="col-md-3">
             <div class="input-group">
-                <input class="form-control" ng-model="folderName"
-                       type="text" placeholder="Folder"/>
-               <div class="input-group-btn">
-                    <button class="btn btn-default"
-                            ng-click="createFolder(folderName)">
-                            <span class="glyphicon glyphicon-ok"></span>
+                <input class="form-control" ng-model="folderName" type="text" placeholder="Folder" />
+                <div class="input-group-btn">
+                    <button class="btn btn-default" ng-click="createFolder(folderName)">
+                        <span class="glyphicon glyphicon-ok"></span>
                     </button>
-                    <button class="btn btn-default"
-                            ng-click="cleanFolderName()">
-                            <span class="glyphicon glyphicon-remove"></span>
+                    <button class="btn btn-default" ng-click="cleanFolderName()">
+                        <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>
             </div>
-       </div>
-
-   </div>
-
-    <br/>
+        </div>
+-->
 
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <td class="col-md-1"></td>
-                <td class="col-md-6">Name</td>
-                <td class="col-md-1">Size</td>
-                <td class="col-md-1">Download</td>
-                <td class="col-md-3">Last updated</td>
-            </tr>
-        </thead>
-        <tbody ng-repeat="file in files.files">
-            <!-- Directory -->
-            <tr ng-if="file.isDirectory">
-                <td class="col-md-1">
-                    <span class="glyphicon glyphicon-folder-open type-icon"></span>
-                    </td>
-                <td class="col-md-6">
-                    <a ng-click="goToRelativePath(file.name)">
-                        <span class="folder-name">{{file.name}}</span>
-                    </a>
-                </td>
-                <td class="col-md-1"></td>
-                <td class="col-md-1">
-                    <a ng-click="downloadFile(file.name)">
-                        <span class="glyphicon glyphicon-floppy-save save-file"></span>
-                    </a>
-                </td>
-                <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
-            </tr>
-            <!-- File -->
-            <tr ng-if="!file.isDirectory">
-                <td class="col-md-1">
-                    <span class="glyphicon glyphicon-file type-icon"></span>
-                </td>
-                <td class="col-md-6 file-name">{{file.name}}</td>
-                <td class="col-md-1">{{file.size | byteFmt: 2}} </td>
-                <td class="col-md-1">
-                    <a ng-click="downloadFile(file.name)">
-                        <span class="glyphicon glyphicon-floppy-save save-file"></span>
-                    </a>
-                </td>
-                <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
+        <div class="col-md-10 pull-right">
 
-            </tr>
-        </tbody>
-    </table>
+            <span class="pull-right">
+    <button class="pull-right btn btn-danger header-button" ng-show="uploading" ng-click="uploading = false">
+        <span class="glyphicon glyphicon-floppy-remove"></span> Finish upload
+            </button>
 
-    <upload ng-if="uploading" path="getUploadPath()"></upload>
+            <button class="pull-right btn btn-default header-button" ng-hide="uploading" ng-click="uploading = true">
+                <span class="glyphicon glyphicon-cloud-upload"></span> Upload
+            </button>
+            </span>
+
+
+
+            <button ng-click="download()" class="pull-right btn btn-default header-button">
+                <span class="glyphicon glyphicon-cloud-download"></span> Download
+            </button>
+
+            <span class="pull-right">
+            <span ng-hide="creatingFolder">
+                <button ng-click="creatingFolder = true" class="pull-right btn btn-default header-button">
+                    <span class="glyphicon glyphicon-plus"></span> Create folder
+            </button>
+            </span>
+
+            <span ng-show="creatingFolder">
+                <span class="input-group col-md-10 pull-right">
+                    <input class="form-control" ng-model="folderName" type="text" placeholder="Folder" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" ng-click="createFolder(folderName)">
+                            <span class="glyphicon glyphicon-ok"></span>
+                        </button>
+
+                        <button class="btn btn-default" ng-click="cleanFolderName()">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
+                </span>
+            </span>
+                </span>
+
+</div>
+
+</div>
+
+<br/>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td class="col-md-1"></td>
+            <td class="col-md-6">Name</td>
+            <td class="col-md-1">Size</td>
+            <td class="col-md-1">Download</td>
+            <td class="col-md-3">Last updated</td>
+        </tr>
+    </thead>
+    <tbody ng-repeat="file in files.files">
+        <!-- Directory -->
+        <tr ng-if="file.isDirectory">
+            <td class="col-md-1">
+                <span class="glyphicon glyphicon-folder-open type-icon"></span>
+            </td>
+            <td class="col-md-6">
+                <a ng-click="goToRelativePath(file.name)">
+                    <span class="folder-name">{{file.name}}</span>
+                </a>
+            </td>
+            <td class="col-md-1"></td>
+            <td class="col-md-1">
+                <a ng-click="downloadFile(file.name)">
+                    <span class="glyphicon glyphicon-floppy-save save-file"></span>
+                </a>
+            </td>
+            <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
+        </tr>
+        <!-- File -->
+        <tr ng-if="!file.isDirectory">
+            <td class="col-md-1">
+                <span class="glyphicon glyphicon-file type-icon"></span>
+            </td>
+            <td class="col-md-6 file-name">{{file.name}}</td>
+            <td class="col-md-1">{{file.size | byteFmt: 2}} </td>
+            <td class="col-md-1">
+                <a ng-click="downloadFile(file.name)">
+                    <span class="glyphicon glyphicon-floppy-save save-file"></span>
+                </a>
+            </td>
+            <td class="col-md-3" am-time-ago="file.lastUpdated"></td>
+
+        </tr>
+    </tbody>
+</table>
+
+<upload ng-if="uploading" path="getUploadPath()"></upload>
 
 </div>
