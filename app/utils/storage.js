@@ -134,11 +134,11 @@ const load = function() {
      */
     Storage.deleteCourse = function (code) {
         return new P(function(resolve, reject) {
-            const path = Path.join(internals.courseFolder, code, true);
+            const path = Path.join(internals.courseFolder, code);
             internals.removeRecursivelyAsync(path).finally(function() {
                 internals.File.destroy({
                     where: {
-                        course_code: name
+                        course_code: code
                     }
                 }).finally(resolve);
             });
@@ -299,7 +299,7 @@ const load = function() {
                             ext: null,
                             course_code: course,
                             hidden: hidden
-                        }).then(resolve).catch((err) => { console.log(err); reject(500); });
+                        }).then(resolve).catch(err => reject(500));
                     }).catch(() => reject(422));
                 }
             }).catch(() => reject(500));

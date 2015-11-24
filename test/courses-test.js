@@ -675,9 +675,23 @@ describe('Controller.Course', () => {
             });
         });
 
-        it ('Should return 422 (bad data -- invalid path)', done => {
+        it ('Should return 409 (bad data -- invalid path)', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(409);
+                done();
+            });
+        });
+
+        it ('Should return 422 (bad data -- invalid path)', done => {
+
+            const copyRequest = Hoek.applyToDefaults(request, {
+                url: '/courses/ATL3G/folders/folder/folderbis'
+            });
+
+            copyRequest.headers = internals.headers;
+
+            server.inject(copyRequest, res => {
                 expect(res.request.response.statusCode).equal(422);
                 fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/folder/folderbis'),
                         (err, stats) => {
