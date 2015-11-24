@@ -125,7 +125,18 @@ const load = function() {
         const oldPath = Path.join(internals.courseFolder, oldName);
         const newPath = Path.join(internals.courseFolder, newName);
 
-        return Fs.renameAsync(oldPath, newPath);
+        return new P(function(resolve, reject) {
+            Fs.renameAsync(oldPath, newPath).then(function() {
+                internals.File.update({
+                    course_code: newName
+                }, {
+                    where: {
+                        course_code: oldName
+                    }
+                }).then(resolve).catch(reject);
+            }).catch(reject);
+        });
+
     };
 
     /**

@@ -550,7 +550,7 @@ exports.patch = {
         .update(request.payload, { where: { code: { $eq: request.params.id } } })
         .then(values => {
             const toReturn = { count: values[0] };
-            if (id && values[0] !== 0) {
+            if (newId && values[0] !== 0) {
                 return renameFolder(toReturn);
             } else {
                 return reply(toReturn);
