@@ -12,8 +12,11 @@ const Easypeazip = require('easypeazip');
 
 const internals = {};
 
+
+// Returns true if path is a folder, false otherwise
 internals.isFolder = path => Fs.statSync(path).isDirectory();
 
+// Returns true if path is a file, false otherwise
 internals.isFile = path => Fs.statSync(path).isFile();
 
 // Create folder and remove an existing file
@@ -21,16 +24,12 @@ internals.initializeFolder = function (path) {
 
     return new P((resolve, reject) => {
         try {
-            if (!internals.isFolder(path))
-            {
-                Fs.unlinkAsync(path)
-                    .then(() => {
+            if (!internals.isFolder(path)) {
+                Fs.unlinkAsync(path).then(function() {
                         Fs.mkdirSync(path);
                         resolve();
                 });
-            }
-            else
-            {
+            } else {
                resolve();
             }
         } catch(err) {
@@ -53,41 +52,34 @@ internals.removeRecursivelyAsync = function(path) {
 };
 
 
-// Returns the path of the file in the course
-internals.getDocumentPath = function(course, path, doNotEncode) {
-    if (doNotEncode) {
-        return Path.join(internals.courseFolder, encodeURI(course), internals.documents, path);
-    } else {
-        return Path.join(internals.courseFolder, encodeURI(course), internals.documents, encodeURI(path));
-    }
+// Returns the absolute path of the file in the course folder
+internals.getDocumentPath = function(course, path) {
+    return Path.join(internals.courseFolder, course, internals.documents, path);
 };
 
-/**
- * This deletes the documents folder only if the path is '/'.
- */
+// Deletes a folder
 internals.deleteFolder = function (path) {
-    // DELETE ALL FILES/DIRECTORY WHERE DIR BEGINS WITH PATH
     return internals.removeRecursivelyAsync(path);
 };
 
+// Deletes a file
 internals.deleteFile = function (path) {
     return Fs.unlinkAsync(path);
 };
 
-
-/**
- * Initialize storage.
- */
+// Initialize the storage by creating the folders storage/courses
 internals.initialize = function () {
 
     internals.initializeFolder(internals.relativeTo)
         .then(() => internals.initializeFolder(internals.courseFolder));
 };
 
+// Create file in the db
 internals.createFile = function(data) {
      return internals.File.create(data);
 };
 
+// Replace file in the db
 internals.replaceFile = function(file, data) {
     // Directory and type do not change.
 
@@ -100,13 +92,96 @@ internals.replaceFile = function(file, data) {
     });
 };
 
+// Delete a file in the file system
+internals.deleteOne = function (course, path) {
+    const toDelete = internals.getDocumentPath(course, path);
+    return new P((resolve, reject) => {
+        try {
+
+            const directory = internals.replaceDirectory(path);
+
+            // Delete the file and delete the entry in the database
+            if (internals.isFile(toDelete)) {
+                internals.deleteFile(toDelete).finally(function() {
+
+                    internals.File.destroy({
+                        where: {
+                            course_code: course,
+                            directory: directory,
+                            name: Path.basename(path)
+                        }
+                    }).finally(resolve);
+
+                });
+
+            } else {
+                // Delete the folder and delete all the entries of this folder
+                // and subfolders in the database
+                internals.deleteFolder(toDelete).finally(function() {
+
+                    // DELETE files WHERE course_code = {course}
+                    // AND (directory LIKE {path}% OR
+                    // (directory = {directory} AND name = {Path.basename(path)}))
+                    internals.File.destroy({
+                        where: {
+                            course_code: course,
+                            $or: [{
+                                directory: { $like: path + '%' }
+                            }, {
+                                $and: [{
+                                    directory: { $eq: directory }
+                                }, {
+                                    name: { $eq: Path.basename(path) }
+                                }]
+                            }]
+                        }
+                    }).finally(resolve);
+
+                });
+            }
+        } catch(err) {
+            resolve(); // does not exists -> continue
+        }
+    });
+};
+
+// Returns the directory of the path
+// If the directory is '.', replaces it by '/' (the root of the course)
+// Path.dirname('folder') returns '.' and the directory of 'folder' is '/'
+// in this case (root of the course)
+internals.replaceDirectory = function(path) {
+    let dir = Path.dirname(path);
+    if (dir === '.') {
+        dir = '/';
+    }
+
+    return dir;
+}
+
+// Deletes files in the file system
+internals.deleteFiles = function (course, filenames) {
+    return new P((resolve, reject) => {
+        Items.parallel(filenames, function(filename, next) {
+
+            internals.deleteOne(course, filename).then(next);
+
+        }, function(err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+};
+
 
 const load = function() {
 
     const Storage = {};
 
     /**
-     * Create a course folder.
+     * Create the folders {course_code}/documents
      */
     Storage.createCourse = function (name) {
         const path = Path.join(internals.courseFolder, name);
@@ -118,8 +193,7 @@ const load = function() {
 
 
     /**
-     * Rename a course folder
-     * @return a promise
+     * Rename a course folder and rename the code in the database entries
      */
     Storage.renameCourse = function (oldName, newName) {
         const oldPath = Path.join(internals.courseFolder, oldName);
@@ -140,8 +214,7 @@ const load = function() {
     };
 
     /**
-     * Delete the entire course folder
-     * @return a promise
+     * Delete the entire course folder and the database entries (files)
      */
     Storage.deleteCourse = function (code) {
         return new P(function(resolve, reject) {
@@ -156,96 +229,31 @@ const load = function() {
         });
     };
 
-    Storage.deleteOne = function (course, path) {
-        const toDelete = internals.getDocumentPath(course, path, true);
-        return new P((resolve, reject) => {
-            try {
-
-                let directory = Path.dirname(path);
-                if (directory === '.') {
-                    directory = '/';
-                }
-
-                if (internals.isFile(toDelete)) {
-                    internals.deleteFile(toDelete).finally(function() {
-
-
-                        internals.File.destroy({
-                            where: {
-                                course_code: course,
-                                directory: directory,
-                                name: Path.basename(path)
-                            }
-                        }).finally(resolve);
-
-                    });
-                } else {
-                    internals.deleteFolder(toDelete).finally(function() {
-
-                        internals.File.destroy({
-                            where: {
-                                course_code: course,
-                                $or: [{
-                                    directory: {
-                                        $like: path + '%'
-                                    }
-                                }, {
-                                    $and: [{
-                                        directory: {
-                                            $eq: directory
-                                        }
-                                    }, {
-                                        name: {
-                                            $eq: Path.basename(path)
-                                        }
-                                    }]
-                                }]
-                            }
-                        }).finally(resolve);
-
-                    });
-                }
-            } catch(err) {
-                resolve(); // does not exists -> continue
-            }
-        });
-    };
-
-    Storage.deleteFiles = function (course, filenames) {
-        return new P((resolve, reject) => {
-            Items.parallel(filenames, function(filename, next) {
-
-                Storage.deleteOne(course, filename).then(next);
-
-            }, function(err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    };
-
+    /**
+     * Deletes file(s)
+     */
     Storage.delete = function(course, filenames) {
         return new P((resolve, reject) => {
 
             if (Array.isArray(filenames)) {
-                Storage.deleteFiles(course, filenames).then(resolve).catch(reject);
+                internals.deleteFiles(course, filenames).then(resolve).catch(reject);
             } else {
-                Storage.deleteOne(course, filenames).then(resolve).catch(reject);
+                internals.deleteOne(course, filenames).then(resolve).catch(reject);
             }
 
         });
     };
 
-
-
+    /**
+     * Create or replace a file.
+     * Create or update the database entry corresponding to the file.
+     */
     Storage.createOrReplaceFile = function (course, path, datafile, hidden) {
         return new P(function (resolve, reject) {
-            const file = internals.getDocumentPath(course, path, true);
+            const file = internals.getDocumentPath(course, path);
             datafile.pipe(Fs.createWriteStream(file));
 
+            // Check if the file exists
             internals.File.findOne({
                 where: {
                     name: datafile.hapi.filename,
@@ -259,18 +267,18 @@ const load = function() {
                     hidden = false;
                 }
 
-                const stat = Fs.statSync(file);
-
+                // The data of the database entry
                 const data = {
                     name: datafile.hapi.filename,
                     directory: Path.dirname(path),
                     type: 'f',
-                    size: stat.size,
+                    size: Fs.statSync(file).size,
                     ext: Path.extname(path),
                     course_code: course,
                     hidden: hidden
                 };
 
+                // If the file exists, replace (update) it, otherwise, create it.
                 if (result) {
                     return internals.replaceFile(result, data).then(resolve);
                 } else {
@@ -280,17 +288,16 @@ const load = function() {
         });
     };
 
-    // Returns a promise
+    /**
+     * Creates a folder and the database entry of this folder.
+     */
     Storage.createFolder = function (course, path, hidden) {
 
         return new P(function(resolve, reject) {
-            const folder = internals.getDocumentPath(course, path, true);
-            let directory = Path.dirname(path);
-            if (directory === '.') {
-                directory = '/';
-            }
+            const folder = internals.getDocumentPath(course, path);
+            const directory = internals.replaceDirectory(path);
 
-
+            // Check if the directory exists
             internals.File.findOne({
                 where: {
                     course_code: course,
@@ -298,10 +305,15 @@ const load = function() {
                     name: Path.basename(path)
                 }
             }).then(function(result) {
+
+                // if it exists, send 409 (conflict), otherwise, creates it
                 if (result) {
                     reject(409);
                 } else {
+
+                    // if the mkdir fails, the path is invalid, sends 422 bad data
                     Fs.mkdirAsync(folder).then(function() {
+
                         internals.File.create({
                             name: Path.basename(path),
                             directory: directory,
@@ -311,30 +323,27 @@ const load = function() {
                             course_code: course,
                             hidden: hidden
                         }).then(resolve).catch(err => reject(500));
+
                     }).catch(() => reject(422));
                 }
+
             }).catch(() => reject(500));
 
         });
     };
 
-      // Returns a promise
+    /**
+     * Updates a folder
+     */
     Storage.updateFolder = function (course, path, name, hidden) {
-
 
         return new P(function(resolve, reject) {
 
-            const oldFolder = internals.getDocumentPath(course, path, true);
-            const newFolder = internals.getDocumentPath(course, Path.dirname(path) + '/' + name, true);
-
-            let directory = Path.dirname(path);
-            if (directory === '.') {
-                directory = '/';
-            }
-
+            const directory = internals.replaceDirectory(path);
 
             const doRename = function() {
 
+                // Check if folder exists
                 internals.File.findOne({
                     where: {
                         name: Path.basename(path),
@@ -342,6 +351,8 @@ const load = function() {
                         course_code: course,
                     }
                 }).then(function(result) {
+
+                    // If the folder exists, update, otherwise sends 404 not found
                     if (result) {
 
                         // Against undefined
@@ -349,10 +360,18 @@ const load = function() {
                             result.set('hidden', hidden);
                         }
 
-                        const rename = function() {
-                            return Fs.renameAsync(oldFolder, newFolder);
+
+                        const rename = function(r) {
+                            return Storage
+                                .renameFile(course, path, Path.dirname(path) + '/' + name)
+                                .then(function() {
+                                    r.save();
+                                    resolve();
+                                });
+
                         };
 
+                        // If new name has been given, update name
                         if (name) {
                             result.set('name', name);
                             internals.File.update({
@@ -363,16 +382,10 @@ const load = function() {
                                     course_code: course
                                 }
                             }).then(function() {
-                                rename().then(function() {
-                                    result.save();
-                                    resolve();
-                                });
+                                rename(result);
                             }).catch(() => reject(500));
                         } else {
-                            rename().then(function() {
-                                result.save();
-                                resolve();
-                            });
+                            rename(result);
                         }
 
                     } else {
@@ -382,7 +395,7 @@ const load = function() {
 
             };
 
-            // Check if folder already exists
+            // Check if folder with the new name already exists
             internals.File.findOne({
                 where: {
                     name: name,
@@ -390,6 +403,7 @@ const load = function() {
                     course_code: course
                 }
             }).then(function(result) {
+                // Sends 409 conflict if the new name already exists, otherwise rename
                 if (result) {
                     reject(409);
                 } else {
@@ -399,17 +413,21 @@ const load = function() {
                 reject(500);
             });
 
-
-
         });
     };
 
+    /**
+     * Rename a file
+     */
     Storage.renameFile = function(course, oldPath, newPath) {
         const oldFile = internals.getDocumentPath(course, oldPath);
         const newFile = internals.getDocumentPath(course, newPath);
         return Fs.renameAsync(oldFile, newFile);
     };
 
+    /**
+     * Download a folder or file
+     */
     Storage.download = function(course, path) {
 
         const document = internals.getDocumentPath(course, path);
@@ -435,13 +453,17 @@ const load = function() {
         });
     };
 
+    /**
+     * Get the tree of the path.
+     * Can be recursive or not.
+     */
     Storage.getTree = function(course, path, recursive) {
         Hoek.assert(course, 'course is required');
         Hoek.assert(path, 'path is required');
 
         recursive = recursive || false;
 
-        const document = internals.getDocumentPath(course, path, true);
+        const document = internals.getDocumentPath(course, path);
         const relativeTo = Path.join(internals.courseFolder, encodeURI(course), internals.documents);
         return require('./ls').sync(document, {
             recursive: recursive,
