@@ -480,14 +480,14 @@ const load = function() {
                     course_code: course
                 }
             }).then(function(results) {
-                console.log('PATH', path);
+                // directory is the parent dir
                 let directory;
                 if (path === '/') {
                     directory = null
                 } else {
                     directory = internals.replaceDirectory(path);
                 }
-                console.log('DIRECTORY', directory);
+
                 resolve({
                     dir: directory,
                     files: results

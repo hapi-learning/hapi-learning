@@ -862,7 +862,7 @@ describe('Controller.Course', () => {
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).to.equal(200);
-                expect(response.dir).to.equal('/');
+                expect(response.dir).to.be.null();
 
                 const files = response.files;
 
