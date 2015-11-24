@@ -104,7 +104,9 @@ angular.module('hapi-learning')
                 Restangular
                     .one('courses', course)
                     .all('documents')
-                    .customOperation('remove', null, null, null, {
+                    .customOperation('remove', null, null, {
+                        'Content-Type': 'application/json; charset=UTF-8'
+                    }, {
                         files: path
                     })
                     .then(function() {

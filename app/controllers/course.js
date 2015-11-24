@@ -666,9 +666,6 @@ exports.deleteTeachers = {
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {
-        options: {
-            stripUnknown: true
-        },
         params: {
             id: Joi.string().required().description('Course code')
         },
@@ -699,7 +696,7 @@ exports.deleteDocument = {
         const del = function() {
             Storage.delete(id, files)
                 .then(() => reply().code(202))
-                .catch(() => reply.badImplementation());
+                .catch((err) => reply.badImplementation(err));
         };
 
         internals.checkCourse(Course, id, reply, del);

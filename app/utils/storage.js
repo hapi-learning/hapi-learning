@@ -132,12 +132,12 @@ const load = function() {
      * @return a promise
      */
     Storage.deleteCourse = function (name) {
-        const path = Path.join(internals.courseFolder, name);
+        const path = Path.join(internals.courseFolder, name, true);
         return internals.removeRecursivelyAsync(path);
     };
 
     Storage.deleteOne = function (course, path) {
-        const toDelete = internals.getDocumentPath(course, path);
+        const toDelete = internals.getDocumentPath(course, path, true);
         return new P((resolve, reject) => {
             try {
                 if (internals.isFile(toDelete))
