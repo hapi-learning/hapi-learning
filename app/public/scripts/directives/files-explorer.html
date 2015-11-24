@@ -112,8 +112,8 @@
                 <td class="col-md-5">Name</td>
                 <td class="col-md-1">Size</td>
                 <td class="col-md-1">Download</td>
-                <td class="col-md-2">Last updated</td>
-                <td class="col-md-2">Edit</td>
+                <td class="col-md-1">Last updated</td>
+                <td class="col-md-3">Edit</td>
             </tr>
         </thead>
         <tbody ng-repeat="file in files.files">
@@ -121,9 +121,13 @@
 
             <!-- Directory -->
             <tr ng-if="file.isDirectory">
+
+                <!-- ICON -->
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-folder-open type-icon"></span>
-                    </td>
+                </td>
+
+                <!-- NAME -->
                 <td class="col-md-5">
                     <a ng-click="fileExplorer.$visible || goToRelativePath(file.name)"
                         ng-disabled="fileExplorer.$visible">
@@ -133,14 +137,22 @@
                         </span>
                     </a>
                 </td>
+
+                <!-- SIZE (EMPTY FOR DIRECTORY) -->
                 <td class="col-md-1"></td>
+
+                <!-- DOWNLOAD ICON -->
                 <td class="col-md-1">
                     <a ng-click="downloadFile(file.name)">
                         <span class="glyphicon glyphicon-floppy-save save-file"></span>
                     </a>
                 </td>
-                <td class="col-md-2" am-time-ago="file.lastUpdated"></td>
-                <td class="col-md-2">
+
+                <!-- LAST UPDATED -->
+                <td class="col-md-1" am-time-ago="file.lastUpdated"></td>
+
+                <!-- EDIT -->
+                <td class="col-md-3">
 
                     <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
                           class="form-buttons form-inline" onbeforesave="updateFolder($data, file.name)">
@@ -193,18 +205,28 @@
 
             <!-- File -->
             <tr ng-if="!file.isDirectory">
+
+                <!-- ICON -->
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-file type-icon"></span>
                 </td>
-                <td class="col-md-6 file-name">{{file.name}}</td>
+
+                <!-- NAME -->
+                <td class="col-md-5 file-name">{{file.name}}</td>
+
+                <!-- SIZE -->
                 <td class="col-md-1">{{file.size | byteFmt: 2}} </td>
+
+                <!-- DOWNLOAD ICON -->
                 <td class="col-md-1">
                     <a ng-click="downloadFile(file.name)">
                         <span class="glyphicon glyphicon-floppy-save save-file"></span>
                     </a>
                 </td>
-                <td class="col-md-2" am-time-ago="file.lastUpdated"></td>
 
+                <!-- LAST UPDATED -->
+                <td class="col-md-1" am-time-ago="file.lastUpdated"></td>
+                <td class="col-md-3"></td>
             </tr>
         </tbody>
 
