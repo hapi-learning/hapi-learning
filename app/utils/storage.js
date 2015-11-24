@@ -66,6 +66,7 @@ internals.getDocumentPath = function(course, path, doNotEncode) {
  * This deletes the documents folder only if the path is '/'.
  */
 internals.deleteFolder = function (path) {
+    // DELETE ALL FILES/DIRECTORY WHERE DIR BEGINS WITH PATH
     return internals.removeRecursivelyAsync(path);
 };
 
@@ -132,6 +133,7 @@ const load = function() {
      * @return a promise
      */
     Storage.deleteCourse = function (name) {
+        // TODO -- DELETE ALL FILES WHERE COURSE + name
         const path = Path.join(internals.courseFolder, name, true);
         return internals.removeRecursivelyAsync(path);
     };
@@ -140,10 +142,50 @@ const load = function() {
         const toDelete = internals.getDocumentPath(course, path, true);
         return new P((resolve, reject) => {
             try {
+
+                let directory = Path.dirname(path);
+                if (directory === '.') {
+                    directory = '/';
+                }
+
                 if (internals.isFile(toDelete)) {
-                    internals.deleteFile(toDelete).then(resolve);
+                    internals.deleteFile(toDelete).finally(function() {
+
+
+                        internals.File.destroy({
+                            where: {
+                                course_code: course,
+                                directory: directory,
+                                name: Path.basename(path)
+                            }
+                        }).finally(resolve);
+
+                    });
                 } else {
-                    internals.deleteFolder(toDelete).then(resolve);
+                    internals.deleteFolder(toDelete).finally(function() {
+
+                        internals.File.destroy({
+                            where: {
+                                course_code: course,
+                                $or: [{
+                                    directory: {
+                                        $like: path + '%'
+                                    }
+                                }, {
+                                    $and: [{
+                                        directory: {
+                                            $eq: directory
+                                        }
+                                    }, {
+                                        name: {
+                                            $eq: Path.basename(path)
+                                        }
+                                    }]
+                                }]
+                            }
+                        }).finally(resolve);
+
+                    });
                 }
             } catch(err) {
                 resolve(); // does not exists -> continue
