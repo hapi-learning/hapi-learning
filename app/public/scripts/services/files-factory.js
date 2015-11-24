@@ -127,8 +127,7 @@ angular.module('hapi-learning')
 
                 var disposition = results.headers('Content-Disposition');
                 var contentType = results.headers('Content-Type');
-                var filename = disposition.substr(21); // get filename
-
+                var filename = decodeURIComponent(disposition.substr(21)); // get filename
                 var file = new Blob([results.data], {type: contentType });
 
                 saveAs(file, filename, true);
