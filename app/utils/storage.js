@@ -299,7 +299,7 @@ const load = function() {
                             ext: null,
                             course_code: course,
                             hidden: hidden
-                        }).then(resolve).catch(() => reject(500));
+                        }).then(resolve).catch((err) => { console.log(err); reject(500); });
                     }).catch(() => reject(422));
                 }
             }).catch(() => reject(500));

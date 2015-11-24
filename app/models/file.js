@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     return sequelize.define('File', {
         name: {
             type: DataTypes.STRING,
-            unique: false,
+            unique: 'file_key',
             allowNull: false,
             field: 'name',
             set: function(val) {
@@ -21,7 +21,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         directory: {
             type: DataTypes.STRING,
-            unique: false,
+            unique: 'file_key',
             allowNull: true, // If root folder == null
             field: 'directory',
         },
@@ -48,6 +48,15 @@ module.exports = function(sequelize, DataTypes) {
             unique: false,
             allowNull: true,
             field: 'size'
+        },
+        course_code: {
+            type: DataTypes.STRING,
+            unique: 'file_key',
+            allowNull: false,
+            references: {
+                model: 'courses',
+                key: 'code'
+            }
         }
     }, {
         tableName: 'files',
