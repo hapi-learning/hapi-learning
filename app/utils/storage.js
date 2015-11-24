@@ -140,10 +140,11 @@ const load = function() {
         const toDelete = internals.getDocumentPath(course, path, true);
         return new P((resolve, reject) => {
             try {
-                if (internals.isFile(toDelete))
+                if (internals.isFile(toDelete)) {
                     internals.deleteFile(toDelete).then(resolve);
-                else
+                } else {
                     internals.deleteFolder(toDelete).then(resolve);
+                }
             } catch(err) {
                 resolve(); // does not exists -> continue
             }
@@ -157,10 +158,11 @@ const load = function() {
                 Storage.deleteOne(course, filename).then(next);
 
             }, function(err) {
-                if (err)
+                if (err) {
                     reject(err);
-                else
+                } else {
                     resolve();
+                }
             });
         });
     };
@@ -227,17 +229,31 @@ const load = function() {
             if (directory === '.') {
                 directory = '/';
             }
-            Fs.mkdirAsync(folder).then(function() {
-                internals.File.create({
-                    name: Path.basename(path),
-                    directory: directory,
-                    type: 'd',
-                    size: null,
-                    ext: null,
+
+
+            internals.File.findOne({
+                where: {
                     course_code: course,
-                    hidden: hidden
-                }).then(resolve).catch(reject);
-            }).catch(reject);
+                    directory: directory,
+                    name: Path.basename(path)
+                }
+            }).then(function(result) {
+                if (result) {
+                    reject(409);
+                } else {
+                    Fs.mkdirAsync(folder).then(function() {
+                        internals.File.create({
+                            name: Path.basename(path),
+                            directory: directory,
+                            type: 'd',
+                            size: null,
+                            ext: null,
+                            course_code: course,
+                            hidden: hidden
+                        }).then(resolve).catch(() => reject(500));
+                    }).catch(() => reject(422));
+                }
+            }).catch(() => reject(500));
 
         });
     };
@@ -254,7 +270,7 @@ const load = function() {
             let directory = Path.dirname(path);
             if (directory === '.') {
                 directory = '/';
-            };
+            }
 
 
             const doRename = function() {
@@ -304,7 +320,7 @@ const load = function() {
                     }
                 }).catch(() => reject(500));
 
-            }
+            };
 
             // Check if folder already exists
             internals.File.findOne({

@@ -25,6 +25,8 @@
     }
 
     .btn-edit {
+        margin-bottom: 2px;
+        margin-top: 2x;
     }
 </style>
 
@@ -157,8 +159,7 @@
                     <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
                           class="form-buttons form-inline" onbeforesave="updateFolder($data, file.name)">
 
-                    <div class="input-group">
-                        <div class="input-group-btn">
+                        <div>
 
                             <!-- Confirm -->
                             <button type="submit" class="btn btn-success btn-edit"
@@ -177,26 +178,23 @@
                                 </span>
                             </button>
                         </div>
-                    </div>
                     </form>
 
-                    <div class="input-group" ng-show="!fileExplorer.$visible">
-                        <div class="input-group-btn">
+                    <div ng-show="!fileExplorer.$visible">
 
-                            <!-- Edit -->
-                            <button class="btn btn-primary btn-edit" ng-click="fileExplorer.$show()">
-                                <span class="glyphicon glyphicon-pencil">
+                        <!-- Edit -->
+                        <button class="btn btn-primary btn-edit" ng-click="fileExplorer.$show()">
+                            <span class="glyphicon glyphicon-pencil">
 
-                                </span>
-                            </button>
+                            </span>
+                        </button>
 
-                            <!-- Delete -->
-                            <button class="btn btn-danger btn-edit" ng-click="removeFile($index)">
-                                <span class="glyphicon glyphicon-minus">
+                        <!-- Delete -->
+                        <button class="btn btn-danger btn-edit" ng-click="removeFile($index)">
+                            <span class="glyphicon glyphicon-minus">
 
-                                </span>
-                            </button>
-                        </div>
+                            </span>
+                        </button>
                     </div>
 
                 </td>

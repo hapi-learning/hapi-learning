@@ -369,8 +369,19 @@ exports.createFolder = {
         const createFolder = function() {
             Storage
                 .createFolder(course, path, request.query.hidden)
-                .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
-                .catch(err => reply.badData(err));
+                .then(() => reply().code(201))
+                .catch(err => {
+                    switch(err) {
+                        case 409:
+                            return reply.conflict();
+                        case 422:
+                            return reply.badData();
+                        case 500:
+                        default:
+                            return reply.badImplementation(err);
+
+                    }
+                });
         };
 
         return internals.checkCourse(Course, course, reply, createFolder);
