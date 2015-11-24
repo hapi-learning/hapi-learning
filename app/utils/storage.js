@@ -132,10 +132,17 @@ const load = function() {
      * Delete the entire course folder
      * @return a promise
      */
-    Storage.deleteCourse = function (name) {
-        // TODO -- DELETE ALL FILES WHERE COURSE + name
-        const path = Path.join(internals.courseFolder, name, true);
-        return internals.removeRecursivelyAsync(path);
+    Storage.deleteCourse = function (code) {
+        return new P(function(resolve, reject) {
+            const path = Path.join(internals.courseFolder, code, true);
+            internals.removeRecursivelyAsync(path).finally(function() {
+                internals.File.destroy({
+                    where: {
+                        course_code: name
+                    }
+                }).finally(resolve);
+            });
+        });
     };
 
     Storage.deleteOne = function (course, path) {
