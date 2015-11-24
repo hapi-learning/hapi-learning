@@ -471,6 +471,27 @@ const load = function() {
         });
     };
 
+    Storage.getList = function(course, path) {
+
+        return new P(function(resolve, reject) {
+            internals.File.findAll({
+                where: {
+                    directory: path,
+                    course_code: course
+                }
+            }).then(function(results) {
+                if (results.length === 0) {
+                    reject(404);
+                } else {
+                    resolve({
+                        dir: path,
+                        files: results
+                    });
+                }
+            });
+        });
+    };
+
     return Storage;
 };
 
@@ -481,7 +502,6 @@ exports.register = function(server, options, next) {
     Hoek.assert(options.root, 'option.root is required');
 
     internals.File = server.plugins.models.models.File;
-
 
     internals.root = options.root;
     internals.relativeTo = Path.join(internals.root, options.storage || 'storage');
