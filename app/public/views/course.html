@@ -10,9 +10,10 @@
 
     <h1 class="page-header">
         <span ng-bind="course.code"></span> − <span ng-bind="course.name"></span>
+        <span class="show-md pull-right"><subscribe code="course.code"></subscribe></span>
     </h1>
 
-    <div class="col-md-8">
+    <div class="col-md-12">
         <nav>
             <ul class="nav nav-tabs">
                 <li ui-sref-active="active" >
@@ -31,23 +32,29 @@
         </nav>
 
         <br/>
+
         <div ui-view></div>
     </div>
-    <div class="col-md-4">
-            <subscribe code="course.code"></subscribe>
-        <br/>
-        <div>
 
+    <div class="col-md-12">
+
+        <br/>
+
+        <div>
             <label>Teachers</label>
+
             <br />
+
             <span ng-repeat="teacher in course.teachers">
                 <teacher-info teacher="teacher"></teacher-info>
             </span>
         </div>
+
         <br />
 
         <div>
             <label>Tags</label>
+
             <br />
 
             <span ng-repeat="tag in course.tags">
