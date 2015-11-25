@@ -1,6 +1,6 @@
 <style>
     /* make sidebar nav vertical */
-    
+
     @media (max-width: 992px) {
         .sidebar-nav .navbar .navbar-collapse {
             padding: 0;
@@ -26,32 +26,32 @@
             padding-left: 20px;
         }
     }
-    
+
     @media (min-width: 992px) {
         .sidebar-nav .navbar-default {
             border-color: transparent;
             background-color: transparent;
         }
     }
-    
+
     .sidebar-nav .navbar ul {
         float: none;
     }
-    
+
     .sidebar-nav .navbar ul:not {
         display: block;
     }
-    
+
     .sidebar-nav .navbar li {
         float: none;
         display: block;
     }
-    
+
     .sidebar-nav .navbar li a {
         padding-top: 12px;
         padding-bottom: 12px;
     }
-    
+
     .sidebar-nav .navbar-header {
         float: none;
     }
@@ -71,7 +71,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="visible-xs visible-sm navbar-brand">hapi learning</span>
+            <span class="visible-xs visible-sm navbar-brand" ng-bind="profile.username"></span>
         </div>
         <div class="navbar-collapse collapse sidebar-navbar-collapse">
             <div class="visible-xs visible-sm">
@@ -81,7 +81,7 @@
                         <span ng-bind="profile.firstName"></span>
                         <span ng-bind="profile.lastName"></span>
                             </div>
-                    
+
                 <div>
                     <small><span ng-bind="profile.username"></span></small>
                 </div>
@@ -113,7 +113,7 @@
 
 <!--
 <div id="sidebar-nav" class="navbar-collapse collapse">
-    
+
     <h1 class="navbar-header">
         <span ng-bind="profile.firstName"></span>
         <span ng-bind="profile.lastName"></span>
