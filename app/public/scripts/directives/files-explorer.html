@@ -4,9 +4,6 @@
         color: black;
     }
 
-    .type-icon, .save-file {
-        font-size: 18px;
-    }
 
     .save-file, .folder-name {
         cursor: pointer;
@@ -63,30 +60,6 @@
             </a>
         </div>
 
-
-        <div class="col-md-3" ng-show="uploading">
-            <button class="btn btn-danger btn-block"
-                     ng-click="uploading = false">
-                <span class="glyphicon glyphicon-floppy-remove"></span>
-                Finish upload
-            </button>
-        </div>
-
-        <div class="col-md-3" ng-show="!uploading">
-            <button class="btn btn-default btn-block"
-                    ng-click="uploading = true">
-                <span class="glyphicon glyphicon-cloud-upload"></span>
-                Upload
-            </button>
-        </div>
-
-        <div class="col-md-3">
-            <button ng-click="download()" class="btn btn-default btn-block">
-               <span class="glyphicon glyphicon-cloud-download"></span>
-               Download
-            </button>
-        </div>
-
         <div class="col-md-3" ng-show="!creatingFolder">
             <button ng-click="creatingFolder = true"
                 class="btn btn-default btn-block">
@@ -111,6 +84,30 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3" ng-show="uploading">
+            <button class="btn btn-danger btn-block"
+                     ng-click="uploading = false">
+                <span class="glyphicon glyphicon-floppy-remove"></span>
+                Finish upload
+            </button>
+        </div>
+
+        <div class="col-md-3" ng-show="!uploading">
+            <button class="btn btn-default btn-block"
+                    ng-click="uploading = true">
+                <span class="glyphicon glyphicon-cloud-upload"></span>
+                Upload
+            </button>
+        </div>
+
+        <div class="col-md-3">
+            <button ng-click="download()" class="btn btn-default btn-block">
+               <span class="glyphicon glyphicon-cloud-download"></span>
+               Download
+            </button>
+        </div>
+
     </div>
 
     <br/>
@@ -136,7 +133,7 @@
 
                     <!-- ICON -->
                     <td class="col-md-1">
-                        <span class="glyphicon glyphicon-folder-open type-icon"></span>
+                        <span class="fa fa-folder-open fa-lg"></span>
                     </td>
 
                     <!-- NAME -->
@@ -156,7 +153,7 @@
                     <!-- DOWNLOAD ICON -->
                     <td class="col-md-1">
                         <a ng-click="downloadFile(file.name)">
-                            <span class="glyphicon glyphicon-floppy-save save-file"></span>
+                            <span class="fa fa-save fa-lg save-file"></span>
                         </a>
                     </td>
 
@@ -216,7 +213,7 @@
 
                     <!-- ICON -->
                     <td class="col-md-1">
-                        <span class="glyphicon glyphicon-file type-icon"></span>
+                        <span file-icon ext="file.ext"></span></file-icon>
                     </td>
 
                     <!-- NAME -->
@@ -228,7 +225,7 @@
                     <!-- DOWNLOAD ICON -->
                     <td class="col-md-1">
                         <a ng-click="downloadFile(file.name)">
-                            <span class="glyphicon glyphicon-floppy-save save-file"></span>
+                            <span class="fa fa-save fa-lg save-file"></span>
                         </a>
                     </td>
 
