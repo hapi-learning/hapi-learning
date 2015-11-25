@@ -10,6 +10,8 @@ angular.module('hapi-learning')
               CoursesFactory, LoginFactory,
               FilesFactory, $state) {
 
+        $scope.$state = $state; // for the active class
+
         $scope.update = false;
         $scope.course = null;
         $scope.editing = false;
