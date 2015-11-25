@@ -169,19 +169,18 @@
                             <div>
 
                                 <!-- Confirm -->
-                                <button type="submit" class="btn btn-success btn-edit"
+                                <button type="submit" class="btn btn-primary"
                                         ng-disabled="fileExplorer.$waiting">
-                                    <span class="glyphicon glyphicon-ok">
+                                    <span class="fa fa-check fa-lg">
 
                                     </span>
                                 </button>
 
                                 <!-- Cancel -->
-                                <button type="button" class="btn btn-warning btn-edit"
+                                <button type="button" class="btn btn-warning"
                                         ng-disabled="fileExplorer.$waiting"
                                         ng-click="fileExplorer.$cancel()">
-                                    <span class="glyphicon glyphicon-remove">
-
+                                    <span class="fa fa-remove fa-lg">
                                     </span>
                                 </button>
                             </div>
@@ -190,16 +189,14 @@
                         <div ng-show="!fileExplorer.$visible">
 
                             <!-- Edit -->
-                            <button class="btn btn-primary btn-edit" ng-click="fileExplorer.$show()">
-                                <span class="glyphicon glyphicon-pencil">
-
+                            <button class="btn btn-default" ng-click="fileExplorer.$show()">
+                                <span class="fa fa-pencil-square-o fa-lg">
                                 </span>
                             </button>
 
                             <!-- Delete -->
-                            <button class="btn btn-danger btn-edit" ng-click="removeFile($index)">
-                                <span class="glyphicon glyphicon-minus">
-
+                            <button class="btn btn-danger" ng-click="removeFile($index)">
+                                <span class="fa fa-remove fa-lg">
                                 </span>
                             </button>
                         </div>
