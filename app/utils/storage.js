@@ -365,10 +365,8 @@ const load = function() {
                             return Storage
                                 .renameFile(course, path, Path.dirname(path) + '/' + name)
                                 .then(function() {
-                                    r.save();
-                                    resolve();
-                                });
-
+                                    r.save().then(resolve).catch(() => reject(422));
+                                }).catch(() => reject(422));
                         };
 
                         // If new name has been given, update name
