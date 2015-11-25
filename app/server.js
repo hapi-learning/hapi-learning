@@ -29,27 +29,12 @@ let internals = {
             labels: ['api']
         }],
         plugins: {
+           './cache': [{select: ['api']}],
             './utils/error' : [{select: ['api']}],
-            './utils/storage': [
-                {
-                    select: ['api'],
-                    options: {
-                        root: __dirname,
-                        documents: 'documents',
-                        courses: 'courses',
-                        storage: 'storage',
-                        test: false
-                    }
-                }],
             'hapi-auth-jwt2': [{
                 select: ['api']
             }],
-            './auth': [{
-                select: ['api'],
-                options: {
-                    setDefault: false
-                }
-            }],
+            './auth': [{select: ['api']}],
             inert: [{
                 select: ['api', 'web']
             }],
@@ -68,6 +53,17 @@ let internals = {
                     }
                 }
             ],
+            './utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        documents: 'documents',
+                        courses: 'courses',
+                        storage: 'storage',
+                        test: false
+                    }
+                }],
             './controllers': [{
                 select: ['api']
             }],
@@ -142,7 +138,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
     var Models = server.plugins.models.models;
 
     Models.sequelize.sync({
-       //force: false // drops all db and recreates them
+        force: false // drops all db and recreates them
        // logging: console.log
     })
     .then(() => {
@@ -153,65 +149,85 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
             } else {
 
                 process.on('SIGINT', function() {
-                    console.log('\nStopping server...');
-                    server.stop({timeout: 10000}, err => {
+                    console.log('Stopping server...');
+                    server.plugins.cache.cache.stop();
+                    server.stop({timeout: 10}, err => {
                         if (err) {
                             console.log(err);
                         } else {
                             console.log('Server stopped successfuly !');
                         }
-
                         process.exit();
                     });
                 });
 
-
                 _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
-
-
 
                 // INIT DATA FOR TEST PURPOSES
 
                 const Wreck = require('wreck');
-                const roles = require('../resources/roles.json');
+                const Models = server.plugins.models.models;
+                const Role = Models.Role;
+                const User = Models.User;
+                const baseUrl = server.select('api').info.uri;
+
                 const users = require('../resources/users.json');
                 const tags  = require('../resources/tags.json');
                 const permissions = require('../resources/permissions.json');
                 const teachers = require('../resources/all_teachers.json');
                 const courses = require('../resources/all_courses.json');
 
+                const roles = _.map(require('../resources/roles.json'), role => Role.create(role));
+                Promise.all(roles).then(function() {
+                    User.create({
+                        username: 'admin',
+                        password: 'admin',
+                        role_id: 1,
+                        email: 'admin@admin.com',
+                        firstName: 'admin',
+                        lastName: 'admin'
+                    }).then(function() {
 
-                const post = function(url, payload) {
-                    Wreck.post(url, { payload: JSON.stringify(payload) }, () => {});
-                };
+                        Wreck.post(baseUrl + '/login', {
+                            payload: JSON.stringify({
+                                username: 'admin',
+                                password: 'admin'
+                            })
+                        }, function(err, response, payload) {
+                            const token = JSON.parse(payload.toString()).token;
+                            const post = function(url, payload) {
+                                Wreck.post(baseUrl + url, {
+                                    payload: JSON.stringify(payload),
+                                    headers: {
+                                        Authorization: token
+                                    }
+                                }, () => {});
+                            };
 
-                const addCourses = function() {
-                    _.forEach(courses, course => post('http://' + (process.env.HOST || 'localhost') + ':8088/courses', course));
-                };
+                            const addCourses = function() {
+                                _.forEach(courses, course => post('/courses', course));
+                            };
 
-                const addTeachers = function() {
-                    _.forEach(teachers, teacher => post('http://' + (process.env.HOST || 'localhost') + ':8088/users', teacher));
-                };
+                            const addTeachers = function() {
+                                _.forEach(teachers, teacher => post('/users', teacher));
+                            };
 
-               /* const addUsers = function() {
-                    _.forEach(users, user => post('http://' + (process.env.HOST || 'localhost') + ':8088/users', user, addTeachers));
-                };*/
+                            const addTags = function() {
+                                _.forEach(tags, tag => post('/tags', tag));
+                            };
 
-                const addTags = function() {
-                    _.forEach(tags, tag => post('http://' + (process.env.HOST || 'localhost') + ':8088/tags', tag));
-                };
 
-                const addRoles = function() {
-                    _.forEach(roles, role => post('http://' + (process.env.HOST || 'localhost') + ':8088/roles', role));
-                };
-                
-                addRoles();
-                addTags();
-                addTeachers();
-                setTimeout(addCourses, 1000); // just for test.
+                            addTags();
+                            addTeachers();
+                            setTimeout(addCourses, 1000); // just for test.
+                        });
 
+
+                    });
+                })
+                .catch(function() {});
             }
-        });
 
+        });
     });
 });

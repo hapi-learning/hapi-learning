@@ -1,15 +1,30 @@
 
 <div class="container-fluid">
-
-    <div class="col-md-8" ng-controller="CoursesCtrl">
-        <h1 class="page-header">My courses</h1>
-        <course-list courses="courses"></course-list>
-    </div>
-
-    <div class="col-md-4" ng-controller="NewsCtrl">
+    
+    <div class="col-md-12 col-lg-4 col-lg-push-8" ng-controller="NewsCtrl">
         <h1 class="page-header">News</h1>
         <last-news></last-news>
     </div>
+
+
+    <div class="col-md-10 col-lg-8 col-lg-pull-4">
+        <h1 class="page-header">My courses</h1>
+        <course-list filters="false" subscribed="true"></course-list>
+    </div>
+    
+<!--
+    <div class="col-lg-4 col-lg-push-4" ng-controller="NewsCtrl">
+        <h1 class="page-header">News</h1>
+        <last-news></last-news>
+    </div>
+
+    <div class="col-lg-8 col-lg-pull-6" ng-controller="CoursesCtrl">
+        <h1 class="page-header">My courses</h1>
+        <course-list courses="courses"></course-list>
+    </div>
+-->
+
+    
 
 </div>
 

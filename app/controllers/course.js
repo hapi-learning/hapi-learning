@@ -8,40 +8,6 @@ const Path  = require('path');
 
 const internals = {};
 
-// result is a sequelize instance
-internals.getCourse = function(result) {
-
-    // Attributes to include in teachers
-    const teachersInclude = ['id', 'username', 'email',
-                             'first_name', 'last_name'];
-
-    return Promise.resolve(
-        Promise
-        .all([result.getTags({attributes: ['name'], joinTableAttributes: []}),
-              result.getTeachers({attributes: teachersInclude, joinTableAttributes: []})])
-
-        .then(values => {
-            let course = result.get({plain:true});
-            course.tags = _.map(values[0], (t => t.get('name', {plain:true})));
-            course.teachers = _.map(values[1], (t => t.get({plain:true})));
-
-            return course;
-        })
-    );
-};
-
-internals.findCourseByCode = function(Course, id) {
-
-    Hoek.assert(Course, 'Model Course required');
-    Hoek.assert(id, 'Course code required');
-
-    return Course.findOne({
-        where: {
-            code: { $eq : id }
-        }
-    });
-};
-
 internals.checkCourse = function(Course, id, reply, callback) {
 
     Hoek.assert(Course, 'Model Course required');
@@ -49,7 +15,7 @@ internals.checkCourse = function(Course, id, reply, callback) {
     Hoek.assert(callback, 'Callback required');
     Hoek.assert(reply, 'Reply interface required');
 
-    internals
+    Utils
         .findCourseByCode(Course, id)
         .then(result => {
             if (result) {
@@ -80,7 +46,7 @@ exports.getAll = {
         Course
             .findAndCountAll(options).then(results => {
 
-            let promises = _.map(results.rows, (r => internals.getCourse(r)));
+            let promises = _.map(results.rows, (r => Utils.getCourse(r)));
             // Wait for all promises to end
             Promise
                 .all(promises)
@@ -103,12 +69,12 @@ exports.get = {
         const Course = this.models.Course;
         const id = request.params.id;
 
-        internals.findCourseByCode(Course, id)
+        Utils.findCourseByCode(Course, id)
         .then(result => {
             if (result) // If found
             {
 
-                internals.getCourse(result).then(course => reply(course));
+                Utils.getCourse(result).then(course => reply(course));
             }
             else // If not found
             {
@@ -145,14 +111,16 @@ exports.getDocuments = {
 
             if (isFile)
             {
-                return reply.file(result, { mode: 'attachment'});
+                return reply.file(result, { mode: 'attachment'})
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition');
             }
             else
             {
                 const pathName = path === '/' ? '' : '_' + require('path').basename(path);
-                const contentDisposition = 'attachment; filename=' + course + pathName;
+                const contentDisposition = 'attachment; filename=' + course + pathName + '.zip';
                 return reply(result)
                     .type('application/zip')
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition')
                     .header('Content-Disposition', contentDisposition);
             }
         })
@@ -171,9 +139,6 @@ exports.getTree = {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
-        },
-        query: {
-            recursive: Joi.boolean().default(true)
         }
     },
     handler: function (request, reply) {
@@ -190,7 +155,15 @@ exports.getTree = {
         const recursive = request.query.recursive
 
         const tree = function() {
-            return reply(Storage.getTree(id, path, recursive));
+            Storage.getList(id, path).then(function(results) {
+                return reply(results);
+            }).catch(function(err) {
+                if (err === 404) {
+                    return reply.notFound('Folder not found');
+                } else {
+                    return reply.badImplementation(err);
+                }
+            });
         };
 
         return internals.checkCourse(Course, id, reply, tree);
@@ -208,7 +181,7 @@ exports.getStudents = {
     handler: function (request, reply) {
         const Course = this.models.Course;
 
-        internals.findCourseByCode(Course, request.params.id)
+        Utils.findCourseByCode(Course, request.params.id)
         .then(course => {
             course
                 .getUsers({joinTableAttributes: []})
@@ -220,6 +193,9 @@ exports.getStudents = {
 
 
 exports.post = {
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     description: 'Add a course',
     validate: {
         options: {
@@ -245,7 +221,6 @@ exports.post = {
         const description = request.payload.description;
         const pteachers   = request.payload.teachers;
         const ptags       = request.payload.tags;
-
 
         const hasTeachers = pteachers ? true : false;
         const hasTags     = ptags ? true : false;
@@ -322,12 +297,16 @@ exports.postDocument = {
         maxBytes: process.env.UPLOAD_MAX,
         output: 'stream',
         allow: 'multipart/form-data',
-        parse: true
+        parse: true,
+        timeout: 60000
     },
     validate: {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
+        },
+        query: {
+            hidden: Joi.boolean().default(false)
         }
     },
     handler: function (request, reply) {
@@ -344,7 +323,7 @@ exports.postDocument = {
             return reply.badRequest('Filename required to post a document');
         }
 
-        const path = Path.join(encodeURI(request.params.path), encodeURI(filename));
+        const path = Path.join(request.params.path, filename);
 
         // needs a better verification, but will do it for now.
         if (internals.checkForbiddenPath(path)) {
@@ -352,17 +331,16 @@ exports.postDocument = {
         }
 
         const course = request.params.id;
-
+        const hidden = request.query.hidden;
         const Storage = this.storage;
         const Course = this.models.Course;
 
         const upload = function() {
-            try {
-                Storage.createOrReplaceFile(course, path, file);
+            Storage.createOrReplaceFile(course, path, file, hidden).then(function() {
                 return reply('File : ' + filename + ' successfuly uploaded').code(201);
-            } catch(err) {
+            }).catch(function(err) {
                 return reply.conflict(err);
-            }
+            });
         };
 
         return internals.checkCourse(Course, course, reply, upload);
@@ -375,6 +353,9 @@ exports.createFolder = {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().required().invalid('/')
+        },
+        query: {
+            hidden: Joi.boolean().default(false)
         }
     },
     handler: function (request, reply) {
@@ -382,7 +363,8 @@ exports.createFolder = {
         const Storage = this.storage;
         const Course  = this.models.Course;
         const course  = request.params.id;
-        const path    = encodeURI(request.params.path);
+
+        const path = request.params.path;
 
         // needs a better verification, but will do it for now.
         if (internals.checkForbiddenPath(path)) {
@@ -391,12 +373,77 @@ exports.createFolder = {
 
         const createFolder = function() {
             Storage
-                .createFolder(course, path)
-                .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly created').code(201))
-                .catch(err => reply.badData(err));
+                .createFolder(course, path, request.query.hidden)
+                .then(() => reply().code(201))
+                .catch(err => {
+                    switch(err) {
+                        case 409:
+                            return reply.conflict();
+                        case 422:
+                            return reply.badData();
+                        case 500:
+                        default:
+                            return reply.badImplementation(err);
+
+                    }
+                });
         };
 
         return internals.checkCourse(Course, course, reply, createFolder);
+    }
+};
+
+exports.updateFolder = {
+    description: 'Create a folder to a course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().required().invalid('/')
+        },
+        payload: {
+            name: Joi.string().optional(),
+            hidden: Joi.boolean().optional()
+        }
+    },
+    handler: function (request, reply) {
+
+        const Storage = this.storage;
+        const Course  = this.models.Course;
+        const course  = request.params.id;
+
+        const path = request.params.path;
+        const name = request.payload.name;
+        const hidden = request.payload.hidden;
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
+        const updateFolder = function() {
+            Storage
+                .updateFolder(course, path, name, hidden)
+                .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly updated').code(200))
+                .catch(err => {
+                    switch(err) {
+                        case 404:
+                            return reply.notFound('Folder not found');
+                            break;
+                        case 409:
+                            return reply.conflict();
+                            break;
+                        case 422:
+                            return reply.badData();
+                            break;
+                        case 500:
+                        default:
+                            return reply.badImplementation();
+                    }
+
+            });
+        };
+
+        return internals.checkCourse(Course, course, reply, updateFolder);
     }
 };
 
@@ -420,11 +467,11 @@ exports.addTags = {
         Tag
         .findAll({where: { name: { $in: request.payload.tags } }})
         .then(tags => {
-            internals.findCourseByCode(Course, request.params.id)
+            Utils.findCourseByCode(Course, request.params.id)
             .then(course => {
                 if (course) {
                     course.addTags(tags).then(() => {
-                       internals.getCourse(course).then(result => {
+                       Utils.getCourse(course).then(result => {
                            return reply(result);
                        });
                     });
@@ -459,11 +506,11 @@ exports.addTeachers = {
         User
         .findAll({where: { username: { $in: request.payload.teachers } }})
         .then(teachers => {
-            internals.findCourseByCode(Course, request.params.id)
+            Utils.findCourseByCode(Course, request.params.id)
             .then(course => {
                 if (course) {
                     course.addTeachers(teachers).then(() => {
-                        internals.getCourse(course).then(result => {
+                        Utils.getCourse(course).then(result => {
                             return reply(result);
                         });
                     });
@@ -508,7 +555,7 @@ exports.patch = {
         .update(request.payload, { where: { code: { $eq: request.params.id } } })
         .then(values => {
             const toReturn = { count: values[0] };
-            if (id && values[0] !== 0) {
+            if (newId && values[0] !== 0) {
                 return renameFolder(toReturn);
             } else {
                 return reply(toReturn);
@@ -569,11 +616,11 @@ exports.deleteTags = {
         Tag
         .findAll({where: { name: { $in: ptags} }})
         .then(tags => {
-            internals.findCourseByCode(Course, id)
+            Utils.findCourseByCode(Course, id)
             .then(course => {
                 if (course) {
                     course.removeTags(tags).then(() => {
-                        internals.getCourse(course).then(result => {
+                        Utils.getCourse(course).then(result => {
                             return reply(result);
                        });
                     });
@@ -610,11 +657,11 @@ exports.deleteTeachers = {
         User
         .findAll({where: { username: { $in: pteachers } }})
         .then(teachers => {
-            internals.findCourseByCode(Course, id)
+            Utils.findCourseByCode(Course, id)
             .then(course => {
                 if (course) {
                     course.removeTeachers(teachers).then(() => {
-                        internals.getCourse(course).then(result => {
+                        Utils.getCourse(course).then(result => {
                             return reply(result);
                         });
                     });
@@ -635,9 +682,6 @@ exports.deleteTeachers = {
 exports.deleteDocument = {
     description: 'Delete a document from a course',
     validate: {
-        options: {
-            stripUnknown: true
-        },
         params: {
             id: Joi.string().required().description('Course code')
         },
@@ -668,7 +712,7 @@ exports.deleteDocument = {
         const del = function() {
             Storage.delete(id, files)
                 .then(() => reply().code(202))
-                .catch(() => reply.badImplementation());
+                .catch((err) => reply.badImplementation(err));
         };
 
         internals.checkCourse(Course, id, reply, del);

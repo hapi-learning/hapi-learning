@@ -1,8 +1,11 @@
+<div>
+    <div ng-if="filters">
+        <search-courses></search-courses>
+    </div>
 
-<ul class="list-group">
-    <li class="list-group-item" ng-repeat="course in courses | filter: {name: filter.course, code: filter.code} | filter: filterByTags">
-
-        <course-info course="course"></course-info>
-        <br />
-    </li>
-</ul>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="course in courses | filter: search">
+            <course-info course="course"></course-info>
+        </li>
+    </ul>
+</div>

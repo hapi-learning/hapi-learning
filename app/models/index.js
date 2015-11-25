@@ -9,8 +9,8 @@ const _         = require('lodash');
 exports.register = function(server, options, next) 
 {
     let models = {};
-    const sequelize = new Sequelize(
-    
+
+    models.sequelize = new Sequelize(
         options.name || null,
         options.username || null,
         options.password || null, {
@@ -21,8 +21,6 @@ exports.register = function(server, options, next)
         }
     );
 
-    models.sequelize = sequelize;
-
     const files = Fs.readdirSync(__dirname);
 
     _.forEach(files, (file) => {
@@ -31,11 +29,20 @@ exports.register = function(server, options, next)
 
             const name = model.charAt(0).toUpperCase() + model.slice(1);
 
-            models[name] = sequelize.import(model);
+            models[name] = models.sequelize.import(model);
         }
     });
 
-    (function setAssociations(m) {
+    void (function setAssociations(m) {
+
+
+     /*   // A course has many files
+        m.File.belongsTo(m.Course, {
+            foreignKey: {
+                name: 'course_code',
+                allowNull: false },
+            targetKey: 'code'
+        });*/
 
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
@@ -68,6 +75,24 @@ exports.register = function(server, options, next)
 
         // A user can have specifics additional permissions.
         m.User.belongsToMany(m.Permission, { through: 'user_permissions' });
+
+
+        m.News.belongsTo(m.User, {
+            foreignKey : {
+                name : 'user',
+                allowNull : false
+            },
+            targetKey : 'username'
+        });
+
+        // A news can be related to a course
+        m.News.belongsTo(m.Course, {
+            foreignKey : {
+                name : 'course',
+                allowNull : true
+            },
+            targetKey : 'code'
+        });
 
     })(models);
 

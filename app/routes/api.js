@@ -2,7 +2,8 @@
 
 exports.register = function (server, options, next) {
 
-    const Storage = server.plugins.storage.storage;
+    const Cache       = server.plugins.cache.cache;
+    const Storage     = server.plugins.storage.storage;
     const Controllers = server.plugins.controllers.controllers;
     const Models      = server.plugins.models.models;
 
@@ -11,25 +12,30 @@ exports.register = function (server, options, next) {
     // Can now access models with this.models
     server.bind({
         models: Models,
-        storage: Storage
+        storage: Storage,
+        cache: Cache
     });
 
     server.route([
 
         {method: 'POST', path: '/login',  config: Controllers.Auth.login},
         {method: 'POST', path: '/logout', config: Controllers.Auth.logout},
+        {method: 'GET',  path: '/me',     config: Controllers.Auth.me},
 
         // Users routes
-        {method: 'GET',    path: '/users',                             config: Controllers.User.getAll},
-        {method: 'GET',    path: '/users/{username}',                  config: Controllers.User.get},
-        {method: 'GET',    path: '/users/{username}/tags',             config: Controllers.User.getTags},
-        {method: 'GET',    path: '/users/{username}/courses',          config: Controllers.User.getCourses},
-        {method: 'GET',    path: '/users/{username}/folders',          config: Controllers.User.getFolders},
+        {method: 'GET',    path: '/users',                                   config: Controllers.User.getAll},
+        {method: 'GET',    path: '/users/{username}',                        config: Controllers.User.get},
+        {method: 'GET',    path: '/users/{username}/tags',                   config: Controllers.User.getTags},
+        {method: 'GET',    path: '/users/{username}/courses',                config: Controllers.User.getCourses},
+        {method: 'GET',    path: '/users/{username}/folders',                config: Controllers.User.getFolders},
 
-        {method: 'POST',   path: '/users',                             config: Controllers.User.post},
-        {method: 'POST',    path: '/users/{username}/tags',             config: Controllers.User.addTags},
+        {method: 'GET',    path: '/teachers',                                config: Controllers.User.getTeachers},
+
+        {method: 'POST',   path: '/users',                                   config: Controllers.User.post},
+        {method: 'POST',   path: '/users/{username}/tags',                   config: Controllers.User.addTags},
         {method: 'POST',   path: '/users/{username}/subscribe/{crsId}',      config: Controllers.User.subscribeToCourse},
         {method: 'POST',   path: '/users/{username}/unsubscribe/{crsId}',    config: Controllers.User.unsubscribeToCourse},
+        
         {method: 'POST',   path: '/users/{username}/folders',         config: Controllers.User.addFolders},
         {method: 'POST',   path: '/users/{username}/folders/{folderName}/{crsId}', config: Controllers.User.addCourseToFolder},
         {method: 'PUT',    path: '/users/{username}',                  config: Controllers.User.put},
@@ -65,12 +71,20 @@ exports.register = function (server, options, next) {
         {method: 'POST',   path: '/courses/{id}/teachers',          config: Controllers.Course.addTeachers},
         {method: 'POST',   path: '/courses/{id}/documents',         config: Controllers.Course.postDocument},
         {method: 'POST',   path: '/courses/{id}/documents/{path*}', config: Controllers.Course.postDocument},
-        {method: 'POST',   path: '/courses/{id}/folders/{path*}' ,   config: Controllers.Course.createFolder},
+        {method: 'POST',   path: '/courses/{id}/folders/{path*}' ,  config: Controllers.Course.createFolder},
+        {method: 'PATCH',  path: '/courses/{id}/folders/{path*}',   config: Controllers.Course.updateFolder},
         {method: 'PATCH',  path: '/courses/{id}',                   config: Controllers.Course.patch},
         {method: 'DELETE', path: '/courses/{id}',                   config: Controllers.Course.delete},
         {method: 'DELETE', path: '/courses/{id}/documents',         config: Controllers.Course.deleteDocument},
         {method: 'DELETE', path: '/courses/{id}/tags',              config: Controllers.Course.deleteTags},
         {method: 'DELETE', path: '/courses/{id}/teachers',          config: Controllers.Course.deleteTeachers},
+        
+        // News routes
+        {method: 'GET',    path: '/news',                        config: Controllers.News.getAll},
+        {method: 'GET',    path: '/news/{id}',                        config: Controllers.News.get},
+        {method: 'POST',    path: '/news',                        config: Controllers.News.post}
+
+
     ]);
 
     next();

@@ -1,22 +1,16 @@
 <div>
     <h3>
-    <span class="label label-default label-pill pull-right" ng-show="updated()">
-        <span class="glyphicon glyphicon-eye-open"></span>
-    </span>
-
-    <a href="#/courses/{{course.code}}">
-        <span ng-bind="course.code"></span> - <span ng-bind="course.name"></span>
-    </a>
-        </h3>
+        <updated code="course.code"></updated>
+        <course-link course="course"></course-link>
+    </h3>
 
     <div>
         <label>Teachers</label>
 
         <br />
-
         <span ng-repeat="teacher in course.teachers">
-        <teacher-info teacher="teacher"></teacher-info>
-    </span>
+            <teacher-info teacher="teacher"></teacher-info>
+        </span>
     </div>
 
     <br />
@@ -25,18 +19,12 @@
         <label>Tags</label>
 
         <br />
-
         <span ng-repeat="tag in course.tags">
-        <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+            <tag-button tag="tag"></tag-button>
         </span>
     </div>
 
     <br />
 
-    <div>
-        <button type="button" class="btn btn-success" ng-hide="subscribed()">
-            <span class="glyphicon glyphicon-ok"></span>Subscribe</button>
-        <button type="button" class="btn btn-danger" ng-show="subscribed()">
-            <span class="glyphicon glyphicon-remove"></span> Unsubscribe</button>
-    </div>
+    <subscribe code="course.code"></subscribe>
 </div>

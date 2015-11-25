@@ -1,45 +1,38 @@
-angular.module('hapi-learning')
-    .controller('CourseCtrl', ['$scope', '$stateParams', 'CoursesFactory', 'LoginFactory',
-                function ($scope, $stateParams, CoursesFactory, LoginFactory) {
+'use strict';
 
-            $scope.course = {};
-            $scope.available = false;
-            $scope.subscribed = true;
-                    
-            $scope.subscribe = function () {
-                CoursesFactory.subscribe($stateParams.code)
-                .then(function(course) {
-                    $scope.subscribed = true;
-                })
-                .catch(function(error) {
-                    alert('already subscribed');
-                });
-            };
-    
-            $scope.unsubscribe = function () {
-                CoursesFactory.unsubscribe($stateParams.code)
-                .then(function(course) {
-                    $scope.subscribed = false;
-                })
-                .catch(function(error) {
-                    alert('Already unsubscribed');
-                });
-            };
-                    
+angular.module('hapi-learning')
+    .controller('CourseCtrl', [
+        '$rootScope', '$scope', '$stateParams',
+        'CoursesFactory', 'LoginFactory',
+        'FilesFactory', '$state',
+
+    function ($rootScope, $scope, $stateParams,
+              CoursesFactory, LoginFactory,
+              FilesFactory, $state) {
+
+        $scope.update = false;
+        $scope.course = null;
+        $scope.editing = false;
+
+
+        // If stateParams changed, update course
+        if ($scope.course && $stateParams.code !== $scope.course.code) {
+            $scope.update = true;
+        }
+
+        if (!$scope.course || $scope.update) {
+
             CoursesFactory.loadSpecific($stateParams.code)
             .then(function (course) {
-                if (course)
-                {
-                    $scope.course.name = course.name;
-                    $scope.course.description = course.description;
-                    $scope.course.code = course.code;
-                    $scope.course.teachers = course.teachers;
-                    $scope.course.tags = course.tags;
-                }
-                else
-                {
-                    console.log('Course not found');
+                if (course) {
+                    $scope.course = course;
+                    $scope.course.description = course.description || 'This page is empty';
+                } else {
+                    $state.go('root.home');
                 }
             })
-            .catch(function (error) {console.log(error);});
+            .catch(function (error) {
+                $state.go('root.home');
+            });
+        };
     }]);

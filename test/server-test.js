@@ -16,22 +16,10 @@ const internals = {
             labels: ['api']
         }],
         plugins: {
+            '../app/cache': [{select: ['api']}],
             '../app/utils/error' : [{select: ['api']}],
-            '../app/utils/storage': [
-                {
-                    select: ['api'],
-                    options: {
-                        root: __dirname,
-                        test: true
-                    }
-                }],
             'hapi-auth-jwt2': [{select: ['api']}],
-            '../app/auth': [{
-                select: ['api'],
-                options: {
-                    setDefault: false
-                }
-            }],
+            '../app/auth': [{select: ['api']}],
             '../app/models': [
                 {
                     select: ['api'],
@@ -42,6 +30,14 @@ const internals = {
                     }
                 }
             ],
+            '../app/utils/storage': [
+                {
+                    select: ['api'],
+                    options: {
+                        root: __dirname,
+                        test: true
+                    }
+                }],
             '../app/controllers': [{select: ['api']}],
             '../app/routes/api': [{select: ['api']}],
             'hapi-pagination': [
@@ -82,7 +78,6 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
         console.log('server.register error :');
         throw err;
     }
-
     module.exports = server;
 });
 

@@ -16,15 +16,44 @@ const after = lab.after;
 const expect = Code.expect;
 
 
-const server = require('./server-test');
+let server;
 
+const internals = {};
 
 before((done) => {
-
+    server = require('./server-test');
     const Models = server.plugins.models.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => done());
+    }).then(() => {
+        Models.Role.create({
+            name: 'admin'
+        }).then(() => {
+             Models.User.create({
+                username: 'admin',
+                password: 'admin',
+                role_id: 1,
+                email: 'admin@admin.com',
+                firstName: 'admin',
+                lastName: 'admin'
+            }).then(user => {
+                    server.inject({
+                        method: 'POST',
+                        url: '/login',
+                        payload: {
+                            username: 'admin',
+                            password: 'admin'
+                        }
+                    }, (res) => {
+                        internals.headers = {
+                            Authorization: res.request.response.source.token
+                        };
+                        done();
+                    });
+            });
+        });
+
+    });
 });
 
 after(done => {
@@ -58,7 +87,8 @@ const courses = [{
 const pRequest = {
     method: 'POST',
     url: '/courses',
-    payload: course
+    payload: course,
+    headers: internals.headers
 };
 
 
@@ -98,8 +128,9 @@ const moreTags = [{
 
 describe('Controller.Course', () => {
     describe('#post()', () => {
-        it('should return 422 response because of invalid teachers/tags', done => {
 
+        it('should return 422 response because of invalid teachers/tags', done => {
+            pRequest.headers = internals.headers;
             server.inject(pRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(422);
@@ -182,7 +213,8 @@ describe('Controller.Course', () => {
         it('Should return the course with tags and teachers', done => {
             const request = {
                 method: 'GET',
-                url: '/courses/ATL3'
+                url: '/courses/ATL3',
+                headers: internals.headers
             };
 
             server.inject(request, res => {
@@ -206,12 +238,14 @@ describe('Controller.Course', () => {
             let post = {
                 method: 'POST',
                 url: '/courses',
-                payload: courses[0]
+                payload: courses[0],
+                headers: internals.headers
             };
 
             const request = {
                 method: 'GET',
-                url: '/courses'
+                url: '/courses',
+                headers: internals.headers
             };
 
             server.inject(post, () => {
@@ -242,6 +276,7 @@ describe('Controller.Course', () => {
             url: '/courses/ANL3'
         };
         it ('Should return 1', done => {
+            request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response.count).to.equal(1);
@@ -258,6 +293,7 @@ describe('Controller.Course', () => {
         });
 
         it ('Should return 0', done => {
+            request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response.count).to.equal(0);
@@ -273,6 +309,7 @@ describe('Controller.Course', () => {
         };
 
         it ('Should return empty array', done => {
+            request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
@@ -282,6 +319,7 @@ describe('Controller.Course', () => {
         });
 
         it ('Should return an array with 1 users', done => {
+            request.headers = internals.headers;
             const Course = server.plugins.models.models.Course;
             const user = {
                 username: 'kevin2004',
@@ -322,7 +360,7 @@ describe('Controller.Course', () => {
         it ('Should return the number of rows updated (0)', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, {url : '/courses/ABCD'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
 
                 const response = res.request.response.source;
@@ -334,6 +372,7 @@ describe('Controller.Course', () => {
         });
 
         it ('Should return the number of rows updated (1)', done => {
+            request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
 
@@ -354,7 +393,7 @@ describe('Controller.Course', () => {
         });
 
         it ('Should return the updated course', done => {
-            server.inject({method: 'GET', url:'/courses/ATL3G'}, res => {
+            server.inject({method: 'GET', url:'/courses/ATL3G', headers: internals.headers}, res => {
                 const response = res.request.response.source;
 
                 expect(response.code).to.equal(request.payload.code);
@@ -372,8 +411,7 @@ describe('Controller.Course', () => {
 
     describe('#addTags', () => {
 
-        const Models = server.plugins.models.models;
-        const Tag = Models.Tag;
+
 
         const request = {
             method: 'POST',
@@ -384,7 +422,9 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the new tags', done => {
-
+            const Models = server.plugins.models.models;
+            const Tag = Models.Tag;
+            request.headers = internals.headers;
              const createTags = new Promise((resolve, reject) => {
                 let promises = [];
                 moreTags.forEach(t => promises.push(Tag.create(t)));
@@ -406,7 +446,7 @@ describe('Controller.Course', () => {
         it('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(404);
@@ -417,6 +457,7 @@ describe('Controller.Course', () => {
         it ('Should return 400 bad request (validation error)', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { payload: { tags: '3e', teachers: '3e'}});
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response;
                 expect(response.statusCode).to.equal(400);
@@ -427,8 +468,7 @@ describe('Controller.Course', () => {
 
     describe('#addTeachers', () => {
 
-        const Models = server.plugins.models.models;
-        const User = Models.User;
+
 
         const request = {
             method: 'POST',
@@ -439,8 +479,10 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the new teachers', done => {
-
-             const createTeachers = new Promise((resolve, reject) => {
+            const Models = server.plugins.models.models;
+            const User = Models.User;
+            request.headers = internals.headers;
+            const createTeachers = new Promise((resolve, reject) => {
                 let promises = [];
                 moreUsers.forEach(t => promises.push(User.create(t)));
                 Promise.all(promises).then(resolve);
@@ -464,7 +506,7 @@ describe('Controller.Course', () => {
         it('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/teachers'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(404);
@@ -475,6 +517,7 @@ describe('Controller.Course', () => {
         it ('Should return 400 bad request (validation error)', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: 'ABS'}});
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(400);
@@ -494,7 +537,7 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the without the deleted tags', done => {
-
+            request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
 
@@ -507,7 +550,7 @@ describe('Controller.Course', () => {
         it('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(404);
@@ -518,6 +561,7 @@ describe('Controller.Course', () => {
         it ('Should return 400 bad request (validation error)', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { payload: { tags: '3e'}});
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(400);
@@ -538,7 +582,7 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the new teachers', done => {
-
+            request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
 
@@ -554,7 +598,7 @@ describe('Controller.Course', () => {
         it('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/teachers'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(404);
@@ -565,6 +609,7 @@ describe('Controller.Course', () => {
         it ('Should return 400 bad request (validation error)', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { payload: { teachers: 'ABS'}});
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(400);
@@ -576,13 +621,13 @@ describe('Controller.Course', () => {
     describe('#createFolder', () => {
         const request = {
             method: 'POST',
-            url: '/courses/ATL3G/folders/subfolder',
+            url: '/courses/ATL3G/folders/subfolder'
         };
 
         it ('Should return 404 course not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/subfolder'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(404);
@@ -594,7 +639,7 @@ describe('Controller.Course', () => {
         it ('Should return 400 bad request (validation error)', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders/'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(400);
@@ -605,7 +650,7 @@ describe('Controller.Course', () => {
         it ('Should return 400 bad request (validation error) - bis', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/folders//'});
-
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 const response = res.request.response.source;
                 expect(response.statusCode).to.equal(400);
@@ -614,7 +659,7 @@ describe('Controller.Course', () => {
         });
 
         it ('Should return 201 created and create the folder', done => {
-
+            request.headers = internals.headers;
             server.inject(request, res => {
                 expect(res.request.response.statusCode).equal(201);
 
@@ -630,9 +675,23 @@ describe('Controller.Course', () => {
             });
         });
 
+        it ('Should return 409 (bad data -- invalid path)', done => {
+            request.headers = internals.headers;
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(409);
+                done();
+            });
+        });
+
         it ('Should return 422 (bad data -- invalid path)', done => {
 
-            server.inject(request, res => {
+            const copyRequest = Hoek.applyToDefaults(request, {
+                url: '/courses/ATL3G/folders/folder/folderbis'
+            });
+
+            copyRequest.headers = internals.headers;
+
+            server.inject(copyRequest, res => {
                 expect(res.request.response.statusCode).equal(422);
                 fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/folder/folderbis'),
                         (err, stats) => {
@@ -646,7 +705,10 @@ describe('Controller.Course', () => {
 
         it ('Should return 403 forbidden path', done => {
 
-            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL3G/folders/../../ANL3/documents/folder'});
+            const copyRequest = Hoek.applyToDefaults(request, {
+                url: '/courses/ATL3G/folders/../../ANL3/documents/folder'
+            });
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 expect(res.request.response.statusCode).equal(403);
                 done();
@@ -662,13 +724,17 @@ describe('Controller.Course', () => {
 
         it ('Should return 201 created', done => {
             const form = new FormData();
+
+            const headers = form.getHeaders();
+            headers.Authorization = internals.headers.Authorization;
+
             form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
             streamToPromise(form).then(payload => {
                 server.inject({
                     method: 'POST',
                     url: '/courses/ATL3G/documents',
                     payload: payload,
-                    headers: form.getHeaders()
+                    headers: headers
                 }, res => {
                     expect(res.request.response.statusCode).to.equal(201);
                     const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/server-test.js');
@@ -691,13 +757,17 @@ describe('Controller.Course', () => {
         it ('Should return 404 not found', done => {
 
             const form = new FormData();
+
+            const headers = form.getHeaders();
+            headers.Authorization = internals.headers.Authorization;
+
             form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
              streamToPromise(form).then(payload => {
                 server.inject({
                     method: 'POST',
                     url: '/courses/ATL/documents',
                     payload: payload,
-                    headers: form.getHeaders()
+                    headers: headers
                 }, res => {
                     const response = res.request.response.source;
                     expect(response.statusCode).to.equal(404);
@@ -708,13 +778,17 @@ describe('Controller.Course', () => {
 
         it ('Should return 400 bad request -- missing file', done => {
             const form = new FormData();
+
+            const headers = form.getHeaders();
+            headers.Authorization = internals.headers.Authorization;
+
             form.append('wrongFile', fs.createReadStream(Path.join(__dirname, 'courses-test.js')));
              streamToPromise(form).then(payload => {
                 server.inject({
                     method: 'POST',
                     url: '/courses/ATL3G/documents',
                     payload: payload,
-                    headers: form.getHeaders()
+                    headers: headers
                 }, res => {
                     const response = res.request.response.source;
                     expect(response.statusCode).to.equal(400);
@@ -725,13 +799,17 @@ describe('Controller.Course', () => {
 
         it ('Should return 403 forbidden path', done => {
             const form = new FormData();
+
+            const headers = form.getHeaders();
+            headers.Authorization = internals.headers.Authorization;
+
             form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
              streamToPromise(form).then(payload => {
                 server.inject({
                     method: 'POST',
                     url: '/courses/ATL3G/documents/../../ANL3/documents',
                     payload: payload,
-                    headers: form.getHeaders()
+                    headers: headers
                 }, res => {
                     const response = res.request.response.source;
                     expect(response.statusCode).to.equal(403);
@@ -741,62 +819,73 @@ describe('Controller.Course', () => {
         });
     });
 
+    describe('#updateFolder', () => {
+        it ('Should rename the folder', done => {
+
+            const request = {
+                method: 'PATCH',
+                url: '/courses/ATL3G/folders/subfolder',
+                payload: {
+                    name: 'subfolderrenamed'
+                },
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).equal(200);
+
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/subfolderrenamed'),
+                        (err, stats) => {
+
+                    expect(err).to.be.null();
+                    expect(stats).to.exists();
+                    expect(stats.isDirectory()).to.be.true();
+
+                    done();
+                });
+            });
+        })
+    });
+
     describe('#getTree', () => {
-        const request = {
-            method: 'GET',
-            url: '/courses/ATL3G/tree'
-        };
 
-        const size = fs.statSync(Path.join(__dirname, 'server-test.js')).size;
-
-
+        const stat = fs.statSync(Path.join(__dirname, 'server-test.js'));
 
         it ('Should return the correct tree', done => {
 
-               const expectedTree = [
-                    {
-                        dir: 'documents',
-                        file: 'server-test.js',
-                        size: size
-                    },
-                    {
-                        subfolder: []
-                    }
-                ];
+            const request = {
+                method: 'GET',
+                url: '/courses/ATL3G/tree',
+                headers: internals.headers
+            };
 
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(res.request.response.statusCode).to.equal(200);
-                expect(response).to.deep.equal(expectedTree);
+                expect(response.dir).to.be.null();
+
+                const files = response.files;
+
+                expect(files).to.be.an.array();
+                expect(files).to.have.length(2);
+
+                expect(files[0].directory).to.equal('/');
+                expect(files[0].name).to.equal('subfolderrenamed');
+                expect(files[0].type).to.equal('d');
+                expect(files[0].size).to.be.null();
+                expect(files[0].ext).to.be.null();
+
+                expect(files[1].directory).to.equal('/');
+                expect(files[1].name).to.equal('server-test.js');
+                expect(files[1].ext).to.equal('.js');
+                expect(files[1].type).to.equal('f');
+                expect(files[1].size).to.be.a.number();
+
+
                 done();
             });
         });
 
-        it ('Should return the correct tree', done => {
-
-               const expectedTree = [
-                    {
-                        dir: 'documents',
-                        file: 'server-test.js',
-                        size: size,
-                        isDirectory: false
-                    },
-                    {
-                        dir: 'documents',
-                        file: 'subfolder',
-                        size: 4096,
-                        isDirectory: true
-                    }
-                ];
-
-            const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL3G/tree?recursive=false'})
-            server.inject(copyRequest, res => {
-                const response = res.request.response.source;
-                expect(res.request.response.statusCode).to.equal(200);
-                expect(response).to.deep.equal(expectedTree);
-                done();
-            });
-        });
     });
 
     describe('#deleteDocument', () => {
@@ -813,6 +902,7 @@ describe('Controller.Course', () => {
             const copyRequest = Hoek.applyToDefaults(request, {
                 payload : { files: '../../ANL3/documents/server-test.js' }
             });
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 expect(res.request.response.statusCode).to.equal(403);
                 done();
@@ -821,6 +911,7 @@ describe('Controller.Course', () => {
 
         it ('Should return 404 not found', done => {
             const copyRequest = Hoek.applyToDefaults(request, {url : '/courses/ATL/documents'});
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 expect(res.request.response.statusCode).to.equal(404);
                 done();
@@ -829,6 +920,7 @@ describe('Controller.Course', () => {
 
         it ('Should return 400 bad validation', done => {
             const copyRequest = Hoek.applyToDefaults(request, {payload : []});
+            copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
                 expect(res.request.response.statusCode).to.equal(400);
                 done();
@@ -836,6 +928,7 @@ describe('Controller.Course', () => {
         });
 
         it ('Should return 202 accepted and file deleted', done => {
+            request.headers = internals.headers;
             server.inject(request, res => {
                 expect(res.request.response.statusCode).to.equal(202);
                 const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/server-test.js');
@@ -854,6 +947,8 @@ describe('Controller.Course', () => {
                     files: ['server-test.js', 'subfolder']
                 }
             });
+
+            copyRequest.headers = internals.headers;
 
             server.inject(copyRequest, res => {
                 expect(res.request.response.statusCode).to.equal(202);

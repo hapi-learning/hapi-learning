@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning')
     .directive('teacherInfo', function () {
         return {
@@ -5,6 +7,6 @@ angular.module('hapi-learning')
             templateUrl: 'scripts/directives/teacher-info.html',
             scope: {
                 teacher: '='
-            },
+            }
         };
     });

@@ -3,54 +3,27 @@
 const Hoek = require('hoek');
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
+const P = require('bluebird');
 
 const Utils = require('../utils/sequelize');
 const _ = require('lodash');
 
 const internals = {};
 
-// result is a sequelize instance
-internals.getUser = function(result) {
+internals.updateHandler = function(request, reply) {
 
-    return Promise.resolve(
+    const User = this.models.User;
 
-        result.getTags({attributes: ['name'], joinTableAttributes: []})
-        .then(tags => {
-            const user = result.get({ plain:true });
-            user.tags = _.map(tags, (t => t.get('name', { plain:true })));
-            return user;
-        })
-    );
-};
-
-internals.findUser = function(User, username)
-{
-    Hoek.assert(User, 'Model User required');
-    Hoek.assert(username, 'username required');
-
-    return User.findOne({
-        where: {
-            username: username
-        },
-        attributes: {
-            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+    User.update(
+        request.payload,
+        {
+            where: {
+                username: request.params.username
+            }
         }
-    });
-};
-
-internals.findCourseByCode = function(Course, id) {
-
-    Hoek.assert(Course, 'Model Course required');
-    Hoek.assert(id, 'Course code required');
-
-    return Course.findOne({
-        where: {
-            code: { $eq : id }
-        },
-        attributes: {
-            exclude: ['updated_at', 'deleted_at', 'created_at']
-        }
-    });
+    )
+    .then(result => reply({count : result[0] || 0}))
+    .catch(error => reply.badImplementation(error));
 };
 
 internals.schemaUserPOST = function(){
@@ -61,7 +34,7 @@ internals.schemaUserPOST = function(){
             firstName: Joi.string().min(1).max(255).description('User first name'),
             lastName: Joi.string().min(1).max(255).description('User last name'),
             phoneNumber: Joi.phone.e164().description('User phone number'),
-            role_id: Joi.number().integer().default(1)
+            role_id: Joi.number().integer().default(3)
         }).options({stripUnknown : true});
 
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
@@ -81,7 +54,7 @@ exports.get = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
             .then(result => {
                 if (result) {
                     return reply(Utils.removeDates(result));
@@ -113,8 +86,30 @@ exports.getAll = {
 };
 
 
+exports.getTeachers = {
+    description: 'Get only teachers',
+    handler: function(request, reply) {
+
+        const User = this.models.User;
+
+        User.findAndCountAll({
+                where: {role_id: 2},
+                limit: request.query.limit,
+                offset: (request.query.page - 1) * request.query.limit,
+                attributes: {
+                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+                }
+            })
+            .then(results => reply.paginate(Utils.removeDates(results.rows), results.count))
+            .catch(err => reply.badImplementation(err));
+    }
+};
+
 
 exports.post = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Add user',
     validate: {
         payload : internals.schemaUserPOST()
@@ -142,6 +137,9 @@ exports.post = {
 };
 
 exports.addTags = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Link tags to a user',
     validate: {
         params: {
@@ -160,11 +158,11 @@ exports.addTags = {
 
         Tag.findAll({where: { name: { $in: request.payload.tags } }})
         .then(tags => {
-            internals.findUser(User, id)
+            Utils.findUser(User, id)
             .then(user => {
                 if (user) {
                     user.addTags(tags).then(() => {
-                       internals.getUser(user).then(result => {
+                       Utils.getUser(user).then(result => {
                            return reply(result);
                        });
                     });
@@ -178,6 +176,9 @@ exports.addTags = {
 };
 
 exports.delete = {
+    auth: {
+        scope: ['admin']
+    },
     description: 'Delete user',
     validate: {
         params: {
@@ -198,23 +199,12 @@ exports.delete = {
     }
 };
 
-const updateHandler = function(request, reply) {
 
-    const User = this.models.User;
-
-    User.update(
-        request.payload,
-        {
-            where: {
-                username: request.params.username
-            }
-        }
-    )
-    .then(result => reply({count : result[0] || 0}))
-    .catch(error => reply.badImplementation(error));
-};
 
 exports.put = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Update all info about user (except username)',
     validate: {
         params: {
@@ -228,10 +218,14 @@ exports.put = {
             phoneNumber: Joi.string().min(1).max(255).required().description('User phone number')
         }
     },
-    handler: updateHandler
+
+    handler: internals.updateHandler
 };
 
 exports.patch = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Update some info about user (except username)',
     validate: {
         params: {
@@ -245,7 +239,7 @@ exports.patch = {
             phoneNumber: Joi.string().min(1).max(255).description('User phone number')
         }
     },
-    handler: updateHandler
+    handler: internals.updateHandler
 };
 
 exports.getTags = {
@@ -259,7 +253,7 @@ exports.getTags = {
 
         const User = this.models.User;
 
-            internals.findUser(User, request.params.username)
+            Utils.findUser(User, request.params.username)
             .then(user => {
                 if (user) {
                     user.getTags()
@@ -285,7 +279,7 @@ exports.getFolders = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user)
             {
@@ -303,7 +297,9 @@ exports.getFolders = {
 };
 
 exports.getCourses = {
-
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
@@ -314,12 +310,18 @@ exports.getCourses = {
 
         const User = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user)
             {
                 user.getCourses()
-                .then(courses => reply(courses))
+                .then(results => {
+                    const promises = _.map(results, c => Utils.getCourse(c));
+
+                    Promise.all(promises).then(courses => {
+                       return reply(courses);
+                    });
+                })
                 .catch(error => reply.badImplementation(error));
             }
             else
@@ -331,7 +333,11 @@ exports.getCourses = {
     }
 };
 
+
 exports.subscribeToCourse = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Subscribe to a course',
     validate: {
         params: {
@@ -344,7 +350,7 @@ exports.subscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user) {
                 user.getCourses({where : {code : request.params.crsId}})
@@ -356,7 +362,7 @@ exports.subscribeToCourse = {
                         .then(course => {
                             if (course) {
                                 user.addCourse(course);
-                                return reply(Utils.removeDates(user));
+                                return reply(Utils.removeDates(course));
                             } else {
                                 return reply.notFound('Course ' + request.params.crsId + ' not found');
                             }
@@ -374,6 +380,9 @@ exports.subscribeToCourse = {
 };
 
 exports.unsubscribeToCourse = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Unsubscribe to a course',
     validate: {
         params: {
@@ -386,14 +395,24 @@ exports.unsubscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        internals.findUser(User, request.params.username)
+        Utils.findUser(User, request.params.username)
         .then(user => {
             if (user) {
-                user.getCourses({where : {code : request.params.crsId}})
+                user.getCourses({where : {code : request.params.crsId}, joinTableAttributes: []})
                 .then(courses => {
                     if (courses.length > 0) {
-                        user.removeCourse(courses);
-                        return reply(Utils.removeDates(user));
+                        user.removeCourse(courses)
+                        .then(count => {
+                            if (count > 0)
+                            {
+                                return reply(Utils.removeDates(courses)[0]);
+                            }
+                            else
+                            {
+                                return reply.notFound('Course ' + request.params.crsId + ' can not be subscribed');
+                            }
+                        })
+                        .catch(error => reply.badImplementation(error));
                     } else {
                         return reply.notFound('Course ' + request.params.crsId + ' is not subscribed by the user');
                     }
@@ -410,6 +429,9 @@ exports.unsubscribeToCourse = {
 };
 
 exports.addFolders = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Add a folder',
     validate: {
         params: {
@@ -420,18 +442,18 @@ exports.addFolders = {
         }
     },
     handler: function(request, reply) {
-        
+
         const User   = this.models.User;
         const Folder = this.models.Folder;
-        
+
         const username = request.params.username;
         const folders  = request.payload.folders;
-        
-        internals.findUser(User, username)
+
+        Utils.findUser(User, username)
         .then(user => {
             if (user)
             {
-                
+
                 let promises = _.map(folders, folder => {
                     return Folder.findOne({
                         where : {
@@ -440,21 +462,27 @@ exports.addFolders = {
                         }
                     });
                 });
-                
+
                 Promise.all(promises)
                 .then(values => {
-                    _.forEach(values, (value, key) => {
-                        if (!value)
-                        {
-                            user.createFolder({name : folders[key]})
-                            .then(() => console.log('Folder : \'' + folders[key] + '\' created for user ' + username))
-                            .catch(error => reply.badImplementation(error));
-                        }
-                    });
-                    
-                    user.getFolders()
-                    .then(folders => reply(Utils.removeDates(folders)))
-                    .catch(error => reply.badImplementation(error));
+
+                    new P(function(resolve, reject) {
+                        const createFolders = [];
+                        _.forEach(values, (value, key) => {
+                            if (!value) {
+                                createFolders.push(user.createFolder({name : folders[key]}));
+                            }
+                        });
+
+                        P.all(createFolders).then(resolve).catch(reject);
+
+                    }).then(() => {
+                        user.getFolders()
+                        .then(folders => reply(Utils.removeDates(folders)))
+                        .catch(error => reply.badImplementation(error));
+                    })
+
+
                 })
                 .catch(error => reply.badImplementation(error));
             }
@@ -468,6 +496,9 @@ exports.addFolders = {
 };
 
 exports.addCourseToFolder = {
+    auth: {
+        scope: ['admin', '{params.username}']
+    },
     description: 'Add a course to the folder (removes from the old folder)',
     validate: {
         params: {
