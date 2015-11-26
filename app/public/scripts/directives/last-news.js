@@ -16,7 +16,6 @@ angular.module('hapi-learning')
 
                     NewsFactory.load(typeof scope.count === 'number' ? scope.count : null)
                         .then(function (news) {
-                        console.log(news);
                             scope.news = news;
                             scope.fetched = true;
                         })
