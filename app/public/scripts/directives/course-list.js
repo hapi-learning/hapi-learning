@@ -11,11 +11,11 @@ angular.module('hapi-learning')
             },
             templateUrl: 'scripts/directives/course-list.html',
             link: function(scope, elem, attrs) {
-                                
+
                 const internals = {
                     filterByTags : function (course) {
                         var select = true;
-    
+
                         scope.selectedTags.forEach(function (tag) {
                             select = select && (course.tags.indexOf(tag.name) > -1);
                         });
@@ -23,7 +23,7 @@ angular.module('hapi-learning')
                         return select;
                     }
                 };
-                
+
                 scope.courses = [];
                 scope.tags = [];
                 scope.selectedTags = [];
@@ -39,7 +39,7 @@ angular.module('hapi-learning')
                         scope.selectedTags.push(tag);
                     }
                 };
-                
+
                 scope.search = function (course) {
                     var name = angular.lowercase(course.name) || '';
                     var code = angular.lowercase(course.code) || '';
