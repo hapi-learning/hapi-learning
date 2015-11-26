@@ -508,7 +508,7 @@ exports.addCourseToFolder = {
         }
     },
     handler: function(request, reply) {
-        // Cours déjà dans le dossier ?
+
         const User   = this.models.User;
         const Folder = this.models.Folder;
         const Course = this.models.course
@@ -530,8 +530,11 @@ exports.addCourseToFolder = {
                                         {
                                             folder.addCourse(userCourse);
                                             
-                                            let oldFolder = _.find()
-                                            
+                                            let oldFolder = 
+                                                _.find(userFolders, userFolder => 
+                                                                    (_.find(folder.getCourses, course => 
+                                                                            course.crsId === request.params.crsId) 
+                                                                            !== undefined));
                                             if (oldFolder)
                                                 oldFolder.removeCourse(userCourse);
                                         }
@@ -543,7 +546,7 @@ exports.addCourseToFolder = {
                             else
                                 return reply.notFound('User doesn\'t own the folder ' + request.params.folderName); 
                         })
-                    .catch(error => reply.badImplementation(error))
+                    .catch(error => reply.badImplementation(error));
             }
             else
                 return reply.notFound('User ' + request.params.username + ' not found');

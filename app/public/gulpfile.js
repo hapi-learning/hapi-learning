@@ -2,10 +2,11 @@ var gulp = require('gulp');
 
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
+var minify = require('gulp-minify-css');
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
+    
     return gulp.src([
         
         //lib scripts
@@ -42,9 +43,24 @@ gulp.task('scripts', function() {
         
         'scripts/**/*.js',
     ])
-        .pipe(concat('all.js'))
-        .pipe(gulp.dest('dist/scripts'))
-        .pipe(rename('all.min.js'))
+        .pipe(concat('all.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist/scripts'));
 });
+
+gulp.task('css', function() {
+    
+    return gulp.src([
+        
+        'lib/bootstrap/dist/css/bootstrap.min.css',
+        'lib/font-awesome/css/font-awesome.min.css',
+        'lib/ng-tags-input/ng-tags-input.css',
+        'lib/ng-tags-input/ng-tags-input.bootstrap.css',
+        'lib/angular-loading-bar/build/loading-bar.min.css',
+        'styles/main.css',
+        'lib/angular-xeditable/dist/css/xeditable.css'
+    ])
+        .pipe(concat('all.min.css'))
+        .pipe(minify())
+        .pipe(gulp.dest('dist/css'));
+})
