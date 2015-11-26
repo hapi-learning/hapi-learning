@@ -123,7 +123,7 @@
         "name": "Laboratoire de Programmation Java I",
         "tags": [
             "Q1",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PBT",
@@ -178,7 +178,7 @@
         "name": "Laboratoire de Programmation Java I",
         "tags": [
             "Q1",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PBT",
@@ -332,7 +332,7 @@
         "tags": [
             "Q2",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EFO",
@@ -367,7 +367,7 @@
         "name": "Laboratoire Java II",
         "tags": [
             "Q2",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PBT",
@@ -395,7 +395,7 @@
         "tags": [
             "Q2",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EFO",
@@ -407,7 +407,7 @@
         "name": "Laboratoire de persistance des données I",
         "tags": [
             "Q2",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "NPX",
@@ -437,7 +437,7 @@
         "name": "Laboratoire Java II",
         "tags": [
             "Q2",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PBT",
@@ -455,7 +455,7 @@
         "name": "Laboratoire microprocesseurs",
         "tags": [
             "Q2",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "HAL",
@@ -471,7 +471,7 @@
         "tags": [
             "Q2",
             "IR",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "YPR",
@@ -483,7 +483,7 @@
         "name": "Laboratoire microprocesseurs",
         "tags": [
             "Q2",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "HAL",
@@ -521,7 +521,7 @@
         "name": "Laboratoire de persistance des données I",
         "tags": [
             "Q2",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "NPX",
@@ -547,7 +547,7 @@
         "tags": [
             "Q2",
             "IR",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "YPR",
@@ -615,7 +615,7 @@
         "name": "Laboratoire d'analyse II",
         "tags": [
             "Q3",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ELV",
@@ -676,7 +676,7 @@
         "name": "Laboratoire C/C++ I",
         "tags": [
             "Q3",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "NVS",
@@ -792,7 +792,7 @@
         "name": "Laboratoire d'analyse II",
         "tags": [
             "Q3",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "JDM",
@@ -806,7 +806,7 @@
         "tags": [
             "Q3",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PMA",
@@ -829,7 +829,7 @@
         "name": "Laboratoire C/C++ I",
         "tags": [
             "Q3",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "NVS",
@@ -845,7 +845,7 @@
         "tags": [
             "Q3",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ADT",
@@ -859,7 +859,7 @@
         "tags": [
             "Q3",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PMA",
@@ -872,7 +872,7 @@
         "tags": [
             "Q3",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EGR"
@@ -895,7 +895,7 @@
         "tags": [
             "Q3",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ADT",
@@ -942,7 +942,7 @@
         "tags": [
             "Q3",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EGR"
@@ -954,7 +954,7 @@
         "tags": [
             "Q3",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PMA"
@@ -1046,7 +1046,7 @@
         "tags": [
             "Q4",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "MWA"
@@ -1115,7 +1115,7 @@
         "tags": [
             "Q4",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ELV",
@@ -1156,7 +1156,7 @@
         "tags": [
             "Q4",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EFO",
@@ -1179,7 +1179,7 @@
         "name": "Laboratoire C/C++ II",
         "tags": [
             "Q4",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "NVS",
@@ -1230,7 +1230,7 @@
         "tags": [
             "Q4",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "JDM",
@@ -1255,7 +1255,7 @@
         "tags": [
             "Q4",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EFO"
@@ -1266,7 +1266,7 @@
         "name": "Laboratoire C/C++ II",
         "tags": [
             "Q4",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "NVS",
@@ -1282,7 +1282,7 @@
         "tags": [
             "Q4",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ADT",
@@ -1296,7 +1296,7 @@
         "tags": [
             "Q4",
             "IR",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ADT",
@@ -1309,7 +1309,7 @@
         "name": "Laboratoire de systèmes d'exploitation",
         "tags": [
             "Q4",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "MBA"
@@ -1321,7 +1321,7 @@
         "tags": [
             "Q4",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "CIH"
@@ -1333,7 +1333,7 @@
         "tags": [
             "Q4",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ADT",
@@ -1347,7 +1347,7 @@
         "tags": [
             "Q4",
             "IR",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ARO",
@@ -1394,7 +1394,7 @@
         "name": "Laboratoire de systèmes d'exploitation",
         "tags": [
             "Q4",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "MBA"
@@ -1416,7 +1416,7 @@
         "tags": [
             "Q4",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "JLC",
@@ -1462,7 +1462,7 @@
         "tags": [
             "Q5",
             "I",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "CIH",
@@ -1475,7 +1475,7 @@
         "tags": [
             "Q5",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "CIH",
@@ -1523,7 +1523,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "FPL"
@@ -1535,7 +1535,7 @@
         "tags": [
             "Q5",
             "IR",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PMA"
@@ -1637,7 +1637,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EFO"
@@ -1660,7 +1660,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EGR"
@@ -1712,7 +1712,7 @@
     },
     {
         "code": "IEI",
-        "name": "Interfaçage d'équipements industriels et laboratoires",
+        "name": "Interfaçage d'équipements industriels et Laboratoires",
         "tags": [
             "Q5",
             "I"
@@ -1738,7 +1738,7 @@
         "tags": [
             "Q5",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "MHI"
@@ -1761,7 +1761,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "FPL"
@@ -1773,7 +1773,7 @@
         "tags": [
             "Q5",
             "IR",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "PMA"
@@ -1785,7 +1785,7 @@
         "tags": [
             "Q5",
             "I",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "CIH",
@@ -1798,7 +1798,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EFO"
@@ -1810,7 +1810,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "EGR"
@@ -1822,7 +1822,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ADT"
@@ -1834,7 +1834,7 @@
         "tags": [
             "Q5",
             "R",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "MHI"
@@ -1856,7 +1856,7 @@
         "tags": [
             "Q5",
             "G",
-            "labo"
+            "Labo"
         ],
         "teachers": [
             "ADT"
