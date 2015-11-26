@@ -30,7 +30,7 @@ internals.newsWrongCourse = {
     subject : 'subject',
     content : 'content',
     username : 'abell2r',
-    code : 'SYS23'  
+    code : 'SYS23'
 };
 internals.newsCourseUnrelated = {
     subject : 'subject',
@@ -149,7 +149,7 @@ describe('Controller.News', () => {
                 done();
             });
         });
-        
+
         it('should return statusCode 201 and created news unrelated to course', done => {
             const request = {
                 method: 'POST',
@@ -166,8 +166,8 @@ describe('Controller.News', () => {
                 done();
             });
         });
-        
-        it('should return statusCode 404 : user not found', done => {
+
+        it('should return statusCode 422 : invalid user', done => {
             const request = {
                 method: 'POST',
                 url: '/news',
@@ -177,12 +177,12 @@ describe('Controller.News', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response.statusCode).equal(404);
+                expect(response.statusCode).equal(422);
                 done();
             });
         });
-        
-         it('should return statusCode 404 : course not found', done => {
+
+         it('should return statusCode 422 : invalid course', done => {
             const request = {
                 method: 'POST',
                 url: '/news',
@@ -192,7 +192,7 @@ describe('Controller.News', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response.statusCode).equal(404);
+                expect(response.statusCode).equal(422);
                 done();
             });
         });
@@ -213,7 +213,7 @@ describe('Controller.News', () => {
                 done();
             });
         });
-        
+
         it('should return statusCode 404', done => {
             const request = {
                 method: 'GET',
