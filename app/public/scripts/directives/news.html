@@ -3,7 +3,9 @@
     <div class="row">
         <div class="col-md-9">
             <strong>
-                <span ng-bind="news.course"></span> 
+                <a ui-sref="root.course.main({code: news.course})">
+                    <span ng-bind="news.course"></span> 
+                </a>
                 <span ng-if="news.course">-</span> 
                 <span ng-bind="news.subject"></span>
             </strong>
