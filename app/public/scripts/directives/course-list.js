@@ -43,9 +43,12 @@ angular.module('hapi-learning')
                 scope.search = function (course) {
                     var name = angular.lowercase(course.name) || '';
                     var code = angular.lowercase(course.code) || '';
-
-                    return ((_.includes(name, angular.lowercase(scope.courseFilter.filter))
-                            || _.includes(code, angular.lowercase(scope.courseFilter.filter))) &&                                                       internals.filterByTags(course));
+                    
+                    return (
+                        (_.includes(name, angular.lowercase(scope.courseFilter.filter)) || 
+                        _.includes(code, angular.lowercase(scope.courseFilter.filter))) 
+                        && internals.filterByTags(course)
+                    );
                 };
 
                 /**

@@ -1,0 +1,22 @@
+<!--<div class="alert alert-{{news.priority}}">-->
+<div class="alert alert-info">
+    <div class="row">
+        <div class="col-md-9">
+            <strong>
+                <span ng-bind="news.course"></span> 
+                <span ng-if="news.course">-</span> 
+                <span ng-bind="news.subject"></span>
+            </strong>
+        </div>
+        <div class="col-md-3">
+            <span ng-bind="(news.date | date)"></span>
+        </div>
+    </div>
+
+</div>
+
+<blockquote>
+    <small>
+        <span ng-bind="news.content"></span>
+    </small>
+</blockquote>

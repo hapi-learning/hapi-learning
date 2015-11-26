@@ -1,19 +1,5 @@
 <ul class="list-group">
-    <li class="list-group-item" ng-repeat="annonce in annonces">
-        <div class="alert alert-{{annonce.priority}}">
-
-            <div class="row">
-                <div class="col-md-9">
-                    <strong>
-                        <span ng-bind="annonce.course"></span> − <span ng-bind="annonce.subject"></span>
-                    </strong>
-                </div>
-
-                <div class="col-md-3"><span ng-bind="(annonce.createdOn | date)"></span></div>
-            </div>
-
-        </div>
-
-        <blockquote><small><span ng-bind="annonce.description"></span></small></blockquote>
+    <li class="list-group-item" ng-repeat="n in news">
+        <news news="n"></news>
     </li>
 </ul>
