@@ -22,10 +22,13 @@ angular.module('hapi-learning')
                         Restangular.all('news')
                             .getList()
                             .then(function (news) {
+                                console.log(news);
                                 internals.news = news.results;
                                 internals.fetched = true;
 
-                                if (typeof count === 'number' && count > 0) {
+                                if (typeof count === 'number' && count > 0 && count <= internals.news.length) {
+                                    console.log(count);
+                                    console.log(internals.news.length);
                                     resolve(internals.news.slice(0, count));
                                 } else {
                                     resolve(internals.news);
@@ -49,11 +52,11 @@ angular.module('hapi-learning')
                         })
                         .than(function (news) {
                             console.log(news);
-                        
+
                             if (internals.fetched) {
                                 _.fill(internals.news, news);
                             }
-                        
+
                             resolve(news);
                         })
                         .catch(function (err) {
