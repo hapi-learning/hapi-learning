@@ -178,7 +178,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                 const teachers = require('../resources/all_teachers.json');
                 const courses = require('../resources/all_courses.json');
                 const news = require('../resources/news.json');
-                
+
                 const roles = _.map(require('../resources/roles.json'), role => Role.create(role));
                 Promise.all(roles).then(function() {
                     User.create({
@@ -227,7 +227,7 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                             const addTags = function() {
                                 return P.all(_.map(tags, tag => post('/tags', tag)));
                             };
-                            
+
                             const addNews = function() {
                                 return P.all(_.map(news, n => post('/news', n)));
                             };

@@ -3,4 +3,34 @@
         <blockquote ng-bind="course.description">
         </blockquote>
     </div>
+
+    <div class="col-md-12">
+
+        <br/>
+
+        <div ng-if="course.teachers.length > 0">
+            <label>Teachers</label>
+
+            <br />
+
+            <span ng-repeat="teacher in course.teachers">
+                <teacher-info teacher="teacher"></teacher-info>
+            </span>
+        </div>
+
+        <br />
+
+        <div ng-if="course.tags.length > 0">
+            <label>Tags</label>
+
+            <br />
+
+            <span ng-repeat="tag in course.tags">
+                <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+            </span>
+
+        </div>
+
+
+    </div>
 </div>
