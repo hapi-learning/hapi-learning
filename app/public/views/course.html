@@ -15,7 +15,7 @@
     <div class="col-md-12">
         <nav>
             <ul class="nav nav-tabs nav-justified">
-                <li ui-sref-active="active" >
+                <li ui-sref-active="active">
                     <a ui-sref="root.course.main({code: course.code})">
                         <span class="glyphicon glyphicon-book"></span>
                         Course Home
@@ -25,6 +25,18 @@
                     <a ui-sref="root.course.documents({code: course.code, path: ''})">
                         <span class="glyphicon glyphicon-folder-open"></span>
                         Documents
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="root.course.news({code: course.code})">
+                        <span class="fa fa-newspaper-o fa-lg"></span>
+                        News
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="root.course.admin({code: course.code})">
+                        <span class="fa fa-cog fa-lg"></span>
+                        Administration
                     </a>
                 </li>
                 <li>
@@ -38,33 +50,5 @@
         <div ui-view></div>
     </div>
 
-    <div class="col-md-12">
 
-        <br/>
-
-        <div>
-            <label>Teachers</label>
-
-            <br />
-
-            <span ng-repeat="teacher in course.teachers">
-                <teacher-info teacher="teacher"></teacher-info>
-            </span>
-        </div>
-
-        <br />
-
-        <div>
-            <label>Tags</label>
-
-            <br />
-
-            <span ng-repeat="tag in course.tags">
-                <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
-            </span>
-
-        </div>
-
-
-    </div>
 </div>
