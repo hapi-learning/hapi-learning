@@ -1,5 +1,5 @@
 <div>
-    <form editable-form name="profileForm" class="form-horizontal">
+    <form editable-form name="profileForm" class="form-horizontal" onbeforesave="updateProfile($data)">
 
        <div class="form-group">
             <label class="control-label col-md-2">First name: </label>
@@ -78,7 +78,9 @@
             </button>
 
             <span ng-show="profileForm.$visible">
-                <button type="submit" class="btn btn-primary" ng-disabled="profileForm.$waiting">
+                <button type="submit" class="btn btn-primary"
+                        ng-disabled="profileForm.$waiting"
+                        >
                     Save
                 </button>
 
