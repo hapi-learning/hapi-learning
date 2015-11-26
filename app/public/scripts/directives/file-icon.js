@@ -9,6 +9,7 @@ angular.module('hapi-learning')
         templateUrl: 'scripts/directives/file-icon.html',
         link: function(scope, elem, attrs) {
             var fa = ''
+
             switch(scope.ext) {
                 case '.pdf':
                     fa = 'file-pdf-o';

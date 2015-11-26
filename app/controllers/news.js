@@ -37,11 +37,11 @@ exports.get = {
                 }
             })
             .then(news => {
-                if (news) 
+                if (news)
                 {
                     return reply(Utils.removeDates(news));
-                } 
-                else 
+                }
+                else
                 {
                     return reply.notFound('News ' + request.params.id + ' not found');
                 }
@@ -73,7 +73,7 @@ exports.post = {
 
         Utils.findUser(User, username)
             .then(user => {
-                if (user) 
+                if (user)
                 {
                     if (code)
                     {
@@ -92,7 +92,7 @@ exports.post = {
                             }
                             else
                             {
-                                return reply.notFound('Course ' + code + ' not found'); 
+                                return reply.badData('Invalid course');
                             }
                         })
                         .catch((error) => reply.conflict(error));
@@ -107,10 +107,10 @@ exports.post = {
                         .then(news => reply(Utils.removeDates(news)).code(201))
                         .catch((error) => reply.conflict(error));
                     }
-                } 
-                else 
+                }
+                else
                 {
-                    return reply.notFound('User ' + username + ' not found');
+                    return reply.badData('Invalid user');
                 }
             })
             .catch(error => reply.badImplementation(error));
