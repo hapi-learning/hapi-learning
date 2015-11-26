@@ -9,45 +9,62 @@
 <div class="container-fluid">
 
     <h1 class="page-header">
-        <span ng-bind="course.code"></span> − <span ng-bind="course.name"></span>
+        <span ng-bind="course.code"></span>
+        <span class="hidden-xs">
+            - <span ng-bind="course.name"></span>
+        </span>
+        <br/>
+        <span class="visible-xs">
+            <span ng-bind="course.name"></span>
+        </span>
     </h1>
 
-    <div class="col-md-12">
-        <nav>
-            <ul class="nav nav-tabs nav-justified">
-                <li ui-sref-active="active">
-                    <a ui-sref="root.course.main({code: course.code})">
-                        <span class="glyphicon glyphicon-book"></span>
-                        Course Home
-                    </a>
-                </li>
-                <li ng-class="{active: $state.includes('root.course.documents')}">
-                    <a ui-sref="root.course.documents({code: course.code, path: ''})">
-                        <span class="glyphicon glyphicon-folder-open"></span>
-                        Documents
-                    </a>
-                </li>
-                <li ui-sref-active="active">
-                    <a ui-sref="root.course.news({code: course.code})">
-                        <span class="fa fa-newspaper-o fa-lg"></span>
-                        News
-                    </a>
-                </li>
-                <li ui-sref-active="active">
-                    <a ui-sref="root.course.admin({code: course.code})">
-                        <span class="fa fa-cog fa-lg"></span>
-                        Administration
-                    </a>
-                </li>
-                <li>
-                    <subscribe class="pull-right" code="course.code"></subscribe>
-                </li>
-            </ul>
-        </nav>
 
-        <br/>
+    <div class="row">
+        <div class="col-sm-3">
+            <subscribe code="course.code"></subscribe>
+        </div>
+    </div>
 
-        <div ui-view></div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-12">
+            <nav>
+                <ul class="nav nav-tabs nav-justified">
+                    <li ui-sref-active="active">
+                        <a ui-sref="root.course.main({code: course.code})">
+                            <span class="glyphicon glyphicon-book"></span>
+                            <span> Course Home</span>
+
+                        </a>
+                    </li>
+                    <li ng-class="{active: $state.includes('root.course.documents')}">
+                        <a ui-sref="root.course.documents({code: course.code, path: ''})">
+                            <span class="glyphicon glyphicon-folder-open"></span>
+                            <span> Documents</span>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="root.course.news({code: course.code})">
+                            <span class="fa fa-newspaper-o fa-lg"></span>
+                            <span> News</span>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="root.course.admin({code: course.code})">
+                            <span class="fa fa-cog fa-lg"></span>
+                            <span> Administration</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <br/>
+
+            <div ui-view></div>
+        </div>
     </div>
 
 

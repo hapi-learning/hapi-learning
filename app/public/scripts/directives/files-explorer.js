@@ -18,7 +18,7 @@ angular.module('hapi-learning')
                 scope.uploading = false;
                 scope.fetching = null;
 
-                scope.folderName = '';
+                scope.folder = {};
                 scope.creatingFolder = false;
                 scope.folderError = false;
                 scope.uploadError = false;
@@ -47,16 +47,19 @@ angular.module('hapi-learning')
 
 
                 scope.cleanFolderName = function() {
-                    scope.folderName = "";
+                    scope.folder = {};
                     scope.creatingFolder = false;
                     scope.folderError = null;
                 };
 
-                scope.createFolder = function(path) {
+                scope.createFolder = function() {
 
-                    path = $stateParams.path + '/' + path;
+                    var name = scope.folder.name;
+                    var hidden = scope.folder.hidden;
 
-                    FilesFactory.createFolder(scope.code, path).then(function() {
+                    var path = $stateParams.path + '/' + name;
+
+                    FilesFactory.createFolder(scope.code, path, hidden).then(function() {
                         scope.cleanFolderName();
                         scope.getList($stateParams.path, scope.showHidden);
                     }).catch(function(error) {

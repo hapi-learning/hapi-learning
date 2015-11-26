@@ -78,14 +78,16 @@ angular.module('hapi-learning')
             return d.promise;
         };
 
-        exports.createFolder = function(course, path) {
+        exports.createFolder = function(course, path, hidden) {
 
             return $q(function(resolve, reject) {
                 path = internals.replacePath(path);
                 Restangular
                     .one('courses', course)
                     .all('folders')
-                    .customPOST(null, encodeURIComponent(path))
+                    .customPOST(null, encodeURIComponent(path), {
+                        hidden: hidden
+                    })
                     .then(function() {
                         resolve();
                     })
