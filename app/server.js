@@ -7,6 +7,7 @@ require('hoek').assert(process.env.UPLOAD_MAX);
 const Glue = require('glue');
 const _ = require('lodash');
 const Path = require('path');
+const P = require('bluebird');
 
 let internals = {
     manifest: {
@@ -195,31 +196,43 @@ Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
                             })
                         }, function(err, response, payload) {
                             const token = JSON.parse(payload.toString()).token;
+
+
                             const post = function(url, payload) {
-                                Wreck.post(baseUrl + url, {
-                                    payload: JSON.stringify(payload),
-                                    headers: {
-                                        Authorization: token
-                                    }
-                                }, () => {});
+                                return new P(function(resolve, reject) {
+                                    Wreck.post(baseUrl + url, {
+                                        payload: JSON.stringify(payload),
+                                        headers: {
+                                            Authorization: token
+                                        }
+                                    }, (err, r, p) => {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            resolve();
+                                        }
+                                    });
+                                });
                             };
 
                             const addCourses = function() {
-                                _.forEach(courses, course => post('/courses', course));
+                                return P.all(_.map(courses, course => post('/courses', course)));
                             };
 
                             const addTeachers = function() {
-                                _.forEach(teachers, teacher => post('/users', teacher));
+                                return P.all(_.map(teachers, teacher => post('/users', teacher)));
                             };
 
                             const addTags = function() {
-                                _.forEach(tags, tag => post('/tags', tag));
+                                return P.all(_.map(tags, tag => post('/tags', tag)));
                             };
 
+                            addTags().then(function() {
+                                addTeachers().then(function() {
+                                    addCourses();
+                                });
+                            });
 
-                            addTags();
-                            addTeachers();
-                            setTimeout(addCourses, 1000); // just for test.
                         });
 
 
