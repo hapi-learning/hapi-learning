@@ -196,7 +196,7 @@
 
                             <!-- Delete -->
                             <button class="btn btn-danger" ng-click="removeFile($index)">
-                                <span class="fa fa-remove fa-lg">
+                                <span class="fa fa-minus fa-lg">
                                 </span>
                             </button>
                         </div>
@@ -228,7 +228,12 @@
 
                     <!-- LAST UPDATED -->
                     <td class="col-md-1" am-time-ago="file.updated_at"></td>
-                    <td class="col-md-3"></td>
+                    <td class="col-md-3">
+                        <button class="btn btn-danger" ng-click="removeFile($index)">
+                                <span class="fa fa-minus fa-lg">
+                                </span>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
 
