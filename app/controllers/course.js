@@ -139,6 +139,9 @@ exports.getTree = {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
+        },
+        query: {
+            hidden: Joi.boolean().default(false)
         }
     },
     handler: function (request, reply) {
@@ -152,10 +155,10 @@ exports.getTree = {
         const Storage   = this.storage;
         const Course    = this.models.Course;
         const id        = request.params.id;
-        const recursive = request.query.recursive
+        const hidden    = request.query.hidden;
 
         const tree = function() {
-            Storage.getList(id, path).then(function(results) {
+            Storage.getList(id, path, hidden).then(function(results) {
                 return reply(results);
             }).catch(function(err) {
                 if (err === 404) {

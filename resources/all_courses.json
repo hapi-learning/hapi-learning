@@ -1,6 +1,6 @@
 [
     {
-        "code": "ALG",
+        "code": "ALGI",
         "name": "Algorithmique I",
         "tags": [
             "Q1"
@@ -32,7 +32,7 @@
         ]
     },
     {
-        "code": "ANG",
+        "code": "ANGI",
         "name": "Communication anglophone de l'informatique I",
         "tags": [
             "Q1"
@@ -43,7 +43,7 @@
         ]
     },
     {
-        "code": "CAI",
+        "code": "CAI1",
         "name": "Communication anglophone de l'informatique I",
         "tags": [
             "Q1"
@@ -263,7 +263,7 @@
         ]
     },
     {
-        "code": "ALG",
+        "code": "ALGII",
         "name": "Algorithmique II",
         "tags": [
             "Q2"
@@ -295,7 +295,7 @@
         ]
     },
     {
-        "code": "ANG",
+        "code": "ANG2",
         "name": "Communication anglophone de l'informatique II",
         "tags": [
             "Q2"
@@ -317,7 +317,7 @@
         ]
     },
     {
-        "code": "CAI",
+        "code": "CAI2",
         "name": "Communication anglophone de l'informatique II",
         "tags": [
             "Q2"
@@ -327,7 +327,7 @@
         ]
     },
     {
-        "code": "COBL",
+        "code": "COBL1",
         "name": "Laboratoire Cobol I",
         "tags": [
             "Q2",
@@ -340,7 +340,7 @@
         ]
     },
     {
-        "code": "COB",
+        "code": "COB1",
         "name": "Cobol I",
         "tags": [
             "Q2",
@@ -379,7 +379,7 @@
         ]
     },
     {
-        "code": "JAV",
+        "code": "JAV2",
         "name": "Langage Java II",
         "tags": [
             "Q2"
@@ -390,7 +390,7 @@
         ]
     },
     {
-        "code": "LCB",
+        "code": "LCB1",
         "name": "Laboratoire Cobol I",
         "tags": [
             "Q2",
@@ -416,7 +416,7 @@
         ]
     },
     {
-        "code": "LGJ",
+        "code": "LGJ2",
         "name": "Langage Java II",
         "tags": [
             "Q2"
@@ -433,7 +433,7 @@
         ]
     },
     {
-        "code": "LJV",
+        "code": "LJV2",
         "name": "Laboratoire Java II",
         "tags": [
             "Q2",
@@ -530,7 +530,7 @@
         ]
     },
     {
-        "code": "PER",
+        "code": "PER1",
         "name": "Persistance des données I",
         "tags": [
             "Q2"
@@ -600,7 +600,7 @@
         ]
     },
     {
-        "code": "ANG",
+        "code": "ANG3",
         "name": "Anglais",
         "tags": [
             "Q3",
@@ -661,7 +661,7 @@
         ]
     },
     {
-        "code": "CAI",
+        "code": "CAI3",
         "name": "Anglais",
         "tags": [
             "Q3",
@@ -904,7 +904,7 @@
         ]
     },
     {
-        "code": "PER",
+        "code": "PER2G",
         "name": "Persistance des données II",
         "tags": [
             "Q3",
@@ -915,7 +915,7 @@
         ]
     },
     {
-        "code": "PER",
+        "code": "PER2IR",
         "name": "Persistance des données II",
         "tags": [
             "Q3",
@@ -1099,7 +1099,7 @@
         ]
     },
     {
-        "code": "ALG",
+        "code": "ALGIII",
         "name": "Algorithmique III",
         "tags": [
             "Q4"
@@ -1151,7 +1151,7 @@
         ]
     },
     {
-        "code": "COBL",
+        "code": "COBL2",
         "name": "Laboratoire Cobol II",
         "tags": [
             "Q4",
@@ -1164,7 +1164,7 @@
         ]
     },
     {
-        "code": "COB",
+        "code": "COB2",
         "name": "Cobol II",
         "tags": [
             "Q4",
@@ -1328,7 +1328,7 @@
         ]
     },
     {
-        "code": "PERL",
+        "code": "PERL3G",
         "name": "Laboratoire de Persistance des données III",
         "tags": [
             "Q4",
@@ -1342,7 +1342,7 @@
         ]
     },
     {
-        "code": "PERL",
+        "code": "PERL2IR",
         "name": "Laboratoire de Persistance des données II",
         "tags": [
             "Q4",
@@ -1357,7 +1357,7 @@
         ]
     },
     {
-        "code": "PER",
+        "code": "PER3G",
         "name": "Persistance des données III",
         "tags": [
             "Q4",
@@ -1368,7 +1368,7 @@
         ]
     },
     {
-        "code": "PER",
+        "code": "PER3IR",
         "name": "Persistance des données III",
         "tags": [
             "Q4",
@@ -1401,7 +1401,7 @@
         ]
     },
     {
-        "code": "SYS",
+        "code": "SYS2",
         "name": "Systèmes d'exploitation II",
         "tags": [
             "Q4"
@@ -1435,7 +1435,7 @@
         ]
     },
     {
-        "code": "ADI",
+        "code": "ADI2G",
         "name": "Applications distribuées II",
         "tags": [
             "Q5",
@@ -1518,7 +1518,7 @@
         ]
     },
     {
-        "code": "ANLL",
+        "code": "ANLL3G",
         "name": "Laboratoire d'analyse III",
         "tags": [
             "Q5",
@@ -1530,7 +1530,7 @@
         ]
     },
     {
-        "code": "ANLL",
+        "code": "ANLLIR",
         "name": "Laboratoire d'analyse III",
         "tags": [
             "Q5",
@@ -1542,7 +1542,7 @@
         ]
     },
     {
-        "code": "ANL",
+        "code": "ANL3G",
         "name": "Analyse III",
         "tags": [
             "Q5",
@@ -1595,7 +1595,7 @@
         ]
     },
     {
-        "code": "ATLJ",
+        "code": "ATLJ3IR",
         "name": "Ateliers logiciels III (Java)",
         "tags": [
             "Q5",
@@ -1609,7 +1609,7 @@
         ]
     },
     {
-        "code": "ATL",
+        "code": "ATL3G",
         "name": "Ateliers logiciels III",
         "tags": [
             "Q5",
@@ -1632,7 +1632,7 @@
         ]
     },
     {
-        "code": "COBL",
+        "code": "COBL3",
         "name": "Laboratoire de Cobol III",
         "tags": [
             "Q5",
@@ -1644,7 +1644,7 @@
         ]
     },
     {
-        "code": "COB",
+        "code": "COB3",
         "name": "Cobol III",
         "tags": [
             "Q5",
@@ -1668,17 +1668,6 @@
     },
     {
         "code": "CPR",
-        "name": "Compléments réseaux",
-        "tags": [
-            "Q5",
-            "G"
-        ],
-        "teachers": [
-            "EGR"
-        ]
-    },
-    {
-        "code": "CRS",
         "name": "Compléments réseaux",
         "tags": [
             "Q5",
@@ -1719,16 +1708,6 @@
         ],
         "teachers": [
             "ABS"
-        ]
-    },
-    {
-        "code": "EXP",
-        "name": "Expression et communication",
-        "tags": [
-            "Q5"
-        ],
-        "teachers": [
-            "DNA"
         ]
     },
     {
@@ -1777,7 +1756,7 @@
         ]
     },
     {
-        "code": "LAL",
+        "code": "LALIG",
         "name": "Laboratoire d'analyse III",
         "tags": [
             "Q5",
@@ -1789,7 +1768,7 @@
         ]
     },
     {
-        "code": "LAL",
+        "code": "LAL3IR",
         "name": "Laboratoire d'analyse III",
         "tags": [
             "Q5",
@@ -1806,19 +1785,6 @@
         "tags": [
             "Q5",
             "I",
-            "labo"
-        ],
-        "teachers": [
-            "CIH",
-            "MWA"
-        ]
-    },
-    {
-        "code": "LAR",
-        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
-        "tags": [
-            "Q5",
-            "R",
             "labo"
         ],
         "teachers": [

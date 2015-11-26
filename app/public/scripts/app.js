@@ -81,7 +81,10 @@ angular.module('hapi-learning', [
                 })
                 .state('root.course.documents', {
                     url: '/documents{path:.*}',
-                    templateUrl: '/views/course-documents.html'
+                    templateUrl: '/views/course-documents.html',
+                    params: {
+                        showHidden: false
+                    }
                 });
     }])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {

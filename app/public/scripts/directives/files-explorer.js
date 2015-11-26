@@ -22,16 +22,17 @@ angular.module('hapi-learning')
                 scope.creatingFolder = false;
                 scope.folderError = false;
                 scope.uploadError = false;
+                scope.showHidden = $stateParams.showHidden;
 
                 scope.getUploadPath = function() {
                     return FilesFactory.getUploadPath(scope.code, $stateParams.path);
                 };
 
-                scope.getList = function(path) {
+                scope.getList = function(path, showHidden) {
 
                     scope.fetching = true;
                     return $q(function(resolve, reject) {
-                        FilesFactory.getList(scope.code, path).then(function(results) {
+                        FilesFactory.getList(scope.code, path, showHidden).then(function(results) {
                             scope.files.dir = results.dir;
                             scope.files.files = results.files;
                             scope.fetching = false;
@@ -39,6 +40,11 @@ angular.module('hapi-learning')
                         }).catch(reject);
                     });
                 };
+
+                scope.$watch('showHidden', function(value) {
+                    scope.getList($stateParams.path, value);
+                });
+
 
                 scope.cleanFolderName = function() {
                     scope.folderName = "";
@@ -52,7 +58,7 @@ angular.module('hapi-learning')
 
                     FilesFactory.createFolder(scope.code, path).then(function() {
                         scope.cleanFolderName();
-                        scope.getList($stateParams.path);
+                        scope.getList($stateParams.path, scope.showHidden);
                     }).catch(function(error) {
                         scope.folderError = true;
                     });
@@ -75,7 +81,8 @@ angular.module('hapi-learning')
                 scope.goToAbsolutePath = function(path) {
                     $state.go('root.course.documents', {
                         code: scope.code,
-                        path: path
+                        path: path,
+                        showHidden: scope.showHidden
                     });
                 };
 
@@ -85,7 +92,8 @@ angular.module('hapi-learning')
 
                     $state.go('root.course.documents', {
                         code: scope.code,
-                        path: $stateParams.path + tmp + path
+                        path: $stateParams.path + tmp + path,
+                        showHidden: scope.showHidden
                     });
                 };
 
@@ -110,15 +118,15 @@ angular.module('hapi-learning')
 
                     FilesFactory.deleteDocument(scope.code, path)
                         .then(function() {
-                            scope.getList($stateParams.path);
+                            scope.getList($stateParams.path, scope.showHidden);
                         }).catch(function() {
                             console.log('error - cannot delete');
                         });
 
-                }
+                };
 
                 $rootScope.$on('upload-complete', function() {
-                    scope.getList($stateParams.path);
+                    scope.getList($stateParams.path, scope.showHidden);
                 });
 
                 $rootScope.$on('upload-error', function() {
@@ -129,13 +137,13 @@ angular.module('hapi-learning')
                 // Set this back if bug appears again.
 
                 if (scope.code) {
-                    scope.getList($stateParams.path);
+                    scope.getList($stateParams.path, scope.showHidden);
                 } else {
                     // The code can be undefined because of asynchronous calls
                     scope.$watch('code', function(value) {
 
                         if (value) {
-                            scope.getList($stateParams.path);
+                            scope.getList($stateParams.path, scope.showHidden);
                         }
                     });
                 }
