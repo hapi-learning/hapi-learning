@@ -2,14 +2,14 @@
     {
         "subject": "New file added",
         "content": "Projet.pdf has been added. Instructions will follow.",
-        "username": "PBT",
-        "course": "TMP56GATL"
+        "username": "SRV",
+        "code": "JAV2"
     },
     {
         "subject": "You're screwed",
         "content": "Your mission, if you accept it, is to fail again.",
         "username": "MBA",
-        "course": "SYS2"
+        "code": "SYSL"
     },
     {
         "subject": "Hapi Learning update",
