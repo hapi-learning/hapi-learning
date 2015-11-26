@@ -115,7 +115,9 @@ angular.module('hapi-learning', [
         });
 
     }])
-
+    .run(['editableOptions', 'editableThemes', function(editableOptions, editableThemes) {
+        editableOptions.theme = 'bs3';
+    }])
     .run(function(amMoment) {
         amMoment.changeLocale('en');
     });

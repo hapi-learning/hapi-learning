@@ -71,8 +71,8 @@ angular.module('hapi-learning')
                     Restangular.one('users', profile.username)
                         .customPOST({}, 'subscribe/' + code)
                         .then(function (object) {
-                            //_.fill(internals.subscribedCourses, object); // object doit être le cours
-                            internals.subscribedCourses = [];
+                            _.fill(internals.subscribedCourses, object); // object doit être le cours
+                            //internals.subscribedCourses = [];
                             resolve(object);
                         })
                         .catch(function (err) {

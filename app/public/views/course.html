@@ -21,7 +21,7 @@
                         Course Home
                     </a>
                 </li>
-                <li ui-sref-active="active">
+                <li ng-class="{active: $state.includes('root.course.documents')}">
                     <a ui-sref="root.course.documents({code: course.code, path: ''})">
                         <span class="glyphicon glyphicon-folder-open"></span>
                         Documents
