@@ -8,7 +8,9 @@ angular.module('hapi-learning')
 
         var internals = {};
         internals.courses = [];
+        internals.fetchedCourses = false;
         internals.subscribedCourses = [];
+        internals.fetchedSubscribed = false;
 
         var exports = {};
         exports.add = function (value) {
@@ -22,12 +24,13 @@ angular.module('hapi-learning')
         **/
         exports.load = function (limit, page) {
             return $q(function (resolve, reject) {
-                if (internals.courses.length === 0)
+                if (!internals.fetchedCourses)
                 {
                     Restangular.all('courses')
                     .customGET('', { limit: limit, page: page })
                     .then(function (object) {
                         internals.courses = object.results;
+                        internals.fetchedCourses = true;
                         resolve(object.results);
                     })
                     .catch(function (err) {
@@ -70,10 +73,9 @@ angular.module('hapi-learning')
                 LoginFactory.getProfile().then(function(profile) {
                     Restangular.one('users', profile.username)
                         .customPOST({}, 'subscribe/' + code)
-                        .then(function (object) {
-                            _.fill(internals.subscribedCourses, object); // object doit être le cours
-                            //internals.subscribedCourses = [];
-                            resolve(object);
+                        .then(function (cours) {
+                            internals.subscribedCourses.push(cours); 
+                            resolve(cours);
                         })
                         .catch(function (err) {
                             reject(err);
@@ -112,13 +114,14 @@ angular.module('hapi-learning')
         **/
         exports.getSubscribed = function () {
             return $q(function(resolve, reject) {
-                if (internals.subscribedCourses.length === 0) {
+                if (!internals.fetchedSubscribed) {
                     LoginFactory.getProfile().then(function(profile) {
 
                         Restangular.one('users', profile.username)
                             .getList('courses')
-                            .then(function(object) {
-                                internals.subscribedCourses = object;
+                            .then(function(subscribedCourses) {
+                                internals.subscribedCourses = subscribedCourses;
+                                internals.fetchedSubscribed = true;
                                 resolve(internals.subscribedCourses);
                             })
                             .catch(function(error) {
