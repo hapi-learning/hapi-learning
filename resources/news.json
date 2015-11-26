@@ -1,19 +1,19 @@
 [
     {
-        subject : 'New file added',
-        content : 'Projet.pdf has been added. Instructions will follow.',
-        userId : 'rreyes1c',
-        crsId : 'TMP56GATL'
+        "subject": "New file added",
+        "content": "Projet.pdf has been added. Instructions will follow.",
+        "username": "PBT",
+        "course": "TMP56GATL"
     },
     {
-        subject : 'You\'re screwed',
-        content : 'Your mission, if you accept it, is to fail again.',
-        userId : 'cgeorge0',
-        crsId : 'SYS2'
+        "subject": "You're screwed",
+        "content": "Your mission, if you accept it, is to fail again.",
+        "username": "MBA",
+        "course": "SYS2"
     },
     {
-        subject : 'Hapi Learning update',
-        content : 'Don\'t worry it can\'t be worse than now.',
-        userId : 'crodriguez7'
+        "subject": "Hapi Learning update",
+        "content": "Don't worry it can't be worse than now.",
+        "username": "NVS"
     }
 ]
