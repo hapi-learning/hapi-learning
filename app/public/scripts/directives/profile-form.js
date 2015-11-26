@@ -8,8 +8,11 @@ angular.module('hapi-learning')
         templateUrl: 'scripts/directives/profile-form.html',
         link: function(scope, elem, attrs) {
 
+            scope.updateProfile = function(data) {
+                console.log(data);
 
-
+                return true;
+            };
 
         }
     };
