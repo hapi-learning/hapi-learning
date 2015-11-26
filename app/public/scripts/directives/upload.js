@@ -15,13 +15,20 @@ angular.module('hapi-learning')
             compile: function() {
                 return {
                     pre: function(scope, elem, attrs) {
-                        console.log(scope.path);
                         scope.uploader = new FileUploader({
                             url: scope.path,
                             headers: {
                                 Authorization: AuthStorage.get('token')
                             }
                         });
+
+                        scope.uploader.onAfterAddingFile = function(item) {
+                            item.file.visible = true;
+                        };
+
+                        scope.uploader.onBeforeUploadItem = function(item) {
+                            item.url = scope.uploader.url + '?hidden=' + (!item.file.visible);
+                        };
 
                         scope.uploader.onErrorItem = function(item, response, status, headers) {
                             $rootScope.$emit('upload-error');

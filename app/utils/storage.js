@@ -156,7 +156,7 @@ internals.replaceDirectory = function(path) {
     }
 
     return dir;
-}
+};
 
 // Deletes files in the file system
 internals.deleteFiles = function (course, filenames) {
@@ -261,11 +261,6 @@ const load = function() {
                     course_code: course
                 }
             }).then(result => {
-
-                 // undefined or null
-                if (!hidden) {
-                    hidden = false;
-                }
 
                 // The data of the database entry
                 const data = {
@@ -469,19 +464,25 @@ const load = function() {
         });
     };
 
-    Storage.getList = function(course, path) {
+    Storage.getList = function(course, path, hidden) {
+
+        const where = {
+            directory: path,
+            course_code: course
+        };
+
+        if (!hidden) {
+            where.hidden = hidden;
+        }
 
         return new P(function(resolve, reject) {
             internals.File.findAll({
-                where: {
-                    directory: path,
-                    course_code: course
-                }
+                where: where
             }).then(function(results) {
                 // directory is the parent dir
                 let directory;
                 if (path === '/') {
-                    directory = null
+                    directory = null;
                 } else {
                     directory = internals.replaceDirectory(path);
                 }

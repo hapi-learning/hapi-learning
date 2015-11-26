@@ -101,13 +101,24 @@
             </button>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <button ng-click="download()" class="btn btn-default btn-block">
                <span class="glyphicon glyphicon-cloud-download"></span>
                Download
             </button>
         </div>
 
+        <div class="col-md-1" ng-show="showHidden">
+            <button class="btn btn-default btn-block" ng-click="showHidden = false">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </button>
+        </div>
+
+        <div class="col-md-1" ng-show="!showHidden" >
+            <button class="btn btn-default btn-block" ng-click="showHidden = true">
+                <span class="glyphicon glyphicon-eye-close"></span>
+            </button>
+        </div>
     </div>
 
     <br/>
