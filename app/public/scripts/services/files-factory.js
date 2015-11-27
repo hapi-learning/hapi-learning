@@ -78,6 +78,26 @@ angular.module('hapi-learning')
             return d.promise;
         };
 
+        exports.updateFile = function(course, path, newName, hidden) {
+
+            var d = $q.defer();
+
+            path = internals.replacePath(path);
+            Restangular
+                .one('courses', course)
+                .all('documents')
+                .customOperation('patch', encodeURIComponent(path), null, null, {
+                    name: newName,
+                    hidden: hidden
+                }).then(function() {
+                    d.resolve();
+                }).catch(function() {
+                    d.reject('Invalid name');
+                });
+
+            return d.promise;
+        };
+
         exports.createFolder = function(course, path, hidden) {
 
             return $q(function(resolve, reject) {

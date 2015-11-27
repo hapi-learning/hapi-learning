@@ -110,14 +110,29 @@ angular.module('hapi-learning')
                 };
 
 
-                scope.updateFolder = function(data, oldName) {
+                scope.updateFolder = function(data, index) {
 
-                    if (data.name === oldName) {
-                        return true;
+                    var oldName = scope.files.files[index].name;
+                    var oldHidden = scope.files.files[index].hidden;
+
+                    if (data.name === oldName && data.hidden === oldHidden) {
+                        return true; // Accept and does not update
                     }
 
                     var path = $stateParams.path + '/' + oldName;
-                    return FilesFactory.updateFolder(scope.code, path, data.name, false);
+                    return FilesFactory.updateFolder(scope.code, path, data.name, data.hidden);
+                };
+
+                scope.updateFile = function(data, index) {
+                    var oldName = scope.files.files[index].name;
+                    var oldHidden = scope.files.files[index].hidden;
+
+                    if (data.name === oldName && data.hidden === oldHidden) {
+                        return true; // Accept and does not update
+                    }
+
+                    var path = $stateParams + '/' + oldName;
+                    return FilesFactory.updateFile(scope.code, path, data.name, data.hidden);
                 };
 
                 scope.removeFile = function(index) {
