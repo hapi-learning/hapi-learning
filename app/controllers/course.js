@@ -426,7 +426,7 @@ exports.updateFile = {
         const update = function() {
             Storage
                 .update(course, path, {name: name, hidden: hidden})
-                .then(() => reply('File : ' + Path.basename(path) + ' successfuly updated').code(200))
+                .then(file => reply(file).code(200))
                 .catch(err => {
                     switch(err) {
                         case 404:

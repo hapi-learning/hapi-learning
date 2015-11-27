@@ -109,8 +109,7 @@ angular.module('hapi-learning')
                     scope.goToAbsolutePath(path);
                 };
 
-
-                scope.updateFolder = function(data, index) {
+                var update = function(data, index, type) {
 
                     var oldName = scope.files.files[index].name;
                     var oldHidden = scope.files.files[index].hidden;
@@ -120,19 +119,49 @@ angular.module('hapi-learning')
                     }
 
                     var path = $stateParams.path + '/' + oldName;
-                    return FilesFactory.updateFolder(scope.code, path, data.name, data.hidden);
+
+                    var updateLocalFile = function(file) {
+
+                        // If files are hidden and updated is hidden,
+                        // remove it from the list
+                        if (!scope.showHidden && file.hidden) {
+                            _.pullAt(scope.files.files, index);
+                        } else {
+                            scope.files.files[index].name = file.name;
+                            scope.files.files[index].hidden = file.hidden;
+                            scope.files.files[index]['updated_at'] = file['updated_at'];
+                        }
+
+                    };
+
+                    if (type === 'f') {
+                        FilesFactory
+                            .updateFile(scope.code, path, data.name, data.hidden)
+                            .then(function(file) {
+                                updateLocalFile(file);
+                                return true;
+                            }).catch(function(err) {
+                                return err;
+                            });
+                    } else {
+                        FilesFactory
+                            .updateFolder(scope.code, path, data.name, data.hidden)
+                            .then(function(file) {
+                                updateLocalFile(file);
+                                return true;
+                            }).catch(function(err) {
+                                return err;
+                            });
+
+                    }
+                }
+
+                scope.updateFolder = function(data, index) {
+                    return update(data, index, 'd');
                 };
 
                 scope.updateFile = function(data, index) {
-                    var oldName = scope.files.files[index].name;
-                    var oldHidden = scope.files.files[index].hidden;
-
-                    if (data.name === oldName && data.hidden === oldHidden) {
-                        return true; // Accept and does not update
-                    }
-
-                    var path = $stateParams.path + '/' + oldName;
-                    return FilesFactory.updateFile(scope.code, path, data.name, data.hidden);
+                    return update(data, index, 'f');
                 };
 
                 scope.removeFile = function(index) {

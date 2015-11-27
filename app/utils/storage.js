@@ -175,6 +175,83 @@ internals.deleteFiles = function (course, filenames) {
     });
 };
 
+/**
+ * Rename a file
+ */
+internals.renameFile = function(course, oldPath, newPath) {
+    const oldFile = internals.getDocumentPath(course, oldPath);
+    const newFile = internals.getDocumentPath(course, newPath);
+    return Fs.renameAsync(oldFile, newFile);
+};
+
+internals.renameFolder = function(file, course, path, name, rename) {
+
+    return new P(function(resolve, reject) {
+
+        let directory = internals.replaceDirectory(path);
+
+        if (directory !== '/') {
+            directory += '/';
+        } else {
+            directory = '';
+        }
+
+        internals.File.update({
+            directory: directory + name
+        }, {
+            where: {
+                directory: path,
+                course_code: course
+            }
+        }).then(function() {
+            rename(file, course, path, name).then(resolve).catch(reject);
+        }).catch((err) => reject(500));
+    });
+};
+
+internals.update = function(file, course, path, data) {
+
+    const hidden = data.hidden;
+    const name   = data.name;
+    const type   = file.get('type');
+
+    return new P(function(resolve, reject) {
+
+        // Against undefined
+        if (typeof hidden !== 'undefined' && hidden !== null) {
+            file.set('hidden', hidden);
+        }
+
+        const save = function() {
+            file.save().then(resolve).catch(() => reject(422));
+        };
+
+        if (name) {
+
+            file.set('name', name);
+
+            // Rename folder / file
+            const rename = function(file, course, path, name) {
+                return new Promise(function(resolve, reject) {
+                    internals
+                        .renameFile(course, path, Path.dirname(path) + '/' + name)
+                        .then(resolve).catch(() => reject(422));
+                });
+            };
+
+            if (type === 'f') {
+                rename(file, course, path, name).then(save).catch(reject);
+            } else {
+                internals
+                    .renameFolder(file, course, path, name, rename)
+                    .then(save).catch(reject);
+            }
+        } else {
+            save();
+        }
+    });
+};
+
 
 const load = function() {
 
@@ -327,73 +404,7 @@ const load = function() {
         });
     };
 
-    internals.renameFolder = function(file, course, path, name, rename) {
 
-        return new P(function(resolve, reject) {
-
-            let directory = internals.replaceDirectory(path);
-
-            if (directory !== '/') {
-                directory += '/';
-            } else {
-                directory = '';
-            }
-
-            internals.File.update({
-                directory: directory + name
-            }, {
-                where: {
-                    directory: path,
-                    course_code: course
-                }
-            }).then(function() {
-                rename(file, course, path, name).then(resolve).catch(reject);
-            }).catch((err) => reject(500));
-        });
-    };
-
-    internals.update = function(file, course, path, data) {
-
-        const hidden = data.hidden;
-        const name   = data.name;
-        const type   = file.get('type');
-
-        return new P(function(resolve, reject) {
-
-            // Against undefined
-            if (typeof hidden !== 'undefined' && hidden !== null) {
-                file.set('hidden', hidden);
-            }
-
-            const save = function() {
-                file.save().then(resolve).catch(() => reject(422));
-            };
-
-            if (name) {
-
-                file.set('name', name);
-
-                // Rename folder / file
-                const rename = function(file, course, path, name) {
-                    return new Promise(function(resolve, reject) {
-                        Storage
-                            .renameFile(course, path, Path.dirname(path) + '/' + name)
-                            .then(resolve).catch(() => reject(422));
-                    });
-                };
-
-                if (type === 'f') {
-                    rename(file, course, path, name).then(save).catch(reject);
-                } else {
-                    internals
-                        .renameFolder(file, course, path, name, rename)
-                        .then(save).catch(reject);
-                }
-            } else {
-                save();
-            }
-        });
-    };
 
 
     Storage.update = function(course, path, data) {
@@ -417,7 +428,9 @@ const load = function() {
                     // if the names are equals, just update hidden
                     // otherwise, check if the new name already exists and update
                     if (name === oldName) {
-                        internals.update(result, course, path, data).then(resolve).catch(reject);
+                        internals.update(result, course, path, data).then(function() {
+                            resolve(result);
+                        }).catch(reject);
                     } else {
                         // Check if already exists with the new name
                         internals.File.findOne({
@@ -431,7 +444,9 @@ const load = function() {
                             if (existingFile) {
                                 reject(409);
                             } else {
-                                internals.update(result, course, path, data).then(resolve).catch(reject);
+                                internals.update(result, course, path, data).then(function() {
+                                    resolve(result);
+                                }).catch(reject);
                             }
                         }).catch(function() {
                             reject(500);
@@ -449,14 +464,7 @@ const load = function() {
         });
     };
 
-    /**
-     * Rename a file
-     */
-    Storage.renameFile = function(course, oldPath, newPath) {
-        const oldFile = internals.getDocumentPath(course, oldPath);
-        const newFile = internals.getDocumentPath(course, newPath);
-        return Fs.renameAsync(oldFile, newFile);
-    };
+
 
     /**
      * Download a folder or file
