@@ -396,8 +396,62 @@ exports.createFolder = {
     }
 };
 
+exports.updateFile = {
+    description: 'Create a file of a course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code'),
+            path: Joi.string().required().invalid('/')
+        },
+        payload: {
+            name: Joi.string().optional(),
+            hidden: Joi.boolean().optional()
+        }
+    },
+    handler: function (request, reply) {
+
+        const Storage = this.storage;
+        const Course  = this.models.Course;
+        const course  = request.params.id;
+
+        const path = request.params.path;
+        const name = request.payload.name;
+        const hidden = request.payload.hidden;
+
+        // needs a better verification, but will do it for now.
+        if (internals.checkForbiddenPath(path)) {
+            return reply.forbidden();
+        }
+
+        const updateFolder = function() {
+            Storage
+                .updateFile(course, path, name, hidden)
+                .then(() => reply('File : ' + Path.basename(path) + ' successfuly updated').code(200))
+                .catch(err => {
+                    switch(err) {
+                        case 404:
+                            return reply.notFound('Folder not found');
+                            break;
+                        case 409:
+                            return reply.conflict();
+                            break;
+                        case 422:
+                            return reply.badData();
+                            break;
+                        case 500:
+                        default:
+                            return reply.badImplementation();
+                    }
+
+            });
+        };
+
+        return internals.checkCourse(Course, course, reply, updateFolder);
+    }
+};
+
 exports.updateFolder = {
-    description: 'Create a folder to a course',
+    description: 'Update a folder of a course',
     validate: {
         params: {
             id: Joi.string().required().description('Course code'),

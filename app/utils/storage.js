@@ -327,6 +327,39 @@ const load = function() {
         });
     };
 
+
+    Storage.update = function(course, path, name, hidden) {
+        return new P(function(resolve, reject) {
+            const directory = internals.replaceDirectory(path);
+
+            const oldName = Path.basename(path);
+
+            if (name === oldName) {
+                // update
+            } else {
+
+                // Check if already exists with the new name
+                internals.File.findOne({
+                    where: {
+                        name: name,
+                        directory: directory,
+                        course_code: course
+                    }
+                }).then(function(result) {
+                    // Sends 409 conflict if the new name already exists, otherwise rename
+                    if (result) {
+                        reject(409);
+                    } else {
+                      // update
+                    }
+                }).catch(function() {
+                    reject(500);
+                });
+            }
+
+        });
+    };
+
     /**
      * Updates a folder
      */
