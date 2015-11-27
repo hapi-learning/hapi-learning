@@ -131,7 +131,7 @@ angular.module('hapi-learning')
                         return true; // Accept and does not update
                     }
 
-                    var path = $stateParams + '/' + oldName;
+                    var path = $stateParams.path + '/' + oldName;
                     return FilesFactory.updateFile(scope.code, path, data.name, data.hidden);
                 };
 

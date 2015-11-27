@@ -397,7 +397,7 @@ exports.createFolder = {
 };
 
 exports.updateFile = {
-    description: 'Create a file of a course',
+    description: 'Create a file or folder of a course',
     validate: {
         params: {
             id: Joi.string().required().description('Course code'),
@@ -423,9 +423,9 @@ exports.updateFile = {
             return reply.forbidden();
         }
 
-        const updateFolder = function() {
+        const update = function() {
             Storage
-                .updateFile(course, path, name, hidden)
+                .update(course, path, {name: name, hidden: hidden})
                 .then(() => reply('File : ' + Path.basename(path) + ' successfuly updated').code(200))
                 .catch(err => {
                     switch(err) {
@@ -446,63 +446,10 @@ exports.updateFile = {
             });
         };
 
-        return internals.checkCourse(Course, course, reply, updateFolder);
+        return internals.checkCourse(Course, course, reply, update);
     }
 };
 
-exports.updateFolder = {
-    description: 'Update a folder of a course',
-    validate: {
-        params: {
-            id: Joi.string().required().description('Course code'),
-            path: Joi.string().required().invalid('/')
-        },
-        payload: {
-            name: Joi.string().optional(),
-            hidden: Joi.boolean().optional()
-        }
-    },
-    handler: function (request, reply) {
-
-        const Storage = this.storage;
-        const Course  = this.models.Course;
-        const course  = request.params.id;
-
-        const path = request.params.path;
-        const name = request.payload.name;
-        const hidden = request.payload.hidden;
-
-        // needs a better verification, but will do it for now.
-        if (internals.checkForbiddenPath(path)) {
-            return reply.forbidden();
-        }
-
-        const updateFolder = function() {
-            Storage
-                .updateFolder(course, path, name, hidden)
-                .then(() => reply('Folder : ' + Path.basename(path) + ' successfuly updated').code(200))
-                .catch(err => {
-                    switch(err) {
-                        case 404:
-                            return reply.notFound('Folder not found');
-                            break;
-                        case 409:
-                            return reply.conflict();
-                            break;
-                        case 422:
-                            return reply.badData();
-                            break;
-                        case 500:
-                        default:
-                            return reply.badImplementation();
-                    }
-
-            });
-        };
-
-        return internals.checkCourse(Course, course, reply, updateFolder);
-    }
-};
 
 // Tags that does not exists will be ignored
 exports.addTags = {

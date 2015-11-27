@@ -205,11 +205,11 @@
                     <td class="col-md-1">
                         <div e-title="Hidden" e-name="hidden" e-form="fileExplorer"
                               editable-checkbox="file.hidden">
-                            <span ng-if="file.hidden">
-                                <span class="glyphicon glyphicon-eye-closed">
+                            <span ng-if="file.hidden === true">
+                                <span class="glyphicon glyphicon-eye-close">
                                 </span>
                             </span>
-                            <span ng-if="!file.hidden">
+                            <span ng-if="file.hidden === false">
                                 <span class="glyphicon glyphicon-eye-open">
                                 </span>
                             </span>
@@ -270,7 +270,12 @@
                     </td>
 
                     <!-- NAME -->
-                    <td class="col-md-5 file-name">{{file.name}}</td>
+                    <td class="col-md-5 file-name">
+                       <span editable-text="file.name"
+                             e-name="name" e-form="fileExplorer" e-required
+                             ng-bind="file.name">
+                       </span>
+                    </td>
 
                     <!-- SIZE -->
                     <td class="col-md-1">{{file.size | byteFmt: 2}} </td>
@@ -285,15 +290,16 @@
                     <!-- LAST UPDATED -->
                     <td class="col-md-1" am-time-ago="file.updated_at"></td>
 
+
                     <!-- HIDDEN -->
                     <td class="col-md-1">
                         <div e-name="hidden" e-form="fileExplorer"
                              e-title="Hidden" editable-checkbox="file.hidden">
-                            <span ng-if="file.hidden">
-                                <span class="glyphicon glyphicon-eye-closed">
+                            <span ng-show="file.hidden">
+                                <span class="glyphicon glyphicon-eye-close">
                                 </span>
                             </span>
-                            <span ng-if="!file.hidden">
+                            <span ng-show="!file.hidden">
                                 <span class="glyphicon glyphicon-eye-open">
                                 </span>
                             </span>

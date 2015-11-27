@@ -327,117 +327,124 @@ const load = function() {
         });
     };
 
+    internals.renameFolder = function(file, course, path, name, rename) {
 
-    Storage.update = function(course, path, name, hidden) {
         return new P(function(resolve, reject) {
-            const directory = internals.replaceDirectory(path);
 
-            const oldName = Path.basename(path);
+            let directory = internals.replaceDirectory(path);
 
-            if (name === oldName) {
-                // update
+            if (directory !== '/') {
+                directory += '/';
             } else {
-
-                // Check if already exists with the new name
-                internals.File.findOne({
-                    where: {
-                        name: name,
-                        directory: directory,
-                        course_code: course
-                    }
-                }).then(function(result) {
-                    // Sends 409 conflict if the new name already exists, otherwise rename
-                    if (result) {
-                        reject(409);
-                    } else {
-                      // update
-                    }
-                }).catch(function() {
-                    reject(500);
-                });
+                directory = '';
             }
 
+            internals.File.update({
+                directory: directory + name
+            }, {
+                where: {
+                    directory: path,
+                    course_code: course
+                }
+            }).then(function() {
+                rename(file, course, path, name).then(resolve).catch(reject);
+            }).catch((err) => reject(500));
         });
     };
 
-    /**
-     * Updates a folder
-     */
-    Storage.updateFolder = function (course, path, name, hidden) {
+    internals.update = function(file, course, path, data) {
+
+        const hidden = data.hidden;
+        const name   = data.name;
+        const type   = file.get('type');
 
         return new P(function(resolve, reject) {
 
-            const directory = internals.replaceDirectory(path);
+            // Against undefined
+            if (typeof hidden !== 'undefined' && hidden !== null) {
+                file.set('hidden', hidden);
+            }
 
-            const doRename = function() {
-
-                // Check if folder exists
-                internals.File.findOne({
-                    where: {
-                        name: Path.basename(path),
-                        directory: directory,
-                        course_code: course,
-                    }
-                }).then(function(result) {
-
-                    // If the folder exists, update, otherwise sends 404 not found
-                    if (result) {
-
-                        // Against undefined
-                        if (typeof hidden !== 'undefined' && hidden !== null) {
-                            result.set('hidden', hidden);
-                        }
-
-
-                        const rename = function(r) {
-                            return Storage
-                                .renameFile(course, path, Path.dirname(path) + '/' + name)
-                                .then(function() {
-                                    r.save().then(resolve).catch(() => reject(422));
-                                }).catch(() => reject(422));
-                        };
-
-                        // If new name has been given, update name
-                        if (name) {
-                            result.set('name', name);
-                            internals.File.update({
-                                directory: Path.dirname(path) + '/' + name
-                            }, {
-                                where: {
-                                    directory: path,
-                                    course_code: course
-                                }
-                            }).then(function() {
-                                rename(result);
-                            }).catch(() => reject(500));
-                        } else {
-                            rename(result);
-                        }
-
-                    } else {
-                        reject(404);
-                    }
-                }).catch(() => reject(500));
-
+            const save = function() {
+                file.save().then(resolve).catch(() => reject(422));
             };
 
-            // Check if folder with the new name already exists
+            if (name) {
+
+                file.set('name', name);
+
+                // Rename folder / file
+                const rename = function(file, course, path, name) {
+                    return new Promise(function(resolve, reject) {
+                        Storage
+                            .renameFile(course, path, Path.dirname(path) + '/' + name)
+                            .then(resolve).catch(() => reject(422));
+                    });
+                };
+
+                if (type === 'f') {
+                    rename(file, course, path, name).then(save).catch(reject);
+                } else {
+                    internals
+                        .renameFolder(file, course, path, name, rename)
+                        .then(save).catch(reject);
+                }
+            } else {
+                save();
+            }
+        });
+    };
+
+
+    Storage.update = function(course, path, data) {
+
+        const directory = internals.replaceDirectory(path);
+        const oldName = Path.basename(path);
+
+        const name   = data.name;
+        const hidden = data.hidden;
+
+        return new P(function(resolve, reject) {
+
             internals.File.findOne({
                 where: {
-                    name: name,
+                    name: oldName,
                     directory: directory,
-                    course_code: course
+                    course_code: course,
                 }
             }).then(function(result) {
-                // Sends 409 conflict if the new name already exists, otherwise rename
                 if (result) {
-                    reject(409);
+                    // if the names are equals, just update hidden
+                    // otherwise, check if the new name already exists and update
+                    if (name === oldName) {
+                        internals.update(result, course, path, data).then(resolve).catch(reject);
+                    } else {
+                        // Check if already exists with the new name
+                        internals.File.findOne({
+                            where: {
+                                name: name,
+                                directory: directory,
+                                course_code: course
+                            }
+                        }).then(function(existingFile) {
+                            // Sends 409 conflict if the new name already exists, otherwise rename
+                            if (existingFile) {
+                                reject(409);
+                            } else {
+                                internals.update(result, course, path, data).then(resolve).catch(reject);
+                            }
+                        }).catch(function() {
+                            reject(500);
+                        });
+                    }
+
                 } else {
-                    return doRename();
+                    reject(404); // file not found
                 }
             }).catch(function() {
                 reject(500);
             });
+
 
         });
     };

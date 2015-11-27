@@ -71,7 +71,7 @@ exports.register = function (server, options, next) {
         {method: 'POST',   path: '/courses/{id}/documents',         config: Controllers.Course.postDocument},
         {method: 'POST',   path: '/courses/{id}/documents/{path*}', config: Controllers.Course.postDocument},
         {method: 'POST',   path: '/courses/{id}/folders/{path*}' ,  config: Controllers.Course.createFolder},
-        {method: 'PATCH',  path: '/courses/{id}/folders/{path*}',   config: Controllers.Course.updateFolder},
+        {method: 'PATCH',  path: '/courses/{id}/folders/{path*}',   config: Controllers.Course.updateFile},
         {method: 'PATCH',  path: '/courses/{id}/documents/{path*}', config: Controllers.Course.updateFile},
         {method: 'PATCH',  path: '/courses/{id}',                   config: Controllers.Course.patch},
         {method: 'DELETE', path: '/courses/{id}',                   config: Controllers.Course.delete},
