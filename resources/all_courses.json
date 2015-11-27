@@ -15,8 +15,8 @@
         ]
     },
     {
-        "code": "ALM",
-        "name": "Algorithmique I",
+        "code": "ALM1",
+        "name": "Algorithmique ALM I",
         "tags": [
             "Q1"
         ],
@@ -32,7 +32,7 @@
         ]
     },
     {
-        "code": "ANGI",
+        "code": "ANG1",
         "name": "Communication anglophone de l'informatique I",
         "tags": [
             "Q1"
@@ -44,7 +44,7 @@
     },
     {
         "code": "CAI1",
-        "name": "Communication anglophone de l'informatique I",
+        "name": "Communication anglophone de l'informatique CAI I",
         "tags": [
             "Q1"
         ],
@@ -78,7 +78,7 @@
     },
     {
         "code": "INI",
-        "name": "Introduction à l'informatique industrielle",
+        "name": "Introduction à l'informatique industrielle INI",
         "tags": [
             "Q1"
         ],
@@ -88,7 +88,7 @@
     },
     {
         "code": "INL",
-        "name": "Introduction au logiciel",
+        "name": "Introduction au logiciel INL",
         "tags": [
             "Q1"
         ],
@@ -98,7 +98,7 @@
     },
     {
         "code": "INO",
-        "name": "Introduction à l'ordinateur",
+        "name": "Introduction à l'ordinateur INO",
         "tags": [
             "Q1"
         ],
@@ -119,7 +119,7 @@
         ]
     },
     {
-        "code": "JAVL",
+        "code": "JAVL1",
         "name": "Laboratoire de Programmation Java I",
         "tags": [
             "Q1",
@@ -138,7 +138,7 @@
         ]
     },
     {
-        "code": "JAV",
+        "code": "JAV1",
         "name": "Langage Java I",
         "tags": [
             "Q1"
@@ -156,8 +156,8 @@
         ]
     },
     {
-        "code": "LGJ",
-        "name": "Langage Java I",
+        "code": "LGJ1",
+        "name": "Langage Java LGJ I",
         "tags": [
             "Q1"
         ],
@@ -174,8 +174,8 @@
         ]
     },
     {
-        "code": "LJV",
-        "name": "Laboratoire de Programmation Java I",
+        "code": "LJV1",
+        "name": "Laboratoire de Programmation Java LJV I",
         "tags": [
             "Q1",
             "Labo"
@@ -219,16 +219,6 @@
         ]
     },
     {
-        "code": "MET",
-        "name": "Méthodologie",
-        "tags": [
-            "Q1"
-        ],
-        "teachers": [
-            "CMI"
-        ]
-    },
-    {
         "code": "ORD",
         "name": "Introduction à l'ordinateur",
         "tags": [
@@ -242,7 +232,7 @@
     },
     {
         "code": "RES",
-        "name": "Introduction au réseau",
+        "name": "Introduction au réseau RES",
         "tags": [
             "Q1"
         ],
@@ -277,8 +267,8 @@
         ]
     },
     {
-        "code": "ALM",
-        "name": "Algorithmique II",
+        "code": "ALM2",
+        "name": "Algorithmique ALM II",
         "tags": [
             "Q2"
         ],
@@ -306,7 +296,7 @@
         ]
     },
     {
-        "code": "ANL",
+        "code": "ANL1",
         "name": "Analyse I",
         "tags": [
             "Q2"
@@ -318,7 +308,7 @@
     },
     {
         "code": "CAI2",
-        "name": "Communication anglophone de l'informatique II",
+        "name": "Communication anglophone de l'informatique CAI II",
         "tags": [
             "Q2"
         ],
@@ -363,7 +353,7 @@
         ]
     },
     {
-        "code": "JAVL",
+        "code": "JAVL2",
         "name": "Laboratoire Java II",
         "tags": [
             "Q2",
@@ -403,7 +393,7 @@
         ]
     },
     {
-        "code": "LDN",
+        "code": "LDN1",
         "name": "Laboratoire de persistance des données I",
         "tags": [
             "Q2",
@@ -417,7 +407,7 @@
     },
     {
         "code": "LGJ2",
-        "name": "Langage Java II",
+        "name": "Langage Java LGJ II",
         "tags": [
             "Q2"
         ],
@@ -480,7 +470,7 @@
     },
     {
         "code": "MICL",
-        "name": "Laboratoire microprocesseurs",
+        "name": "Laboratoire microprocesseurs MICL",
         "tags": [
             "Q2",
             "Labo"
@@ -517,7 +507,7 @@
         ]
     },
     {
-        "code": "PERL",
+        "code": "PERL1",
         "name": "Laboratoire de persistance des données I",
         "tags": [
             "Q2",
@@ -579,7 +569,7 @@
         ]
     },
     {
-        "code": "SYS",
+        "code": "SYS1",
         "name": "Systèmes d'exploitation I",
         "tags": [
             "Q2"
@@ -611,7 +601,7 @@
         ]
     },
     {
-        "code": "ANLL",
+        "code": "ANLL2",
         "name": "Laboratoire d'analyse II",
         "tags": [
             "Q3",
@@ -626,7 +616,7 @@
         ]
     },
     {
-        "code": "ANL",
+        "code": "ANL2",
         "name": "Analyse II",
         "tags": [
             "Q3"
@@ -650,7 +640,7 @@
         ]
     },
     {
-        "code": "AUT",
+        "code": "AUT1",
         "name": "Automates programmables",
         "tags": [
             "Q3",
@@ -693,17 +683,6 @@
         ],
         "teachers": [
             "NVS"
-        ]
-    },
-    {
-        "code": "CPT",
-        "name": "Comptabilité",
-        "tags": [
-            "Q3",
-            "G"
-        ],
-        "teachers": [
-            "JDS"
         ]
     },
     {
@@ -840,7 +819,7 @@
         ]
     },
     {
-        "code": "LDN",
+        "code": "LDN2",
         "name": "Laboratoire de persistance des données II",
         "tags": [
             "Q3",
@@ -890,7 +869,7 @@
         ]
     },
     {
-        "code": "PERL",
+        "code": "PERL2",
         "name": "Laboratoire de persistance des données II",
         "tags": [
             "Q3",
@@ -1110,7 +1089,7 @@
         ]
     },
     {
-        "code": "ANLL",
+        "code": "ANLL2",
         "name": "Laboratoire d'analyse II bis",
         "tags": [
             "Q4",
@@ -1250,7 +1229,7 @@
         ]
     },
     {
-        "code": "LCB",
+        "code": "LCB2",
         "name": "Laboratoire Cobol II",
         "tags": [
             "Q4",
@@ -1277,25 +1256,11 @@
         ]
     },
     {
-        "code": "LDN",
+        "code": "LDN3",
         "name": "Laboratoire de Persistance des données III",
         "tags": [
             "Q4",
             "G",
-            "Labo"
-        ],
-        "teachers": [
-            "ADT",
-            "ARO",
-            "NVS"
-        ]
-    },
-    {
-        "code": "LDN",
-        "name": "Laboratoire de Persistance des données II",
-        "tags": [
-            "Q4",
-            "IR",
             "Labo"
         ],
         "teachers": [
@@ -1518,7 +1483,7 @@
         ]
     },
     {
-        "code": "ANLL3G",
+        "code": "ANLL3",
         "name": "Laboratoire d'analyse III",
         "tags": [
             "Q5",
@@ -1621,7 +1586,7 @@
         ]
     },
     {
-        "code": "AUT",
+        "code": "AUT2",
         "name": "Automates programmables II",
         "tags": [
             "Q5",
@@ -1661,17 +1626,6 @@
             "Q5",
             "G",
             "Labo"
-        ],
-        "teachers": [
-            "EGR"
-        ]
-    },
-    {
-        "code": "CPR",
-        "name": "Compléments réseaux",
-        "tags": [
-            "Q5",
-            "G"
         ],
         "teachers": [
             "EGR"
@@ -1793,7 +1747,7 @@
         ]
     },
     {
-        "code": "LCB",
+        "code": "LCB3",
         "name": "Laboratoire de Cobol III",
         "tags": [
             "Q5",
@@ -1851,7 +1805,7 @@
         ]
     },
     {
-        "code": "PERL",
+        "code": "PERL4",
         "name": "Laboratoire de persistance des données IV",
         "tags": [
             "Q5",
@@ -1864,7 +1818,7 @@
     },
     {
         "code": "SCI",
-        "name": "Éléments de sécurité informatique",
+        "name": "Éléments de sécurité informatique SCI",
         "tags": [
             "Q5",
             "I"
@@ -1918,7 +1872,7 @@
         ]
     },
     {
-        "code": "SYS",
+        "code": "SYS3",
         "name": "Système III",
         "tags": [
             "Q5",
@@ -1929,8 +1883,8 @@
         ]
     },
     {
-        "code": "SYS",
-        "name": "Systèmes d'exploitation : temps réel",
+        "code": "SYSTR",
+        "name": "Systèmes d'exploitation : temps réel SYSTR",
         "tags": [
             "Q5",
             "I"
@@ -1961,7 +1915,7 @@
     },
     {
         "code": "VIP",
-        "name": "Voice over IP",
+        "name": "Voice over IP VIP",
         "tags": [
             "Q5",
             "R"
@@ -1972,7 +1926,7 @@
     },
     {
         "code": "VOIP",
-        "name": "Voice over IP",
+        "name": "Voice over IP VOIP",
         "tags": [
             "Q5",
             "R"
