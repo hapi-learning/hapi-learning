@@ -162,7 +162,8 @@
                     <td class="col-md-1">Size</td>
                     <td class="col-md-1">Download</td>
                     <td class="col-md-1">Last updated</td>
-                    <td class="col-md-3">Edit</td>
+                    <td class="col-md-1">Visibility</td>
+                    <td class="col-md-2">Edit</td>
                 </tr>
             </thead>
             <tbody ng-repeat="file in files.files">
@@ -200,11 +201,26 @@
                     <!-- LAST UPDATED -->
                     <td class="col-md-1" am-time-ago="file.updated_at"></td>
 
+                    <!-- HIDDEN -->
+                    <td class="col-md-1">
+                        <div e-title="Hidden" e-name="hidden" e-form="fileExplorer"
+                              editable-checkbox="file.hidden">
+                            <span ng-if="file.hidden">
+                                <span class="glyphicon glyphicon-eye-closed">
+                                </span>
+                            </span>
+                            <span ng-if="!file.hidden">
+                                <span class="glyphicon glyphicon-eye-open">
+                                </span>
+                            </span>
+                        </div>
+                    </td>
+
                     <!-- EDIT -->
-                    <td class="col-md-3">
+                    <td class="col-md-2">
 
                         <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
-                              class="form-buttons form-inline" onbeforesave="updateFolder($data, file.name)">
+                              class="form-buttons form-inline" onbeforesave="updateFolder($data, $index)">
 
                             <div>
 
@@ -268,12 +284,64 @@
 
                     <!-- LAST UPDATED -->
                     <td class="col-md-1" am-time-ago="file.updated_at"></td>
-                    <td class="col-md-3">
-                        <button class="btn btn-danger" ng-click="removeFile($index)">
+
+                    <!-- HIDDEN -->
+                    <td class="col-md-1">
+                        <div e-name="hidden" e-form="fileExplorer"
+                             e-title="Hidden" editable-checkbox="file.hidden">
+                            <span ng-if="file.hidden">
+                                <span class="glyphicon glyphicon-eye-closed">
+                                </span>
+                            </span>
+                            <span ng-if="!file.hidden">
+                                <span class="glyphicon glyphicon-eye-open">
+                                </span>
+                            </span>
+                        </div>
+                    </td>
+
+                    <td class="col-md-2">
+
+                        <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
+                              class="form-buttons form-inline" onbeforesave="updateFile($data, $index)">
+
+                            <div>
+
+                                <!-- Confirm -->
+                                <button type="submit" class="btn btn-primary"
+                                        ng-disabled="fileExplorer.$waiting">
+                                    <span class="fa fa-check fa-lg">
+
+                                    </span>
+                                </button>
+
+                                <!-- Cancel -->
+                                <button type="button" class="btn btn-warning"
+                                        ng-disabled="fileExplorer.$waiting"
+                                        ng-click="fileExplorer.$cancel()">
+                                    <span class="fa fa-remove fa-lg">
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div ng-show="!fileExplorer.$visible">
+
+                            <!-- Edit -->
+                            <button class="btn btn-default" ng-click="fileExplorer.$show()">
+                                <span class="fa fa-pencil-square-o fa-lg">
+                                </span>
+                            </button>
+
+                            <!-- Delete -->
+                            <button class="btn btn-danger" ng-click="removeFile($index)">
                                 <span class="fa fa-minus fa-lg">
                                 </span>
-                        </button>
+                            </button>
+                        </div>
+
                     </td>
+
                 </tr>
             </tbody>
 
