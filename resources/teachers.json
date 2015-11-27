@@ -143,6 +143,14 @@
         "username": "JLC",
         "role_id": 2
     },
+        {
+        "email": "cih@heb.be",
+        "firstName": "Monsieur",
+        "lastName": "Cihan",
+        "password": "CIH",
+        "username": "CIH",
+        "role_id": 2
+    },
     {
         "email": "rpl@heb.be",
         "firstName": "René-Philippe",
