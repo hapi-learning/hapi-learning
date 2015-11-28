@@ -8,8 +8,16 @@ const Glue = require('glue');
 const _ = require('lodash');
 const Path = require('path');
 const P = require('bluebird');
+const program = require('commander');
+const rmdir = require('rmdir');
 
-let internals = {
+program
+    .version(require('../package.json').version)
+    .option('-f, --flush', 'Reset storage and database')
+    .parse(process.argv);
+
+
+const internals = {
     manifest: {
         connections: [{
             host: process.env.WEB_HOST || 'localhost',
@@ -129,125 +137,139 @@ let internals = {
 };
 
 
-Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
+const initializeData = function(server, Models) {
 
-    if (err) {
-        console.log('server.register error :');
-        throw err;
-    }
+    const Wreck = require('wreck');
+    const User = Models.User;
+    const baseUrl = server.select('api').info.uri;
 
-    var Models = server.plugins.models.models;
+    const users = require('../resources/users.json');
+    const tags  = require('../resources/tags.json');
+    const teachers = require('../resources/all_teachers.json');
+    const courses = require('../resources/all_courses.json');
+    const news = require('../resources/news.json');
 
-    Models.sequelize.sync({
-        force: false // drops all db and recreates them
-       // logging: console.log
-    })
-    .then(() => {
+    User.create({
+        username: 'admin',
+        password: 'admin',
+        role_id: 1,
+        email: 'admin@admin.com',
+        firstName: 'admin',
+        lastName: 'admin'
+    }).then(function() {
+        Wreck.post(baseUrl + '/login', {
+            payload: JSON.stringify({
+                username: 'admin',
+                password: 'admin'
+            })
+        }, function(err, response, payload) {
+            const token = JSON.parse(payload.toString()).token;
 
-        server.start((err) => {
-            if (err) {
-                throw err;
-            } else {
-
-                process.on('SIGINT', function() {
-                    console.log('Stopping server...');
-                    server.plugins.cache.cache.stop();
-                    server.stop({timeout: 10}, err => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('Server stopped successfuly !');
+            const post = function(url, payload) {
+                return new P(function(resolve, reject) {
+                    Wreck.post(baseUrl + url, {
+                        payload: JSON.stringify(payload),
+                        headers: {
+                            Authorization: token
                         }
-                        process.exit();
+                    }, (err, r, p) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
                     });
                 });
+            };
 
-                _.forEach(server.connections, (connection) => console.log('Server running on ' + connection.info.uri));
+            const addCourses = function() {
+                return P.all(_.map(courses, course => post('/courses', course)));
+            };
 
-                // INIT DATA FOR TEST PURPOSES
+            const addTeachers = function() {
+                return P.all(_.map(teachers, teacher => post('/users', teacher)));
+            };
 
-                const Wreck = require('wreck');
-                const Models = server.plugins.models.models;
-                const Role = Models.Role;
-                const User = Models.User;
-                const baseUrl = server.select('api').info.uri;
+            const addTags = function() {
+                return P.all(_.map(tags, tag => post('/tags', tag)));
+            };
 
-                const users = require('../resources/users.json');
-                const tags  = require('../resources/tags.json');
-                const permissions = require('../resources/permissions.json');
-                const teachers = require('../resources/all_teachers.json');
-                const courses = require('../resources/all_courses.json');
-                const news = require('../resources/news.json');
+            const addNews = function() {
+                return P.all(_.map(news, n => post('/news', n)));
+            };
 
-                const roles = _.map(require('../resources/roles.json'), role => Role.create(role));
-                Promise.all(roles).then(function() {
-                    User.create({
-                        username: 'admin',
-                        password: 'admin',
-                        role_id: 1,
-                        email: 'admin@admin.com',
-                        firstName: 'admin',
-                        lastName: 'admin'
-                    }).then(function() {
-
-                        Wreck.post(baseUrl + '/login', {
-                            payload: JSON.stringify({
-                                username: 'admin',
-                                password: 'admin'
-                            })
-                        }, function(err, response, payload) {
-                            const token = JSON.parse(payload.toString()).token;
-
-
-                            const post = function(url, payload) {
-                                return new P(function(resolve, reject) {
-                                    Wreck.post(baseUrl + url, {
-                                        payload: JSON.stringify(payload),
-                                        headers: {
-                                            Authorization: token
-                                        }
-                                    }, (err, r, p) => {
-                                        if (err) {
-                                            reject(err);
-                                        } else {
-                                            resolve();
-                                        }
-                                    });
-                                });
-                            };
-
-                            const addCourses = function() {
-                                return P.all(_.map(courses, course => post('/courses', course)));
-                            };
-
-                            const addTeachers = function() {
-                                return P.all(_.map(teachers, teacher => post('/users', teacher)));
-                            };
-
-                            const addTags = function() {
-                                return P.all(_.map(tags, tag => post('/tags', tag)));
-                            };
-
-                            const addNews = function() {
-                                return P.all(_.map(news, n => post('/news', n)));
-                            };
-
-                            addTags().then(function() {
-                                addTeachers().then(function() {
-                                    addCourses().then(function() {
-                                        addNews();
-                                    });
-                                });
-                            });
-
-                        });
-
-
+            addTags().then(function() {
+                addTeachers().then(function() {
+                    addCourses().then(function() {
+                        addNews();
                     });
-                })
-                .catch(function() {});
-            }
+                });
+            });
 
         });
+    }).catch(console.log);
+}
+
+
+
+const compose = function() {
+    Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
+
+        if (err) {
+            console.log('server.register error :');
+            throw err;
+        }
+
+         process.on('SIGINT', function() {
+            console.log('Stopping server...');
+            server.plugins.cache.cache.stop();
+            server.stop({timeout: 10}, err => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('Server stopped successfuly !');
+                }
+                process.exit();
+            });
+        });
+
+        const Models = server.plugins.models.models;
+
+        Models.sequelize.sync({
+            force: program.flush,
+            logging: console.log
+        })
+        .then(() => {
+
+            server.start((err) => {
+                if (err) {
+                    throw err;
+                } else {
+
+                    _.forEach(server.connections,
+                              (connection) => console.log('Server running on ' + connection.info.uri));
+
+                    // INIT DATA FOR TEST PURPOSES
+
+                    // initialize roles
+                    const Role = Models.Role;
+                    const roles = _.map(require('../resources/roles.json'), role => Role.create(role));
+
+                    Promise.all(roles).then(function() {
+                        if (program.flush) {
+                            initializeData(server, Models);
+                        }
+                    })
+                    .catch(function() {});
+                }
+
+            });
+        });
     });
-});
+}
+
+if (program.flush) {
+    rmdir(Path.join(__dirname, 'storage'), compose);
+} else {
+    compose();
+}

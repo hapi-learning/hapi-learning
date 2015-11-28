@@ -517,7 +517,7 @@ const load = function() {
             }).then(function(result) {
 
                 // If the result is hidden but we cannot fetch it, returns 404
-                if (!result || (result && !getHidden && result.hidden)) {
+                if (!result) {
                     reject(404);
                 } else {
                     const isFile = (result.get('type') === 'f');
