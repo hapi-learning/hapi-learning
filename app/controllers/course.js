@@ -128,7 +128,10 @@ exports.getDocuments = {
                     .header('Content-Disposition', contentDisposition);
             }
         })
-        .catch(() => reply.notFound('File not found'));
+        .catch((err) => {
+            console.log(err);
+            return reply.notFound('File not found');
+        });
     }
 };
 

@@ -137,13 +137,16 @@ angular.module('hapi-learning')
         };
 
 
-        exports.download = function(course, path) {
+        exports.download = function(course, path, showHidden) {
 
             var url = internals.getUrl(course, path);
 
             $http({
                 url: url,
                 method: 'GET',
+                params: {
+                    hidden: showHidden
+                },
                 responseType: 'arraybuffer'
             }).then(function(results) {
 

@@ -360,6 +360,8 @@ const load = function() {
                 }
             }).then(result => {
 
+                // TODO select directory and check if hidden or not
+
                 // The data of the database entry
                 const data = {
                     name: datafile.hapi.filename,
@@ -492,17 +494,25 @@ const load = function() {
      */
     Storage.download = function(course, path, getHidden) {
 
-        const document = internals.getDocumentPath(course, path);
         const directory = internals.replaceDirectory(path);
         const name = Path.basename(path);
+
+        console.log(directory, name);
 
         return new P((resolve, reject) => {
 
             internals.File.findOne({
                 where: {
-                    name: name,
-                    directory: directory,
-                    course_code: course
+                    course_code: course,
+                    $or: [{
+                        $and: [{
+                            name: name,
+                        }, {
+                            directory: directory,
+                        }]
+                    }, {
+                        directory: directory
+                    }]
                 }
             }).then(function(result) {
 
@@ -513,35 +523,49 @@ const load = function() {
                     const isFile = (result.get('type') === 'f');
 
                     if (isFile) {
-                        resolve({ result: document, isFile: isFile});
+                        resolve({ result: internals.getDocumentPath(course, path), isFile: isFile});
                     } else {
 
 
+                        const dir = (path === '/') ? '' : path;
                         const where = {
                             directory: {
-                                $like: path + '%'
+                                $like: dir + '%'
                             },
-                            course_code: course,
-                            hidden: false,
+                            course_code: course
                         };
 
-                        if (getHidden) {
-                            where.hidden = true;
+                        if (!getHidden) {
+                            where.hidden = false;
                         }
 
                         internals.File.findAll({
                             where: where
                         }).then(function(results) {
 
-                            Easypeazip.toBuffer(document)
-                                .then(buffer => resolve({ result: buffer, isFile: isFile }));
-                        }).catch(function() {
-                            reject(500);
+                            const baseUrl = internals.getDocumentPath(course, Path.dirname(path));
+                            const files = _.filter(results, r => r.get('type') === 'f');
+
+                            const documents = _.map(files, f => {
+                                const d = {};
+                                d.prefix = baseUrl;
+
+
+                                d.name = Path.join(f.get('directory'), f.get('name'));
+                                return d;
+                            });
+
+                            Easypeazip.toBuffer(documents)
+                                .then(buffer => resolve({ result: buffer, isFile: isFile }))
+                                .catch((err) => reject(err));
+
+                        }).catch(function(err) {
+                            reject(err);
                         });
 
 
-                        }
                     }
+                }
             });
 
         });
