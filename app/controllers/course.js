@@ -5,6 +5,8 @@ const _     = require('lodash');
 const Hoek  = require('hoek');
 const Utils = require('../utils/sequelize');
 const Path  = require('path');
+const Fs    = require('fs');
+const StreamBuffers = require('stream-buffers');
 
 const internals = {};
 
@@ -113,19 +115,33 @@ exports.getDocuments = {
             const isFile = results.isFile;
             const result = results.result;
 
+
             if (isFile)
             {
-                return reply.file(result, { mode: 'attachment'})
-                    .header('Access-Control-Expose-Headers', 'Content-Disposition');
+                const contentDisposition = 'attachment; filename=' + Path.basename(result);
+                var stream = Fs.createReadStream(result);
+
+                return reply(stream)
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition')
+                    .header('Content-Disposition', contentDisposition);
             }
             else
             {
+                var stream = new StreamBuffers.ReadableStreamBuffer({
+                    frequency: 10,     // in milliseconds.
+                    chunkSize: 204800  // 200Ko
+                });
+
                 const pathName = path === '/' ? '' : '_' + require('path').basename(path);
                 const contentDisposition = 'attachment; filename=' + course + pathName + '.zip';
-                return reply(result)
+                stream.put(result);
+                stream.stop();
+
+                return reply(stream)
                     .type('application/zip')
                     .header('Access-Control-Expose-Headers', 'Content-Disposition')
                     .header('Content-Disposition', contentDisposition);
+
             }
         })
         .catch(err => {

@@ -507,14 +507,12 @@ const load = function() {
                 }
             }).then(function(result) {
 
-                if (!result && path === '/') {
-                    Easypeazip.toBuffer([])
-                        .then(buffer => resolve({ result: buffer, isFile: false }))
-                        .catch((err) => reject({ statusCode: 500, message: err}));
-                } else if (!result) {
+
+                if (!result && path !== '/') {
                     reject({statusCode: 404, message: 'File / folder not found'});
                 } else {
-                    const isFile = (result.get('type') === 'f');
+
+                    const isFile = (result ? (result.get('type') === 'f') : false);
 
                     if (isFile) {
                         resolve({ result: internals.getDocumentPath(course, path), isFile: isFile});
