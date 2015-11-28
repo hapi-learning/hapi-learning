@@ -14,6 +14,7 @@ const rmdir = require('rmdir');
 program
     .version(require('../package.json').version)
     .option('-f, --flush', 'Reset storage and database')
+    .option('-v, --verbose', 'Verbose mode')
     .parse(process.argv);
 
 
@@ -58,7 +59,7 @@ const internals = {
                         host: null,
                         dialect: 'sqlite',
                         storage: 'database.sqlite',
-                        logging: console.log
+                        logging: program.verbose ? console.log : false
                     }
                 }
             ],
@@ -237,7 +238,7 @@ const compose = function() {
 
         Models.sequelize.sync({
             force: program.flush,
-            logging: console.log
+            logging: program.verbose ? console.log : false
         })
         .then(() => {
 
