@@ -341,7 +341,7 @@
         ]
     },
     {
-        "code": "DON",
+        "code": "DON1",
         "name": "Persistance des données I",
         "tags": [
             "Q2"
@@ -457,7 +457,7 @@
     },
     {
         "code": "LPH",
-        "name": "Laboratoire de physique",
+        "name": "Laboratoire de physique LPH",
         "tags": [
             "Q2",
             "IR",
@@ -508,7 +508,7 @@
     },
     {
         "code": "PERL1",
-        "name": "Laboratoire de persistance des données I",
+        "name": "Laboratoire de persistance des données PERLI",
         "tags": [
             "Q2",
             "Labo"
@@ -521,7 +521,7 @@
     },
     {
         "code": "PER1",
-        "name": "Persistance des données I",
+        "name": "Persistance des données I PER1",
         "tags": [
             "Q2"
         ],
@@ -579,7 +579,7 @@
         ]
     },
     {
-        "code": "AMI",
+        "code": "AMIF",
         "name": "Applications microinformatiques",
         "tags": [
             "Q3",
@@ -662,7 +662,7 @@
         ]
     },
     {
-        "code": "CPPL",
+        "code": "CPPL1",
         "name": "Laboratoire C/C++ I",
         "tags": [
             "Q3",
@@ -698,8 +698,8 @@
         ]
     },
     {
-        "code": "DON",
-        "name": "Persistance des données II",
+        "code": "DON2G",
+        "name": "Persistance des données II G",
         "tags": [
             "Q3",
             "G"
@@ -711,8 +711,8 @@
         ]
     },
     {
-        "code": "DON",
-        "name": "Persistance des données II",
+        "code": "DON2IR",
+        "name": "Persistance des données II IR",
         "tags": [
             "Q3",
             "IR"
@@ -724,7 +724,7 @@
     },
     {
         "code": "DPD",
-        "name": "Droit et philosophie",
+        "name": "Droit et philosophie DPD",
         "tags": [
             "Q3",
             "G"
@@ -781,7 +781,7 @@
     },
     {
         "code": "LANL",
-        "name": "Laboratoire LAN",
+        "name": "Laboratoire LANL",
         "tags": [
             "Q3",
             "R",
@@ -859,7 +859,7 @@
     },
     {
         "code": "LWR",
-        "name": "Réseaux sans fils et mobiles",
+        "name": "Réseaux sans fils et mobiles LWR",
         "tags": [
             "Q3",
             "R"
@@ -870,7 +870,7 @@
     },
     {
         "code": "PERL2",
-        "name": "Laboratoire de persistance des données II",
+        "name": "Laboratoire de persistance des données II PERL2",
         "tags": [
             "Q3",
             "G",
@@ -941,7 +941,7 @@
     },
     {
         "code": "RSM",
-        "name": "Réseaux sans fils et mobiles",
+        "name": "Réseaux sans fils et mobiles RSM",
         "tags": [
             "Q3",
             "R"
@@ -952,7 +952,7 @@
     },
     {
         "code": "VAN",
-        "name": "Visualisation - Analyse",
+        "name": "Visualisation - Analyse VAN",
         "tags": [
             "Q3",
             "I"
@@ -963,7 +963,7 @@
     },
     {
         "code": "VIS",
-        "name": "Visualisation - Analyse",
+        "name": "Visualisation - Analyse VIS",
         "tags": [
             "Q3",
             "I"
@@ -985,7 +985,7 @@
     },
     {
         "code": "WIR",
-        "name": "Réseaux sans fils et mobiles",
+        "name": "Réseaux sans fils et mobiles WIR",
         "tags": [
             "Q3",
             "R"
@@ -1067,7 +1067,7 @@
     },
     {
         "code": "AGW",
-        "name": "Gestion et administration des réseaux Windows",
+        "name": "Gestion et administration des réseaux Windows AGW",
         "tags": [
             "Q4",
             "R"
@@ -1089,7 +1089,7 @@
         ]
     },
     {
-        "code": "ANLL2",
+        "code": "ANLL2G",
         "name": "Laboratoire d'analyse II bis",
         "tags": [
             "Q4",
@@ -1103,7 +1103,7 @@
         ]
     },
     {
-        "code": "ATL",
+        "code": "ATL2",
         "name": "Ateliers logiciels II",
         "tags": [
             "Q4",
@@ -1116,7 +1116,7 @@
         ]
     },
     {
-        "code": "ATL",
+        "code": "ATL1",
         "name": "Ateliers logiciels I",
         "tags": [
             "Q4",
@@ -1154,8 +1154,8 @@
         ]
     },
     {
-        "code": "CPPL",
-        "name": "Laboratoire C/C++ II",
+        "code": "CPPL2",
+        "name": "Laboratoire C/C++ II CPPL",
         "tags": [
             "Q4",
             "Labo"
@@ -1167,8 +1167,8 @@
         ]
     },
     {
-        "code": "DON",
-        "name": "Persistance des données III",
+        "code": "DON3G",
+        "name": "Persistance des données III G",
         "tags": [
             "Q4",
             "G"
@@ -1180,8 +1180,8 @@
         ]
     },
     {
-        "code": "DON",
-        "name": "Persistance des données III",
+        "code": "DON3IR",
+        "name": "Persistance des données III IR",
         "tags": [
             "Q4",
             "IR"
@@ -1194,7 +1194,7 @@
     },
     {
         "code": "ERG",
-        "name": "Ergonomie du logicieL",
+        "name": "Ergonomie du logiciel ERG",
         "tags": [
             "Q4",
             "G"
@@ -1271,7 +1271,7 @@
     },
     {
         "code": "LSS",
-        "name": "Laboratoire de systèmes d'exploitation",
+        "name": "Laboratoire de systèmes d'exploitation LSS",
         "tags": [
             "Q4",
             "Labo"
@@ -1282,7 +1282,7 @@
     },
     {
         "code": "LWN",
-        "name": "Laboratoire WAN",
+        "name": "Laboratoire WAN LWN",
         "tags": [
             "Q4",
             "R",
@@ -1294,7 +1294,7 @@
     },
     {
         "code": "PERL3G",
-        "name": "Laboratoire de Persistance des données III",
+        "name": "Laboratoire de Persistance des données III PERL3G",
         "tags": [
             "Q4",
             "G",
@@ -1308,7 +1308,7 @@
     },
     {
         "code": "PERL2IR",
-        "name": "Laboratoire de Persistance des données II",
+        "name": "Laboratoire de Persistance des données II PERL2IR",
         "tags": [
             "Q4",
             "IR",
@@ -1323,7 +1323,7 @@
     },
     {
         "code": "PER3G",
-        "name": "Persistance des données III",
+        "name": "Persistance des données III 3G",
         "tags": [
             "Q4",
             "G"
@@ -1334,7 +1334,7 @@
     },
     {
         "code": "PER3IR",
-        "name": "Persistance des données III",
+        "name": "Persistance des données III 3IR",
         "tags": [
             "Q4",
             "IR"
@@ -1411,7 +1411,7 @@
         ]
     },
     {
-        "code": "AGR",
+        "code": "AGRWU",
         "name": "Administration et gestion des réseaux : intégration Windows - Unix",
         "tags": [
             "Q5",
@@ -1422,8 +1422,8 @@
         ]
     },
     {
-        "code": "AIRL",
-        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
+        "code": "AIRLI",
+        "name": "Laboratoire d'architecture et Ingénierie des réseaux AIRLI",
         "tags": [
             "Q5",
             "I",
@@ -1435,8 +1435,8 @@
         ]
     },
     {
-        "code": "AIRL",
-        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
+        "code": "AIRLR",
+        "name": "Laboratoire d'architecture et Ingénierie des réseaux AIRLR",
         "tags": [
             "Q5",
             "R",
@@ -1448,7 +1448,7 @@
         ]
     },
     {
-        "code": "AIR",
+        "code": "AIRI",
         "name": "Architecture et Ingénierie des réseaux",
         "tags": [
             "Q5",
@@ -1460,8 +1460,8 @@
         ]
     },
     {
-        "code": "AIR",
-        "name": "Architecture et Ingénierie des réseaux",
+        "code": "AIRR",
+        "name": "Architecture et Ingénierie des réseaux AIRR",
         "tags": [
             "Q5",
             "R"
@@ -1484,7 +1484,7 @@
     },
     {
         "code": "ANLL3",
-        "name": "Laboratoire d'analyse III",
+        "name": "Laboratoire d'analyse III ANLL3",
         "tags": [
             "Q5",
             "G",
@@ -1532,7 +1532,7 @@
         ]
     },
     {
-        "code": "ATJ",
+        "code": "ATJ3",
         "name": "Ateliers logiciels III (Java)",
         "tags": [
             "Q5",
@@ -1598,7 +1598,7 @@
     },
     {
         "code": "COBL3",
-        "name": "Laboratoire de Cobol III",
+        "name": "Laboratoire de Cobol III COBL3",
         "tags": [
             "Q5",
             "G",
@@ -1621,7 +1621,7 @@
     },
     {
         "code": "CPRL",
-        "name": "Laboratoire de compléments réseaux",
+        "name": "Laboratoire de compléments réseaux CPRL",
         "tags": [
             "Q5",
             "G",
@@ -1688,7 +1688,7 @@
     },
     {
         "code": "ITRL",
-        "name": "Laboratoire d'Interconnexion des réseaux",
+        "name": "Laboratoire d'Interconnexion des réseaux ITRL",
         "tags": [
             "Q5",
             "R",
@@ -1700,7 +1700,7 @@
     },
     {
         "code": "ITR",
-        "name": "Interconnexion des réseaux",
+        "name": "Interconnexion des réseaux ITR",
         "tags": [
             "Q5",
             "R"
@@ -1735,7 +1735,7 @@
     },
     {
         "code": "LAR",
-        "name": "Laboratoire d'architecture et Ingénierie des réseaux",
+        "name": "Laboratoire d'architecture et Ingénierie des réseaux LAR",
         "tags": [
             "Q5",
             "I",
@@ -1771,7 +1771,7 @@
         ]
     },
     {
-        "code": "LDN",
+        "code": "LDN4",
         "name": "Laboratoire de persistance des données IV",
         "tags": [
             "Q5",
@@ -1806,7 +1806,7 @@
     },
     {
         "code": "PERL4",
-        "name": "Laboratoire de persistance des données IV",
+        "name": "Laboratoire de persistance des données IV PERL4",
         "tags": [
             "Q5",
             "G",
