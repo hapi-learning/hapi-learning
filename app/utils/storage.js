@@ -216,7 +216,7 @@ internals.updateFolder = function(file, course, path, data, rename) {
             } else {
                 resolve();
             }
-        }).catch((err) => reject(500));
+        }).catch(err => reject({statusCode: 500, message: err}));
     });
 };
 
@@ -235,7 +235,7 @@ internals.update = function(file, course, path, data) {
         }
 
         const save = function() {
-            file.save().then(resolve).catch(() => reject(422));
+            file.save().then(resolve).catch(() => reject({statusCode: 422, message: 'Bad data'}));
         };
 
         if (name) {
@@ -247,7 +247,7 @@ internals.update = function(file, course, path, data) {
                 return new Promise(function(resolve, reject) {
                     internals
                         .renameFile(course, path, Path.dirname(path) + '/' + name)
-                        .then(resolve).catch(() => reject(422));
+                        .then(resolve).catch(() => reject({statusCode: 422, message: 'Bad data'}));
                 });
             };
 
@@ -403,7 +403,7 @@ const load = function() {
 
                 // if it exists, send 409 (conflict), otherwise, creates it
                 if (result) {
-                    reject(409);
+                    reject({statusCode: 409, message: 'The folder name already exists'});
                 } else {
 
                     // if the mkdir fails, the path is invalid, sends 422 bad data
@@ -417,12 +417,12 @@ const load = function() {
                             ext: null,
                             course_code: course,
                             hidden: hidden
-                        }).then(resolve).catch(err => reject(500));
+                        }).then(resolve).catch(err => reject({statusCode: 500, message: err}));
 
-                    }).catch(() => reject(422));
+                    }).catch(() => reject({statusCode: 422, message: 'Bad data'}));
                 }
 
-            }).catch(() => reject(500));
+            }).catch(err => reject({statusCode: 500, message: err}));
 
         });
     };
@@ -465,22 +465,22 @@ const load = function() {
                         }).then(function(existingFile) {
                             // Sends 409 conflict if the new name already exists, otherwise rename
                             if (existingFile) {
-                                reject(409);
+                                reject({statusCode: 409, message: 'The name already exists'});
                             } else {
                                 internals.update(result, course, path, data).then(function() {
                                     resolve(result);
-                                }).catch(reject);
+                                }).catch((err) => reject({statusCode: 500, message: err}));
                             }
                         }).catch(function() {
-                            reject(500);
+                            reject({statusCode: 500, message: err});
                         });
                     }
 
                 } else {
-                    reject(404); // file not found
+                    reject({statusCode: 404, message: 'File not found'});
                 }
-            }).catch(function() {
-                reject(500);
+            }).catch(function(err) {
+                reject({statusCode: 500, message: err});
             });
 
 
@@ -497,36 +497,28 @@ const load = function() {
         const directory = internals.replaceDirectory(path);
         const name = Path.basename(path);
 
-        console.log(directory, name);
-
         return new P((resolve, reject) => {
 
             internals.File.findOne({
                 where: {
                     course_code: course,
-                    $or: [{
-                        $and: [{
-                            name: name,
-                        }, {
-                            directory: directory,
-                        }]
-                    }, {
-                        directory: directory
-                    }]
+                    name: name,
+                    directory: directory,
                 }
             }).then(function(result) {
 
-                // If the result is hidden but we cannot fetch it, returns 404
-                if (!result) {
-                    reject(404);
+                if (!result && path === '/') {
+                    Easypeazip.toBuffer([])
+                        .then(buffer => resolve({ result: buffer, isFile: false }))
+                        .catch((err) => reject({ statusCode: 500, message: err}));
+                } else if (!result) {
+                    reject({statusCode: 404, message: 'File / folder not found'});
                 } else {
                     const isFile = (result.get('type') === 'f');
 
                     if (isFile) {
                         resolve({ result: internals.getDocumentPath(course, path), isFile: isFile});
                     } else {
-
-
                         const dir = (path === '/') ? '' : path;
                         const where = {
                             directory: {
@@ -557,10 +549,10 @@ const load = function() {
 
                             Easypeazip.toBuffer(documents)
                                 .then(buffer => resolve({ result: buffer, isFile: isFile }))
-                                .catch((err) => reject(err));
+                                .catch(err => reject({statusCode: 500, message: err}));
 
                         }).catch(function(err) {
-                            reject(err);
+                            reject({statusCode: 500, message: err});
                         });
 
 

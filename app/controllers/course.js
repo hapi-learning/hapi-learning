@@ -128,9 +128,14 @@ exports.getDocuments = {
                     .header('Content-Disposition', contentDisposition);
             }
         })
-        .catch((err) => {
-            console.log(err);
-            return reply.notFound('File not found');
+        .catch(err => {
+            switch(err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                case 500:
+                default:
+                    return reply.badImplementation(err.message);
+            }
         });
     }
 };
@@ -168,10 +173,12 @@ exports.getTree = {
             Storage.getList(id, path, hidden).then(function(results) {
                 return reply(results);
             }).catch(function(err) {
-                if (err === 404) {
-                    return reply.notFound('Folder not found');
-                } else {
-                    return reply.badImplementation(err);
+                switch (err.statusCode) {
+                    case 404:
+                        return reply.notFound(err.message);
+                    case 500:
+                    default:
+                        return reply.badImplementation(err.message);
                 }
             });
         };
@@ -386,14 +393,14 @@ exports.createFolder = {
                 .createFolder(course, path, request.query.hidden)
                 .then(() => reply().code(201))
                 .catch(err => {
-                    switch(err) {
+                    switch(err.statusCode) {
                         case 409:
-                            return reply.conflict();
+                            return reply.conflict(err.message);
                         case 422:
-                            return reply.badData();
+                            return reply.badData(err.message);
                         case 500:
                         default:
-                            return reply.badImplementation(err);
+                            return reply.badImplementation(err.message);
 
                     }
                 });
@@ -435,19 +442,19 @@ exports.updateFile = {
                 .update(course, path, {name: name, hidden: hidden})
                 .then(file => reply(file).code(200))
                 .catch(err => {
-                    switch(err) {
+                    switch(err.statusCode) {
                         case 404:
-                            return reply.notFound('Folder not found');
+                            return reply.notFound(err.message);
                             break;
                         case 409:
-                            return reply.conflict();
+                            return reply.conflict(err.message);
                             break;
                         case 422:
-                            return reply.badData();
+                            return reply.badData(err.message);
                             break;
                         case 500:
                         default:
-                            return reply.badImplementation();
+                            return reply.badImplementation(err.message);
                     }
 
             });

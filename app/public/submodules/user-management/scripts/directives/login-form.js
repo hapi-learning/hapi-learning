@@ -3,13 +3,11 @@ angular.module('hapi-learning.um')
                 function($state, $stateParams, LoginFactory, UM_CONFIG) {
     return {
         restrict: 'A',
-        templateUrl: 'submodules/user-management/scripts/directives/login-form.html',
+        templateUrl: 'submodules/user-management/templates/login-form.html',
         link: function(scope, elem, attrs) {
 
             scope.user = {};
-
             scope.invalidCredentials = false;
-            scope.forgotPassword = false;
 
             scope.login = function() {
                 console.log('Logging in ...');

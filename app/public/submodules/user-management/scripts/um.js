@@ -1,6 +1,7 @@
 angular.module('hapi-learning.um', [
         'angular-jwt',
-        'angular-storage'
+        'angular-storage',
+        'ui.bootstrap'
     ])
     .constant('UM_CONFIG', {
         API_PREFIX: '',
@@ -13,8 +14,6 @@ angular.module('hapi-learning.um', [
     .factory('AuthStorage', ['store', function (store) {
             return store.getNamespacedStore('auth');
     }])
-
-
     .factory('LoginFactory', ['$state', '$http', 'jwtHelper',
                               'AuthStorage', '$q', 'UM_CONFIG',
                               function ($state, $http, jwtHelper,
@@ -100,6 +99,55 @@ angular.module('hapi-learning.um', [
         };
 
         return exports;
+    }])
+    .factory('unauthorizedInterceptor', ['$injector', '$q', 'UM_CONFIG',
+                                         function($injector, $q, UM_CONFIG) {
+        return {
+            responseError: function(response) {
+                var d = $q.defer();
+
+                var $state = $injector.get('$state');
+                var AuthStorage = $injector.get('AuthStorage');
+                var token = AuthStorage.get('token');
+                var jwtHelper = $injector.get('jwtHelper');
+                var isExpired = (token && jwtHelper.isTokenExpired(token));
+
+                if (response.status === 401 && isExpired) {
+
+                    AuthStorage.remove('token');
+                    $state.go(UM_CONFIG.LOGIN_STATE);
+                    d.reject(response);
+
+                    //var $uibModal = $injector.get('$uibModal');
+
+                    /*$uibModal.open({
+                        templateUrl: 'submodules/user-management/templates/login-form.html',
+                        controller: ['$scope', '$uibModalInstance', 'LoginFactory',
+                                     function($scope, $uibModalInstance, LoginFactory) {
+
+                            $scope.user = {};
+                            $scope.invalidCredentials = false;
+                            $scope.login = function() {
+                                LoginFactory
+                                    .login($scope.user)
+                                    .then(function() {
+                                        $uibModalInstance.close();
+                                        d.resolve(response);
+                                    })
+                                    .catch(function() {
+                                        $scope.invalidCredentials = true;
+                                    });
+                            }
+                        }]
+                    })*/
+                }
+
+                return d.promise;
+            }
+        }
+    }])
+    .config(['$httpProvider', function($httpProvider) {
+        $httpProvider.interceptors.push('unauthorizedInterceptor')
     }])
     .config(['$httpProvider', 'jwtInterceptorProvider',
           function($httpProvider, jwtInterceptorProvider) {
