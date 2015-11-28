@@ -91,55 +91,32 @@
             <ul class="nav">
                 <li ui-sref-active="active">
                     <a ui-sref="root.home">
-                        <i class="glyphicon glyphicon-home"></i> Home </a>
+                        <span class="fa fa-home"></span> Home
+                    </a>
                 </li>
                 <li ui-sref-active="active">
                     <a ui-sref="root.profile">
-                        <i class="glyphicon glyphicon-user"></i> Account Settings </a>
+                        <span class="fa fa-user"></span> Account Settings
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="root.news">
+                        <span class="fa fa-newspaper-o"></span> News
+                    </a>
                 </li>
                 <li ui-sref-active="active">
                     <a ui-sref="root.courses">
-                        <i class="glyphicon glyphicon-th-list"></i> Courses </a>
+                        <span class="fa fa-th-list"></span> Courses
+                    </a>
                 </li>
                 <li>
                     <a href="#" ng-click="logout()">
-                        <i class="glyphicon glyphicon-log-out"></i> Logout </a>
+                        <span class="fa fa-sign-out"></span> Logout
+                    </a>
                 </li>
             </ul>
         </div>
-        <!--/.nav-collapse -->
     </div>
 </div>
 
-<!--
-<div id="sidebar-nav" class="navbar-collapse collapse">
 
-    <h1 class="navbar-header">
-        <span ng-bind="profile.firstName"></span>
-        <span ng-bind="profile.lastName"></span>
-        <small><span ng-bind="profile.username"></span></small>
-    </h1>
-
-    <ul class="nav navbar-nav nav-stacked">
-        <li ui-sref-active="active">
-            <a ui-sref="root.home">
-                <i class="glyphicon glyphicon-home"></i> Home
-            </a>
-        </li>
-        <li ui-sref-active="active">
-            <a ui-sref="root.profile">
-                <i class="glyphicon glyphicon-user"></i> Account Settings
-            </a>
-        </li>
-        <li ui-sref-active="active">
-            <a ui-sref="root.courses">
-                <i class="glyphicon glyphicon-th-list"></i> Courses
-            </a>
-        </li>
-        <li ui-sref-active="active">
-            <a ng-click="logout()" style="cursor: pointer">
-                <i class="glyphicon glyphicon-log-out"></i> Logout
-            </a>
-        </li>
-    </ul>
-</div>-->
