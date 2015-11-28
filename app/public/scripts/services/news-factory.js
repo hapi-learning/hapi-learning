@@ -9,7 +9,14 @@ angular.module('hapi-learning')
 
             const internals = {
                 news: [],
-                fetched: false
+                fetched: false,
+                slice : function(count) {
+                    if (typeof count === 'number' && count > 0 && count <= internals.news.length) {
+                        return internals.news.slice(0, count);
+                    } else {
+                        return internals.news;
+                    }
+                }
             };
 
             const exports = {};
@@ -17,19 +24,14 @@ angular.module('hapi-learning')
             exports.load = function (count) {
                 return $q(function (resolve, reject) {
                     if (internals.fetched) {
-                        resolve(internals.news);
+                        resolve(internals.slice(count));
                     } else {
                         Restangular.all('news')
                             .getList()
                             .then(function (news) {
                                 internals.news = news;
                                 internals.fetched = true;
-
-                                if (typeof count === 'number' && count > 0 && count <= internals.news.length) {
-                                    resolve(internals.news.slice(0, count));
-                                } else {
-                                    resolve(internals.news);
-                                }
+                                resolve(internals.slice(count));
                             })
                             .catch(function (err) {
                                 reject(err)
