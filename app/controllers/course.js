@@ -122,6 +122,7 @@ exports.getDocuments = {
                 var stream = Fs.createReadStream(result);
 
                 return reply(stream)
+                    .type('application/octet-stream')
                     .header('Access-Control-Expose-Headers', 'Content-Disposition')
                     .header('Content-Disposition', contentDisposition);
             }
