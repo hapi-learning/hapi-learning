@@ -15,7 +15,7 @@ angular.module('hapi-learning')
                     scope.news = [];
                     scope.fetched = false;
 
-                    NewsFactory.load(scope.count)
+                    NewsFactory.load(scope.code ? null : scope.count)
                         .then(function (news) {
                             if (scope.code) {
                                 scope.news = _.filter(news, function (n) {

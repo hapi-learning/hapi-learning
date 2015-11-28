@@ -1,7 +1,21 @@
-node_modules
-app/public/lib
-npm-debug.log
+# Databases
 database.sqlite
 test_database.sqlite
+#
+
+# Modules & libraries
+node_modules
+app/public/lib
+#
+
+# Debug files
+npm-debug.log
+#
+
+# Env. variables
 .env
+#
+
+# Storages folder content
 app/storage
+#
