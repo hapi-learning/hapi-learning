@@ -7,16 +7,23 @@ angular.module('hapi-learning')
             return {
                 restrict: 'E',
                 scope: {
-                    count: '='
+                    count: '=',
+                    code: '='
                 },
                 templateUrl: 'scripts/directives/last-news.html',
                 link: function (scope, element, attrs) {
                     scope.news = [];
                     scope.fetched = false;
 
-                    NewsFactory.load(typeof scope.count === 'number' ? scope.count : null)
+                    NewsFactory.load(scope.count)
                         .then(function (news) {
-                            scope.news = news;
+                            if (scope.code) {
+                                scope.news = _.filter(news, function (n) {
+                                    return n.course === scope.code;
+                                });
+                            } else {
+                                scope.news = news;
+                            }
                             scope.fetched = true;
                         })
                         .catch(function (err) {
