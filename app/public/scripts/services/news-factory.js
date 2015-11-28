@@ -11,6 +11,8 @@ angular.module('hapi-learning')
                 news: [],
                 fetched: false,
                 slice : function(count) {
+                    // count has to be a number :
+                    // slice(0, ..) with null return empty, negative numbers return truncated array, ...
                     if (typeof count === 'number' && count > 0 && count <= internals.news.length) {
                         return internals.news.slice(0, count);
                     } else {
