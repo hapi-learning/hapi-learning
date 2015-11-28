@@ -94,17 +94,21 @@ exports.getDocuments = {
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
+        },
+        query: {
+            hidden: Joi.boolean().default(false)
         }
     },
     handler: function (request, reply) {
 
         const Storage = this.storage;
-        const path = request.params.path;
-        const course = request.params.id;
+        const path    = request.params.path;
+        const course  = request.params.id;
+        const hidden  = request.query.hidden;
 
         Storage
-        .download(course, path)
-        .then((results) => {
+        .download(course, path, hidden)
+        .then(function(results) {
 
             const isFile = results.isFile;
             const result = results.result;
@@ -124,7 +128,10 @@ exports.getDocuments = {
                     .header('Content-Disposition', contentDisposition);
             }
         })
-        .catch(() => reply.notFound('File not found'));
+        .catch((err) => {
+            console.log(err);
+            return reply.notFound('File not found');
+        });
     }
 };
 

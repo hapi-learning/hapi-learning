@@ -54,9 +54,10 @@ internals.getFileNames = function(path) {
 };
 
 
-exports.toBuffer = function(path) {
+exports.toBuffer = function(files) {
 
-    const filenames = internals.getFileNames(path);
+    const filenames = Array.isArray(files) ? files : internals.getFileNames(files);
+
     let zip = new JSzip();
 
     return new Promise((resolve, reject) => {
@@ -75,6 +76,7 @@ exports.toBuffer = function(path) {
         });
     });
 };
+
 
 exports.toZipFile = function(path, zipFile) {
 
