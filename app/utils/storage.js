@@ -8,6 +8,7 @@ const Items = require('items');
 const Hoek  = require('hoek');
 const rm = require('rmdir');
 const Easypeazip = require('easypeazip');
+const _ = require('lodash');
 
 
 const internals = {};
@@ -184,27 +185,37 @@ internals.renameFile = function(course, oldPath, newPath) {
     return Fs.renameAsync(oldFile, newFile);
 };
 
-internals.renameFolder = function(file, course, path, name, rename) {
+internals.updateFolder = function(file, course, path, data, rename) {
 
     return new P(function(resolve, reject) {
 
-        let directory = internals.replaceDirectory(path);
+        const attributes = {};
 
-        if (directory !== '/') {
-            directory += '/';
-        } else {
-            directory = '';
+        if (typeof data.hidden !== 'undefined' && data.hidden !== null) {
+            attributes.hidden = data.hidden;
         }
 
-        internals.File.update({
-            directory: directory + name
-        }, {
+        if (data.name) {
+            let directory = internals.replaceDirectory(path);
+            if (directory !== '/') {
+                directory += '/';
+            } else {
+                directory = '';
+            }
+            attributes.directory = directory + data.name;
+        }
+
+        internals.File.update(attributes, {
             where: {
                 directory: path,
                 course_code: course
             }
         }).then(function() {
-            rename(file, course, path, name).then(resolve).catch(reject);
+            if (rename) {
+                rename(file, course, path, data.name).then(resolve).catch(reject);
+            } else {
+                resolve();
+            }
         }).catch((err) => reject(500));
     });
 };
@@ -216,6 +227,7 @@ internals.update = function(file, course, path, data) {
     const type   = file.get('type');
 
     return new P(function(resolve, reject) {
+
 
         // Against undefined
         if (typeof hidden !== 'undefined' && hidden !== null) {
@@ -243,11 +255,20 @@ internals.update = function(file, course, path, data) {
                 rename(file, course, path, name).then(save).catch(reject);
             } else {
                 internals
-                    .renameFolder(file, course, path, name, rename)
+                    .updateFolder(file, course, path, data, rename)
                     .then(save).catch(reject);
             }
         } else {
-            save();
+
+            // If the name has not changed, just update all
+            // the files in a directory
+            if (type === 'd') {
+                internals.updateFolder(file, course, path, { hidden: hidden })
+                    .then(save).catch(reject);
+            } else {
+                save();
+            }
+
         }
     });
 };
@@ -469,28 +490,60 @@ const load = function() {
     /**
      * Download a folder or file
      */
-    Storage.download = function(course, path) {
+    Storage.download = function(course, path, getHidden) {
 
         const document = internals.getDocumentPath(course, path);
+        const directory = internals.replaceDirectory(path);
+        const name = Path.basename(path);
+
         return new P((resolve, reject) => {
 
-            try {
-
-                const isFile = internals.isFile(document);
-
-                if (isFile)
-                {
-                    return resolve({ result: document, isFile: isFile });
+            internals.File.findOne({
+                where: {
+                    name: name,
+                    directory: directory,
+                    course_code: course
                 }
-                else
-                {
-                    Easypeazip.toBuffer(document)
-                        .then(buffer => resolve({ result: buffer, isFile: isFile }));
-                }
+            }).then(function(result) {
 
-            } catch(err) {
-                reject(err);
-            }
+                // If the result is hidden but we cannot fetch it, returns 404
+                if (!result || (result && !getHidden && result.hidden)) {
+                    reject(404);
+                } else {
+                    const isFile = (result.get('type') === 'f');
+
+                    if (isFile) {
+                        resolve({ result: document, isFile: isFile});
+                    } else {
+
+
+                        const where = {
+                            directory: {
+                                $like: path + '%'
+                            },
+                            course_code: course,
+                            hidden: false,
+                        };
+
+                        if (getHidden) {
+                            where.hidden = true;
+                        }
+
+                        internals.File.findAll({
+                            where: where
+                        }).then(function(results) {
+
+                            Easypeazip.toBuffer(document)
+                                .then(buffer => resolve({ result: buffer, isFile: isFile }));
+                        }).catch(function() {
+                            reject(500);
+                        });
+
+
+                        }
+                    }
+            });
+
         });
     };
 
