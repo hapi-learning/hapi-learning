@@ -3,6 +3,7 @@
 angular.module('hapi-learning', [
         'hapi-learning.api',
         'hapi-learning.um',
+        'ui.bootstrap',
         'ui.router',
         'ngTagsInput',
         'jcs-autoValidate',

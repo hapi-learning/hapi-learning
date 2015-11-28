@@ -25,11 +25,11 @@
     "ng-cookies": "~1.1.1",
     "angular-jwt": "~0.0.9",
     "a0-angular-storage": "~0.0.13",
-    "angular-ui-bootstrap": "~0.14.3",
     "font-awesome": "fontawesome#~4.4.0",
     "angular-moment": "~0.10.3",
     "moment": "~2.10.6",
     "angular-filter": "~0.5.8",
-    "angular-xeditable": "~0.1.9"
+    "angular-xeditable": "~0.1.9",
+    "angular-bootstrap": "~0.14.3"
   }
 }
