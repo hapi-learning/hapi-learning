@@ -1,6 +1,4 @@
-<div class="container-fluid">
-
-
+<div if-group="admin" class="container-fluid">
     <div class="col-md-10" ng-controller="AdminCtrl as adminCtrl">
 
         <h1 class="page-header">Administration</h1>
@@ -43,5 +41,12 @@
         </div>
 
     </div>
+</div>
+<div if-group="user teacher">
 
+    <div class="page-header">
+        <h1>You don't have access to this page !</h1>
+
+
+   </div>
 </div>

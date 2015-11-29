@@ -165,10 +165,14 @@ exports.me = {
     handler: function (request, reply) {
 
         const User = this.models.User;
+        const Role = this.models.Role;
         const payload = request.decoded;
 
         User.findOne({
             where: { username: { $eq: payload.username } },
+            include: {
+                model: Role
+            },
             attributes: { exclude: ['password', 'deleted_at'] }
         }).then(result => {
             if (result) {

@@ -9,15 +9,17 @@ angular.module('hapi-learning.um', [
         API_LOGOUT_ENDPOINT: '/logout',
         API_ME_ENDPOINT: '/me',
         LOGIN_STATE: 'login',
-        AFTER_LOGIN_STATE: 'root.home'
+        AFTER_LOGIN_STATE: 'root.home',
+        BEGIN_SESSION_EVENT: 'um.begin-session',
+        END_SESSION_EVENT: 'um.end-session'
     })
     .factory('AuthStorage', ['store', function (store) {
             return store.getNamespacedStore('auth');
     }])
     .factory('LoginFactory', ['$state', '$http', 'jwtHelper',
-                              'AuthStorage', '$q', 'UM_CONFIG',
+                              'AuthStorage', '$q', 'UM_CONFIG', '$rootScope',
                               function ($state, $http, jwtHelper,
-                                             AuthStorage, $q, UM_CONFIG) {
+                                        AuthStorage, $q, UM_CONFIG, $rootScope) {
 
         var exports = {};
         var internals = {};
@@ -51,8 +53,9 @@ angular.module('hapi-learning.um', [
                 if (!internals.profile) {
                     internals.loadProfile().then(function(profile) {
                         internals.profile = profile;
+                        $rootScope.$emit(UM_CONFIG.BEGIN_SESSION_EVENT);
                         resolve(internals.profile);
-                    });
+                    }).catch(reject);
                 } else {
                     resolve(internals.profile);
                 }
@@ -73,7 +76,8 @@ angular.module('hapi-learning.um', [
                 })
                 .then(function(response) {
                     AuthStorage.set('token', response.data.token);
-                    internals.loadProfile().then(resolve).catch(reject);
+                    resolve();
+                    //internals.loadProfile().then(resolve).catch(reject);
                 }, function(error) {
                     reject(error);
                 });
@@ -90,6 +94,7 @@ angular.module('hapi-learning.um', [
                 .then(function (response) {
                     AuthStorage.remove('token');
                     delete internals.profile;
+                    $rootScope.$emit(UM_CONFIG.END_SESSION_EVENT);
                     $state.go(UM_CONFIG.LOGIN_STATE);
                     resolve();
                 }, function (response) {
@@ -181,7 +186,22 @@ angular.module('hapi-learning.um', [
                     }
             });
         }
-    ]);
+    ])
+    .run(['$rootScope', 'LoginFactory', 'UM_CONFIG',
+          function($rootScope, LoginFactory, UM_CONFIG) {
+
+        $rootScope.user = null;
+
+        $rootScope.$on(UM_CONFIG.BEGIN_SESSION_EVENT, function() {
+            LoginFactory.getProfile().then(function(user) {
+               $rootScope.user = user;
+            });
+        });
+
+        $rootScope.$on(UM_CONFIG.END_SESSION_EVENT, function() {
+            $rootScope.user = null;
+        });
+    }]);
 
 
 
