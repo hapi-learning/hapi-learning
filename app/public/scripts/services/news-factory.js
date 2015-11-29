@@ -46,21 +46,22 @@ angular.module('hapi-learning')
                 return $q(function (resolve, reject) {
                     Restangular.all('news')
                         .post({
-                            username: LoginFactory.getProfile().username,
-                            code: (news.code === '') ? null : news.code,
                             subject: news.subject,
-                            content: news.content
+                            content: news.content,
+                            username: LoginFactory.getProfile().username,
+                            code: (news.course === '') ? null : news.course
                         })
-                        .than(function (news) {
+                        .then(function (news) {
                             console.log(news);
 
                             if (internals.fetched) {
-                                _.fill(internals.news, news);
+                                internals.news.push(news);
                             }
 
                             resolve(news);
                         })
                         .catch(function (err) {
+                        console.log(err);
                             reject(err);
                         });
                 });

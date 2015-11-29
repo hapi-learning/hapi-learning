@@ -4,7 +4,8 @@ angular.module('hapi-learning')
     .directive('newsForm', [
     'LoginFactory',
     'CoursesFactory',
-    function (LoginFactory, CoursesFactory) {
+    'NewsFactory',
+    function (LoginFactory, CoursesFactory, NewsFactory) {
             return {
                 restrict: 'E',
                 templateUrl: 'scripts/directives/news-form.html',
@@ -20,7 +21,9 @@ angular.module('hapi-learning')
                     scope.showPreview = false;
                     scope.postNews = function () {
                         if (scope.complete()) {
-                            console.log(scope.news);
+                            NewsFactory.add(scope.news)
+                            .then(function (news) {})
+                            .catch(function (error) {console.log(error);});
                         }
                     };
 
