@@ -36,23 +36,54 @@ internals.checkForbiddenPath = function(path) {
 
 exports.getAll = {
     description: 'List all the courses',
+    validate: {
+        query: {
+            select: [Joi.string().valid('code', 'name', 'description'),
+                    Joi.array(Joi.string().valid('code', 'name', 'description'))],
+            pagination: Joi.boolean().default(true)
+        }
+    },
     handler: function (request, reply) {
 
         const Course = this.models.Course;
+        const select = request.query.select;
+        const pagination = request.query.pagination;
 
-        const options = {
-            limit: request.query.limit,
-            offset: (request.query.page - 1) * request.query.limit
+        const options = {};
+
+        if (pagination) {
+            options.limit  = request.query.limit;
+            options.offset = (request.query.page - 1) * request.query.limit;
+        }
+
+
+        if (select) {
+            options.attributes = [].concat(select);
         };
 
         Course
             .findAndCountAll(options).then(results => {
 
-            let promises = _.map(results.rows, (r => Utils.getCourse(r)));
-            // Wait for all promises to end
-            Promise
-                .all(promises)
-                .then(values => reply.paginate(values, results.count));
+            if (select) {
+                if (pagination) {
+                    return reply.paginate(results.rows, results.count);
+                } else {
+                    return reply(results.rows);
+                }
+            } else {
+                const promises = _.map(results.rows, (r => Utils.getCourse(r)));
+                // Wait for all promises to end
+                Promise
+                    .all(promises)
+                    .then(values => {
+                        if (pagination) {
+                            return reply.paginate(values, results.count)
+                        } else {
+                            return reply(values);
+                        }
+                    });
+            }
+
 
         })
         .catch(err => reply.badImplementation(err));
@@ -282,9 +313,9 @@ exports.post = {
         // loading the teachers, otherwise return a promise returning an empty array
         const userExclude = ['password'];
         const getTeachers = hasTeachers ?
-            Promise.resolve(User.findAll(
-                {where: {username: {$in: pteachers}},
-                 attributes: {exclude: userExclude}}))
+            Promise.resolve(User.findAll({
+                where: {username: {$in: pteachers}},
+                attributes: {exclude: userExclude}}))
             : Promise.resolve([]);
 
         // Loads tags and teachers to be added
