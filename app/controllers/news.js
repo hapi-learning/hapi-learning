@@ -14,7 +14,9 @@ exports.getAll = {
 
         const News = this.models.News;
 
-        News.findAll()
+        News.findAll({
+                order: 'date DESC'
+            })
             .then(news => reply(Utils.removeDates(news)))
             .catch(error => reply.badImplementation(error));
     }
@@ -37,12 +39,10 @@ exports.get = {
                 }
             })
             .then(news => {
-                if (news)
-                {
+                if (news) {
                     return reply(Utils.removeDates(news));
                 }
-                else
-                {
+                else {
                     return reply.notFound('News ' + request.params.id + ' not found');
                 }
             })
@@ -73,43 +73,37 @@ exports.post = {
 
         Utils.findUser(User, username)
             .then(user => {
-                if (user)
-                {
-                    if (code)
-                    {
+                if (user) {
+                    if (code) {
                         Utils.findCourseByCode(Course, code)
-                        .then(course => {
-                            if (course)
-                            {
-                                News.create({
-                                    subject: subject,
-                                    content: content,
-                                    user: username,
-                                    course: code
-                                })
-                                .then(news => reply(Utils.removeDates(news)).code(201))
-                                .catch((error) => reply.conflict(error));
-                            }
-                            else
-                            {
-                                return reply.badData('Invalid course');
-                            }
-                        })
-                        .catch((error) => reply.conflict(error));
+                            .then(course => {
+                                if (course) {
+                                    News.create({
+                                            subject: subject,
+                                            content: content,
+                                            user: username,
+                                            course: code
+                                        })
+                                        .then(news => reply(Utils.removeDates(news)).code(201))
+                                        .catch((error) => reply.conflict(error));
+                                }
+                                else {
+                                    return reply.badData('Invalid course');
+                                }
+                            })
+                            .catch((error) => reply.conflict(error));
                     }
-                    else
-                    {
+                    else {
                         News.create({
-                            subject: subject,
-                            content: content,
-                            user: username
-                        })
-                        .then(news => reply(Utils.removeDates(news)).code(201))
-                        .catch((error) => reply.conflict(error));
+                                subject: subject,
+                                content: content,
+                                user: username
+                            })
+                            .then(news => reply(Utils.removeDates(news)).code(201))
+                            .catch((error) => reply.conflict(error));
                     }
                 }
-                else
-                {
+                else {
                     return reply.badData('Invalid user');
                 }
             })
