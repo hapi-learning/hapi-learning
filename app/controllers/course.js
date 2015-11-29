@@ -118,13 +118,15 @@ exports.getDocuments = {
 
             if (isFile)
             {
-                const contentDisposition = 'attachment; filename=' + Path.basename(result);
-                var stream = Fs.createReadStream(result);
+          /*      const contentDisposition = 'attachment; filename=' + Path.basename(result);
+                var stream = Fs.createReadStream(result);*/
 
+                return reply.file(result, {mode: 'attachment'})
+                    .header('Access-Control-Expose-Headers', 'Content-Disposition');
+                /*
                 return reply(stream)
                     .type('application/octet-stream')
-                    .header('Access-Control-Expose-Headers', 'Content-Disposition')
-                    .header('Content-Disposition', contentDisposition);
+                    .header('Content-Disposition', contentDisposition);*/
             }
             else
             {
