@@ -18,13 +18,20 @@ angular.module('hapi-learning')
                         priority : null
                     };
                     scope.postNews = function () {
-                        console.log('SUBMIT');
+                        console.log(scope.news);
+                    };
+                    
+                    scope.complete = function () {
+                        /*return scope.news.course &&
+                            scope.news.subject &&
+                            scope.news.content &&
+                            scope.news.priority;*/
+                        return true;
                     };
 
                     CoursesFactory.load()
                         .then(function (courses) {
                             scope.codes = _.map(courses, 'code');
-                            console.log(scope.codes);
                         })
                         .catch(function (error) {
                             console.log(error);
