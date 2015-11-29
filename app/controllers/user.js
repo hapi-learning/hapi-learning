@@ -23,7 +23,7 @@ internals.updateHandler = function(request, reply) {
         }
     )
     .then(result => reply({count : result[0] || 0}))
-    .catch(error => reply.badImplementation(error));
+    .catch(error => reply.conflict(error));
 };
 
 internals.schemaUserPOST = function(){
@@ -362,7 +362,7 @@ exports.subscribeToCourse = {
                         .then(course => {
                             if (course) {
                                 user.addCourse(course);
-                                
+
                                 Utils.getCourse(course).then(result => reply(result));
                             } else {
                                 return reply.notFound('Course ' + request.params.crsId + ' not found');

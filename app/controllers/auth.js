@@ -165,10 +165,14 @@ exports.me = {
     handler: function (request, reply) {
 
         const User = this.models.User;
+        const Role = this.models.Role;
         const payload = request.decoded;
 
         User.findOne({
             where: { username: { $eq: payload.username } },
+            include: {
+                model: Role
+            },
             attributes: { exclude: ['password', 'deleted_at'] }
         }).then(result => {
             if (result) {
@@ -179,3 +183,38 @@ exports.me = {
         }).catch(err => reply.badImplementation(err));
     }
 };
+
+/**
+ * Parses the token and returns
+ * the user informations.
+ */
+exports.patchMe = {
+    description: 'Update current user',
+    validate: {
+        payload: {
+            password: Joi.string().min(1).max(255).description('User password'),
+            email: Joi.string().min(1).max(255).description('User email'),
+            firstName: Joi.string().min(1).max(255).description('User first name'),
+            lastName: Joi.string().min(1).max(255).description('User last name'),
+            phoneNumber: Joi.string().min(1).max(255).description('User phone number')
+        },
+    },
+    handler: function (request, reply) {
+
+        const User = this.models.User;
+        const Role = this.models.Role;
+        const payload = request.decoded;
+
+        User.update(
+            request.payload,
+            {
+                where: {
+                    username: payload.username
+                }
+            }
+        )
+        .then(result => reply({count : result[0] || 0}))
+        .catch(error => reply.conflict(error));
+    }
+};
+

@@ -4,7 +4,8 @@ angular.module('hapi-learning')
     .factory('FilesFactory', [
         'Restangular',
         '$q',
-        '$http', function(Restangular, $q, $http) {
+        '$http', 'AuthStorage',
+    function(Restangular, $q, $http, AuthStorage) {
 
         var internals = {};
         var exports = {};
@@ -136,8 +137,15 @@ angular.module('hapi-learning')
             });
         };
 
+        exports.getDownloadPath = function(course, path, showHidden) {
+            var url = internals.getUrl(course, path);
+            url += '?hidden=' + showHidden;
+            url += '&token=' + AuthStorage.get('token');
 
-        exports.download = function(course, path, showHidden) {
+            return url;
+        };
+
+       /* exports.download = function(course, path, showHidden) {
 
             var url = internals.getUrl(course, path);
 
@@ -160,7 +168,7 @@ angular.module('hapi-learning')
                 console.log(err);
             });
 
-        };
+        };*/
 
         return exports;
 

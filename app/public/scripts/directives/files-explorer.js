@@ -72,8 +72,13 @@ angular.module('hapi-learning')
                 };
 
                 scope.download = function() {
-                    return FilesFactory.download(scope.code, $stateParams.path, scope.showHidden);
+                    return FilesFactory.getDownloadPath(scope.code, $stateParams.path, scope.showHidden);
+                    //return FilesFactory.download(scope.code, $stateParams.path, scope.showHidden);
                 };
+
+                scope.getDownloadPath = function(file) {
+                    return FilesFactory.getDownloadPath(scope.code, $stateParams.path + '/' + file, scope.showHidden);
+                }
 
                 scope.downloadFile = function(file) {
                     return FilesFactory.download(scope.code, $stateParams.path + '/' + file, scope.showHidden);

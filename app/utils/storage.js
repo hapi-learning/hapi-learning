@@ -351,35 +351,41 @@ const load = function() {
             const file = internals.getDocumentPath(course, path);
             datafile.pipe(Fs.createWriteStream(file));
 
-            // Check if the file exists
-            internals.File.findOne({
-                where: {
-                    name: datafile.hapi.filename,
-                    directory: Path.dirname(path),
-                    course_code: course
-                }
-            }).then(result => {
+            datafile.on('end', function() {
 
-                // TODO select directory and check if hidden or not
+                // Check if the file exists
+                internals.File.findOne({
+                    where: {
+                        name: datafile.hapi.filename,
+                        directory: Path.dirname(path),
+                        course_code: course
+                    }
+                }).then(result => {
 
-                // The data of the database entry
-                const data = {
-                    name: datafile.hapi.filename,
-                    directory: Path.dirname(path),
-                    type: 'f',
-                    size: Fs.statSync(file).size,
-                    ext: Path.extname(path),
-                    course_code: course,
-                    hidden: hidden
-                };
+                    // TODO select directory and check if hidden or not
 
-                // If the file exists, replace (update) it, otherwise, create it.
-                if (result) {
-                    return internals.replaceFile(result, data).then(resolve);
-                } else {
-                    return internals.createFile(data).then(resolve).catch(reject);
-                }
-            }).catch(reject);
+
+                    // The data of the database entry
+                    const data = {
+                        name: datafile.hapi.filename,
+                        directory: Path.dirname(path),
+                        type: 'f',
+                        size: Fs.statSync(file).size,
+                        ext: Path.extname(path),
+                        course_code: course,
+                        hidden: hidden
+                    };
+
+                    // If the file exists, replace (update) it, otherwise, create it.
+                    if (result) {
+                        return internals.replaceFile(result, data).then(resolve);
+                    } else {
+                        return internals.createFile(data).then(resolve).catch(reject);
+                    }
+                }).catch(reject);
+
+            });
+
         });
     };
 
@@ -515,7 +521,11 @@ const load = function() {
                     const isFile = (result ? (result.get('type') === 'f') : false);
 
                     if (isFile) {
-                        resolve({ result: internals.getDocumentPath(course, path), isFile: isFile});
+                        resolve({
+                            result: internals.getDocumentPath(course, path),
+                            isFile: isFile,
+                            size: result.get('size')
+                        });
                     } else {
                         const dir = (path === '/') ? '' : path;
                         const where = {

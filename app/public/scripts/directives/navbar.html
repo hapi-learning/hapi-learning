@@ -109,6 +109,11 @@
                         <span class="fa fa-th-list"></span> Courses
                     </a>
                 </li>
+                <li if-group="admin" ui-sref-active="active">
+                    <a ui-sref="root.admin">
+                        <span class="fa fa-cog"></span> Administration
+                    </a>
+                </li>
                 <li>
                     <a href="#" ng-click="logout()">
                         <span class="fa fa-sign-out"></span> Logout

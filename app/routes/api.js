@@ -18,9 +18,10 @@ exports.register = function (server, options, next) {
 
     server.route([
 
-        {method: 'POST', path: '/login',  config: Controllers.Auth.login},
-        {method: 'POST', path: '/logout', config: Controllers.Auth.logout},
-        {method: 'GET',  path: '/me',     config: Controllers.Auth.me},
+        {method: 'POST',  path: '/login',  config: Controllers.Auth.login},
+        {method: 'POST',  path: '/logout', config: Controllers.Auth.logout},
+        {method: 'GET',   path: '/me',     config: Controllers.Auth.me},
+        {method: 'PATCH', path: '/me',     config: Controllers.Auth.patchMe},
 
         // Users routes
         {method: 'GET',    path: '/users',                                   config: Controllers.User.getAll},

@@ -10,7 +10,7 @@ exports.register = function (server, options, next) {
         Hoek.assert(authorization, 'Authorization header is required');
 
         // Removes useless labels
-        authorization = authorization.replace(/Bearer/gi, '').replace(/ /g, '')
+        authorization = authorization.replace(/Bearer/gi, '').replace(/ /g, '');
 
         return {
             decoded: JWT.decode(authorization),
@@ -18,16 +18,15 @@ exports.register = function (server, options, next) {
         };
     });
 
-    server.auth.strategy('jwt', 'jwt', {
-        key: process.env.AUTH_KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
-        validateFunc: function(decoded, request, callback) {
+    const validateFunc = function(decoded, request, callback) {
 
             const User = server.plugins.models.models.User;
             const Role = server.plugins.models.models.Role;
             const Cache = server.plugins.cache.cache;
 
-            const token = server.methods.parseAuthorization(request.headers.authorization).token;
+            const authorization = request.headers.authorization || request.query.token;
 
+            const token = server.methods.parseAuthorization(authorization).token;
             // Key to deleted tokens
             const deletedTokens = {
                 segment: 'DeletedTokens',
@@ -79,13 +78,24 @@ exports.register = function (server, options, next) {
                     });
                 }
             });
+    };
 
-
-
-        },
+    server.auth.strategy('jwt', 'jwt', {
+        key: process.env.AUTH_KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
+        validateFunc: validateFunc,
         verifyOptions: {
             algorithms: [ 'HS256' ]
         }
+    });
+
+    server.auth.strategy('jwt-ignore-exp', 'jwt', {
+        key: process.env.AUTH_KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
+        validateFunc: validateFunc,
+        verifyOptions: {
+            algorithms: [ 'HS256'],
+            ignoreExpiration: true,
+        },
+        urlKey: 'token'
     });
 
     server.auth.default('jwt');

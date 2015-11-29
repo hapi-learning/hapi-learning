@@ -94,10 +94,12 @@
         </div>
 
         <div class="col-md-2">
-            <button ng-click="download()" class="btn btn-default btn-block">
-               <span class="glyphicon glyphicon-cloud-download"></span>
-               Download
-            </button>
+            <a ng-href="{{download()}}">
+                <button class="btn btn-default btn-block">
+                   <span class="glyphicon glyphicon-cloud-download"></span>
+                   Download
+                </button>
+            </a>
         </div>
 
         <div class="col-md-1" ng-show="showHidden">
@@ -193,7 +195,7 @@
 
                     <!-- DOWNLOAD ICON -->
                     <td class="col-md-1">
-                        <a ng-click="downloadFile(file.name)">
+                        <a ng-href="{{getDownloadPath(file.name)}}">
                             <span class="fa fa-save fa-lg save-file"></span>
                         </a>
                     </td>
@@ -282,7 +284,7 @@
 
                     <!-- DOWNLOAD ICON -->
                     <td class="col-md-1">
-                        <a ng-click="downloadFile(file.name)">
+                        <a ng-href="{{getDownloadPath(file.name)}}">
                             <span class="fa fa-save fa-lg save-file"></span>
                         </a>
                     </td>
