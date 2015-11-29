@@ -22,7 +22,9 @@ angular.module('hapi-learning')
                     scope.postNews = function () {
                         if (scope.complete()) {
                             NewsFactory.add(scope.news)
-                            .then(function (news) {})
+                            .then(function (news) {
+                                alert('AJOUTÉÉ');
+                            })
                             .catch(function (error) {console.log(error);});
                         }
                     };
