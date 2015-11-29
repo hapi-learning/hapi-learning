@@ -12,21 +12,27 @@ angular.module('hapi-learning')
 
                     scope.codes = [];
                     scope.news = {
-                        course : null,
-                        subject : null,
-                        content : null,
-                        priority : null
+                        course: null,
+                        subject: null,
+                        content: null,
+                        priority: null
                     };
+                    scope.showPreview = false;
                     scope.postNews = function () {
-                        console.log(scope.news);
+                        if (scope.complete()) {
+                            console.log(scope.news);
+                        }
                     };
-                    
+
                     scope.complete = function () {
-                        /*return scope.news.course &&
+                        return scope.news.course &&
                             scope.news.subject &&
                             scope.news.content &&
-                            scope.news.priority;*/
-                        return true;
+                            scope.news.priority;
+                    };
+                    
+                    scope.preview = function () {
+                        scope.showPreview = !scope.showPreview;
                     };
 
                     CoursesFactory.load()
