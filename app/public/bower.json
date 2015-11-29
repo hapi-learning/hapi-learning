@@ -30,6 +30,7 @@
     "moment": "~2.10.6",
     "angular-filter": "~0.5.8",
     "angular-xeditable": "~0.1.9",
-    "angular-bootstrap": "~0.14.3"
+    "angular-bootstrap": "~0.14.3",
+    "ng-showdown": "~1.1.0"
   }
 }
