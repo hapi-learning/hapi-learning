@@ -10,12 +10,13 @@ angular.module('hapi-learning')
             const internals = {
                 news: [],
                 fetched: false,
-                slice : function(count) {
+                slice: function (count) {
                     // count has to be a number :
                     // slice(0, ..) with null return empty, negative numbers return truncated array, ...
                     if (typeof count === 'number' && count > 0 && count <= internals.news.length) {
                         return internals.news.slice(0, count);
-                    } else {
+                    }
+                    else {
                         return internals.news;
                     }
                 }
@@ -27,7 +28,8 @@ angular.module('hapi-learning')
                 return $q(function (resolve, reject) {
                     if (internals.fetched) {
                         resolve(internals.slice(count));
-                    } else {
+                    }
+                    else {
                         Restangular.all('news')
                             .getList()
                             .then(function (news) {
@@ -44,26 +46,31 @@ angular.module('hapi-learning')
 
             exports.add = function (news) {
                 return $q(function (resolve, reject) {
-                    Restangular.all('news')
-                        .post({
-                            subject: news.subject,
-                            content: news.content,
-                            username: LoginFactory.getProfile().username,
-                            code: (news.course === '') ? null : news.course
-                        })
-                        .then(function (news) {
-                            console.log(news);
 
-                            if (internals.fetched) {
-                                internals.news.push(news);
-                            }
+                    LoginFactory.getProfile()
+                        .then(function (profile) {
+                            Restangular.all('news')
+                                .post({
+                                    username : profile.username,
+                                    code : news.course ? news.course : null,
+                                    content : news.content,
+                                    subject : news.subject
+                                })
+                                .then(function (news) {
+                                    if (internals.fetched) {
+                                        internals.news.push(news);
+                                    }
 
-                            resolve(news);
+                                    resolve(news);
+                                })
+                                .catch(function (err) {
+                                    reject(err);
+                                });
                         })
-                        .catch(function (err) {
-                        console.log(err);
-                            reject(err);
+                        .catch(function (error) {
+                            reject(error);
                         });
+
                 });
             };
 
