@@ -37,10 +37,12 @@ internals.checkForbiddenPath = function(path) {
 exports.getAll = {
     description: 'List all the courses',
     validate: {
+        options: {
+            allowUnknown: true
+        },
         query: {
             select: [Joi.string().valid('code', 'name', 'description'),
-                    Joi.array(Joi.string().valid('code', 'name', 'description'))],
-            pagination: Joi.boolean().default(true)
+                    Joi.array(Joi.string().valid('code', 'name', 'description'))]
         }
     },
     handler: function (request, reply) {
