@@ -244,7 +244,7 @@ exports.post = {
         payload: {
             name: Joi.string().min(1).max(255).required().description('Course name'),
             code: Joi.string().min(1).max(255).required().description('Course code'),
-            description: Joi.string().min(1).max(255).description('Course description'),
+            description: Joi.string().description('Course description'),
             teachers: Joi.array().items(Joi.string()).description('Teachers'),
             tags: Joi.array().items(Joi.string()).description('Tags')
         }
