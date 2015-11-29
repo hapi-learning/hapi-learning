@@ -21,7 +21,8 @@ angular.module('hapi-learning')
                                 scope.news = _.filter(news, function (n) {
                                     return n.course === scope.code;
                                 });
-                            } else {
+                            }
+                            else {
                                 scope.news = news;
                             }
                             scope.fetched = true;
