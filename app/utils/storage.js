@@ -515,7 +515,11 @@ const load = function() {
                     const isFile = (result ? (result.get('type') === 'f') : false);
 
                     if (isFile) {
-                        resolve({ result: internals.getDocumentPath(course, path), isFile: isFile});
+                        resolve({
+                            result: internals.getDocumentPath(course, path),
+                            isFile: isFile,
+                            size: result.get('size')
+                        });
                     } else {
                         const dir = (path === '/') ? '' : path;
                         const where = {

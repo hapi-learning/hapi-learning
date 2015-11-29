@@ -92,7 +92,11 @@ exports.get = {
 // WORKS - How to unit test this ?
 exports.getDocuments = {
     description: 'Get a ZIP containing documents or a file',
+    auth: 'jwt-ignore-exp',
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
@@ -118,15 +122,14 @@ exports.getDocuments = {
 
             if (isFile)
             {
-          /*      const contentDisposition = 'attachment; filename=' + Path.basename(result);
-                var stream = Fs.createReadStream(result);*/
 
-                return reply.file(result, {mode: 'attachment'})
-                    .header('Access-Control-Expose-Headers', 'Content-Disposition');
-                /*
+                const filename = Path.basename(result).replace(/"/g, '\\"');
+                const contentDisposition = 'attachment; filename="' + filename + '"';
+                var stream = Fs.createReadStream(result);
+
                 return reply(stream)
-                    .type('application/octet-stream')
-                    .header('Content-Disposition', contentDisposition);*/
+                    .header('Content-Disposition', contentDisposition)
+                    .header('Content-Length', results.size);
             }
             else
             {
@@ -135,14 +138,15 @@ exports.getDocuments = {
                     chunkSize: 204800  // 200Ko
                 });
 
+
                 const pathName = path === '/' ? '' : '_' + require('path').basename(path);
-                const contentDisposition = 'attachment; filename=' + course + pathName + '.zip';
+                const filename = (course + pathName + '.zip').replace(/"/g, '\\"');
+                const contentDisposition = 'attachment; filename="' + filename + '"';
                 stream.put(result);
                 stream.stop();
 
                 return reply(stream)
                     .type('application/zip')
-                    .header('Access-Control-Expose-Headers', 'Content-Disposition')
                     .header('Content-Disposition', contentDisposition);
 
             }
@@ -329,6 +333,7 @@ exports.post = {
 
 exports.postDocument = {
     description: 'Upload a file to a course',
+    auth: 'jwt-ignore-exp',
     payload: {
         maxBytes: process.env.UPLOAD_MAX,
         output: 'stream',
@@ -337,6 +342,9 @@ exports.postDocument = {
         timeout: 60000
     },
     validate: {
+        options: {
+            stripUnknown: true
+        },
         params: {
             id: Joi.string().required().description('Course code'),
             path: Joi.string().default('/')
@@ -464,13 +472,10 @@ exports.updateFile = {
                     switch(err.statusCode) {
                         case 404:
                             return reply.notFound(err.message);
-                            break;
                         case 409:
                             return reply.conflict(err.message);
-                            break;
                         case 422:
                             return reply.badData(err.message);
-                            break;
                         case 500:
                         default:
                             return reply.badImplementation(err.message);

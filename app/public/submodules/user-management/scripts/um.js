@@ -116,7 +116,6 @@ angular.module('hapi-learning.um', [
 
                     AuthStorage.remove('token');
                     $state.go(UM_CONFIG.LOGIN_STATE);
-                    d.reject(response);
 
                     //var $uibModal = $injector.get('$uibModal');
 
@@ -141,6 +140,8 @@ angular.module('hapi-learning.um', [
                         }]
                     })*/
                 }
+
+                d.reject(response);
 
                 return d.promise;
             }
