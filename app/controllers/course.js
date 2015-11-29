@@ -58,7 +58,6 @@ exports.getAll = {
             options.offset = (request.query.page - 1) * request.query.limit;
         }
 
-
         if (select) {
             options.attributes = [].concat(select);
         };
@@ -118,6 +117,26 @@ exports.get = {
         })
         .catch(err => reply.badImplementation(err));
 
+    }
+};
+
+exports.getHomepage = {
+    description: 'Get the course\' homepage',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code')
+        }
+    },
+    handler: function (request, reply) {
+        const Course = this.models.Course;
+        const Storage = this.Storage;
+        const id = request.params.id;
+
+        const getHomepage = function() {
+            return reply.file(Storage.getHomepage(id));
+        };
+
+        return internals.checkCourse(Course, id, reply, getHomepage);
     }
 };
 
@@ -366,7 +385,10 @@ exports.post = {
 
 exports.postDocument = {
     description: 'Upload a file to a course',
-    auth: 'jwt-ignore-exp',
+    auth: {
+        strategies: ['jwt-ignore-exp'],
+        scope: ['teacher', 'admin']
+    },
     payload: {
         maxBytes: process.env.UPLOAD_MAX,
         output: 'stream',
@@ -426,6 +448,9 @@ exports.postDocument = {
 
 exports.createFolder = {
     description: 'Create a folder to a course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         params: {
             id: Joi.string().required().description('Course code'),
@@ -469,6 +494,38 @@ exports.createFolder = {
         return internals.checkCourse(Course, course, reply, createFolder);
     }
 };
+
+exports.postHomepage = {
+    description: 'Post the course\' homepage',
+    auth: {
+        strategies: ['jwt-ignore-exp'],
+        scope: ['teacher', 'admin']
+    },
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code')
+        },
+        payload: {
+            content: Joi.string().default('')
+        }
+    },
+    handler: function (request, reply) {
+        const Course = this.models.Course;
+        const Storage = this.Storage;
+        const id = request.params.id;
+
+        const setHomepage = function() {
+            Storage.setHomepage(id, request.payload.content).then(function() {
+                return reply().code(201);
+            }).catch(function() {
+                return reply.badImplementation();
+            });
+        };
+
+        return internals.checkCourse(Course, id, reply, setHomepage);
+    }
+};
+
 
 exports.updateFile = {
     description: 'Create a file or folder of a course',
