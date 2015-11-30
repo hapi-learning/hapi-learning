@@ -17,7 +17,8 @@ angular.module('hapi-learning', [
         'angular-jwt',
         'angularMoment',
         'angular.filter',
-        'xeditable'])
+        'xeditable',
+        'ng-showdown'])
 
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.type('FilePath', {

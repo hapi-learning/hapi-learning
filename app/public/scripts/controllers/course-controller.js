@@ -28,7 +28,7 @@ angular.module('hapi-learning')
             .then(function (course) {
                 if (course) {
                     $scope.course = course;
-                    $scope.course.description = course.description || 'This page is empty';
+                    $scope.course.description = course.description || '*This page is empty*';
                 } else {
                     $state.go('root.home');
                 }
