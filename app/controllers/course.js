@@ -36,23 +36,55 @@ internals.checkForbiddenPath = function(path) {
 
 exports.getAll = {
     description: 'List all the courses',
+    validate: {
+        options: {
+            allowUnknown: true
+        },
+        query: {
+            select: [Joi.string().valid('code', 'name'),
+                    Joi.array(Joi.string().valid('code', 'name'))]
+        }
+    },
     handler: function (request, reply) {
 
         const Course = this.models.Course;
+        const select = request.query.select;
+        const pagination = request.query.pagination;
 
-        const options = {
-            limit: request.query.limit,
-            offset: (request.query.page - 1) * request.query.limit
+        const options = {};
+
+        if (pagination) {
+            options.limit  = request.query.limit;
+            options.offset = (request.query.page - 1) * request.query.limit;
+        }
+
+        if (select) {
+            options.attributes = [].concat(select);
         };
 
         Course
             .findAndCountAll(options).then(results => {
 
-            let promises = _.map(results.rows, (r => Utils.getCourse(r)));
-            // Wait for all promises to end
-            Promise
-                .all(promises)
-                .then(values => reply.paginate(values, results.count));
+            if (select) {
+                if (pagination) {
+                    return reply.paginate(results.rows, results.count);
+                } else {
+                    return reply(results.rows);
+                }
+            } else {
+                const promises = _.map(results.rows, (r => Utils.getCourse(r)));
+                // Wait for all promises to end
+                Promise
+                    .all(promises)
+                    .then(values => {
+                        if (pagination) {
+                            return reply.paginate(values, results.count)
+                        } else {
+                            return reply(values);
+                        }
+                    });
+            }
+
 
         })
         .catch(err => reply.badImplementation(err));
@@ -85,6 +117,26 @@ exports.get = {
         })
         .catch(err => reply.badImplementation(err));
 
+    }
+};
+
+exports.getHomepage = {
+    description: 'Get the course\' homepage',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code')
+        }
+    },
+    handler: function (request, reply) {
+        const Course = this.models.Course;
+        const Storage = this.Storage;
+        const id = request.params.id;
+
+        const getHomepage = function() {
+            return reply.file(Storage.getHomepage(id));
+        };
+
+        return internals.checkCourse(Course, id, reply, getHomepage);
     }
 };
 
@@ -282,9 +334,9 @@ exports.post = {
         // loading the teachers, otherwise return a promise returning an empty array
         const userExclude = ['password'];
         const getTeachers = hasTeachers ?
-            Promise.resolve(User.findAll(
-                {where: {username: {$in: pteachers}},
-                 attributes: {exclude: userExclude}}))
+            Promise.resolve(User.findAll({
+                where: {username: {$in: pteachers}},
+                attributes: {exclude: userExclude}}))
             : Promise.resolve([]);
 
         // Loads tags and teachers to be added
@@ -333,7 +385,10 @@ exports.post = {
 
 exports.postDocument = {
     description: 'Upload a file to a course',
-    auth: 'jwt-ignore-exp',
+    auth: {
+        strategies: ['jwt-ignore-exp'],
+        scope: ['teacher', 'admin']
+    },
     payload: {
         maxBytes: process.env.UPLOAD_MAX,
         output: 'stream',
@@ -393,6 +448,9 @@ exports.postDocument = {
 
 exports.createFolder = {
     description: 'Create a folder to a course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         params: {
             id: Joi.string().required().description('Course code'),
@@ -436,6 +494,38 @@ exports.createFolder = {
         return internals.checkCourse(Course, course, reply, createFolder);
     }
 };
+
+exports.postHomepage = {
+    description: 'Post the course\' homepage',
+    auth: {
+        strategies: ['jwt-ignore-exp'],
+        scope: ['teacher', 'admin']
+    },
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code')
+        },
+        payload: {
+            content: Joi.string().default('')
+        }
+    },
+    handler: function (request, reply) {
+        const Course = this.models.Course;
+        const Storage = this.Storage;
+        const id = request.params.id;
+
+        const setHomepage = function() {
+            Storage.setHomepage(id, request.payload.content).then(function() {
+                return reply().code(201);
+            }).catch(function() {
+                return reply.badImplementation();
+            });
+        };
+
+        return internals.checkCourse(Course, id, reply, setHomepage);
+    }
+};
+
 
 exports.updateFile = {
     description: 'Create a file or folder of a course',

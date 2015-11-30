@@ -285,6 +285,7 @@ const load = function() {
         const path = Path.join(internals.courseFolder, name);
         try {
             Fs.mkdirSync(path);
+            Fs.writeFileSync(Path.join(internals.courseFolder, 'homepage.md'), '');
             Fs.mkdirSync(Path.join(path, internals.documents));
         } catch(err) {}
     };
@@ -589,6 +590,7 @@ const load = function() {
         });
     };
 
+
     Storage.getList = function(course, path, hidden) {
 
         const where = {
@@ -618,6 +620,15 @@ const load = function() {
                 });
             }).catch(reject);
         });
+    };
+
+    Storage.getHomepage = function(course) {
+        return Path.join(internals.courseFolder, course, 'homepage.md');
+    };
+
+    Storage.setHomepage = function(course, content) {
+        const path = Storage.getHomepage(course);
+        return Fs.writeFileAsync(path, content);
     };
 
     return Storage;

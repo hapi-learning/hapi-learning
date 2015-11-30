@@ -14,12 +14,6 @@ module.exports = function(sequelize, DataTypes) {
             unique: true,
             allowNull: false,
             field: 'code'
-        },
-        description: {
-            type: DataTypes.TEXT,
-            unique: false,
-            allowNull: true,
-            field: 'description'
         }
     }, {
         paranoid: true,

@@ -28,6 +28,16 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class="control-label col-md-2">Phone number:</label>
+            <div class="col-md-10">
+                <span e-class="form-control" editable-text="profile.phoneNumber" e-name="phoneNumber"
+                      ng-bind="profile.phoneNumber" e-placeholder="Phone number">
+
+                </span>
+            </div>
+        </div>
+
 
         <div class="form-group" ng-show="profileForm.$visible">
             <label class="control-label col-md-2">
@@ -44,7 +54,7 @@
         <div class="form-group" ng-show="profileForm.$visible">
             <label class="control-label col-md-2">New password:</label>
             <div class="col-md-10">
-              <span e-type="password" editable-text="profile.password"
+              <span e-type="password" editable-text="profile.newPassword"
                 e-class="form-control"
              ng-model="newPassword"
              ng-minlength="8" e-name="newPassword" e-placeholder="●●●●●●●●">

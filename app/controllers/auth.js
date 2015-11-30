@@ -193,10 +193,10 @@ exports.patchMe = {
     validate: {
         payload: {
             password: Joi.string().min(1).max(255).description('User password'),
-            email: Joi.string().min(1).max(255).description('User email'),
-            firstName: Joi.string().min(1).max(255).description('User first name'),
-            lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.string().min(1).max(255).description('User phone number')
+            email: Joi.string().email().description('User email'),
+            firstName: Joi.string().max(255).allow('').description('User first name'),
+            lastName: Joi.string().max(255).allow('').description('User last name'),
+            phoneNumber: Joi.string().max(255).allow('').description('User phone number')
         },
     },
     handler: function (request, reply) {
