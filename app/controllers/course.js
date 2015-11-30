@@ -129,7 +129,7 @@ exports.getHomepage = {
     },
     handler: function (request, reply) {
         const Course = this.models.Course;
-        const Storage = this.Storage;
+        const Storage = this.storage;
         const id = request.params.id;
 
         const getHomepage = function() {
