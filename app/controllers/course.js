@@ -41,8 +41,8 @@ exports.getAll = {
             allowUnknown: true
         },
         query: {
-            select: [Joi.string().valid('code', 'name', 'description'),
-                    Joi.array(Joi.string().valid('code', 'name', 'description'))]
+            select: [Joi.string().valid('code', 'name'),
+                    Joi.array(Joi.string().valid('code', 'name'))]
         }
     },
     handler: function (request, reply) {
