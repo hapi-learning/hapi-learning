@@ -1,3 +1,4 @@
+
 <div>
     <div ng-if="errorPostHomepage">
         <div class="alert alert-danger" ng-bind="errorPostHomepage"></div>
@@ -10,8 +11,11 @@
 
 
         <md-editor ng-if="editing" save-button="true" content="course.description"></md-editor>
-        <div ng-if="!editing" markdown-to-html="course.description"></div>
+
+        <div ng-if="!editing && course.description" markdown-to-html="course.description"></div>
     </div>
+
+    <br/>
 
     <div class="col-md-12">
 

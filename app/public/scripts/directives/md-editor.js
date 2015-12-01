@@ -17,6 +17,7 @@ angular.module('hapi-learning')
 
                         scope.aceLoaded = function(_editor) {
                             scope._editor   = _editor;
+                            scope._editor.focus();
                             scope._session  = scope._editor.getSession();
                             scope._document = scope._session.getDocument();
 
@@ -59,6 +60,10 @@ angular.module('hapi-learning')
                             $rootScope.$emit('save-md-editor', scope._document.getValue());
                         };
 
+
+                        scope.cancel = function() {
+                            $rootScope.$emit('cancel-md-editor');
+                        };
 
                     }
                 };

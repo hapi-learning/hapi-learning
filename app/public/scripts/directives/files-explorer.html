@@ -22,6 +22,20 @@
         margin-top: 2x;
     }
 
+    .dropdown-btn {
+        cursor: pointer;
+    }
+
+    @media (max-width: 992px) {
+        .btn {
+          margin-bottom: 10px;
+        }
+        .pull-left, .pull-right {
+          float: none !important;
+        }
+      }
+}
+
 </style>
 
 
@@ -60,22 +74,40 @@
             </a>
         </div>
 
-        <div class="col-md-3" ng-show="!creatingFolder">
-            <button ng-click="creatingFolder = true"
-                class="btn btn-default btn-block">
-            <span class="glyphicon glyphicon-plus"></span>
-            Create folder
+        <div class="col-md-2 col-lg-1">
+            <button class="btn btn-default btn-block dropdown-toggle"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-plus"></span> <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-btn" ng-click="creatingFolder = true">Create directory</a></li>
+                <li><a class="dropdown-btn" ng-click="uploading = true">Upload file(s)</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a class="dropdown-btn">Create file</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-2 col-lg-1 pull-right" ng-show="showHidden">
+            <button class="btn btn-default btn-block" ng-click="showHidden = false">
+                <span class="glyphicon glyphicon-eye-open"></span>
             </button>
         </div>
 
-        <div class="col-md-3" ng-show="creatingFolder">
-            <button ng-click="creatingFolder = false"
-                class="btn btn-primary btn-block">
-            <span class="glyphicon glyphicon-remove"></span>
-            Cancel
+        <div class="col-md-2 col-lg-1 pull-right" ng-show="!showHidden" >
+            <button class="btn btn-default btn-block" ng-click="showHidden = true">
+                <span class="glyphicon glyphicon-eye-close"></span>
             </button>
         </div>
 
+        <div class="col-md-2 pull-right">
+            <a ng-href="{{download()}}">
+                <button class="btn btn-primary btn-block">
+                   <span class="glyphicon glyphicon-cloud-download"></span>
+                   <span class="hidden-md">Download</span>
+                </button>
+            </a>
+        </div>
 
         <div class="col-md-3" ng-show="uploading">
             <button class="btn btn-danger btn-block"
@@ -85,35 +117,9 @@
             </button>
         </div>
 
-        <div class="col-md-3" ng-show="!uploading">
-            <button class="btn btn-default btn-block"
-                    ng-click="uploading = true">
-                <span class="glyphicon glyphicon-cloud-upload"></span>
-                Upload
-            </button>
-        </div>
 
-        <div class="col-md-2">
-            <a ng-href="{{download()}}">
-                <button class="btn btn-default btn-block">
-                   <span class="glyphicon glyphicon-cloud-download"></span>
-                   Download
-                </button>
-            </a>
-        </div>
-
-        <div class="col-md-1" ng-show="showHidden">
-            <button class="btn btn-default btn-block" ng-click="showHidden = false">
-                <span class="glyphicon glyphicon-eye-open"></span>
-            </button>
-        </div>
-
-        <div class="col-md-1" ng-show="!showHidden" >
-            <button class="btn btn-default btn-block" ng-click="showHidden = true">
-                <span class="glyphicon glyphicon-eye-close"></span>
-            </button>
-        </div>
     </div>
+
 
    <br/>
 
@@ -156,7 +162,7 @@
 
 
     <div class="table-responsive">
-        <table class="table">
+        <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <td class="col-md-1"></td>
@@ -168,37 +174,61 @@
                     <td class="col-md-2">Edit</td>
                 </tr>
             </thead>
-            <tbody ng-repeat="file in files.files">
-
+            <tbody>
 
                 <!-- Directory -->
-                <tr ng-if="file.type === 'd'">
+                <tr ng-repeat="file in files.files">
 
                     <!-- ICON -->
                     <td class="col-md-1">
-                        <span class="fa fa-folder-open fa-lg"></span>
+                        <div ng-if="file.type === 'd'">
+                            <span class="fa fa-folder-open fa-lg"></span>
+                        </div>
+                        <div ng-if="file.type === 'f'">
+                            <span file-icon ext="file.ext"></span></file-icon>
+                        </div>
                     </td>
+
 
                     <!-- NAME -->
                     <td class="col-md-5">
-                        <a ng-click="fileExplorer.$visible || goToRelativePath(file.name)"
-                            ng-disabled="fileExplorer.$visible">
-                            <span class="folder-name" editable-text="file.name"
-                                  e-name="name" e-form="fileExplorer" e-required ng-bind="file.name">
-
-                            </span>
-                        </a>
+                       <div ng-if="file.type === 'd'">
+                            <a ng-click="fileExplorer.$visible || goToRelativePath(file.name)"
+                                ng-disabled="fileExplorer.$visible">
+                                <span class="folder-name" editable-text="file.name"
+                                      e-name="name" e-form="fileExplorer" e-required ng-bind="file.name">
+                                </span>
+                            </a>
+                       </div>
+                       <div ng-if="file.type === 'f'" class="file-name">
+                           <span editable-text="file.name"
+                                 e-name="name" e-form="fileExplorer" e-required
+                                 ng-bind="file.name">
+                           </span>
+                       </div>
                     </td>
 
-                    <!-- SIZE (EMPTY FOR DIRECTORY) -->
-                    <td class="col-md-1"></td>
+                     <!-- SIZE -->
+                    <td class="col-md-1">
+                        <div ng-if="file.type === 'f'">
+                            {{file.size | byteFmt: 2}}
+                        </div>
+                    </td>
 
                     <!-- DOWNLOAD ICON -->
                     <td class="col-md-1">
-                        <a ng-href="{{getDownloadPath(file.name)}}">
-                            <span class="fa fa-save fa-lg save-file"></span>
-                        </a>
+                       <div ng-if="file.type === 'd'">
+                            <a ng-href="{{getDownloadPath(file.name)}}">
+                                <span class="fa fa-save fa-lg save-file"></span>
+                            </a>
+                       </div>
+                       <div ng-if="file.type === 'f'">
+                            <a ng-href="{{getDownloadPath(file.name)}}">
+                                <span class="fa fa-save fa-lg save-file"></span>
+                            </a>
+                       </div>
                     </td>
+
 
                     <!-- LAST UPDATED -->
                     <td class="col-md-1" am-time-ago="file.updated_at"></td>
@@ -220,140 +250,73 @@
 
                     <!-- EDIT -->
                     <td class="col-md-2">
+                        <form editable-form name="fileExplorer"
+                             ng-show="fileExplorer.$visible"
+                              class="form-buttons form-inline"
+                              onbeforesave="file.type === 'd' ?
+                                      updateFolder($data, $index) :
+                                      updateFile($data, $index)">
 
-                        <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
-                              class="form-buttons form-inline" onbeforesave="updateFolder($data, $index)">
+                            <div ng-if="file.type === 'd'">
+                                <div>
+                                    <!-- Confirm -->
+                                    <button type="submit" class="btn btn-primary"
+                                            ng-disabled="fileExplorer.$waiting">
+                                        <span class="fa fa-check fa-lg">
 
-                            <div>
+                                        </span>
+                                    </button>
 
-                                <!-- Confirm -->
-                                <button type="submit" class="btn btn-primary"
-                                        ng-disabled="fileExplorer.$waiting">
-                                    <span class="fa fa-check fa-lg">
+                                    <!-- Cancel -->
+                                    <button type="button" class="btn btn-warning"
+                                            ng-disabled="fileExplorer.$waiting"
+                                            ng-click="fileExplorer.$cancel()">
+                                        <span class="fa fa-remove fa-lg">
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-if="file.type === 'f'">
+                                    <div>
 
-                                    </span>
-                                </button>
+                                        <!-- Confirm -->
+                                        <button type="submit" class="btn btn-primary"
+                                                ng-disabled="fileExplorer.$waiting">
+                                            <span class="fa fa-check fa-lg">
 
-                                <!-- Cancel -->
-                                <button type="button" class="btn btn-warning"
-                                        ng-disabled="fileExplorer.$waiting"
-                                        ng-click="fileExplorer.$cancel()">
-                                    <span class="fa fa-remove fa-lg">
-                                    </span>
-                                </button>
+                                            </span>
+                                        </button>
+
+                                        <!-- Cancel -->
+                                        <button type="button" class="btn btn-warning"
+                                                ng-disabled="fileExplorer.$waiting"
+                                                ng-click="fileExplorer.$cancel()">
+                                            <span class="fa fa-remove fa-lg">
+                                            </span>
+                                        </button>
+                                    </div>
+
                             </div>
                         </form>
+                            <div ng-show="!fileExplorer.$visible">
 
-                        <div ng-show="!fileExplorer.$visible">
+                                    <!-- Edit -->
+                                    <button class="btn btn-default" ng-click="fileExplorer.$show()">
+                                        <span class="fa fa-pencil-square-o fa-lg">
+                                        </span>
+                                    </button>
 
-                            <!-- Edit -->
-                            <button class="btn btn-default" ng-click="fileExplorer.$show()">
-                                <span class="fa fa-pencil-square-o fa-lg">
-                                </span>
-                            </button>
-
-                            <!-- Delete -->
-                            <button class="btn btn-danger" ng-click="removeFile($index)">
-                                <span class="fa fa-minus fa-lg">
-                                </span>
-                            </button>
-                        </div>
+                                    <!-- Delete -->
+                                    <button class="btn btn-danger" ng-click="removeFile($index)">
+                                        <span class="fa fa-minus fa-lg">
+                                        </span>
+                                    </button>
+                            </div>
 
                     </td>
                 </tr>
 
-
-                <!-- File -->
-                <tr ng-if="file.type === 'f'">
-
-                    <!-- ICON -->
-                    <td class="col-md-1">
-                        <span file-icon ext="file.ext"></span></file-icon>
-                    </td>
-
-                    <!-- NAME -->
-                    <td class="col-md-5 file-name">
-                       <span editable-text="file.name"
-                             e-name="name" e-form="fileExplorer" e-required
-                             ng-bind="file.name">
-                       </span>
-                    </td>
-
-                    <!-- SIZE -->
-                    <td class="col-md-1">{{file.size | byteFmt: 2}} </td>
-
-                    <!-- DOWNLOAD ICON -->
-                    <td class="col-md-1">
-                        <a ng-href="{{getDownloadPath(file.name)}}">
-                            <span class="fa fa-save fa-lg save-file"></span>
-                        </a>
-                    </td>
-
-                    <!-- LAST UPDATED -->
-                    <td class="col-md-1" am-time-ago="file.updated_at"></td>
-
-
-                    <!-- HIDDEN -->
-                    <td class="col-md-1">
-                        <div e-name="hidden" e-form="fileExplorer"
-                             e-title="Hidden" editable-checkbox="file.hidden">
-                            <span ng-show="file.hidden">
-                                <span class="glyphicon glyphicon-eye-close">
-                                </span>
-                            </span>
-                            <span ng-show="!file.hidden">
-                                <span class="glyphicon glyphicon-eye-open">
-                                </span>
-                            </span>
-                        </div>
-                    </td>
-
-                    <td class="col-md-2">
-
-                        <form editable-form name="fileExplorer" ng-show="fileExplorer.$visible"
-                              class="form-buttons form-inline" onbeforesave="updateFile($data, $index)">
-
-                            <div>
-
-                                <!-- Confirm -->
-                                <button type="submit" class="btn btn-primary"
-                                        ng-disabled="fileExplorer.$waiting">
-                                    <span class="fa fa-check fa-lg">
-
-                                    </span>
-                                </button>
-
-                                <!-- Cancel -->
-                                <button type="button" class="btn btn-warning"
-                                        ng-disabled="fileExplorer.$waiting"
-                                        ng-click="fileExplorer.$cancel()">
-                                    <span class="fa fa-remove fa-lg">
-                                    </span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <div ng-show="!fileExplorer.$visible">
-
-                            <!-- Edit -->
-                            <button class="btn btn-default" ng-click="fileExplorer.$show()">
-                                <span class="fa fa-pencil-square-o fa-lg">
-                                </span>
-                            </button>
-
-                            <!-- Delete -->
-                            <button class="btn btn-danger" ng-click="removeFile($index)">
-                                <span class="fa fa-minus fa-lg">
-                                </span>
-                            </button>
-                        </div>
-
-                    </td>
-
-                </tr>
             </tbody>
-
-
         </table>
     </div>
 

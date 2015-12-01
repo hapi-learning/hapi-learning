@@ -19,6 +19,8 @@ angular.module('hapi-learning')
             $scope.update = false;
             $scope.course = null;
             $scope.editing = false;
+            $scope.errorPostHomepage = null;
+
 
 
             // If stateParams changed, update course
@@ -65,7 +67,6 @@ angular.module('hapi-learning')
             };
 
             $rootScope.$on('save-md-editor', function(event, content) {
-                console.log(content);
                 Restangular
                     .one('courses', $scope.course.code)
                     .customPOST({
@@ -74,12 +75,16 @@ angular.module('hapi-learning')
                     'homepage').then(function(res) {
                         $scope.course.description = content;
                         $scope.editing = false;
+                        $scope.errorPostHomepage = null;
                     }).catch(function() {
                         $scope.editing = true;
                         $scope.errorPostHomepage = 'Error saving the homepage';
                     });
+            });
 
-
+            $rootScope.$on('cancel-md-editor', function(event) {
+                $scope.editing = false;
+                $scope.errorPostHomepage = null;
             });
 
 

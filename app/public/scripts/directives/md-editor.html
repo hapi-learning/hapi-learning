@@ -75,8 +75,21 @@
     </div>
     <div ng-if="saveButton">
         <br/>
-        <button class="btn btn-primary" ng-click="save()">
+
+        <button class="btn btn-primary hidden-xs" ng-click="save()">
             <span class="fa fa-floppy-o fa-lg"></span> Save
+        </button>
+
+        <button class="btn btn-primary btn-block visible-xs" ng-click="save()">
+            <span class="fa fa-floppy-o fa-lg"></span> Save
+        </button>
+
+        <button class="btn btn-default hidden-xs" ng-click="cancel()">
+            <span class="fa fa-ban fa-lg"></span> Cancel
+        </button>
+
+        <button class="btn btn-default btn-block visible-xs" ng-click="cancel()">
+            <span class="fa fa-ban fa-lg"></span> Cancel
         </button>
     </div>
 
