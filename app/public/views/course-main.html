@@ -1,4 +1,7 @@
 <div>
+    <div ng-if="errorPostHomepage">
+        <div class="alert alert-danger" ng-bind="errorPostHomepage"></div>
+    </div>
     <div>
 
         <button ng-if="!editing" style="color: black" class="btn btn-link pull-right" ng-click="editHomepage()">
@@ -6,11 +9,7 @@
         </button>
 
 
-        <md-editor ng-if="editing" content="course.description"></md-editor>
-        <br/>
-        <button ng-if="editing" class="btn btn-primary" ng-click="endEditing()">
-            <span class="fa fa-floppy-o fa-lg"></span> Save
-        </button>
+        <md-editor ng-if="editing" save-button="true" content="course.description"></md-editor>
         <div ng-if="!editing" markdown-to-html="course.description"></div>
     </div>
 

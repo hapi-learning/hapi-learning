@@ -1,10 +1,11 @@
 angular.module('hapi-learning')
-    .directive('mdEditor', function() {
+    .directive('mdEditor', ['$rootScope', function($rootScope) {
         return {
             restrict: 'AE',
             templateUrl: 'scripts/directives/md-editor.html',
             scope: {
-                content: '='
+                content: '=',
+                'saveButton': '='
             },
             compile: function() {
                 return {
@@ -18,8 +19,8 @@ angular.module('hapi-learning')
                             scope._editor   = _editor;
                             scope._session  = scope._editor.getSession();
                             scope._document = scope._session.getDocument();
-                            _editor.setFontSize(scope.selectedFontSize);
 
+                            _editor.setFontSize(scope.selectedFontSize);
 
                             scope.setContent(scope.content);
                         };
@@ -29,7 +30,7 @@ angular.module('hapi-learning')
                             if (scope._editor) {
                                 scope._editor.setFontSize(scope.selectedFontSize);
                             }
-                        }
+                        };
 
                         scope.options = {
                             onLoad: scope.aceLoaded,
@@ -54,8 +55,8 @@ angular.module('hapi-learning')
                             }
                         };
 
-                        scope.write = function() {
-                            
+                        scope.save = function() {
+                            $rootScope.$emit('save-md-editor', scope._document.getValue());
                         };
 
 
@@ -64,4 +65,4 @@ angular.module('hapi-learning')
             }
 
         };
-    });
+    }]);

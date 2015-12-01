@@ -64,7 +64,23 @@ angular.module('hapi-learning')
                 $scope.editing = true;
             };
 
-            $scope.endEditing = function() {
-                $scope.editing = false;
-            };
+            $rootScope.$on('save-md-editor', function(event, content) {
+                console.log(content);
+                Restangular
+                    .one('courses', $scope.course.code)
+                    .customPOST({
+                        content: content
+                    },
+                    'homepage').then(function(res) {
+                        $scope.course.description = content;
+                        $scope.editing = false;
+                    }).catch(function() {
+                        $scope.editing = true;
+                        $scope.errorPostHomepage = 'Error saving the homepage';
+                    });
+
+
+            });
+
+
     }]);

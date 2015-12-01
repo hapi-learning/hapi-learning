@@ -65,11 +65,19 @@
     </uib-tabset>
 
 
-    <div ng-show="writing">
-        <div ui-ace="options"></div>
+    <div>
+        <div ng-show="writing">
+            <div ui-ace="options"></div>
+        </div>
+        <div ng-show="!writing">
+            <div markdown-to-html="getContent()"></div>
+        </div>
     </div>
-    <div ng-show="!writing">
-        <div markdown-to-html="getContent()"></div>
+    <div ng-if="saveButton">
+        <br/>
+        <button class="btn btn-primary" ng-click="save()">
+            <span class="fa fa-floppy-o fa-lg"></span> Save
+        </button>
     </div>
 
 </div>
