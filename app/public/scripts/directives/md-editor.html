@@ -1,0 +1,76 @@
+<style>
+    .ace_editor {
+        height: 400px;
+    }
+</style>
+
+<div>
+
+    <uib-tabset class="hidden-xs" justified="false">
+        <uib-tab ng-click="setEditor()" active="writing">
+            <uib-tab-heading>
+                <span class="fa fa-code fa-lg"></span>
+                Write
+            </uib-tab-heading>
+        </uib-tab>
+        <uib-tab ng-click="setPreview()">
+            <uib-tab-heading>
+                <span class="fa fa-desktop fa-lg"></span>
+                Preview
+            </uib-tab-heading>
+        </uib-tab>
+
+
+        <form class="form-inline pull-right" ng-submit="write()">
+            <div class="form-group">
+                <label>Font size: </label>
+                <select ng-change="setFontSize(selectedFontSize)"
+                      class="form-control" ng-model="selectedFontSize"
+                      ng-options="size as size for size in fontSizes"
+                      disable-valid-styling="true">
+
+                </select>
+                <button type="submit">Post</button>
+            </div>
+        </form>
+
+    </uib-tabset>
+
+    <uib-tabset class="visible-xs" justified="true">
+        <uib-tab ng-click="setEditor()" active="writing">
+            <uib-tab-heading>
+                <span class="fa fa-code fa-lg"></span>
+                Write
+            </uib-tab-heading>
+        </uib-tab>
+        <uib-tab ng-click="setPreview()">
+            <uib-tab-heading>
+                <span class="fa fa-desktop fa-lg"></span>
+                Preview
+            </uib-tab-heading>
+        </uib-tab>
+
+        <form class="form-inline pull-right">
+            <div class="form-group">
+                <label>Font size: </label>
+                <select ng-change="setFontSize(selectedFontSize)"
+                      class="form-control" ng-model="selectedFontSize"
+                      ng-options="size as size for size in fontSizes"
+                      disable-valid-styling="true">
+
+                </select>
+            </div>
+        </form>
+
+
+    </uib-tabset>
+
+
+    <div ng-show="writing">
+        <div ui-ace="options"></div>
+    </div>
+    <div ng-show="!writing">
+        <div markdown-to-html="getContent()"></div>
+    </div>
+
+</div>

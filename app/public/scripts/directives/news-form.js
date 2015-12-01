@@ -18,7 +18,6 @@ angular.module('hapi-learning')
                         content: null,
                         priority: null
                     };
-                    scope.showPreview = false;
                     scope.postNews = function () {
                         if (scope.complete()) {
                             NewsFactory.add(scope.news)
@@ -34,10 +33,6 @@ angular.module('hapi-learning')
                             scope.news.subject &&
                             scope.news.content &&
                             scope.news.priority;
-                    };
-                    
-                    scope.preview = function () {
-                        scope.showPreview = !scope.showPreview;
                     };
 
                     CoursesFactory.load()
