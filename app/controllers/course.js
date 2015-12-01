@@ -42,7 +42,9 @@ exports.getAll = {
         },
         query: {
             select: [Joi.string().valid('code', 'name'),
-                    Joi.array(Joi.string().valid('code', 'name'))]
+                    Joi.array(Joi.string().valid('code', 'name'))],
+            code: Joi.string(),
+            name: Joi.string()
         }
     },
     handler: function (request, reply) {
@@ -61,6 +63,21 @@ exports.getAll = {
         if (select) {
             options.attributes = [].concat(select);
         };
+
+        if (request.query.code) {
+            options.where = {};
+            options.where.code = {
+                $like: request.query.code + '%'
+            }
+        }
+
+        if (request.query.name) {
+            options.where = options.where || {};
+            options.where.name = {
+                $like: request.query.name + '%'
+            }
+        }
+
 
         Course
             .findAndCountAll(options).then(results => {
