@@ -59,4 +59,12 @@ angular.module('hapi-learning')
                         $state.go('root.home');
                     });
             };
+
+            $scope.editHomepage = function() {
+                $scope.editing = true;
+            };
+
+            $scope.endEditing = function() {
+                $scope.editing = false;
+            };
     }]);

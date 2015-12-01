@@ -1,6 +1,17 @@
 <div>
     <div>
-        <blockquote markdown-to-html="course.description"></blockquote>
+
+        <button ng-if="!editing" style="color: black" class="btn btn-link pull-right" ng-click="editHomepage()">
+            <span class="fa fa-pencil-square-o fa-lg"></span>
+        </button>
+
+
+        <md-editor ng-if="editing" content="course.description"></md-editor>
+        <br/>
+        <button ng-if="editing" class="btn btn-primary" ng-click="endEditing()">
+            <span class="fa fa-floppy-o fa-lg"></span> Save
+        </button>
+        <div ng-if="!editing" markdown-to-html="course.description"></div>
     </div>
 
     <div class="col-md-12">
@@ -25,11 +36,12 @@
             <br />
 
             <span ng-repeat="tag in course.tags">
-                <button class="btn btn-default btn-xs">#<span ng-bind="tag"></span></button>
+                <tag-button style="margin: 2px;" tag="tag"></tag-button>
             </span>
 
         </div>
 
+        <br/>
 
     </div>
 </div>

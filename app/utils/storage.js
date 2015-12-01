@@ -285,7 +285,7 @@ const load = function() {
         const path = Path.join(internals.courseFolder, name);
         try {
             Fs.mkdirSync(path);
-            Fs.writeFileSync(Path.join(internals.courseFolder, 'homepage.md'), '');
+            Fs.writeFileSync(Path.join(internals.courseFolder, name, 'homepage.md'), '');
             Fs.mkdirSync(Path.join(path, internals.documents));
         } catch(err) {}
     };
