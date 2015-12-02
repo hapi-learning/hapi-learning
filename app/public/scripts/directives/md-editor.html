@@ -67,7 +67,7 @@
 
     <div>
         <div ng-show="writing">
-            <div ui-ace="options"></div>
+            <div ui-ace="options"><ng-transclude></ng-transclude></div>
         </div>
         <div ng-show="!writing">
             <div markdown-to-html="getContent()"></div>

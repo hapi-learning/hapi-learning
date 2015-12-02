@@ -287,7 +287,7 @@
                                     <div>
 
                                         <!-- Confirm -->
-                                        <button type="submit" class="btn btn-primary"
+                                        <button type="submit" class="btn btn-primary btn-sm"
                                                 ng-disabled="fileExplorer.$waiting">
                                             <span class="fa fa-check fa-lg">
 
@@ -295,7 +295,7 @@
                                         </button>
 
                                         <!-- Cancel -->
-                                        <button type="button" class="btn btn-warning"
+                                        <button type="button" class="btn btn-warning btn-sm"
                                                 ng-disabled="fileExplorer.$waiting"
                                                 ng-click="fileExplorer.$cancel()">
                                             <span class="fa fa-remove fa-lg">
@@ -308,13 +308,13 @@
                             <div ng-show="!fileExplorer.$visible">
 
                                     <!-- Edit -->
-                                    <button class="btn btn-default" ng-click="fileExplorer.$show()">
+                                    <button class="btn btn-default btn-sm" style="color: black" ng-click="fileExplorer.$show()">
                                         <span class="fa fa-pencil-square-o fa-lg">
                                         </span>
                                     </button>
 
                                     <!-- Delete -->
-                                    <button class="btn btn-danger" ng-click="removeFile($index)">
+                                    <button class="btn btn-danger btn-sm" ng-click="removeFile($index)">
                                         <span class="fa fa-minus fa-lg">
                                         </span>
                                     </button>

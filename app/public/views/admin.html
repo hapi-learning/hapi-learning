@@ -3,21 +3,13 @@
 
         <h1 class="page-header">Administration</h1>
 
-        <div>
-            <h2>New announcement</h2>
+        <h2>New announcement</h2>
 
-            <br />
-
-            <div ng-include="'../partials/create-announcement-form.html'"></div>
-        </div>
+        <h3>TODO</h3>
 
         <div>
             <h2>New user</h2>
-
-            <br />
-
-            <upload path="upload.php"></upload>
-
+            <users-form></users-form>
         </div>
 
         <br />
@@ -27,7 +19,7 @@
 
             <br />
 
-            <div ng-include="'../partials/admin/create-course-form.html'"></div>
+            <courses-form></courses-form>
         </div>
 
         <br />
@@ -37,7 +29,7 @@
 
             <br />
 
-            <div ng-include="'../partials/admin/create-tag-form.html'"></div>
+            <tags-form></tags-form>
         </div>
 
     </div>

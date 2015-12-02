@@ -3,6 +3,7 @@ angular.module('hapi-learning')
         return {
             restrict: 'AE',
             templateUrl: 'scripts/directives/md-editor.html',
+            transclude: true,
             compile: function() {
                 return {
                     pre: function(scope, elem, attrs) {
