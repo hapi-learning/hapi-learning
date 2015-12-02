@@ -41,7 +41,13 @@
 </form>
 
 
+
 <h2>Import from file</h2>
 
-
-<h3>TODO</h3>
+<input type="file" on-read-file="showUsersFileContent($fileContent)" />
+<div ng-if="usersFileContent">
+    <h2>File content is:</h2>
+    <pre pretty-json="usersFileContent">
+    </pre>
+</div>
+<br/>
