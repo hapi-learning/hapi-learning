@@ -10,7 +10,9 @@
         </button>
 
 
-        <md-editor ng-if="editing" save-button="true" content="course.description"></md-editor>
+        <md-editor onsave="saveEdit($content)" oncancel="cancelEdit()"
+                   ng-if="editing" save-button="true"
+                   content="course.description"></md-editor>
 
         <div ng-if="!editing && course.description" markdown-to-html="course.description"></div>
     </div>

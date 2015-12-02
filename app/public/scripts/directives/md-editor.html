@@ -73,22 +73,22 @@
             <div markdown-to-html="getContent()"></div>
         </div>
     </div>
-    <div ng-if="saveButton">
+    <div>
         <br/>
 
-        <button class="btn btn-primary hidden-xs" ng-click="save()">
+        <button ng-if="hasSave()" class="btn btn-primary hidden-xs" ng-click="save()">
             <span class="fa fa-floppy-o fa-lg"></span> Save
         </button>
 
-        <button class="btn btn-primary btn-block visible-xs" ng-click="save()">
+        <button ng-if="hasSave()" class="btn btn-primary btn-block visible-xs" ng-click="save()">
             <span class="fa fa-floppy-o fa-lg"></span> Save
         </button>
 
-        <button class="btn btn-default hidden-xs" ng-click="cancel()">
+        <button ng-if="hasCancel()" class="btn btn-default hidden-xs" ng-click="cancel()">
             <span class="fa fa-ban fa-lg"></span> Cancel
         </button>
 
-        <button class="btn btn-default btn-block visible-xs" ng-click="cancel()">
+        <button ng-if="hasCancel()" class="btn btn-default btn-block visible-xs" ng-click="cancel()">
             <span class="fa fa-ban fa-lg"></span> Cancel
         </button>
     </div>

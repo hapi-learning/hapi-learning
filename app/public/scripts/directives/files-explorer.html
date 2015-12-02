@@ -83,19 +83,25 @@
             <ul class="dropdown-menu">
                 <li><a class="dropdown-btn" ng-click="creatingFolder = true">Create directory</a></li>
                 <li><a class="dropdown-btn" ng-click="uploading = true">Upload file(s)</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a class="dropdown-btn">Create file</a></li>
+                <!--<li role="separator" class="divider"></li>
+                <li><a class="dropdown-btn">Create file</a></li>-->
             </ul>
         </div>
 
         <div class="col-md-2 col-lg-1 pull-right" ng-show="showHidden">
-            <button class="btn btn-default btn-block" ng-click="showHidden = false">
+            <button popover-trigger="mouseenter" popover-placement="top"
+                    uib-popover="Click to hide hidden files"
+                    popover-popup-delay="700"
+                    class="btn btn-default btn-block" ng-click="showHidden = false">
                 <span class="glyphicon glyphicon-eye-open"></span>
             </button>
         </div>
 
         <div class="col-md-2 col-lg-1 pull-right" ng-show="!showHidden" >
-            <button class="btn btn-default btn-block" ng-click="showHidden = true">
+            <button popover-trigger="mouseenter" popover-placement="top"
+                    uib-popover="Click to show hidden files"
+                    popover-popup-delay="700"
+                    class="btn btn-default btn-block" ng-click="showHidden = true">
                 <span class="glyphicon glyphicon-eye-close"></span>
             </button>
         </div>
@@ -109,7 +115,7 @@
             </a>
         </div>
 
-        <div class="col-md-3" ng-show="uploading">
+        <div class="col-md-3 col-lg-2" ng-show="uploading">
             <button class="btn btn-danger btn-block"
                      ng-click="uploading = false">
                 <span class="glyphicon glyphicon-floppy-remove"></span>
@@ -125,7 +131,7 @@
 
    <div class="row" ng-if="creatingFolder">
 
-        <div class="col-lg-3 col-md-6 col-lg-offset-3">
+        <div class="col-lg-3 col-md-5 col-lg-offset-2">
            <div class="form">
 
                 <div class="form-group">
@@ -165,7 +171,7 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <td class="col-md-1"></td>
+                    <td class="col-md-1">File type</td>
                     <td class="col-md-5">Name</td>
                     <td class="col-md-1">Size</td>
                     <td class="col-md-1">Download</td>
@@ -175,6 +181,7 @@
                 </tr>
             </thead>
             <tbody>
+
 
                 <!-- Directory -->
                 <tr ng-repeat="file in files.files">
@@ -318,6 +325,11 @@
 
             </tbody>
         </table>
+    </div>
+    <div style="text-align: center" class="col-md-12" ng-if="files.files.length === 0 && !uploading">
+        <span class="fa fa-ban fa-2x">
+            No files
+        </span>
     </div>
 
     <upload ng-if="uploading" path="getUploadPath()"></upload>

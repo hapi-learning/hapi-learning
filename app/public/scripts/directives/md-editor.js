@@ -1,15 +1,13 @@
 angular.module('hapi-learning')
-    .directive('mdEditor', ['$rootScope', function($rootScope) {
+    .directive('mdEditor', ['$rootScope', '$parse', function($rootScope, $parse) {
         return {
             restrict: 'AE',
             templateUrl: 'scripts/directives/md-editor.html',
-            scope: {
-                content: '=',
-                'saveButton': '='
-            },
             compile: function() {
                 return {
                     pre: function(scope, elem, attrs) {
+
+                        scope.content = scope.$eval(attrs.content);
 
                         scope.writing = true;
                         scope.selectedFontSize = 16;
@@ -21,8 +19,8 @@ angular.module('hapi-learning')
                             scope._session  = scope._editor.getSession();
                             scope._document = scope._session.getDocument();
 
-                            _editor.setFontSize(scope.selectedFontSize);
-
+                            scope._editor.setFontSize(scope.selectedFontSize);
+                            scope._editor.$blockScrolling = Infinity;
                             scope.setContent(scope.content);
                         };
 
@@ -56,13 +54,26 @@ angular.module('hapi-learning')
                             }
                         };
 
+                        scope.hasSave = function() {
+                            return attrs.onsave;
+                        };
+
+                        scope.hasCancel = function() {
+                            return attrs.oncancel;
+                        };
+
+
                         scope.save = function() {
-                            $rootScope.$emit('save-md-editor', scope._document.getValue());
+                            if (scope.hasSave()) {
+                                return $parse(attrs.onsave)(scope, {$content: scope._document.getValue()});
+                            }
                         };
 
 
                         scope.cancel = function() {
-                            $rootScope.$emit('cancel-md-editor');
+                            if (scope.hasCancel()) {
+                                return $parse(attrs.oncancel)(scope);
+                            }
                         };
 
                     }
