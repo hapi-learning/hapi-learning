@@ -4,20 +4,29 @@ angular.module('hapi-learning')
     .controller('AdminCtrl', ['$scope', 'TeachersFactory', function ($scope, TeachersFactory) {
 
         $scope.user = {};
+        $scope.usersFileNotValid = false;
+        $scope.usersFileContent = null;
 
-        $scope.forgot = false;
-
-        $scope.reset = function () {
-            $scope.forgot = true;
+        $scope.removeNotValidError = function() {
+            $scope.usersFileNotValid = false;
         };
 
-        $scope.backToLogin = function () {
-            $scope.forgot = false;
+        $scope.cancelUploadUsers = function() {
+            $scope.removeNotValidError();
+            $scope.usersFileContent = null;
+        };
+
+        $scope.uploadUsers = function() {
+
         };
 
         $scope.showUsersFileContent = function(content) {
-            $scope.usersFileContent = JSON.parse(content);
-            $scope.prettyUsers = JSON.stringify($scope.usersFileContent, null, 4);
+            try {
+                $scope.usersFileContent = JSON.parse(content);
+                $scope.usersFileNotValid = false;
+            } catch(err) {
+                $scope.usersFileNotValid = true;
+            }
         };
 
         $scope.loadTeachers = function ($query) {

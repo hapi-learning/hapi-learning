@@ -40,14 +40,42 @@
 
 </form>
 
-
-
 <h2>Import from file</h2>
 
-<input type="file" on-read-file="showUsersFileContent($fileContent)" />
-<div ng-if="usersFileContent">
-    <h2>File content is:</h2>
-    <pre pretty-json="usersFileContent">
-    </pre>
+<div ng-if="usersFileNotValid" ng-click="removeNotValidError()">
+    <div class="alert alert-danger">The file is not a valid JSON file</div>
 </div>
+
+<input type="file" accept=".json" on-read-file="showUsersFileContent($fileContent)" />
+
+<br/>
+
+
+<div ng-if="usersFileContent">
+    <div>
+        <button class="btn btn-primary" ng-click="uploadUsers()">
+            <span class="fa fa-floppy-o fa-lg"></span>
+            Save
+        </button>
+        <button class="btn btn-default" ng-click="cancelUploadUsers()">
+            <span class="fa fa-ban fa-lg"></span>
+            Cancel
+        </button>
+    </div>
+
+    <h2>File content is:</h2>
+    <pre pretty-json="usersFileContent"></pre>
+    <br/>
+    <div>
+        <button class="btn btn-primary" ng-click="uploadUsers()">
+            <span class="fa fa-floppy-o fa-lg"></span>
+            Save
+        </button>
+        <button class="btn btn-default" ng-click="cancelUploadUsers()">
+            <span class="fa fa-ban fa-lg"></span>
+            Cancel
+        </button>
+    </div>
+</div>
+
 <br/>
