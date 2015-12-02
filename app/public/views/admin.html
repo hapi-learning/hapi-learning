@@ -1,44 +1,51 @@
 <div if-group="admin" class="container-fluid">
-    <div class="col-md-10" ng-controller="AdminCtrl as adminCtrl">
+    <h1 class="page-header">
+        Administration
+    </h1>
 
-        <h1 class="page-header">Administration</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <nav>
+                <ul class="nav nav-tabs nav-justified">
+                    <li ui-sref-active="active">
+                        <a ui-sref="root.admin.courses">
+                            <span class="glyphicon glyphicon-book"></span>
+                            <span> Courses</span>
 
-        <h2>New announcement</h2>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="root.admin.users">
+                            <span class="fa fa-users fa-lg"></span>
+                            <span> Users</span>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="root.admin.news">
+                            <span class="fa fa-newspaper-o fa-lg"></span>
+                            <span> News</span>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="root.admin.tags">
+                            <span class="fa fa-hashtag fa-lg"></span>
+                            <span> Tags</span>
+                        </a>
+                    </li>
 
-        <h3>TODO</h3>
+                </ul>
+            </nav>
 
-        <div>
-            <h2>New user</h2>
-            <users-form></users-form>
+            <br/>
+
+            <div ui-view></div>
         </div>
-
-        <br />
-
-        <div>
-            <h2>New course</h2>
-
-            <br />
-
-            <courses-form></courses-form>
-        </div>
-
-        <br />
-
-        <div>
-            <h2>New tags</h2>
-
-            <br />
-
-            <tags-form></tags-form>
-        </div>
-
     </div>
 </div>
 <div if-group="user teacher">
 
     <div class="page-header">
         <h1>You don't have access to this page !</h1>
-
 
    </div>
 </div>

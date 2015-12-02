@@ -58,8 +58,25 @@ angular.module('hapi-learning', [
                 })
                 .state('root.admin', {
                     url: '/admin',
+                    abstract: true,
                     templateUrl: '/views/admin.html',
                     controller: 'AdminCtrl'
+                })
+                .state('root.admin.courses', {
+                    url: '/courses',
+                    templateUrl: '/views/admin-courses.html'
+                })
+                .state('root.admin.users', {
+                    url: '/users',
+                    templateUrl: '/views/admin-users.html'
+                })
+                .state('root.admin.tags', {
+                    url: '/tags',
+                    templateUrl: '/views/admin-tags.html'
+                })
+                .state('root.admin.news', {
+                    url: '/news',
+                    templateUrl: '/views/admin-news.html'
                 })
                 .state('root.profile', {
                     url: '/profile',

@@ -8,7 +8,7 @@ angular.module('hapi-learning')
         link: function(scope, elem, attrs) {
 
             scope.profile = null;
-            
+
             scope.logout = function() {
                 LoginFactory.logout();
             };
