@@ -523,7 +523,7 @@ exports.postHomepage = {
             id: Joi.string().required().description('Course code')
         },
         payload: {
-            content: Joi.string().default('')
+            content: Joi.string().default('').allow('')
         }
     },
     handler: function (request, reply) {
