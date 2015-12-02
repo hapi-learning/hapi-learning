@@ -46,6 +46,18 @@
     <div class="alert alert-danger">The file is not a valid JSON file</div>
 </div>
 
+<div ng-if="schemaNotValid" ng-click="removeNotValidError()">
+    <div class="alert alert-danger">The JSON schema is invalid</div>
+</div>
+
+<div ng-if="conflicts" ng-click="removeNotValidError()">
+    <div class="alert alert-danger">Conflicts! Some users already exist !</div>
+</div>
+
+<div ng-if="countAddedUsers" ng-click="removeCountAddedUsers()">
+    <div class="alert alert-success"><span ng-bind="countAddedUsers"></span> users added !</div>
+</div>
+
 <input type="file" accept=".json" on-read-file="showUsersFileContent($fileContent)" />
 
 <br/>
@@ -57,7 +69,7 @@
             <span class="fa fa-floppy-o fa-lg"></span>
             Save
         </button>
-        <button class="btn btn-default" ng-click="cancelUploadUsers()">
+        <button class="btn btn-default" ng-click="resetUploadUsers()">
             <span class="fa fa-ban fa-lg"></span>
             Cancel
         </button>
@@ -71,7 +83,7 @@
             <span class="fa fa-floppy-o fa-lg"></span>
             Save
         </button>
-        <button class="btn btn-default" ng-click="cancelUploadUsers()">
+        <button class="btn btn-default" ng-click="resetUploadUsers()">
             <span class="fa fa-ban fa-lg"></span>
             Cancel
         </button>

@@ -1,23 +1,49 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .controller('AdminCtrl', ['$scope', 'TeachersFactory', function ($scope, TeachersFactory) {
+    .controller('AdminCtrl', [
+        '$scope',
+        'TeachersFactory',
+        'UsersFactory',  function ($scope, TeachersFactory, UsersFactory) {
 
         $scope.user = {};
         $scope.usersFileNotValid = false;
         $scope.usersFileContent = null;
+        $scope.countAddedUsers = null;
+        $scope.schemaNotValid = false;
+        $scope.conflicts = false;
 
         $scope.removeNotValidError = function() {
             $scope.usersFileNotValid = false;
+            $scope.schemaNotValid = false;
+            $scope.conflicts = false;
         };
 
-        $scope.cancelUploadUsers = function() {
+        $scope.resetUploadUsers = function() {
             $scope.removeNotValidError();
             $scope.usersFileContent = null;
         };
 
-        $scope.uploadUsers = function() {
+        $scope.removeCountAddedUsers = function() {
+            $scope.countAddedUsers = null;
+        };
 
+        $scope.uploadUsers = function() {
+            if ($scope.usersFileContent) {
+                UsersFactory
+                    .create($scope.usersFileContent)
+                    .then(function(res) {
+                        $scope.countAddedUsers = res.count;
+                        $scope.resetUploadUsers();
+                    })
+                    .catch(function(err) {
+                        if (err.status === 400) {
+                            $scope.schemaNotValid = true;
+                        } else if (err.status === 409) {
+                            $scope.conflicts = true;
+                        }
+                    });
+            }
         };
 
         $scope.showUsersFileContent = function(content) {

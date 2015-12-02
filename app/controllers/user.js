@@ -33,7 +33,7 @@ internals.schemaUserPOST = function(){
             email: Joi.string().email().required().description('User email'),
             firstName: Joi.string().min(1).max(255).description('User first name'),
             lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.phone.e164().description('User phone number'),
+            phoneNumber: Joi.string().description('User phone number'),
             role_id: Joi.number().integer().default(3)
         }).options({stripUnknown : true});
 
