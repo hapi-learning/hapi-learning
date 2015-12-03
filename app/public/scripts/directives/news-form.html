@@ -2,17 +2,14 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Course</label>
         <div class="col-sm-2">
-            <select class="form-control" ng-model="news.course" ng-options="code for code in codes">
+            <select id="courseSelect" class="form-control" ng-model="news.course" ng-options="code for code in codes">
                 <option value="" disabled selected>-- Available courses --</option>
             </select>
         </div>
         <label class="col-sm-2 control-label">Priority</label>
         <div class="col-sm-2">
-            <select class="form-control" ng-model="news.priority">
+            <select id="optionSelect" class="form-control" ng-model="news.priority"  ng-options="priority for priority in priorities">
                 <option value="" disabled selected>-- Available priority --</option>
-                <option>Info</option>
-                <option>Warning</option>
-                <option>Danger</option>
             </select>
         </div>
     </div>
