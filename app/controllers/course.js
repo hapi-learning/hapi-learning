@@ -44,7 +44,8 @@ exports.getAll = {
             select: [Joi.string().valid('code', 'name'),
                     Joi.array(Joi.string().valid('code', 'name'))],
             code: Joi.string(),
-            name: Joi.string()
+            name: Joi.string(),
+            tags: Joi.array(Joi.string())
         }
     },
     handler: function (request, reply) {

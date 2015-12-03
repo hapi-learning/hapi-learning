@@ -10,34 +10,30 @@ angular.module('hapi-learning')
             var internals = {};
             internals.courses = [];
             internals.fetchedCourses = false;
+            internals.fetchedSubscribed = false;
 
             internals.pagedCourses = [];
-            internals.fetchedPagedCourses = false;
-
             internals.subscribedCourses = [];
-            internals.fetchedSubscribed = false;
+
             internals.loadPaged = function (limit, page) {
-                return $q(function (resolve, reject) {
-                    if (!internals.fetchedPagedCourses) {
-                        Restangular.all('courses')
-                            .customGET('', {
-                                limit: limit,
-                                page: page
-                            })
-                            .then(function (object) {
-                                internals.pagedCourses = object.results;
-                                internals.fetchedPagedCourses = true;
-                                resolve(object.results);
-                            })
-                            .catch(function (err) {
-                                reject(err)
-                            });
-                    }
-                    else {
-                        resolve(internals.pagedCourses);
-                    }
-                });
+
+                var d = $q.defer();
+
+                Restangular.all('courses')
+                    .customGET('', {
+                        limit: limit,
+                        page: page
+                    })
+                    .then(function (object) {
+                        d.resolve(object);
+                    })
+                    .catch(function (err) {
+                        d.reject(err)
+                    });
+
+                return d.promise;
             };
+
             internals.loadAll = function () {
                 return $q(function (resolve, reject) {
                     if (!internals.fetchedCourses) {
