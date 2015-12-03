@@ -18,6 +18,7 @@ angular.module('hapi-learning')
                         content: null,
                         priority: null
                     };
+
                     scope.postNews = function () {
                         if (scope.complete()) {
                             NewsFactory.add(scope.news)
@@ -35,13 +36,13 @@ angular.module('hapi-learning')
                             scope.news.priority;
                     };
 
-                    CoursesFactory.load()
-                        .then(function (courses) {
-                            scope.codes = _.map(courses, 'code');
-                        })
-                        .catch(function (error) {
+                    CoursesFactory.loadCodes()
+                        .then(function(response) {
+                            scope.codes = _.map(response, 'code');
+                        }).catch(function(error) {
                             console.log(error);
-                        });
+                        })
+
                 }
             };
 }]);
