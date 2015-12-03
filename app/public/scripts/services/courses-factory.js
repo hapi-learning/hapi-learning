@@ -125,9 +125,9 @@ angular.module('hapi-learning')
                     LoginFactory.getProfile().then(function (profile) {
                         Restangular.one('users', profile.username)
                             .customPOST({}, 'subscribe/' + code)
-                            .then(function (cours) {
-                                internals.subscribedCourses.push(cours);
-                                resolve(cours);
+                            .then(function (course) {
+                                internals.subscribedCourses.push(course);
+                                resolve(course);
                             })
                             .catch(function (err) {
                                 reject(err);

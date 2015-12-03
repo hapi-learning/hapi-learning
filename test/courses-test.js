@@ -66,7 +66,6 @@ after(done => {
 const course = {
     name: 'Ateliers Logiciel 3e',
     code: 'ATL3',
-    description: 'A course',
     teachers: ['SRV', 'FPL'],
     tags: ['3e', 'Java']
 };
@@ -74,13 +73,11 @@ const course = {
 const courses = [{
     name: 'Analyse 3e',
     code: 'ANL3',
-    description: 'Analyse',
     teachers: ['FPL'],
     tags: ['3e', 'Java']
 }, {
     name: 'Analyse 2e',
     code: 'ANL2',
-    description: 'ANL 2e',
     teachers: ['FPL']
 }];
 
@@ -171,7 +168,6 @@ describe('Controller.Course', () => {
 
                         expect(response.name).to.equal(course.name);
                         expect(response.code).to.equal(course.code);
-                        expect(response.description).to.equal(course.description);
                         expect(response.teachers).to.be.an.array();
                         expect(response.teachers).to.have.length(pRequest.payload.teachers.length);
                         expect(response.teachers).to.only.include(pRequest.payload.teachers);
@@ -222,7 +218,6 @@ describe('Controller.Course', () => {
 
                 expect(response.code).to.equal(course.code);
                 expect(response.name).to.equal(course.name);
-                expect(response.description).to.equal(course.description);
                 expect(response.teachers).to.be.an.array();
                 expect(response.teachers).to.have.length(users.length);
                 expect(response.tags).to.be.an.array();
@@ -398,7 +393,6 @@ describe('Controller.Course', () => {
 
                 expect(response.code).to.equal(request.payload.code);
                 expect(response.name).to.equal(request.payload.name);
-                expect(response.description).to.equal(course.description);
                 expect(response.teachers).to.be.an.array();
                 expect(response.teachers).to.have.length(users.length);
                 expect(response.tags).to.be.an.array();
