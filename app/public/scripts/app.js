@@ -6,7 +6,6 @@ angular.module('hapi-learning', [
         'ui.bootstrap',
         'ui.router',
         'ngTagsInput',
-        'jcs-autoValidate',
         'ngFileUpload',
         'angularFileUpload',
         'angular-loading-bar',
@@ -119,24 +118,8 @@ angular.module('hapi-learning', [
         cfpLoadingBarProvider.includeSpinner = false;
     }])
 
-
-
     .config(['storeProvider', function(storeProvider) {
         storeProvider.setStore('localStorage');
-    }])
-
-
-    .run(['bootstrap3ElementModifier', function (bootstrap3ElementModifier) {
-        bootstrap3ElementModifier.enableValidationStateIcons(true);
-    }])
-
-    .run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
-            // passing a culture into getErrorMessages('fr-fr') will get the culture specific messages
-            // otherwise the current default culture is returned.
-            defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
-                errorMessages.passwordMatch = 'Passwords do not match!';
-               // errorMessages['passwordMatch'] = 'Passwords do not match!';
-            });
     }])
 
     .run(['Restangular', 'API', 'UM_CONFIG', function (Restangular, API, UM_CONFIG) {
