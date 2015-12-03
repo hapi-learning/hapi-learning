@@ -504,12 +504,55 @@ exports.addCourseToFolder = {
     validate: {
         params: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            folder: Joi.string().min(1).max(255).required().description('New folder name'),
-            course: Joi.number().integer().required().description('Course id')
+            folderName: Joi.string().min(1).max(255).required().description('New folder name'),
+            crsId: Joi.number().integer().required().description('Course id')
         }
     },
     handler: function(request, reply) {
-        reply('Not implemented');
+
+        const User   = this.models.User;
+        const Folder = this.models.Folder;
+        const Course = this.models.course
+        
+        internals.findUser(User, request.params.username)
+        .then(user => {
+            if (user)
+            {
+                user.getFolders()
+                    .then(userFolders => 
+                        { 
+                            let folder = _.find(userFolders, 
+                                                userFolder => userFolder.name === request.params.folderName);
+                            if (folder)
+                                user.getCourses({where : {code : request.params.crsId}})
+                                    .then(userCourse => { 
+                                    
+                                        if (userCourse)
+                                        {
+                                            folder.addCourse(userCourse);
+                                            
+                                            let oldFolder = 
+                                                _.find(userFolders, userFolder => 
+                                                                    (_.find(folder.getCourses, course => 
+                                                                            course.crsId === request.params.crsId) 
+                                                                            !== undefined));
+                                            if (oldFolder)
+                                                oldFolder.removeCourse(userCourse);
+                                        }
+                                        else
+                                            return reply.notFound('User did not suscribe to course ' + 
+                                                                  request.params.crsId);
+                                    })
+                                    .catch(error => reply.badImplementation(error));
+                            else
+                                return reply.notFound('User doesn\'t own the folder ' + request.params.folderName); 
+                        })
+                    .catch(error => reply.badImplementation(error));
+            }
+            else
+                return reply.notFound('User ' + request.params.username + ' not found');
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
 

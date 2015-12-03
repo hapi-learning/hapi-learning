@@ -6,7 +6,8 @@ const Path      = require('path');
 const _         = require('lodash');
 
 
-exports.register = function(server, options, next) {
+exports.register = function(server, options, next) 
+{
     let models = {};
 
     models.sequelize = new Sequelize(
