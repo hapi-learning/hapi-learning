@@ -4,7 +4,8 @@ angular.module('hapi-learning')
     .controller('AdminCtrl', [
         '$scope',
         'TeachersFactory',
-        'UsersFactory',  function ($scope, TeachersFactory, UsersFactory) {
+        'UsersFactory',
+        'TagsFactory', function ($scope, TeachersFactory, UsersFactory, TagsFactory) {
 
         $scope.user = {};
         $scope.usersFileNotValid = false;
@@ -74,5 +75,19 @@ angular.module('hapi-learning')
                 .catch(function (error) {
                     console.log(error);
                 });
+        };
+
+        $scope.createTags = function() {
+            _.forEach($scope.tags, function(tag) {
+                var t = { name: tag.text };
+                TagsFactory.create(t)
+                    .then(function() {
+
+                    })
+                    .catch(function() {
+
+                    });
+            });
+
         };
     }]);

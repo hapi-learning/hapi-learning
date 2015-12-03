@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('TagsFactory', ['Restangular', function (Restangular) {
+    .factory('TagsFactory', ['Restangular', '$q', function (Restangular, $q) {
 
         var internals = {};
         internals.tags = [];
@@ -29,6 +29,11 @@ angular.module('hapi-learning')
                     resolve(internals.tags);
                 }
             });
+        };
+
+        exports.create = function(tag) {
+            return Restangular.all('tags')
+                .customPOST(tag);
         };
 
         exports.get = function (index) {

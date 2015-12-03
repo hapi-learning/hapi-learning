@@ -3,14 +3,16 @@
     <fieldset class="form-group">
         <div>
             <label>Tags</label>
-            <tags-input class="ti-input-sm" name="tags" title="Tags" ng-model="tags"></tags-input>
+            <tags-input min-length="1" class="ti-input-sm" name="tags" title="Tags" ng-model="tags"></tags-input>
         </div>
     </fieldset>
 
     <br />
 
-    <fieldset class="form-group">
-        <input type="submit" class="btn btn-primary" value="Create new tags" />
-    </fieldset>
+    <div>
+        <button class="btn btn-primary" ng-click="createTags()">
+            Submit
+        </button>
+    </div>
 
 </form>
