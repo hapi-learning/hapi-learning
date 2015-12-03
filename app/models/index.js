@@ -35,13 +35,6 @@ exports.register = function(server, options, next) {
     void (function setAssociations(m) {
 
 
-     /*   // A course has many files
-        m.File.belongsTo(m.Course, {
-            foreignKey: {
-                name: 'course_code',
-                allowNull: false },
-            targetKey: 'code'
-        });*/
 
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
