@@ -22,29 +22,38 @@ gulp.task('scripts', function() {
         'lib/angular-file-upload/dist/angular-file-upload.min.js',
         'lib/angular-loading-bar/build/loading-bar.min.js',
         'lib/ace-builds/src-min-noconflict/ace.js',
+        'lib/ace-builds/src-min-noconflict/ext-language_tools.js',
+        'lib/ace-builds/src-min-noconflict/mode-markdown.js',
+        'lib/ace-builds/src-min-noconflict/theme-twilight.js',
         'lib/angular-ui-ace/ui-ace.min.js',
         'lib/angular-ui-validate/dist/validate.min.js',
         'lib/lodash/lodash.min.js',
         'lib/restangular/dist/restangular.min.js',
         'lib/a0-angular-storage/dist/angular-storage.min.js',
         'lib/angular-jwt/dist/angular-jwt.min.js',
-        'lib/moment/moment.js',
+        'lib/moment/min/moment.min.js',
         'lib/angular-moment/angular-moment.min.js',
         'lib/angular-filter/dist/angular-filter.min.js',
         'FileSaver.js',
         'lib/angular-xeditable/dist/js/xeditable.min.js',
+        'lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+        'lib/angular-sanitize/angular-sanitize.min.js',
+        'lib/showdown/dist/showdown.min.js',
+        'lib/ng-showdown/dist/ng-showdown.min.js',
+        'lib/ng-prettyjson/dist/ng-prettyjson.min.js',
         
         //app scripts
         'submodules/api/api.js',
         'submodules/user-management/scripts/um.js',
+        'submodules/user-management/scripts/directives/if-group.js',
         'submodules/user-management/scripts/directives/login-form.js',
         
         'scripts/app.js',
         
-        'scripts/**/*.js',
+        'scripts/**/*.js'
     ])
         .pipe(concat('all.min.js'))
-        .pipe(uglify())
+//        .pipe(uglify())
         .pipe(gulp.dest('dist/scripts'));
 });
 
@@ -53,14 +62,13 @@ gulp.task('css', function() {
     return gulp.src([
         
         'lib/bootstrap/dist/css/bootstrap.min.css',
-        'lib/font-awesome/css/font-awesome.min.css',
         'lib/ng-tags-input/ng-tags-input.css',
         'lib/ng-tags-input/ng-tags-input.bootstrap.css',
         'lib/angular-loading-bar/build/loading-bar.min.css',
         'styles/main.css',
-        'lib/angular-xeditable/dist/css/xeditable.css'
+        'lib/angular-xeditable/dist/css/xeditable.css',
+        'lib/ng-prettyjson/dist/ng-prettyjson.min.css'
     ])
         .pipe(concat('all.min.css'))
-        .pipe(minify())
         .pipe(gulp.dest('dist/css'));
 })
