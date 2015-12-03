@@ -2,10 +2,9 @@
 
 angular.module('hapi-learning')
     .directive('newsForm', [
-    'LoginFactory',
     'CoursesFactory',
     'NewsFactory',
-    function (LoginFactory, CoursesFactory, NewsFactory) {
+    function (CoursesFactory, NewsFactory) {
             return {
                 restrict: 'E',
                 templateUrl: 'scripts/directives/news-form.html',
