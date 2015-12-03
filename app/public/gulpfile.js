@@ -57,13 +57,13 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('dist/scripts'));
 });
 
+// /!\ HORS SERVICE
+/*  
 gulp.task('css', function() {
     
     return gulp.src([
         
-        'lib/bootstrap/dist/css/bootstrap.min.css',
-        'lib/ng-tags-input/ng-tags-input.css',
-        'lib/ng-tags-input/ng-tags-input.bootstrap.css',
+        'lib/font-awesome/css/font-awesome.min.css',
         'lib/angular-loading-bar/build/loading-bar.min.css',
         'styles/main.css',
         'lib/angular-xeditable/dist/css/xeditable.css',
@@ -72,3 +72,4 @@ gulp.task('css', function() {
         .pipe(concat('all.min.css'))
         .pipe(gulp.dest('dist/css'));
 })
+*/
