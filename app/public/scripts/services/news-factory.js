@@ -5,7 +5,8 @@ angular.module('hapi-learning')
     '$q',
     'Restangular',
     'LoginFactory',
-        function ($q, Restangular, LoginFactory) {
+    '$rootScope',
+        function ($q, Restangular, LoginFactory, $rootScope) {
 
             const internals = {
                 news: [],
@@ -51,16 +52,16 @@ angular.module('hapi-learning')
                         .then(function (profile) {
                             Restangular.all('news')
                                 .post({
-                                    username : profile.username,
-                                    code : news.course ? news.course : null,
-                                    content : news.content,
-                                    subject : news.subject
+                                    username: profile.username,
+                                    code: news.course ? news.course : null,
+                                    content: news.content,
+                                    subject: news.subject
                                 })
                                 .then(function (news) {
                                     if (internals.fetched) {
                                         internals.news.push(news);
                                     }
-
+                                    $rootScope.$emit('news_added', news);
                                     resolve(news);
                                 })
                                 .catch(function (err) {

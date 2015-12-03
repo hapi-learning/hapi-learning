@@ -53,8 +53,6 @@ angular.module('hapi-learning')
                             scope.news.priority;
                     };
 
-                    console.log(scope.code);
-
                     if (scope.code) {
                         scope.codes = [scope.code];
                         scope.news.course = scope.code;
