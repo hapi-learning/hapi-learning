@@ -27,7 +27,8 @@ angular.module('hapi-learning')
                                 // so there is no data binding; a signal must be send if a news is added
                                 $rootScope.$on('news_added', function (event, news) {
                                     if (!scope.code || news.code === scope.code) {
-                                        scope.news.unshift(news);
+                                        var tmp = [news].concat(scope.news);
+                                        scope.news = tmp;
                                     }
                                 });
                             }
