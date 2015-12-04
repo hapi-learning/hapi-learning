@@ -8,13 +8,15 @@ angular.module('hapi-learning')
 				scope.course = {
 					name: null,
 					code: null,
+                    homepage: null,
 					teachers: []
 				};
 				
 				scope.postCourse = function() {
                     console.log('post course');
                     console.log(scope.course);
-					CoursesFactory.add(scope.course)
+                    
+					return CoursesFactory.add(scope.course)
 					.then(function(course) {
 						alert('course added!');
 					})

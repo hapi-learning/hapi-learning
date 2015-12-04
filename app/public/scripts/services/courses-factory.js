@@ -20,20 +20,17 @@ angular.module('hapi-learning')
 				.post({
 					code : course.code,
 					name : course.name,
-					//content : course.homepage,
+					homepage : course.homepage,
 					teachers : course.teachers
 				})
 				.then(function (course) {
-					if (internals.fetchedCourses) {
-						internals.courses.push(course);
-					}
-
 					d.resolve(course);
 				})
 				.catch(function (err) {
 					d.reject(err);
 				});                
             
+                return d.promise;
             };
 
             /**

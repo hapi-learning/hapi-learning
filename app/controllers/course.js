@@ -358,7 +358,7 @@ exports.post = {
 
         const name        = request.payload.name;
         const code        = request.payload.code;
-        const description = request.payload.description;
+        const homepage    = request.payload.homepage;
         const pteachers   = request.payload.teachers;
         const ptags       = request.payload.tags;
 
@@ -368,7 +368,7 @@ exports.post = {
         const coursePayload = {
             name: name,
             code: code,
-            description: description
+            homepage: homepage
         };
 
         // If tags has been passed to the payload, return a promise
@@ -420,7 +420,7 @@ exports.post = {
                             course.tags = _.map(tags, (t => t.get('name', {plain:true})));
                             course.teachers = _.map(teachers, (t => t.get('username', {plain:true})));
 
-                            Storage.createCourse(course.code);
+                            Storage.createCourse(course.code, coursePayload.homepage);
 
                             return reply(course).code(201);
                         });
