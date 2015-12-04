@@ -44,7 +44,7 @@
 
     <div class="row" ng-if="folderError" ng-click="cleanFolderError()">
        <div class="col-md-12 alert alert-danger error-message">
-            <span>Invalid folder name</span>
+            <span>Invalid file / folder name</span>
        </div>
     </div>
 
@@ -203,13 +203,13 @@
                             <a ng-click="fileExplorer.$visible || goToRelativePath(file.name)"
                                 ng-disabled="fileExplorer.$visible">
                                 <span class="folder-name" editable-text="file.name"
-                                      e-name="name" e-form="fileExplorer" e-required ng-bind="file.name">
+                                      e-name="name" e-form="fileExplorer" ng-bind="file.name">
                                 </span>
                             </a>
                        </div>
                        <div ng-if="file.type === 'f'" class="file-name">
                            <span editable-text="file.name"
-                                 e-name="name" e-form="fileExplorer" e-required
+                                 e-name="name" e-form="fileExplorer"
                                  ng-bind="file.name">
                            </span>
                        </div>

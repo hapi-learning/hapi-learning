@@ -55,9 +55,6 @@ angular.module('hapi-learning')
 
         exports.updateFolder = function(course, path, newName, hidden) {
 
-            // $q.defer() needed by xeditable
-           // var d = $q.defer();
-
             path = internals.replacePath(path);
             return Restangular
                 .one('courses', course)
@@ -66,28 +63,18 @@ angular.module('hapi-learning')
                     name: newName,
                     hidden: hidden
                 });
-                /*.then(d.resolve)
-                .catch(d.reject);*/
-
-            //return d.promise;
         };
 
         exports.updateFile = function(course, path, newName, hidden) {
 
-            var d = $q.defer();
-
             path = internals.replacePath(path);
-            Restangular
+            return Restangular
                 .one('courses', course)
                 .all('documents')
                 .customOperation('patch', encodeURIComponent(path), null, null, {
                     name: newName,
                     hidden: hidden
-                })
-                .then(d.resolve)
-                .catch(d.reject);
-
-            return d.promise;
+                });
         };
 
         exports.createFolder = function(course, path, hidden) {

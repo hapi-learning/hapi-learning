@@ -149,7 +149,7 @@ angular.module('hapi-learning')
                         updateLocalFile(file);
                         return true;
                     }).catch(function(err) {
-                        if (err.status === 409) {
+                        if (err.status === 409 || err.status === 400) {
                             scope.folderError = true;
                             return err.statusText;
                         }
