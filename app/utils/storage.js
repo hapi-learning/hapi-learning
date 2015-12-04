@@ -298,17 +298,15 @@ const load = function() {
         const oldPath = Path.join(internals.courseFolder, oldName);
         const newPath = Path.join(internals.courseFolder, newName);
 
-        return new P(function(resolve, reject) {
-            Fs.renameAsync(oldPath, newPath).then(function() {
-                internals.File.update({
+            return Fs.renameAsync(oldPath, newPath).then(function() {
+                return internals.File.update({
                     course_code: newName
                 }, {
                     where: {
                         course_code: oldName
                     }
-                }).then(resolve).catch(reject);
-            }).catch(reject);
-        });
+                });
+            });
 
     };
 
@@ -572,24 +570,6 @@ const load = function() {
         });
     };
 
-    /**
-     * Get the tree of the path.
-     * Can be recursive or not.
-     */
-    Storage.getTree = function(course, path, recursive) {
-        Hoek.assert(course, 'course is required');
-        Hoek.assert(path, 'path is required');
-
-        recursive = recursive || false;
-
-        const document = internals.getDocumentPath(course, path);
-        const relativeTo = Path.join(internals.courseFolder, encodeURI(course), internals.documents);
-        return require('./ls').sync(document, {
-            recursive: recursive,
-            relativeTo: relativeTo
-        });
-    };
-
 
     Storage.getList = function(course, path, hidden) {
 
@@ -602,23 +582,21 @@ const load = function() {
             where.hidden = hidden;
         }
 
-        return new P(function(resolve, reject) {
-            internals.File.findAll({
-                where: where
-            }).then(function(results) {
-                // directory is the parent dir
-                let directory;
-                if (path === '/') {
-                    directory = null;
-                } else {
-                    directory = internals.replaceDirectory(path);
-                }
+        return internals.File.findAll({
+            where: where
+        }).then(function(results) {
+            // directory is the parent dir
+            let directory;
+            if (path === '/') {
+                directory = null;
+            } else {
+                directory = internals.replaceDirectory(path);
+            }
 
-                resolve({
-                    dir: directory,
-                    files: results
-                });
-            }).catch(reject);
+            return {
+                dir: directory,
+                files: results
+            };
         });
     };
 

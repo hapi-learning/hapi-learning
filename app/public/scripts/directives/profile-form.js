@@ -47,7 +47,7 @@ angular.module('hapi-learning')
                     }
                 }
 
-                if (typeof data.newPassword !== 'undefined') {
+                if (data.newPassword) {
                     if (data.newPassword === data.confirmPassword) {
                         profile.password = data.newPassword;
                     } else {

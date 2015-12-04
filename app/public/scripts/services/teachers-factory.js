@@ -7,6 +7,7 @@ angular.module('hapi-learning')
         internals.teachers = [];
 
         var exports = {};
+
         exports.add = function (value) {
             internals.teachers.push(value);
         };

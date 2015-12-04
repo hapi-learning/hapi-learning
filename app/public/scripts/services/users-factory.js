@@ -6,18 +6,7 @@ angular.module('hapi-learning')
         var exports = {};
 
         exports.create = function(users) {
-            var d = $q.defer();
-
-            Restangular.all('users')
-                .customPOST(users)
-                .then(function(res) {
-                    d.resolve(res);
-                })
-                .catch(function(error) {
-                    d.reject(error);
-                });
-
-            return d.promise;
+            return Restangular.all('users').customPOST(users);
         };
 
         return exports;

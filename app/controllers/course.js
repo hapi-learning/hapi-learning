@@ -104,8 +104,7 @@ exports.getAll = {
         }
 
 
-        Course
-            .findAndCountAll(options).then(results => {
+        Course.findAndCountAll(options).then(results => {
 
             if (select) {
                 if (pagination) {
