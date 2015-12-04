@@ -69,36 +69,17 @@ angular.module('hapi-learning')
             };
 
             exports.loadCodes = function() {
-                var d = $q.defer();
-
-                Restangular.all('courses')
-                    .customGET('', {
-                        pagination: false,
-                        select: ['code']
-                    }).then(function(response) {
-                        d.resolve(response);
-                    }).catch(function(error) {
-                        d.reject(error);
-                    });
-
-                return d.promise;
+                return Restangular.all('courses').customGET('', {
+                    pagination: false,
+                    select: ['code']
+                });
             };
 
             /**
                 Load a specific course
             **/
             exports.loadSpecific = function (code) {
-
-                return $q(function (resolve, reject) {
-                    Restangular.one('courses', code)
-                        .get()
-                        .then(function (object) {
-                            resolve(object);
-                        })
-                        .catch(function (err) {
-                            reject(err);
-                        });
-                });
+                return Restangular.one('courses', code).get();
             };
 
             /**
@@ -109,19 +90,11 @@ angular.module('hapi-learning')
                 /!\ WIP : Does not return course atm, so subscribed course is clear.
             **/
             exports.subscribe = function (code) {
-                return $q(function (resolve, reject) {
-                    LoginFactory.getProfile().then(function (profile) {
-                        Restangular.one('users', profile.username)
-                            .customPOST({}, 'subscribe/' + code)
-                            .then(function (course) {
-                                internals.subscribedCourses.push(course);
-                                resolve(course);
-                            })
-                            .catch(function (err) {
-                                reject(err);
-                            });
-                    }).catch(function (error) {});
-
+                return LoginFactory.getProfile().then(function (profile) {
+                    return Restangular.one('users', profile.username).customPOST({}, 'subscribe/' + code);
+                }).then(function (course) {
+                    internals.subscribedCourses.push(course);
+                    return course;
                 });
             };
 
@@ -131,20 +104,14 @@ angular.module('hapi-learning')
                 from local subscribed courses.
             **/
             exports.unsubscribe = function (code) {
-                return $q(function (resolve, reject) {
-                    LoginFactory.getProfile().then(function (profile) {
-                        Restangular.one('users', profile.username)
-                            .customPOST({}, 'unsubscribe/' + code)
-                            .then(function (object) {
-                                _.remove(internals.subscribedCourses, function (course) {
-                                    return course.code === code;
-                                });
-                                resolve(object);
-                            })
-                            .catch(function (err) {
-                                reject(err);
-                            });
+                return LoginFactory.getProfile().then(function (profile) {
+                    return Restangular.one('users', profile.username).customPOST({}, 'unsubscribe/' + code);
+                }).then(function (object) {
+                    _.remove(internals.subscribedCourses, function (course) {
+                        return course.code === code;
                     });
+
+                    return object;
                 });
             };
 

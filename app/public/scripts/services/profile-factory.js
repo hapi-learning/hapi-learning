@@ -5,19 +5,11 @@ angular.module('hapi-learning')
 
         exports.update = function(profile) {
 
-            var d = $q.defer();
-
-            $http({
+            return $http({
                 method: 'PATCH',
                 url: Restangular.configuration.baseUrl + '/me',
                 data: JSON.stringify(profile)
-            }).then(function success() {
-                d.resolve();
-            }, function failure(err) {
-                d.reject(err);
             });
-
-            return d.promise;
         };
 
         return exports;
