@@ -3,6 +3,5 @@ angular.module('hapi-learning')
         return {
             restrict: 'E',
             templateUrl: 'scripts/directives/courses-form.html'
-
         };
     });

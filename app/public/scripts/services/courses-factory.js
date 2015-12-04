@@ -8,76 +8,64 @@ angular.module('hapi-learning')
     function (Restangular, LoginFactory, $q) {
 
             var internals = {};
-            internals.courses = [];
-            internals.fetchedCourses = false;
-
-            internals.pagedCourses = [];
-            internals.fetchedPagedCourses = false;
-
-            internals.subscribedCourses = [];
-            internals.fetchedSubscribed = false;
-            internals.loadPaged = function (limit, page) {
-                return $q(function (resolve, reject) {
-                    if (!internals.fetchedPagedCourses) {
-                        Restangular.all('courses')
-                            .customGET('', {
-                                limit: limit,
-                                page: page
-                            })
-                            .then(function (object) {
-                                internals.pagedCourses = object.results;
-                                internals.fetchedPagedCourses = true;
-                                resolve(object.results);
-                            })
-                            .catch(function (err) {
-                                reject(err)
-                            });
-                    }
-                    else {
-                        resolve(internals.pagedCourses);
-                    }
-                });
-            };
-            internals.loadAll = function () {
-                return $q(function (resolve, reject) {
-                    if (!internals.fetchedCourses) {
-                        Restangular.all('courses')
-                            .customGET('', {})
-                            .then(function (object) {
-                                internals.courses = object.results;
-                                internals.fetchedCourses = true;
-                                resolve(object.results);
-                            })
-                            .catch(function (err) {
-                                reject(err)
-                            });
-                    }
-                    else {
-                        resolve(internals.courses);
-                    }
-                });
-            };
-
             var exports = {};
+
+            internals.fetchedSubscribed = false;
+            internals.subscribedCourses = [];
+
             exports.add = function (value) {
                 // TO-DO
                 internals.courses.push(value);
             };
 
             /**
-                Courses fetching, return asynchronous promise fill with them.
-                Results are going to be saved in factory to avoid server fetching
-                for every request.
-            **/
-            exports.load = function (limit, page) {
-                if (limit && page)
-                {
-                    return internals.loadPaged(limit, page);
+             *  Courses fetching, return asynchronous promise fill with them.
+             */
+            exports.load = function (options) {
+
+                var d = $q.defer();
+
+                var codename = options.codename;
+                var tags = options.tags;
+                var page = options.page;
+                var limit = options.limit;
+
+                if (tags && (page || limit)) {
+                    d.reject('Cannot request tags with pagination');
                 }
-                else
-                {
-                    return internals.loadAll();
+
+                var where = {};
+
+                if (codename) {
+                    where.codename = codename;
                 }
+
+                if (page) {
+                    where.page = page;
+                }
+
+                if (limit) {
+                    where.limit = limit;
+                }
+
+                if (tags) {
+                    where.tags = tags;
+                    where.pagination = false;
+                }
+
+
+
+                Restangular
+                    .all('courses')
+                    .customGET('', where)
+                    .then(function(results) {
+                        d.resolve(results);
+                    })
+                    .catch(function(error) {
+                        d.reject(error);
+                    });
+
+                return d.promise;
             };
 
             exports.loadCodes = function() {

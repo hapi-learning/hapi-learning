@@ -12,23 +12,27 @@ angular.module('hapi-learning')
         };
 
         exports.load = function () {
-            return new Promise(function (resolve, reject) {
-                if (internals.tags.length === 0)
-                {
-                    Restangular
-                    .all('tags')
-                    .getList()
-                    .then(function(tags) {
-                        internals.tags = tags;
-                        resolve(tags);
-                    })
-                    .catch(reject);
-                }
-                else
-                {
-                    resolve(internals.tags);
-                }
-            });
+            var d = $q.defer();
+
+            if (internals.tags.length === 0)
+            {
+                Restangular
+                .all('tags')
+                .getList()
+                .then(function(tags) {
+                    internals.tags = tags;
+                    d.resolve(tags);
+                })
+                .catch(function() {
+                    d.reject();
+                });
+            }
+            else
+            {
+                d.resolve(internals.tags);
+            }
+
+            return d.promise;
         };
 
         exports.create = function(tag) {

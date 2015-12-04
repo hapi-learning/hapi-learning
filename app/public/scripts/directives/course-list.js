@@ -6,86 +6,58 @@ angular.module('hapi-learning')
         return {
             restrict: 'E',
             scope: {
-                subscribed: '=',
-                filters: '='
+                //subscribed: '=',
+                //filters: '=',
+                courses: '='
             },
             templateUrl: 'scripts/directives/course-list.html',
-            link: function(scope, elem, attrs) {
+            compile: function() {
+                return {
+                    pre: function(scope, elem, attrs) {
 
-                const internals = {
-                    filterByTags : function (course) {
-                        var select = true;
+            /*            const internals = {
+                            filterByTags : function (course) {
+                                var select = true;
 
-                        scope.selectedTags.forEach(function (tag) {
-                            select = select && (course.tags.indexOf(tag.name) > -1);
-                        });
+                                scope.selectedTags.forEach(function (tag) {
+                                    select = select && (course.tags.indexOf(tag.name) > -1);
+                                });
 
-                        return select;
-                    }
-                };
-
-                scope.courses = [];
-                scope.tags = [];
-                scope.selectedTags = [];
-                scope.courseFilter = {
-                    filter : ''
-                };
-
-                scope.selected = function(tag) {
-
-                    if (scope.selectedTags.indexOf(tag) > -1) {
-                        _.remove(scope.selectedTags, {name: tag.name});
-                    } else {
-                        scope.selectedTags.push(tag);
-                    }
-                };
-
-                scope.search = function (course) {
-                    var name = angular.lowercase(course.name) || '';
-                    var code = angular.lowercase(course.code) || '';
-                    
-                    return (
-                        (_.includes(name, angular.lowercase(scope.courseFilter.filter)) || 
-                        _.includes(code, angular.lowercase(scope.courseFilter.filter))) 
-                        && internals.filterByTags(course)
-                    );
-                };
-
-                /**
-                    Listener on 'subscribe' scope value :
-                    it loads all or part of courses.
-                **/
-                scope.$watch('subscribed', function(value) {
-
-                    if (value === true)
-                    {
-                        CoursesFactory.getSubscribed()
-                            .then(function(courses) {
-                            if (courses)
-                            {
-                                scope.courses = courses;
+                                return select;
                             }
-                        })
-                        .catch(function(error) {console.log(error);});
-                    }
-                    else if (value === false)
-                    {
-                        if (scope.filters) {
-                            TagsFactory.load().then(function(tags) {
-                                scope.tags = tags;
-                            });
-                        }
+                        };
+*/
+                       //s scope.courses = [];
+                      /*  scope.tags = [];
+                        scope.selectedTags = [];
+                        scope.courseFilter = {
+                            filter : ''
+                        };
 
-                        CoursesFactory.load()
-                            .then(function(courses) {
-                            if (courses)
-                            {
-                                scope.courses = courses;
+                        scope.selected = function(tag) {
+
+                            if (scope.selectedTags.indexOf(tag) > -1) {
+                                _.remove(scope.selectedTags, {name: tag.name});
+                            } else {
+                                scope.selectedTags.push(tag);
                             }
-                        })
-                        .catch(function(error) {console.log(error);});
+                        };
+
+                        scope.search = function (course) {
+                            var name = angular.lowercase(course.name) || '';
+                            var code = angular.lowercase(course.code) || '';
+
+                            return (
+                                (_.includes(name, angular.lowercase(scope.courseFilter.filter)) ||
+                                _.includes(code, angular.lowercase(scope.courseFilter.filter)))
+                                && internals.filterByTags(course)
+                            );
+                        };*/
+
+
+
                     }
-                });
+                };
             }
         };
     }]);

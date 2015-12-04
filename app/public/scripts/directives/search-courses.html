@@ -1,11 +1,11 @@
 <div class="row">
     <form-group>
         <span class="col-sm-4">
-            <input class="form-control" 
-                   type="text" 
-                   placeholder="Course name or code" 
-                   ng-model="courseFilter.filter" clearable 
-            />
+            <input class="form-control"
+                   type="text"
+                   placeholder="Course name or code"
+                   ng-change="load()"
+                   ng-model="coursesFilter"/>
         </span>
     </form-group>
 </div>
@@ -17,7 +17,7 @@
 
     <div>
         <span data-toggle="buttons" ng-repeat="tag in tags track by $index">
-            <label class="btn btn-default" ng-click="selected(tag)">
+            <label style="margin: 2px" class="btn btn-default" ng-click="selected(tag)">
                 <input type="checkbox" ng-model="tags[$index]" ng-change="selected()">
                 #<span ng-bind="tag.name"></span>
             </label>

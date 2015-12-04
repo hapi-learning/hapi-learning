@@ -1,12 +1,7 @@
 <div>
-    <div ng-if="filters">
-        <search-courses></search-courses>
-    </div>
-
-    <br/>
 
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="course in courses | filter: search">
+        <li class="list-group-item" ng-repeat="course in courses">
             <course-info course="course"></course-info>
         </li>
     </ul>

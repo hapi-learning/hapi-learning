@@ -34,24 +34,36 @@ internals.checkForbiddenPath = function(path) {
 };
 
 
+/**
+ * /!\ Needs to search with tags in the select statement...
+ * For now pagination with tags filters does not work
+ */
 exports.getAll = {
     description: 'List all the courses',
     validate: {
         options: {
             allowUnknown: true
         },
-        query: {
+        query: Joi.object().keys({
             select: [Joi.string().valid('code', 'name'),
                     Joi.array(Joi.string().valid('code', 'name'))],
+            codename: Joi.string(),
             code: Joi.string(),
-            name: Joi.string()
-        }
+            name: Joi.string(),
+            tags: [Joi.string(), Joi.array(Joi.string())]
+        }).without('codename', ['code', 'name'])
     },
     handler: function (request, reply) {
 
         const Course = this.models.Course;
+        const User = this.models.User;
+        const Tag = this.models.Tag;
         const select = request.query.select;
         const pagination = request.query.pagination;
+
+        if (pagination && request.query.tags) {
+            return reply.badRequest('Pagination does not works with tags filter');
+        }
 
         const options = {};
 
@@ -63,6 +75,19 @@ exports.getAll = {
         if (select) {
             options.attributes = [].concat(select);
         };
+
+        if (request.query.codename) {
+            options.where = {};
+            options.where.$or = [{
+                name: {
+                    $like: request.query.codename + '%'
+                }
+            }, {
+                code: {
+                    $like: request.query.codename + '%'
+                }
+            }];
+        }
 
         if (request.query.code) {
             options.where = {};
@@ -89,13 +114,19 @@ exports.getAll = {
                     return reply(results.rows);
                 }
             } else {
-                const promises = _.map(results.rows, (r => Utils.getCourse(r)));
+                const promises = _.map(results.rows, (r => Utils.getCourse(r, request.query.tags)));
                 // Wait for all promises to end
                 Promise
                     .all(promises)
                     .then(values => {
+
+                        // Need an alternative to that...
+                        if (request.query.tags) {
+                            _.remove(values, v => v == null);
+                        }
+
                         if (pagination) {
-                            return reply.paginate(values, results.count)
+                            return reply.paginate(values, results.count);
                         } else {
                             return reply(values);
                         }

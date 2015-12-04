@@ -13,7 +13,7 @@ internals.removeDatesArray = function(sequelizeObjects) {
 };
 
 // result is a sequelize instance
-internals.getCourse = function(result) {
+internals.getCourse = function(result, filterTags) {
 
     // Attributes to include in teachers
     const teachersInclude = ['id', 'username', 'email',
@@ -25,11 +25,28 @@ internals.getCourse = function(result) {
               result.getTeachers({attributes: teachersInclude, joinTableAttributes: []})])
 
         .then(values => {
-            let course = result.get({plain:true});
-            course.tags = _.map(values[0], (t => t.get('name', {plain:true})));
-            course.teachers = _.map(values[1], (t => t.get({plain:true})));
+            const course = result.get({ plain: true });
+            course.teachers = _.map(values[1], (t => t.get({ plain: true })));
 
-            return course;
+            const tags = _.map(values[0], t => t.get('name', { plain: true }));
+            course.tags = tags;
+
+
+            const tagsArray = [].concat(filterTags);
+
+
+            if (filterTags) {
+                const intersection = _.intersection(tags, tagsArray);
+
+                if (intersection.length === tagsArray.length) {
+                    return course;
+                } else {
+                    return null;
+                }
+
+            } else {
+                return course;
+            }
         })
     );
 };

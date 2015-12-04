@@ -3,9 +3,20 @@
     <div class="col-md-12">
 
         <h1 class="page-header">Courses</h1>
-        <course-list filters="true" subscribed="false"></course-list>
+        <search-courses></search-courses>
+        <br/>
+        <course-list courses="courses"></course-list>
 
+        <div class="text-center" ng-show="paginate">
+            <uib-pagination ng-change="load()"
+                            items-per-pages="itemsPerPage"
+                            total-items="totalItems" ng-model="currentPage"
+                            max-size="5" rotate="false" class="pagination">
+            </uib-pagination>
+        </div>
     </div>
 
 </div>
+
+
 
