@@ -13,9 +13,27 @@ angular.module('hapi-learning')
             internals.fetchedSubscribed = false;
             internals.subscribedCourses = [];
 
-            exports.add = function (value) {
-                // TO-DO
-                internals.courses.push(value);
+            exports.add = function (course) {
+                var d = $q.defer();
+
+				Restangular.all('courses')
+				.post({
+					code : course.code,
+					name : course.name,
+					//content : course.homepage,
+					teachers : course.teachers
+				})
+				.then(function (course) {
+					if (internals.fetchedCourses) {
+						internals.courses.push(course);
+					}
+
+					d.resolve(course);
+				})
+				.catch(function (err) {
+					d.reject(err);
+				});                
+            
             };
 
             /**
