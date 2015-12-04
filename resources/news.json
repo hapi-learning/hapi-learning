@@ -3,35 +3,41 @@
         "subject": "New file added",
         "content": "Projet.pdf has been added. Instructions will follow.",
         "username": "SRV",
+        "priority": "warning",
         "code": "JAV2"
     },
     {
         "subject": "You're screwed",
         "content": "Your mission, if you accept it, is to fail again.",
         "username": "MBA",
+        "priority": "danger",
         "code": "SYS2"
     },
     {
         "subject": "Hapi Learning update",
         "content": "Don't worry it can't be worse than now.",
+        "priority": "info",
         "username": "NVS"
     },
     {
         "subject": "Tips",
         "content": "Have you ever tried to search on google ?",
         "username": "SRV",
+        "priority": "info",
         "code": "JAVL1"
     },
     {
         "subject": "Test #3",
         "content": "Do not forget last test of year on december 2th",
         "username": "SRV",
+        "priority": "warning",
         "code": "JAVL1"
     },
     {
         "subject": "New file updated",
         "content": "Last PDF updated.",
         "username": "SRV",
+        "priority": "info",
         "code": "JAVL1"
     }
 ]

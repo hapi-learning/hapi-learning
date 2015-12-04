@@ -55,7 +55,8 @@ angular.module('hapi-learning')
                                     username: profile.username,
                                     code: news.course ? news.course : null,
                                     content: news.content,
-                                    subject: news.subject
+                                    subject: news.subject,
+                                    priority: news.priority
                                 })
                                 .then(function (news) {
                                     if (internals.fetched) {

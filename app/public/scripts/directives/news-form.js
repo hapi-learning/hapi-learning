@@ -22,7 +22,7 @@ angular.module('hapi-learning')
                     };
 
                     scope.priorities = [
-                        'Info', 'Warning', 'Danger'
+                        'info', 'warning', 'danger'
                     ];
 
                     scope.postNews = function () {
