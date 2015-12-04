@@ -32,7 +32,7 @@
     "good-console": "^5.1.0",
     "hapi": "^11.0.3",
     "hapi-auth-jwt2": "^5.2.0",
-    "hapi-pagination": "^1.3.1",
+    "hapi-pagination": "^1.3.2",
     "hoek": "^3.0.1",
     "inert": "^3.2.0",
     "items": "^2.0.0",
