@@ -44,15 +44,14 @@ angular.module('hapi-learning')
         };
 
         $scope.createUser = function() {
-            console.log('test');
             var user = $scope.userForm;
             user.role_id = user.role.value;
             delete user.role;
 
             UsersFactory.create(user).then(function(res) {
-                console.log('ok');
+                //TODO
             }).catch(function(err) {
-                console.log(err);
+                //TODO
             });
         };
 
@@ -115,7 +114,7 @@ angular.module('hapi-learning')
                 var t = { name: tag.text };
                 TagsFactory.create(t)
                     .then(function() {
-
+                        $scope.resetUserForm();
                     })
                     .catch(function() {
 
