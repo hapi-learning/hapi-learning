@@ -120,27 +120,23 @@ angular.module('hapi-learning')
                 If they are already loaded, (internals.subscribedCourse) it will not.
             **/
             exports.getSubscribed = function () {
-                return $q(function (resolve, reject) {
-                    if (!internals.fetchedSubscribed) {
-                        LoginFactory.getProfile().then(function (profile) {
 
-                            Restangular.one('users', profile.username)
-                                .getList('courses')
-                                .then(function (subscribedCourses) {
-                                    internals.subscribedCourses = subscribedCourses;
-                                    internals.fetchedSubscribed = true;
-                                    resolve(internals.subscribedCourses);
-                                })
-                                .catch(function (error) {
-                                    reject(error);
-                                });
-                        }).catch(function (error) {});
-
-                    }
-                    else {
-                        resolve(internals.subscribedCourses);
+                return LoginFactory.getProfile().then(function (profile) {
+                    if (internals.subscribedCourses.length > 0) {
+                        return internals.subscribedCourses;
+                    } else {
+                        return Restangular
+                            .one('users', profile.username)
+                            .getList('courses')
+                            .then(function (subscribedCourses) {
+                                internals.subscribedCourses = subscribedCourses;
+                                internals.fetchedSubscribed = true;
+                                return internals.subscribedCourses;
+                            });
                     }
                 });
+
+
             };
 
             exports.get = function (index) {

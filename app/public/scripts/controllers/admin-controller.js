@@ -89,8 +89,7 @@ angular.module('hapi-learning')
         };
 
         $scope.loadTeachers = function ($query) {
-            return TeachersFactory.load()
-                .then(function (teachers) {
+            return TeachersFactory.load().then(function (teachers) {
 
                     return teachers.filter(function (teacher) {
 
