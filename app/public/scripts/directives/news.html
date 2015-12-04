@@ -16,7 +16,12 @@
 </div>
 
 <blockquote>
-    <small>
+    <p>
         <span ng-bind="news.content"></span>
-    </small>
+    </p>
+    <footer>
+        <cite title="{{news.user}}" ng-bind="news.user"></cite>
+    </footer>
 </blockquote>
+<small>
+</small>
