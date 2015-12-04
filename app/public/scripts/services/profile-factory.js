@@ -5,7 +5,6 @@ angular.module('hapi-learning')
 
         exports.update = function(profile) {
 
-            console.log(profile);
             var d = $q.defer();
 
             $http({

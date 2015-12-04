@@ -8,7 +8,6 @@ angular.module('hapi-learning')
         exports.create = function(users) {
             var d = $q.defer();
 
-            console.log(users);
             Restangular.all('users')
                 .customPOST(users)
                 .then(function(res) {
@@ -20,15 +19,6 @@ angular.module('hapi-learning')
 
             return d.promise;
         };
-
-        exports.createOne = function(user) {
-
-        };
-
-        exports.createMany = function(users) {
-
-        };
-
 
         return exports;
 }]);
