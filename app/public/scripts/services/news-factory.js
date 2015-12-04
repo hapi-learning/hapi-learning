@@ -26,53 +26,37 @@ angular.module('hapi-learning')
             const exports = {};
 
             exports.load = function (count) {
-                return $q(function (resolve, reject) {
-                    if (internals.fetched) {
-                        resolve(internals.slice(count));
-                    }
-                    else {
-                        Restangular.all('news')
-                            .getList()
-                            .then(function (news) {
-                                internals.news = news;
-                                internals.fetched = true;
-                                resolve(internals.slice(count));
-                            })
-                            .catch(function (err) {
-                                reject(err)
-                            });
+                return $q(function(resolve) {
+                    resolve(internals.fetched);
+                }).then(function(fetched) {
+                    if (fetched) {
+                        return internals.slice(count);
+                    }  else {
+                        return Restangular.all('news').getList().then(function(news) {
+                            internals.news = news;
+                            internals.fetched = true;
+                            return internals.slice(count);
+                        });
                     }
                 });
             };
 
             exports.add = function (news) {
-                return $q(function (resolve, reject) {
-
-                    LoginFactory.getProfile()
-                        .then(function (profile) {
-                            Restangular.all('news')
-                                .post({
-                                    username: profile.username,
-                                    code: news.course ? news.course : null,
-                                    content: news.content,
-                                    subject: news.subject,
-                                    priority: news.priority
-                                })
-                                .then(function (news) {
-                                    if (internals.fetched) {
-                                        internals.news.push(news);
-                                    }
-                                    $rootScope.$emit('news_added', news);
-                                    resolve(news);
-                                })
-                                .catch(function (err) {
-                                    reject(err);
-                                });
+                return LoginFactory.getProfile().then(function (profile) {
+                    return Restangular.all('news').post({
+                            username: profile.username,
+                            code: news.course ? news.course : null,
+                            content: news.content,
+                            subject: news.subject,
+                            priority: news.priority
                         })
-                        .catch(function (error) {
-                            reject(error);
+                        .then(function (news) {
+                            if (internals.fetched) {
+                                internals.news.push(news);
+                            }
+                            $rootScope.$emit('news_added', news);
+                            return news;
                         });
-
                 });
             };
 

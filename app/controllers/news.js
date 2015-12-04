@@ -57,7 +57,7 @@ exports.post = {
             code: Joi.string().min(1).max(255).description('Course related code'),
             subject: Joi.string().min(1).max(255).required().description('Subject news'),
             content: Joi.string().required().description('News content'),
-            priority : Joi.string().regex(/^info$|^warning$|^danger$/).description('News priority')
+            priority : Joi.string().valid('info', 'warning', 'danger').description('News priority')
         }
     },
     handler: function (request, reply) {

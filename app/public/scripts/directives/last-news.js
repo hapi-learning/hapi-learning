@@ -35,7 +35,7 @@ angular.module('hapi-learning')
                             else {
                                 scope.news = news;
                             }
-                        
+
                             scope.fetched = true;
                         })
                         .catch(function (err) {
