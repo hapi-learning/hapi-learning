@@ -7,7 +7,7 @@
         <br/>
         <course-list courses="courses"></course-list>
 
-        <div class="text-center" ng-show="paginate">
+        <div class="text-center" ng-hide="fetching" ng-show="paginate">
             <uib-pagination ng-change="load()"
                             items-per-pages="itemsPerPage"
                             total-items="totalItems" ng-model="currentPage"

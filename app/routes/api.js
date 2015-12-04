@@ -36,7 +36,7 @@ exports.register = function (server, options, next) {
         {method: 'POST',   path: '/users/{username}/tags',                   config: Controllers.User.addTags},
         {method: 'POST',   path: '/users/{username}/subscribe/{crsId}',      config: Controllers.User.subscribeToCourse},
         {method: 'POST',   path: '/users/{username}/unsubscribe/{crsId}',    config: Controllers.User.unsubscribeToCourse},
-        
+
         {method: 'POST',   path: '/users/{username}/folders',         config: Controllers.User.addFolders},
         {method: 'POST',   path: '/users/{username}/folders/{folderName}/{crsId}', config: Controllers.User.addCourseToFolder},
         {method: 'PUT',    path: '/users/{username}',                  config: Controllers.User.put},
@@ -44,19 +44,19 @@ exports.register = function (server, options, next) {
         {method: 'DELETE', path: '/users/{username}',                  config: Controllers.User.delete},
 
         // Roles routes
-        {method: 'GET',    path: '/roles',       config: Controllers.Role.getAll},
+        {method: 'GET',    path: '/roles',         config: Controllers.Role.getAll},
         {method: 'GET',    path: '/roles/{name}',  config: Controllers.Role.get},
-        {method: 'POST',   path: '/roles',       config: Controllers.Role.post},
+        {method: 'POST',   path: '/roles',         config: Controllers.Role.post},
         {method: 'DELETE', path: '/roles/{name}',  config: Controllers.Role.delete},
 
         // Permissions routes
-        {method: 'GET', path: '/permissions',      config: Controllers.Permission.getAll},
+        {method: 'GET', path: '/permissions',        config: Controllers.Permission.getAll},
         {method: 'GET', path: '/permissions/{type}', config: Controllers.Permission.get},
 
         // Tags routes
-        {method: 'GET',    path: '/tags',      config:  Controllers.Tag.getAll},
+        {method: 'GET',    path: '/tags',        config:  Controllers.Tag.getAll},
         {method: 'GET',    path: '/tags/{name}', config: Controllers.Tag.get},
-        {method: 'POST',   path: '/tags',      config: Controllers.Tag.post},
+        {method: 'POST',   path: '/tags',        config: Controllers.Tag.post},
         {method: 'DELETE', path: '/tags/{name}', config: Controllers.Tag.delete},
 
         // Courses routes
@@ -83,10 +83,10 @@ exports.register = function (server, options, next) {
         {method: 'DELETE', path: '/courses/{id}/tags',              config: Controllers.Course.deleteTags},
         {method: 'DELETE', path: '/courses/{id}/teachers',          config: Controllers.Course.deleteTeachers},
 
-        // News routes
+        // News route
         {method: 'GET',    path: '/news',                        config: Controllers.News.getAll},
-        {method: 'GET',    path: '/news/{id}',                        config: Controllers.News.get},
-        {method: 'POST',    path: '/news',                        config: Controllers.News.post}
+        {method: 'GET',    path: '/news/{id}',                   config: Controllers.News.get},
+        {method: 'POST',   path: '/news',                        config: Controllers.News.post}
 
 
     ]);

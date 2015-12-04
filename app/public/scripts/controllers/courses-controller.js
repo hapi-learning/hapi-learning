@@ -14,6 +14,7 @@ angular.module('hapi-learning')
         $scope.currentPage = 1;
         $scope.itemsPerPages = 10;
         $scope.coursesFilter = null;
+        $scope.fetching = true;
 
         TagsFactory.load()
             .then(function(tags) {
@@ -47,6 +48,7 @@ angular.module('hapi-learning')
                         $scope.totalItems = res.meta.totalCount;
                         $scope.paginate = true;
                     }
+                    $scope.fetching = false;
                 });
 
         };

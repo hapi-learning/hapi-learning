@@ -7,7 +7,21 @@ angular.module('hapi-learning')
         'UsersFactory',
         'TagsFactory', function ($scope, TeachersFactory, UsersFactory, TagsFactory) {
 
-        $scope.user = {};
+        $scope.roles = [{
+            value: 3,
+            name: 'User'
+        }, {
+            value: 2,
+            name: 'Teacher'
+        }, {
+            value: 1,
+            name: 'Admin'
+        }];
+
+        $scope.userForm = {
+            role: $scope.roles[0]
+        };
+
         $scope.usersFileNotValid = false;
         $scope.usersFileContent = null;
         $scope.countAddedUsers = null;
@@ -27,6 +41,25 @@ angular.module('hapi-learning')
 
         $scope.removeCountAddedUsers = function() {
             $scope.countAddedUsers = null;
+        };
+
+        $scope.createUser = function() {
+            console.log('test');
+            var user = $scope.userForm;
+            user.role_id = user.role.value;
+            delete user.role;
+
+            UsersFactory.create(user).then(function(res) {
+                console.log('ok');
+            }).catch(function(err) {
+                console.log(err);
+            });
+        };
+
+        $scope.resetUserForm = function() {
+            $scope.userForm = {
+                role: $scope.roles[0]
+            };
         };
 
         $scope.uploadUsers = function() {

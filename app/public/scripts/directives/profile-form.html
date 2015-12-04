@@ -1,5 +1,7 @@
 <div>
-    <form editable-form name="profileForm" class="form-horizontal" onbeforesave="updateProfile($data)">
+
+    <form editable-form name="profileForm" class="form-horizontal"
+          onbeforesave="updateProfile($data)" oncancel="removeErrors()">
 
        <div class="form-group">
             <label class="control-label col-md-2">First name: </label>
@@ -23,8 +25,10 @@
         <div class="form-group">
             <label class="control-label col-md-2">Email:</label>
             <div class="col-md-10">
-                <span e-class="form-control" editable-text="profile.email" e-name="email"
-                      ng-bind="profile.email"></span>
+                <span e-class="form-control" e-type="email"
+                      e-ng-change="checkEmail(profile.email)"
+                      editable-text="profile.email" e-name="email"
+                      ng-bind="profile.email" e-required></span>
             </div>
         </div>
 
@@ -40,25 +44,11 @@
 
 
         <div class="form-group" ng-show="profileForm.$visible">
-            <label class="control-label col-md-2">
-                Password (required if you change your password):
-            </label>
-           <div class="col-md-10">
-
-                <span e-type="password" editable-text="profile.password" e-class="form-control"
-                        ng-model="password" ng-minlength="8" e-name="password"
-                       e-placeholder="●●●●●●●●" e-ng-required="profile.password"></span>
-           </div>
-        </div>
-
-        <div class="form-group" ng-show="profileForm.$visible">
             <label class="control-label col-md-2">New password:</label>
             <div class="col-md-10">
-              <span e-type="password" editable-text="profile.newPassword"
-                e-class="form-control"
-             ng-model="newPassword"
-             ng-minlength="8" e-name="newPassword" e-placeholder="●●●●●●●●">
-
+              <span e-type="password" editable-text="newPassword"
+                    e-class="form-control"
+                    e-name="newPassword" e-placeholder="●●●●●●●●">
              </span>
             </div>
         </div>
@@ -66,12 +56,9 @@
         <div class="form-group" ng-show="profileForm.$visible">
             <label class="control-label col-md-2">Confirm new password:</label>
             <div class="col-md-10">
-                <span e-type="password" e-class="form-control" editable-text="profile.confirmPassword"
-                     ng-model="confirmPassword" e-name="confirmPassword"
-                        e-placeholder="●●●●●●●●"
-                        ui-validate="{passwordMatch: '$value === newPassword'}"
-                        ui-validate-watch="'newPassword'" e-ng-required="newPassword.$dirty">
-
+                <span e-type="password" e-class="form-control"
+                      editable-text="confirmPassword"
+                      e-name="confirmPassword" e-placeholder="●●●●●●●●">
                 </span>
 
             </div>
