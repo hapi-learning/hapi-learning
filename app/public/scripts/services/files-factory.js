@@ -30,23 +30,17 @@ angular.module('hapi-learning')
 
 
         internals.get = function(course, path, showHidden) {
-            return $q(function(resolve, reject) {
+            path = internals.replacePath(path);
 
-                path = internals.replacePath(path);
-
-                Restangular
-                    .one('courses', course)
-                    .all('tree')
-                    .customGET(encodeURIComponent(path), {
-                        hidden: showHidden
-                    })
-                    .then(function(results) {
-                        resolve(results);
-                    })
-                    .catch(function(err) {
-                        reject(err);
-                    });
-            });
+            return Restangular
+                .one('courses', course)
+                .all('tree')
+                .customGET(encodeURIComponent(path), {
+                    hidden: showHidden
+                })
+                .then(function(results) {
+                    return results;
+                });
         };
 
         exports.getUploadPath = function(course, path) {
@@ -61,22 +55,21 @@ angular.module('hapi-learning')
 
         exports.updateFolder = function(course, path, newName, hidden) {
 
-            var d = $q.defer();
+            // $q.defer() needed by xeditable
+           // var d = $q.defer();
 
             path = internals.replacePath(path);
-            Restangular
+            return Restangular
                 .one('courses', course)
                 .all('folders')
                 .customOperation('patch', encodeURIComponent(path), null, null, {
                     name: newName,
                     hidden: hidden
-                }).then(function(response) {
-                    d.resolve(response);
-                }).catch(function() {
-                    d.reject('Invalid name');
                 });
+                /*.then(d.resolve)
+                .catch(d.reject);*/
 
-            return d.promise;
+            //return d.promise;
         };
 
         exports.updateFile = function(course, path, newName, hidden) {
@@ -90,51 +83,34 @@ angular.module('hapi-learning')
                 .customOperation('patch', encodeURIComponent(path), null, null, {
                     name: newName,
                     hidden: hidden
-                }).then(function(response) {
-                    d.resolve(response);
-                }).catch(function() {
-                    d.reject('Invalid name');
-                });
+                })
+                .then(d.resolve)
+                .catch(d.reject);
 
             return d.promise;
         };
 
         exports.createFolder = function(course, path, hidden) {
 
-            return $q(function(resolve, reject) {
-                path = internals.replacePath(path);
-                Restangular
-                    .one('courses', course)
-                    .all('folders')
-                    .customPOST(null, encodeURIComponent(path), {
-                        hidden: hidden
-                    })
-                    .then(function() {
-                        resolve();
-                    })
-                    .catch(function(error) {
-                        reject(error);
-                    });
-            });
+            path = internals.replacePath(path);
+            return Restangular
+                .one('courses', course)
+                .all('folders')
+                .customPOST(null, encodeURIComponent(path), {
+                    hidden: hidden
+                });
         };
 
         exports.deleteDocument = function(course, path) {
-            return $q(function(resolve, reject) {
-                path = internals.replacePath(path);
-                Restangular
-                    .one('courses', course)
-                    .all('documents')
-                    .customOperation('remove', null, null, {
-                        'Content-Type': 'application/json; charset=UTF-8'
-                    }, {
-                        files: path
-                    })
-                    .then(function() {
-                        resolve();
-                    }).catch(function(err) {
-                        reject();
-                    });
-            });
+            path = internals.replacePath(path);
+            return Restangular
+                .one('courses', course)
+                .all('documents')
+                .customOperation('remove', null, null, {
+                    'Content-Type': 'application/json; charset=UTF-8'
+                }, {
+                    files: path
+                });
         };
 
         exports.getDownloadPath = function(course, path, showHidden) {
@@ -144,31 +120,6 @@ angular.module('hapi-learning')
 
             return url;
         };
-
-       /* exports.download = function(course, path, showHidden) {
-
-            var url = internals.getUrl(course, path);
-
-            $http({
-                url: url,
-                method: 'GET',
-                params: {
-                    hidden: showHidden
-                },
-                responseType: 'arraybuffer'
-            }).then(function(results) {
-
-                var disposition = results.headers('Content-Disposition');
-                var contentType = results.headers('Content-Type');
-                var filename = decodeURIComponent(disposition.substr(21)); // get filename
-                var file = new Blob([results.data], {type: contentType });
-                saveAs(file, filename, true);
-
-            }).catch(function(err) {
-                console.log(err);
-            });
-
-        };*/
 
         return exports;
 

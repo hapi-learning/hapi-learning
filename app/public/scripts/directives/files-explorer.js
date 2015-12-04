@@ -45,11 +45,14 @@ angular.module('hapi-learning')
                     scope.getList($stateParams.path, value);
                 });
 
+                scope.cleanFolderError = function() {
+                    scope.folderError = false;
+                };
 
                 scope.cleanFolderName = function() {
                     scope.folder = {};
                     scope.creatingFolder = false;
-                    scope.folderError = null;
+                    scope.cleanFolderError;
                 };
 
                 scope.createFolder = function() {
@@ -135,28 +138,23 @@ angular.module('hapi-learning')
                             scope.files.files[index]['updated_at'] = file['updated_at'];
                         }
 
+                        scope.cleanFolderError();
                     };
 
-                    if (type === 'f') {
-                        FilesFactory
-                            .updateFile(scope.code, path, data.name, data.hidden)
-                            .then(function(file) {
-                                updateLocalFile(file);
-                                return true;
-                            }).catch(function(err) {
-                                return err;
-                            });
-                    } else {
-                        FilesFactory
-                            .updateFolder(scope.code, path, data.name, data.hidden)
-                            .then(function(file) {
-                                updateLocalFile(file);
-                                return true;
-                            }).catch(function(err) {
-                                return err;
-                            });
+                    var promise = type === 'f' ?
+                        FilesFactory.updateFile(scope.code, path, data.name, data.hidden) :
+                        FilesFactory.updateFolder(scope.code, path, data.name, data.hidden);
 
-                    }
+                    return promise.then(function(file) {
+                        updateLocalFile(file);
+                        return true;
+                    }).catch(function(err) {
+                        if (err.status === 409) {
+                            scope.folderError = true;
+                            return err.statusText;
+                        }
+                    });
+
                 }
 
                 scope.updateFolder = function(data, index) {
