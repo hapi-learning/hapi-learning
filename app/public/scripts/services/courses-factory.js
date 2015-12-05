@@ -76,7 +76,7 @@ angular.module('hapi-learning')
                         pagination: false,
                         select: ['code']
                     }).then(function(response) {
-                        d.resolve(response);
+                        d.resolve(response.results);
                     }).catch(function(error) {
                         d.reject(error);
                     });

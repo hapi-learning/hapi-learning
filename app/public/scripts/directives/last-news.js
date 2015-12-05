@@ -28,7 +28,7 @@ angular.module('hapi-learning')
                                 $rootScope.$on('news_added', function (event, news) {
                                     if (!scope.code || news.code === scope.code) {
                                         var tmp = [news].concat(scope.news);
-                                        scope.news = tmp;
+                                        scope.news = _.map(tmp, function(news) {return news;});
                                     }
                                 });
                             }
