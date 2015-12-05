@@ -11,7 +11,7 @@ angular.module('hapi-learning')
                     count: '=',
                     code: '='
                 },
-                templateUrl: 'scripts/directives/last-news.html',
+                templateUrl: 'templates/last-news.html',
                 link: function (scope, element, attrs) {
                     scope.news = [];
                     scope.fetched = false;

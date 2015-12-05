@@ -5,7 +5,7 @@ angular.module('hapi-learning')
                              function(LoginFactory, ProfileFactory, $rootScope) {
     return {
         restrict: 'E',
-        templateUrl: 'scripts/directives/profile-form.html',
+        templateUrl: 'templates/profile-form.html',
         link: function(scope, elem, attrs) {
 
             scope.passwords = {};

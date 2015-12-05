@@ -9,7 +9,7 @@ angular.module('hapi-learning')
                 scope: {
                     code: '='
                 },
-                templateUrl: 'scripts/directives/subscribe.html',
+                templateUrl: 'templates/subscribe.html',
                 link: function (scope, elem, attrs) {
 
                     scope.subscribed = false;

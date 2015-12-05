@@ -43,10 +43,7 @@ gulp.task('scripts', function() {
         'lib/ng-prettyjson/dist/ng-prettyjson.min.js',
         
         //app scripts
-        'submodules/api/api.js',
-        'submodules/user-management/scripts/um.js',
-        'submodules/user-management/scripts/directives/if-group.js',
-        'submodules/user-management/scripts/directives/login-form.js',
+        'submodules/**/*.js',
         
         'scripts/app.js',
         

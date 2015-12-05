@@ -6,7 +6,7 @@ angular.module('hapi-learning')
         scope: {
             ext: '='
         },
-        templateUrl: 'scripts/directives/file-icon.html',
+        templateUrl: 'templates/file-icon.html',
         link: function(scope, elem, attrs) {
             var fa = ''
 

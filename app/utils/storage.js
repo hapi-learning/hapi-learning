@@ -285,7 +285,7 @@ const load = function() {
         const path = Path.join(internals.courseFolder, name);
         try {
             Fs.mkdirSync(path);
-            Fs.writeFileSync(Path.join(internals.courseFolder, name, 'homepage.md'), '');
+            Fs.writeFileSync(Path.join(internals.courseFolder, name, internals.homepage), '');
             Fs.mkdirSync(Path.join(path, internals.documents));
         } catch(err) {}
     };
@@ -601,7 +601,7 @@ const load = function() {
     };
 
     Storage.getHomepage = function(course) {
-        return Path.join(internals.courseFolder, course, 'homepage.md');
+        return Path.join(internals.courseFolder, course, internals.homepage);
     };
 
     Storage.setHomepage = function(course, content) {
@@ -624,6 +624,7 @@ exports.register = function(server, options, next) {
     internals.relativeTo = Path.join(internals.root, options.storage || 'storage');
     internals.courseFolder = Path.join(internals.relativeTo, options.courses || 'courses');
     internals.documents = options.documents || 'documents';
+    internals.homepage = 'homepage';
 
     internals.initialize();
 

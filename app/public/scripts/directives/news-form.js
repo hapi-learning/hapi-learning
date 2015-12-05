@@ -7,7 +7,7 @@ angular.module('hapi-learning')
     function (CoursesFactory, NewsFactory) {
             return {
                 restrict: 'E',
-                templateUrl: 'scripts/directives/news-form.html',
+                templateUrl: 'templates/news-form.html',
                 scope: {
                     code: '='
                 },

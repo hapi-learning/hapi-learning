@@ -7,7 +7,7 @@ angular.module('hapi-learning')
 
         return {
             restrict: 'E',
-            templateUrl: 'scripts/directives/files-explorer.html',
+            templateUrl: 'templates/files-explorer.html',
             scope: {
                 code: '='
             },
