@@ -61,7 +61,7 @@ angular.module('hapi-learning')
                     else {
                         CoursesFactory.loadCodes()
                             .then(function (response) {
-                                scope.codes = _.map(response, 'code');
+                                scope.codes = _.map(response.results, 'code');
                             }).catch(function (error) {
                                 console.log(error);
                             });
