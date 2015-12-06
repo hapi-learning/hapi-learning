@@ -343,7 +343,7 @@ exports.post = {
         payload: {
             name: Joi.string().min(1).max(255).required().description('Course name'),
             code: Joi.string().min(1).max(255).required().description('Course code'),
-            description: Joi.string().description('Course description'),
+            homepage: Joi.string().description('Course homepage'),
             teachers: Joi.array().items(Joi.string()).description('Teachers'),
             tags: Joi.array().items(Joi.string()).description('Tags')
         }
@@ -366,8 +366,7 @@ exports.post = {
 
         const coursePayload = {
             name: name,
-            code: code,
-            homepage: homepage
+            code: code
         };
 
         // If tags has been passed to the payload, return a promise
@@ -419,7 +418,7 @@ exports.post = {
                             course.tags = _.map(tags, (t => t.get('name', {plain:true})));
                             course.teachers = _.map(teachers, (t => t.get('username', {plain:true})));
 
-                            Storage.createCourse(course.code, coursePayload.homepage);
+                            Storage.createCourse(course.code, homepage);
 
                             return reply(course).code(201);
                         });
