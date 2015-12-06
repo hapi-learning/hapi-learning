@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning')
     .factory('ProfileFactory', ['$http', 'Restangular', '$q', function($http, Restangular, $q) {
 

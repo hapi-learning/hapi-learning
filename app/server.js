@@ -15,6 +15,7 @@ program
     .version(require('../package.json').version)
     .option('-f, --flush', 'Reset storage and database')
     .option('-v, --verbose', 'Verbose mode')
+    .option('-P, --prod', 'Production mode')
     .parse(process.argv);
 
 
@@ -26,7 +27,7 @@ const internals = {
             routes: {
                 cors: true,
                 files: {
-                    relativeTo: Path.join(__dirname, 'public')
+                    relativeTo: Path.join(__dirname, program.prod ? 'dist' : 'public')
                 }
             },
             labels: ['web']

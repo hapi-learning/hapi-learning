@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning')
     .directive('mdEditor', ['$rootScope', '$parse', function($rootScope, $parse) {
         return {
