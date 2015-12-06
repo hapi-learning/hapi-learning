@@ -10,7 +10,7 @@ const print = require('gulp-print');
 
 
 const paths = {
-    scripts: 'app/public/scripts/**/*.js',
+    scripts: ['app/public/scripts/**/*.js', 'app/public/submodules/**/*.js'],
     styles: 'app/public/styles/**/*.css',
     index: 'app/public/index.html',
     partials: ['app/public/**/*.html', '!app/public/index.html',
@@ -75,6 +75,8 @@ const pipes = {};
 
 pipes.orderedAppScripts = function() {
     return plugins.angularFilesort();
+    /*return gulp.src(paths.scripts)
+        .pipe(plugins.angularFilesort());*/
 };
 
 pipes.minifiedFileName = function() {
@@ -95,6 +97,7 @@ pipes.builtAppScripts = function() {
     return validatedAppScripts
         .pipe(pipes.orderedAppScripts())
         .pipe(plugins.concat('app.min.js'))
+        .pipe(plugins.ngAnnotate())
         .pipe(plugins.uglify())
         .pipe(gulp.dest(paths.distScripts));
 };
@@ -104,6 +107,7 @@ pipes.builtVendorScripts = function() {
     return gulp.src(vendorScripts)
             .pipe(plugins.concat('vendor.min.js'))
             .pipe(plugins.ngAnnotate())
+            .pipe(plugins.uglify())
             .pipe(gulp.dest(paths.distScripts));
 };
 
@@ -119,7 +123,7 @@ pipes.scriptedPartials = function() {
         .pipe(plugins.htmlhint.failReporter())
         .pipe(plugins.htmlmin({
             collapseWhitespace: true,
-            removeComments: true
+            removeComments: true,
         }))
         .pipe(gulp.dest(paths.dist));
 };
@@ -145,7 +149,7 @@ pipes.validatedIndex = function() {
 };
 
 pipes.builtSubmodules = function() {
-    return gulp.src('app/public/submodules/**/*')
+    return gulp.src('app/public/submodules/**/*.html')
         .pipe(gulp.dest('app/dist/submodules'));
 };
 
@@ -171,8 +175,9 @@ pipes.builtIndex = function() {
         .pipe(plugins.inject(vendorStyles, {relative: true, name: 'vendorcss'}))
         .pipe(plugins.inject(appStyles, { relative: true }))
         .pipe(plugins.htmlmin({
-            collapseWhiteSpace: true,
-            removeComments: true
+            collapseWhitespace: true,
+            removeComments: true,
+            minifyCss: true
         }))
         .pipe(gulp.dest(paths.dist));
 };

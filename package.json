@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/lab -v",
-    "prestart": "gulp",
     "start": "node ."
   },
   "repository": {
