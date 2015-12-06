@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/lab -v",
-    "start": "node .",
-	"prod": "node . -P",
-	"prod-reset": "node . -P -f"
+    "prestart": "gulp",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
