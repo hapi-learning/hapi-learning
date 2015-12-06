@@ -10,7 +10,7 @@ angular.module('hapi-learning')
 				scope.course = {
 					name: null,
 					code: null,
-                    homepage: null,
+                    homepage: 'NULL',
 					teachers: []
 				};
 				

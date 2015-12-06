@@ -15,15 +15,25 @@ angular.module('hapi-learning')
 
             exports.add = function (course) {
                 var d = $q.defer();
+                
+                var teachers = [];
+                
+                course.teachers.forEach(function(teacher) {
+                    teachers.push(teacher.username);
+                });
+                
+                console.log(teachers);
 
 				Restangular.all('courses')
 				.post({
 					code : course.code,
 					name : course.name,
 					homepage : course.homepage,
-					teachers : course.teachers
+					teachers : teachers
 				})
 				.then(function (course) {
+                    console.log('factory ');
+                    console.log(course);
 					d.resolve(course);
 				})
 				.catch(function (err) {
