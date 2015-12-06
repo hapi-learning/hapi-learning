@@ -11,8 +11,7 @@ angular.module('hapi-learning')
                     name: null,
                     code: null,
                     homepage: null,
-                    teachers: [],
-                    tags: []
+                    teachers: []
                 };
 
                 scope.postCourse = function () {            

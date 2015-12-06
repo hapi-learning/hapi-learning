@@ -14,15 +14,10 @@ angular.module('hapi-learning')
             internals.subscribedCourses = [];
 
             exports.add = function (course) {
-                var d = $q.defer();
-                
-                var teachers = [];
-                
-                course.teachers.forEach(function(teacher) {
-                    teachers.push(teacher.username);
-                });
+            
+                var teachers = _.map(course.teachers, function(teacher) { return teacher.username; });
 
-				Restangular.all('courses')
+				return Restangular.all('courses')
 				.post({
 					code : course.code,
 					name : course.name,
@@ -30,13 +25,8 @@ angular.module('hapi-learning')
 					teachers : teachers
 				})
 				.then(function (course) {
-					d.resolve(course);
-				})
-				.catch(function (err) {
-					d.reject(err);
+					return course;
 				});                
-            
-                return d.promise;
             };
 
             /**
