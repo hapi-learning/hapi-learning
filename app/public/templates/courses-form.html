@@ -66,7 +66,7 @@
     <fieldset class="form-group">
         <div>
             <label>Tags</label>
-            <tags-input class="ti-input-sm" name="tags" ng-model="course.tags" title="Course tags" placeholder="Add tags" add-from-autocomplete-only="true" display-property="name">
+            <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="course.tags" title="Course tags" placeholder="Add tags" add-from-autocomplete-only="true" display-property="name">
                 <auto-complete min-length="0" source="loadTags($query)"></auto-complete>
             </tags-input>
         </div>
