@@ -22,7 +22,7 @@ angular.module('hapi-learning')
                     teachers.push(teacher.username);
                 });
                 
-                console.log(teachers);
+                console.log(course.homepage);
 
 				Restangular.all('courses')
 				.post({
