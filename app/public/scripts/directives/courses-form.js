@@ -15,15 +15,12 @@ angular.module('hapi-learning')
                     tags: []
                 };
 
-                scope.postCourse = function () {
-                    console.log('post course');
-                    console.log(scope.course);
-                    
+                scope.postCourse = function () {            
                     scope.course.homepage = scope.getContent();
 
                     return CoursesFactory.add(scope.course)
                         .then(function (course) {
-                            alert('course added!');
+                            console.log('Course added!');
                         })
                         .catch(function (error) {
                             console.log(error);

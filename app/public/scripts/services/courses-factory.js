@@ -21,8 +21,6 @@ angular.module('hapi-learning')
                 course.teachers.forEach(function(teacher) {
                     teachers.push(teacher.username);
                 });
-                
-                console.log(course.homepage);
 
 				Restangular.all('courses')
 				.post({
@@ -32,8 +30,6 @@ angular.module('hapi-learning')
 					teachers : teachers
 				})
 				.then(function (course) {
-                    console.log('factory ');
-                    console.log(course);
 					d.resolve(course);
 				})
 				.catch(function (err) {
