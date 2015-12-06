@@ -3,10 +3,6 @@
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const del = require('del');
-const es = require('event-stream');
-const bowerFiles = require('main-bower-files');
-const Q = require('q');
-const print = require('gulp-print');
 
 
 const paths = {
@@ -60,13 +56,13 @@ const vendorScripts = [
 ];
 
 const vendorCss = [
-    "app/public/lib/bootstrap/dist/css/bootstrap.min.css",
-    "app/public/lib/font-awesome/css/font-awesome.min.css",
-    "app/public/lib/ng-tags-input/ng-tags-input.css",
-    "app/public/lib/ng-tags-input/ng-tags-input.bootstrap.css",
-    "app/public/lib/angular-loading-bar/build/loading-bar.min.css",
-    "app/public/lib/angular-xeditable/dist/css/xeditable.css",
-    "app/public/lib/ng-prettyjson/dist/ng-prettyjson.min.css"
+    'app/public/lib/bootstrap/dist/css/bootstrap.min.css',
+    'app/public/lib/font-awesome/css/font-awesome.min.css',
+    'app/public/lib/ng-tags-input/ng-tags-input.css',
+    'app/public/lib/ng-tags-input/ng-tags-input.bootstrap.css',
+    'app/public/lib/angular-loading-bar/build/loading-bar.min.css',
+    'app/public/lib/angular-xeditable/dist/css/xeditable.css',
+    'app/public/lib/ng-prettyjson/dist/ng-prettyjson.min.css'
 ];
 
 const pipes = {};
@@ -131,6 +127,7 @@ pipes.scriptedPartials = function() {
 pipes.builtVendorStyles = function() {
     return gulp.src(vendorCss)
         .pipe(plugins.concat('vendor.min.css'))
+        .pipe(plugins.minifyCss())
         .pipe(gulp.dest(paths.dist));
 };
 
@@ -159,8 +156,8 @@ pipes.builtIndex = function() {
     const appScripts = pipes.builtAppScripts();
     const appStyles = pipes.builtStyles();
     const vendorStyles = pipes.builtVendorStyles();
-    const sub = pipes.builtSubmodules();
-    const scriptedPartials = pipes.scriptedPartials();
+    pipes.builtSubmodules();
+    pipes.scriptedPartials();
 
 
     return pipes.validatedIndex()
