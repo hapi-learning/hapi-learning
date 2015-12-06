@@ -6,7 +6,7 @@ angular.module('hapi-learning')
                           function ($rootScope, FileUploader, Restangular, AuthStorage) {
         return {
             restrict: 'E',
-            templateUrl: 'scripts/directives/upload.html',
+            templateUrl: 'templates/upload.html',
 
             // Compile function needed to create uploader before other directives
             compile: function() {

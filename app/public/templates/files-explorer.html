@@ -42,9 +42,9 @@
 <div>
 
 
-    <div class="row" ng-if="folderError">
+    <div class="row" ng-if="folderError" ng-click="cleanFolderError()">
        <div class="col-md-12 alert alert-danger error-message">
-            <span>Invalid folder name</span>
+            <span>Invalid file / folder name</span>
        </div>
     </div>
 
@@ -192,7 +192,7 @@
                             <span class="fa fa-folder-open fa-lg"></span>
                         </div>
                         <div ng-if="file.type === 'f'">
-                            <span file-icon ext="file.ext"></span></file-icon>
+                            <span file-icon ext="file.ext"></span>
                         </div>
                     </td>
 
@@ -203,13 +203,13 @@
                             <a ng-click="fileExplorer.$visible || goToRelativePath(file.name)"
                                 ng-disabled="fileExplorer.$visible">
                                 <span class="folder-name" editable-text="file.name"
-                                      e-name="name" e-form="fileExplorer" e-required ng-bind="file.name">
+                                      e-name="name" e-form="fileExplorer" ng-bind="file.name">
                                 </span>
                             </a>
                        </div>
                        <div ng-if="file.type === 'f'" class="file-name">
                            <span editable-text="file.name"
-                                 e-name="name" e-form="fileExplorer" e-required
+                                 e-name="name" e-form="fileExplorer"
                                  ng-bind="file.name">
                            </span>
                        </div>
@@ -258,52 +258,31 @@
                     <!-- EDIT -->
                     <td class="col-md-2">
                         <form editable-form name="fileExplorer"
-                             ng-show="fileExplorer.$visible"
+                              ng-show="fileExplorer.$visible"
                               class="form-buttons form-inline"
                               onbeforesave="file.type === 'd' ?
                                       updateFolder($data, $index) :
                                       updateFile($data, $index)">
 
-                            <div ng-if="file.type === 'd'">
-                                <div>
-                                    <!-- Confirm -->
-                                    <button type="submit" class="btn btn-primary"
-                                            ng-disabled="fileExplorer.$waiting">
-                                        <span class="fa fa-check fa-lg">
 
-                                        </span>
-                                    </button>
+                            <div>
+                                <!-- Confirm -->
+                                <button type="submit" class="btn btn-primary btn-sm"
+                                        ng-disabled="fileExplorer.$waiting">
+                                    <span class="fa fa-check fa-lg">
 
-                                    <!-- Cancel -->
-                                    <button type="button" class="btn btn-warning"
-                                            ng-disabled="fileExplorer.$waiting"
-                                            ng-click="fileExplorer.$cancel()">
-                                        <span class="fa fa-remove fa-lg">
-                                        </span>
-                                    </button>
-                                </div>
+                                    </span>
+                                </button>
+
+                                <!-- Cancel -->
+                                <button type="button" class="btn btn-warning btn-sm"
+                                        ng-disabled="fileExplorer.$waiting"
+                                        ng-click="fileExplorer.$cancel()">
+                                    <span class="fa fa-remove fa-lg">
+                                    </span>
+                                </button>
                             </div>
-                            <div ng-if="file.type === 'f'">
-                                    <div>
 
-                                        <!-- Confirm -->
-                                        <button type="submit" class="btn btn-primary btn-sm"
-                                                ng-disabled="fileExplorer.$waiting">
-                                            <span class="fa fa-check fa-lg">
-
-                                            </span>
-                                        </button>
-
-                                        <!-- Cancel -->
-                                        <button type="button" class="btn btn-warning btn-sm"
-                                                ng-disabled="fileExplorer.$waiting"
-                                                ng-click="fileExplorer.$cancel()">
-                                            <span class="fa fa-remove fa-lg">
-                                            </span>
-                                        </button>
-                                    </div>
-
-                            </div>
                         </form>
                             <div ng-show="!fileExplorer.$visible">
 

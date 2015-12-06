@@ -20,6 +20,14 @@ module.exports = function(sequelize, DataTypes) {
             unique: false,
             allowNull: false,
             field: 'date'
+        },
+        priority: {
+            type: DataTypes.ENUM,
+            values : ['info', 'warning', 'danger'],
+            defaultValue: 'info',
+            unique: false,
+            allowNull: false,
+            field: 'priority'
         }
     },  {
         paranoid: true,

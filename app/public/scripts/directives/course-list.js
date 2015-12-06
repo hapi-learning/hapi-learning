@@ -10,7 +10,7 @@ angular.module('hapi-learning')
                 //filters: '=',
                 courses: '='
             },
-            templateUrl: 'scripts/directives/course-list.html',
+            templateUrl: 'templates/course-list.html',
             compile: function() {
                 return {
                     pre: function(scope, elem, attrs) {

@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning.um')
     .directive('loginForm', ['$state', '$stateParams', 'LoginFactory', 'UM_CONFIG',
                 function($state, $stateParams, LoginFactory, UM_CONFIG) {

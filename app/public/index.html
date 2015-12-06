@@ -6,16 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>hapi learning</title>
 
-    <!-- Vendor css -->
+    <!-- vendorcss:css -->
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="lib/ng-tags-input/ng-tags-input.css">
     <link rel="stylesheet" href="lib/ng-tags-input/ng-tags-input.bootstrap.css">
-    <link rel="stylesheet" href="lib/angular-loading-bar/build/loading-bar.min.css" media="all" />
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="lib/angular-loading-bar/build/loading-bar.min.css"/>
     <link rel="stylesheet" href="lib/angular-xeditable/dist/css/xeditable.css">
     <link rel="stylesheet" href="lib/ng-prettyjson/dist/ng-prettyjson.min.css">
-    <!-- End vendor css -->
+    <!-- endinject -->
+
+    <!-- inject:css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endinject -->
 
 </head>
 
@@ -28,14 +31,10 @@
 
     <div ui-view></div>
 
-
-    <!-- Vendor scripts -->
+    <!-- bower:js -->
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="lib/angular/angular.min.js"></script>
-    <!-- End vendor scripts -->
-
-    <!-- Angular modules -->
     <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="lib/ng-tags-input/ng-tags-input.min.js"></script>
     <script src="lib/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
@@ -55,23 +54,20 @@
     <script src="lib/moment/min/moment.min.js"></script>
     <script src="lib/angular-moment/angular-moment.min.js"></script>
     <script src="lib/angular-filter/dist/angular-filter.min.js"></script>
-    <script src="FileSaver.js"></script>
     <script src="lib/angular-xeditable/dist/js/xeditable.min.js"></script>
     <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="lib/showdown/dist/showdown.min.js"></script>
     <script src="lib/ng-showdown/dist/ng-showdown.min.js"></script>
     <script src="lib/ng-prettyjson/dist/ng-prettyjson.min.js"></script>
+    <!-- endinject -->
 
-    <!-- End angular modules -->
 
-    <!-- Application scripts -->
+    <!-- inject:js -->
     <script src="submodules/api/api.js"></script>
-
     <script src="submodules/user-management/scripts/um.js"></script>
     <script src="submodules/user-management/scripts/directives/if-group.js"></script>
     <script src="submodules/user-management/scripts/directives/login-form.js"></script>
-
     <script src="scripts/app.js"></script>
 
 
@@ -94,25 +90,24 @@
     <script src="scripts/directives/profile-form.js"></script>
     <script src="scripts/directives/news-form.js"></script>
     <script src="scripts/directives/footer.js"></script>
-    <script src="scripts/controllers/home-controller.js"></script>
     <script src="scripts/directives/teacher-info.js"></script>
     <script src="scripts/directives/course-info.js"></script>
     <script src="scripts/directives/course-list.js"></script>
     <script src="scripts/directives/file-icon.js"></script>
     <script src="scripts/directives/files-explorer.js"></script>
-    <script src="scripts/controllers/courses-controller.js"></script>
     <script src="scripts/directives/search-courses.js"></script>
     <script src="scripts/directives/subscribe.js"></script>
-    <script src="scripts/directives/h2-small.js"></script>
     <script src="scripts/directives/updated.js"></script>
     <script src="scripts/directives/course-link.js"></script>
     <script src="scripts/directives/news-link.js"></script>
     <script src="scripts/directives/tag-button.js"></script>
+    <script src="scripts/controllers/courses-controller.js"></script>
+    <script src="scripts/controllers/home-controller.js"></script>
     <script src="scripts/controllers/admin-controller.js"></script>
     <script src="scripts/controllers/profile-controller.js"></script>
     <script src="scripts/controllers/news-controller.js"></script>
     <script src="scripts/controllers/course-controller.js"></script>
-    <!-- End application scripts -->
+    <!-- endinject -->
 
 </body>
 

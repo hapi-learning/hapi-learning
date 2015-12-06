@@ -1,3 +1,6 @@
+'use strict';
+
+
 angular.module('hapi-learning.um')
     .directive('ifGroup', ['$rootScope',
                 function($rootScope) {

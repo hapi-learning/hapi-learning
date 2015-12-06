@@ -5,7 +5,7 @@ angular.module('hapi-learning')
                              function(LoginFactory, ProfileFactory, $rootScope) {
     return {
         restrict: 'E',
-        templateUrl: 'scripts/directives/profile-form.html',
+        templateUrl: 'templates/profile-form.html',
         link: function(scope, elem, attrs) {
 
             scope.passwords = {};
@@ -47,7 +47,7 @@ angular.module('hapi-learning')
                     }
                 }
 
-                if (typeof data.newPassword !== 'undefined') {
+                if (data.newPassword) {
                     if (data.newPassword === data.confirmPassword) {
                         profile.password = data.newPassword;
                     } else {

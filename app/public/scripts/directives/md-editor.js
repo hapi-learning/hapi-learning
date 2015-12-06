@@ -1,8 +1,10 @@
+'use strict';
+
 angular.module('hapi-learning')
     .directive('mdEditor', ['$rootScope', '$parse', function($rootScope, $parse) {
         return {
             restrict: 'AE',
-            templateUrl: 'scripts/directives/md-editor.html',
+            templateUrl: 'templates/md-editor.html',
             transclude: true,
             compile: function() {
                 return {

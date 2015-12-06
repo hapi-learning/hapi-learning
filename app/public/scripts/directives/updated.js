@@ -7,7 +7,7 @@ angular.module('hapi-learning')
             scope : {
                 code : '='
             },
-            templateUrl: 'scripts/directives/updated.html',
+            templateUrl: 'templates/updated.html',
             link: function (scope, elem, attrs) {
                 
                 scope.updated = false;

@@ -8,6 +8,6 @@ angular.module('hapi-learning')
                 scope : {
                     news : '='
                 },
-                templateUrl: 'scripts/directives/news.html'
+                templateUrl: 'templates/news.html'
             };
 }]);

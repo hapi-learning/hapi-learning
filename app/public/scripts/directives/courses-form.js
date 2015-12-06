@@ -1,8 +1,10 @@
+'use strict';
+
 angular.module('hapi-learning')
     .directive('coursesForm', ['CoursesFactory', function(CoursesFactory) {
         return {
             restrict: 'E',
-            templateUrl: 'scripts/directives/courses-form.html',
+            templateUrl: 'templates/courses-form.html',
 			link: function (scope, elem, attrs) {
 				
 				scope.course = {
@@ -26,6 +28,5 @@ angular.module('hapi-learning')
 				}
 				
 			}
-
         };
     }]);

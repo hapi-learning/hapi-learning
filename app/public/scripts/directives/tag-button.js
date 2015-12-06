@@ -7,6 +7,6 @@ angular.module('hapi-learning')
             scope: {
                 tag: '='
             },
-            templateUrl: 'scripts/directives/tag-button.html'
+            templateUrl: 'templates/tag-button.html'
         };
     });

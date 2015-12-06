@@ -6,6 +6,7 @@ test_database.sqlite
 # Modules & libraries
 node_modules
 app/public/lib
+app/dist
 #
 
 # Debug files

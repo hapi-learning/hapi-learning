@@ -56,7 +56,8 @@ exports.post = {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
             code: Joi.string().min(1).max(255).description('Course related code'),
             subject: Joi.string().min(1).max(255).required().description('Subject news'),
-            content: Joi.string().required().description('News content')
+            content: Joi.string().required().description('News content'),
+            priority : Joi.string().valid('info', 'warning', 'danger').description('News priority')
         }
     },
     handler: function (request, reply) {
@@ -69,7 +70,7 @@ exports.post = {
         const code = request.payload.code;
         const subject = request.payload.subject;
         const content = request.payload.content;
-
+        const priority = request.payload.priority;
 
         Utils.findUser(User, username)
             .then(user => {
@@ -82,7 +83,8 @@ exports.post = {
                                             subject: subject,
                                             content: content,
                                             user: username,
-                                            course: code
+                                            course: code,
+                                            priority: priority
                                         })
                                         .then(news => reply(Utils.removeDates(news)).code(201))
                                         .catch((error) => reply.conflict(error));

@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('hapi-learning.um', [
         'angular-jwt',
         'angular-storage',

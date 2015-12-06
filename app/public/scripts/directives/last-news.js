@@ -11,7 +11,7 @@ angular.module('hapi-learning')
                     count: '=',
                     code: '='
                 },
-                templateUrl: 'scripts/directives/last-news.html',
+                templateUrl: 'templates/last-news.html',
                 link: function (scope, element, attrs) {
                     scope.news = [];
                     scope.fetched = false;
@@ -28,14 +28,14 @@ angular.module('hapi-learning')
                                 $rootScope.$on('news_added', function (event, news) {
                                     if (!scope.code || news.code === scope.code) {
                                         var tmp = [news].concat(scope.news);
-                                        scope.news = tmp;
+                                        scope.news = _.map(tmp, function(news) {return news;});
                                     }
                                 });
                             }
                             else {
                                 scope.news = news;
                             }
-                        
+
                             scope.fetched = true;
                         })
                         .catch(function (err) {

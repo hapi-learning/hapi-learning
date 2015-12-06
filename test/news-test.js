@@ -24,23 +24,27 @@ internals.newsWrongUser = {
     subject : 'subject',
     content : 'content',
     username : 'Johnny',
+    priority : 'danger',
     code : 'SYS2'
 };
 internals.newsWrongCourse = {
     subject : 'subject',
     content : 'content',
     username : 'abell2r',
+    priority : 'danger',
     code : 'SYS23'
 };
 internals.newsCourseUnrelated = {
     subject : 'subject',
     content : 'content',
+    priority : 'danger',
     username : 'afox1d'
 };
 internals.newsCourseRelated = {
     subject : 'subject',
     content : 'content',
     username : 'abell2r',
+    priority : 'danger',
     code : 'SYS2'
 };
 

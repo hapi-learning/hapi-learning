@@ -1,5 +1,4 @@
-<!--<div class="alert alert-{{news.priority}}">-->
-<div class="alert alert-info">
+<div class="alert alert-{{news.priority}}">
     <div class="row">
         <div class="col-md-9">
             <strong>
@@ -16,7 +15,12 @@
 </div>
 
 <blockquote>
-    <small>
+    <p>
         <span ng-bind="news.content"></span>
-    </small>
+    </p>
+    <footer>
+        <cite title="{{news.user}}" ng-bind="news.user"></cite>
+    </footer>
 </blockquote>
+<small>
+</small>

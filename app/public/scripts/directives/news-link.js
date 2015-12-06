@@ -7,6 +7,6 @@ angular.module('hapi-learning')
             scope: {
                 news : '='
             },
-            templateUrl: 'scripts/directives/news-link.html'
+            templateUrl: 'templates/news-link.html'
         };
     });

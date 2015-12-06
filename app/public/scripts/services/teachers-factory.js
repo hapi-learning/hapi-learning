@@ -1,34 +1,33 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .factory('TeachersFactory', ['Restangular', function (Restangular) {
+    .factory('TeachersFactory', ['Restangular', '$q', function (Restangular, $q) {
 
         var internals = {};
         internals.teachers = [];
 
         var exports = {};
+
         exports.add = function (value) {
             internals.teachers.push(value);
         };
 
         exports.load = function (limit, page) {
-            return new Promise(function (resolve, reject) {
-                if (internals.teachers.length === 0)
-                {
-                    Restangular
-                    .all('teachers')
-                    .customGET('', { limit: limit, page: page })
-                    .then(function(object) {
-                        internals.teachers = object.results;
-                        resolve(object.results);
-                    })
-                    .catch(reject);
+            return $q(function (resolve) {
+                resolve(internals.teachers.length > 0);
+            }).then(function (hasTeachers) {
+                if (hasTeachers) {
+                    return internals.teachers;
+                } else {
+                    return Restangular
+                        .all('teachers')
+                        .getList()
+                        .then(function(response) {
+                            internals.teachers = response;
+                            return internals.teachers;
+                        });
                 }
-                else
-                {
-                    resolve(internals.teachers);
-                }
-            });
+            })
         };
 
         exports.get = function (index) {
