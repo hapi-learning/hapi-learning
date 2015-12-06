@@ -120,6 +120,7 @@ pipes.scriptedPartials = function() {
         .pipe(plugins.htmlmin({
             collapseWhitespace: true,
             removeComments: true,
+            minifyCss: true
         }))
         .pipe(gulp.dest(paths.dist));
 };
