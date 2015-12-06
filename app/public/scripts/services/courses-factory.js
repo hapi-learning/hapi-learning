@@ -16,13 +16,15 @@ angular.module('hapi-learning')
             exports.add = function (course) {
             
                 var teachers = _.map(course.teachers, function(teacher) { return teacher.username; });
+                var tags     = _.map(course.tags, function(tag) { return tag.name; });
 
 				return Restangular.all('courses')
 				.post({
 					code : course.code,
 					name : course.name,
 					homepage : course.homepage,
-					teachers : teachers
+					teachers : teachers,
+                    tags : tags
 				})
 				.then(function (course) {
 					return course;

@@ -90,17 +90,35 @@ angular.module('hapi-learning')
 
         $scope.loadTeachers = function ($query) {
             return TeachersFactory.load().then(function (teachers) {
+                
+                    var query     = $query.toLowerCase();
 
                     return teachers.filter(function (teacher) {
 
                         var username  = teacher.username.toLowerCase();
                         var firstName = teacher.firstName.toLowerCase();
                         var lastName  = teacher.lastName.toLowerCase();
-                        var query     = $query.toLowerCase();
 
                         return username.indexOf(query) != -1 ||
                             firstName.indexOf(query) != -1 ||
                             lastName.indexOf(query) != -1;
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        };
+            
+        $scope.loadTags = function ($query) {
+            return TagsFactory.load().then(function (tags) {
+                
+                    var query = $query.toLowerCase();
+
+                    return tags.filter(function (tag) {
+
+                        var name  = tag.name.toLowerCase();
+
+                        return name.indexOf(query) != -1;
                     });
                 })
                 .catch(function (error) {
