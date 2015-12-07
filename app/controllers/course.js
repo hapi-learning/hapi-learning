@@ -320,13 +320,21 @@ exports.getStudents = {
     handler: function (request, reply) {
         const Course = this.models.Course;
 
-        Utils.findCourseByCode(Course, request.params.id)
-        .then(course => {
-            course
-                .getUsers({joinTableAttributes: []})
-                .then(users => reply(Utils.removeDates(users)));
-        })
-        .catch(err => reply.badImplementation(err));
+        Utils.findCourseByCode(Course, request.params.id).then(course => {
+            if (course) {
+                return course.getUsers({joinTableAttributes: []});
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(function(users) {
+            return reply(Utils.removeDates(users));
+        }).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
