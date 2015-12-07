@@ -41,6 +41,13 @@ module.exports = function(sequelize, DataTypes) {
             unique: false,
             allowNull: true,
             field: 'phone_number'
+        },
+        notify: {
+            type: DataTypes.BOOLEAN,
+            unique: false,
+            allowNull: false,
+            field: 'notify',
+            defaultValue: false
         }
     }, {
         underscored: true,

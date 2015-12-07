@@ -49,6 +49,7 @@ exports.get = {
             .catch(error => reply.badImplementation(error));
     }
 };
+
 exports.post = {
     description: 'Create a news',
     validate: {
