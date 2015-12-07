@@ -6,7 +6,7 @@ const Path      = require('path');
 const _         = require('lodash');
 
 
-exports.register = function(server, options, next) 
+exports.register = function(server, options, next)
 {
     let models = {};
 
@@ -85,6 +85,13 @@ exports.register = function(server, options, next)
                 allowNull : true
             },
             targetKey : 'code'
+        });
+
+        m.Course.hasMany(m.News, {
+            foreignKey: {
+                name: 'course',
+                allowNull: true
+            }
         });
 
     })(models);

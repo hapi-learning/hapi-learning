@@ -25,7 +25,7 @@ const internals = {
                     select: ['api'],
                     options: {
                         dialect: 'sqlite',
-                        storage: 'test_database.sqlite',
+                        storage: 'test/test_database.sqlite',
                         logging: false
                     }
                 }
