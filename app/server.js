@@ -75,6 +75,7 @@ const internals = {
                         test: false
                     }
                 }],
+            './utils/mail-notifier': [{select : ['api'] }],
             './controllers': [{
                 select: ['api']
             }],
