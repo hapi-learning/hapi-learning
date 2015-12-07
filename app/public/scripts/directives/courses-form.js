@@ -21,12 +21,27 @@ angular.module('hapi-learning')
                     return CoursesFactory.add(scope.course)
                         .then(function (course) {
                             console.log('Course added!');
-                            ngDialog.open({ template: 'templateId', scope: scope });
+                            ngDialog.open({ template: 'course-added', scope: scope });
+                            scope.clearFields();
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
                 }
+                
+                scope.clearFields = function () {
+                    scope.course = {
+                        name: null,
+                        code: null,
+                        homepage: null,
+                        teachers: [],
+                        tags: []
+                    };
+                };
+                
+                scope.complete = function () {
+                    return scope.course.name && scope.course.code;
+                };
 
             }
         };

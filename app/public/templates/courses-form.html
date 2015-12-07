@@ -76,11 +76,11 @@
     <br />
 
     <fieldset class="form-group">
-        <input type="submit" ng-click="postCourse()" class="btn btn-primary" value="Create new course" />
+        <input type="submit" ng-click="postCourse()" class="btn btn-primary" value="Create new course" ng-disabled="!complete()" />
         <input type="reset" class="btn btn-warning" value="Reset" />
     </fieldset>
     
-    <script type="text/ng-template" id="templateId">
+    <script type="text/ng-template" id="course-added">
         <h2>Course successfully added!</h2>
         
         <br />

@@ -6,28 +6,44 @@
                 <option value="" disabled selected>-- Available courses --</option>
             </select>
         </div>
+        
         <label class="col-sm-2 control-label">Priority</label>
+        
         <div class="col-sm-2">
             <select id="optionSelect" class="form-control" ng-model="news.priority"  ng-options="priority for priority in priorities">
                 <option value="" disabled selected>-- Available priority --</option>
             </select>
         </div>
     </div>
+    
     <div class="form-group">
         <label class="col-sm-2 control-label">Subject</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" placeholder="Subject" ng-model="news.subject">
         </div>
     </div>
+    
     <div class="form-group">
         <label class="col-sm-2 control-label">Content</label>
         <div class="col-sm-10">
             <textarea class="form-control" rows="10" ng-model="news.content" placeholder="Write some content here"></textarea>
         </div>
     </div>
+    
     <div class="form-inline">
         <div class="col-sm-offset-2 col-sm-10">
             <button type="submit" class="btn btn-success" ng-disabled="!complete()">Submit</button>
         </div>
     </div>
+    
+    <script type="text/ng-template" id="news-added">
+        <h2>News successfully added!</h2>
+        
+        <br />
+        
+        <input class="btn btn-success" type="button" value="OK" ng-click="closeThisDialog('Some value')"/>
+        <a ui-sref="root.news" ng-click="closeThisDialog('Some value')">
+            <input class="btn btn-primary" type="button" value="See all news" />
+        </a>
+    </script>
 </form>
