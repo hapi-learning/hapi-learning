@@ -79,5 +79,16 @@
         <input type="submit" ng-click="postCourse()" class="btn btn-primary" value="Create new course" />
         <input type="reset" class="btn btn-warning" value="Reset" />
     </fieldset>
+    
+    <script type="text/ng-template" id="templateId">
+        <h2>Course successfully added!</h2>
+        
+        <br />
+        
+        <input class="btn btn-success" type="button" value="OK" ng-click="closeThisDialog('Some value')"/>
+        <a ui-sref="root.course.main({code: course.code})" ng-click="closeThisDialog('Some value')">
+            <input class="btn btn-primary" type="button" value="Go to course" />
+        </a>
+    </script>
 
 </form>

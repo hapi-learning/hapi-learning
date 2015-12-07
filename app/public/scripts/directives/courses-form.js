@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .directive('coursesForm', ['CoursesFactory', function (CoursesFactory) {
+    .directive('coursesForm', ['CoursesFactory', 'ngDialog', function (CoursesFactory, ngDialog) {
         return {
             restrict: 'E',
             templateUrl: 'templates/courses-form.html',
@@ -21,6 +21,7 @@ angular.module('hapi-learning')
                     return CoursesFactory.add(scope.course)
                         .then(function (course) {
                             console.log('Course added!');
+                            ngDialog.open({ template: 'templateId', scope: scope });
                         })
                         .catch(function (error) {
                             console.log(error);
