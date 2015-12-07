@@ -1,10 +1,12 @@
 'use strict';
 
 const Hoek = require('hoek');
-const Joi = require('joi');
-const P = require('bluebird');
-
-const Utils = require('../utils/sequelize');
+const Joi  = require('joi');
+const P    = require('bluebird');
+const _    = require('lodash');
+      
+const Utils        = require('../utils/sequelize');
+const MailNotifier = require('../utils/mail-notifier'); 
 
 const internals = {};
 
@@ -76,19 +78,29 @@ exports.post = {
         Utils.findUser(User, username)
             .then(user => {
                 if (user) {
+                    const news = {
+                                subject: subject,
+                                content: content,
+                                user: username
+                            }
+                    
                     if (code) {
                         Utils.findCourseByCode(Course, code)
                             .then(course => {
                                 if (course) {
-                                    News.create({
-                                            subject: subject,
-                                            content: content,
-                                            user: username,
-                                            course: code,
-                                            priority: priority
-                                        })
+                                    
+                                    news.course   = code;
+                                    news.priority = priority
+                                    
+                                    News.create(news)
                                         .then(news => reply(Utils.removeDates(news)).code(201))
                                         .catch((error) => reply.conflict(error));
+                                    
+                                    Utils.getSubscribedUsers(Course, code).then(users => 
+                                            _.forEach(users, user => {
+                                                     if (user.notify)
+                                                        MailNotifier.notifyNews(news, user);             
+                                            }));
                                 }
                                 else {
                                     return reply.badData('Invalid course');
@@ -96,14 +108,17 @@ exports.post = {
                             })
                             .catch((error) => reply.conflict(error));
                     }
-                    else {
-                        News.create({
-                                subject: subject,
-                                content: content,
-                                user: username
-                            })
+                    else {  
+                        
+                        News.create(news)
                             .then(news => reply(Utils.removeDates(news)).code(201))
                             .catch((error) => reply.conflict(error));
+                        
+                        User.findAll().then(users => 
+                                            _.forEach(users, user => {
+                                                     if (user.notify)
+                                                        MailNotifier.notifyNews(news, user);             
+                                            }));
                     }
                 }
                 else {

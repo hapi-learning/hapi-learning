@@ -9,10 +9,10 @@ exports.register = function(server, options, next) {
 
     const MailNotifier = {};
         
-    MailNotifier.notifyNews = function(news, mailAddress) {
+    MailNotifier.notifyNews = function(news, user) {
         
         sendgrid.send({
-            to: mailAddress,
+            to: user.email,
             from: process.env.OFFICIAL_EMAIL_ADDRESS,
             subject: 'News :' + news.subject,
             html : news.content
