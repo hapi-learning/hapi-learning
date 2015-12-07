@@ -135,7 +135,7 @@ angular.module('hapi-learning')
             exports.getSubscribed = function () {
 
                 return LoginFactory.getProfile().then(function (profile) {
-                    if (internals.subscribedCourses.length > 0) {
+                    if (internals.fetchedSubscribed) {
                         return internals.subscribedCourses;
                     } else {
                         return Restangular
@@ -152,17 +152,9 @@ angular.module('hapi-learning')
 
             };
 
-            exports.get = function (index) {
-                if (index) {
-                    return internals.courses[index];
-                }
-                else {
-                    return internals.courses;
-                }
-            };
-
             exports.clear = function () {
-                internals.courses = [];
+                internals.subscribedCourses = [];
+                internals.fetchedSubscribed = false;
             };
 
 
