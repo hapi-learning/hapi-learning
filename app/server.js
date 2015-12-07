@@ -54,12 +54,12 @@ const internals = {
                     select: ['api'],
                     options: {
                         connection: 'api',
-                        name: null,
-                        username: null,
-                        password: null,
-                        host: null,
-                        dialect: 'sqlite',
-                        storage: 'database.sqlite',
+                        name: process.env.DB_NAME || null,
+                        username: process.env.DB_USERNAME || null,
+                        password: process.env.DB_PASSWORD || null,
+                        host: process.env.DB_HOST || null,
+                        dialect: process.env.DB_DIALECT || null,
+                        storage: process.env.DB_STORAGE || null,
                         logging: program.verbose ? console.log : false
                     }
                 }
