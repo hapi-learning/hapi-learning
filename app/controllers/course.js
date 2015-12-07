@@ -7,6 +7,7 @@ const Utils = require('../utils/sequelize');
 const Path  = require('path');
 const Fs    = require('fs');
 const StreamBuffers = require('stream-buffers');
+const P = require('bluebird');
 
 const internals = {};
 
@@ -394,46 +395,35 @@ exports.post = {
             : Promise.resolve([]);
 
         // Loads tags and teachers to be added
-        Promise
-        .all([getTags, getTeachers])
-        .then(values => {
+        P.all([getTags, getTeachers]).spread(function(tags, teachers) {
+            const wrongTeachers = (hasTeachers && teachers.length !== pteachers.length);
+            const wrongTags     = (hasTags && tags.length !== ptags.length);
 
-                const tags     = values[0];
-                const teachers = values[1];
+            if (wrongTeachers || wrongTags) {
+                const message = wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)';
+                throw { statusCode: 422, message: message };
+            } else {
+                return P.all([Course.create(coursePayload), tags, teachers]);
+            }
+        }).spread(function(course, tags, teachers) {
 
-                const wrongTeachers = (hasTeachers && teachers.length !== pteachers.length);
-                const wrongTags     = (hasTags && tags.length !== ptags.length);
+            return P.all([course, tags, teachers, course.addTeachers(teachers), course.addTags(tags)]);
 
-                if (wrongTeachers || wrongTags)
-                {
-                    return reply.badData(wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)');
-                }
-                else
-                {
-                    // TODO - Should refactor this somewhere else.
-                    // Create course
-                    Course
-                    .create(coursePayload)
-                    .then(newCourse => {
+        }).spread(function(newCourse, tags, teachers) {
 
-                        // Add teachers and tags to the new added course
-                        Promise
-                        .all([newCourse.addTeachers(teachers), newCourse.addTags(tags)])
-                        .then(() => {
+            const course = newCourse.get({ plain:true });
+            course.tags = _.map(tags, (t => t.get('name', { plain:true })));
+            course.teachers = _.map(teachers, (t => t.get('username', { plain:true })));
+            Storage.createCourse(course.code, homepage);
+            return reply(course).code(201);
 
-                            // Build response
-                            const course = newCourse.get({plain:true});
-                            course.tags = _.map(tags, (t => t.get('name', {plain:true})));
-                            course.teachers = _.map(teachers, (t => t.get('username', {plain:true})));
-
-                            Storage.createCourse(course.code, homepage);
-
-                            return reply(course).code(201);
-                        });
-                    })
-                    .catch(() => reply.conflict());
-                }
-            });
+        }).catch(function(err) {
+            if (err.statusCode === 422) {
+                return reply.badData(err.message);
+            } else {
+                return reply.conflict();
+            }
+        });
     }
 };
 
