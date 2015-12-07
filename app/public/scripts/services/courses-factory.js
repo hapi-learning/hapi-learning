@@ -152,17 +152,9 @@ angular.module('hapi-learning')
 
             };
 
-            exports.get = function (index) {
-                if (index) {
-                    return internals.courses[index];
-                }
-                else {
-                    return internals.courses;
-                }
-            };
-
             exports.clear = function () {
-                internals.courses = [];
+                internals.subscribedCourses = [];
+                internals.fetchedSubscribed = false;
             };
 
 
