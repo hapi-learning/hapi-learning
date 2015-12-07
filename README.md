@@ -23,17 +23,43 @@ https:
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
 
-Create a .env file in the root folder and change the web/api host and port:
+Create a .env file in the root folder and change the options below:
 
 ```
+# Connections
 
 WEB_HOST=localhost
 WEB_PORT=8080
+WEB_CORS=true
+
 API_HOST=localhost
 API_PORT=8088
+API_CORS=true
+
+# DB
+
+DB_DIALECT=sqlite
+DB_STORAGE=database.sqlite
+
+# For PostgreSQL, MySQL, SQLServer.
+# DB_NAME
+# DB_USERNAME
+# DB_PASSWORD
+# DB_HOST
+
+# Storage
+
+# Where to store the storage folder, by default in the app folder
+# STORAGE_PATH
+
+# Others
 
 AUTH_KEY=9FDS954QLBNQbraF9K9yBJZ0I95CR8269FDS954QLBNQbraF9K9yBJZ0I95CR826
+
+# Maximum size of files to upload in bytes
 UPLOAD_MAX=20970000
+
+# The expiration time of the token
 TOKEN_EXP=7200
 
 ```

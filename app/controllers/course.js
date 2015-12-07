@@ -7,6 +7,7 @@ const Utils = require('../utils/sequelize');
 const Path  = require('path');
 const Fs    = require('fs');
 const StreamBuffers = require('stream-buffers');
+const P = require('bluebird');
 
 const internals = {};
 
@@ -320,13 +321,21 @@ exports.getStudents = {
     handler: function (request, reply) {
         const Course = this.models.Course;
 
-        Utils.findCourseByCode(Course, request.params.id)
-        .then(course => {
-            course
-                .getUsers({joinTableAttributes: []})
-                .then(users => reply(Utils.removeDates(users)));
-        })
-        .catch(err => reply.badImplementation(err));
+        Utils.findCourseByCode(Course, request.params.id).then(course => {
+            if (course) {
+                return course.getUsers({joinTableAttributes: []});
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(function(users) {
+            return reply(Utils.removeDates(users));
+        }).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
@@ -386,46 +395,35 @@ exports.post = {
             : Promise.resolve([]);
 
         // Loads tags and teachers to be added
-        Promise
-        .all([getTags, getTeachers])
-        .then(values => {
+        P.all([getTags, getTeachers]).spread(function(tags, teachers) {
+            const wrongTeachers = (hasTeachers && teachers.length !== pteachers.length);
+            const wrongTags     = (hasTags && tags.length !== ptags.length);
 
-                const tags     = values[0];
-                const teachers = values[1];
+            if (wrongTeachers || wrongTags) {
+                const message = wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)';
+                throw { statusCode: 422, message: message };
+            } else {
+                return P.all([Course.create(coursePayload), tags, teachers]);
+            }
+        }).spread(function(course, tags, teachers) {
 
-                const wrongTeachers = (hasTeachers && teachers.length !== pteachers.length);
-                const wrongTags     = (hasTags && tags.length !== ptags.length);
+            return P.all([course, tags, teachers, course.addTeachers(teachers), course.addTags(tags)]);
 
-                if (wrongTeachers || wrongTags)
-                {
-                    return reply.badData(wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)');
-                }
-                else
-                {
-                    // TODO - Should refactor this somewhere else.
-                    // Create course
-                    Course
-                    .create(coursePayload)
-                    .then(newCourse => {
+        }).spread(function(newCourse, tags, teachers) {
 
-                        // Add teachers and tags to the new added course
-                        Promise
-                        .all([newCourse.addTeachers(teachers), newCourse.addTags(tags)])
-                        .then(() => {
+            const course = newCourse.get({ plain:true });
+            course.tags = _.map(tags, (t => t.get('name', { plain:true })));
+            course.teachers = _.map(teachers, (t => t.get('username', { plain:true })));
+            Storage.createCourse(course.code, homepage);
+            return reply(course).code(201);
 
-                            // Build response
-                            const course = newCourse.get({plain:true});
-                            course.tags = _.map(tags, (t => t.get('name', {plain:true})));
-                            course.teachers = _.map(teachers, (t => t.get('username', {plain:true})));
-
-                            Storage.createCourse(course.code, homepage);
-
-                            return reply(course).code(201);
-                        });
-                    })
-                    .catch(() => reply.conflict());
-                }
-            });
+        }).catch(function(err) {
+            if (err.statusCode === 422) {
+                return reply.badData(err.message);
+            } else {
+                return reply.conflict();
+            }
+        });
     }
 };
 
@@ -642,23 +640,29 @@ exports.addTags = {
         const Course = this.models.Course;
         const id     = request.params.id;
 
-        Tag
-        .findAll({where: { name: { $in: request.payload.tags } }})
-        .then(tags => {
-            Utils.findCourseByCode(Course, request.params.id)
-            .then(course => {
-                if (course) {
-                    course.addTags(tags).then(() => {
-                       Utils.getCourse(course).then(result => {
-                           return reply(result);
-                       });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + ' does not exists.');
+        Tag.findAll({
+            where: {
+                name: {
+                    $in: request.payload.tags
                 }
-            });
-        })
-        .catch(reply.badImplementation);
+            }
+        }).then(function(tags) {
+            return P.all([Utils.findCourseByCode(Course, id), tags]);
+        }).spread(function(course, tags) {
+            if (course) {
+                return P.all([course, course.addTags(tags)]);
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).spread(function(course) {
+            return Utils.getCourse(course);
+        }).then(reply).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
@@ -681,23 +685,29 @@ exports.addTeachers = {
         const Course = this.models.Course;
         const id     = request.params.id;
 
-        User
-        .findAll({where: { username: { $in: request.payload.teachers } }})
-        .then(teachers => {
-            Utils.findCourseByCode(Course, request.params.id)
-            .then(course => {
-                if (course) {
-                    course.addTeachers(teachers).then(() => {
-                        Utils.getCourse(course).then(result => {
-                            return reply(result);
-                        });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + ' does not exists.');
+        User.findAll({
+            where: {
+                username: {
+                    $in: request.payload.teachers
                 }
-            });
-        })
-        .catch(err => reply.badImplementation(err));
+            }
+        }).then(function(teachers) {
+            return P.all([Utils.findCourseByCode(Course, id), teachers]);
+        }).spread(function(course, teachers) {
+            if (course) {
+               return P.all([course, course.addTeachers(teachers)]);
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).spread(function(course) {
+            return Utils.getCourse(course);
+        }).then(reply).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
@@ -791,23 +801,27 @@ exports.deleteTags = {
         const ptags  = request.payload.tags;
         const id     = request.params.id;
 
-        Tag
-        .findAll({where: { name: { $in: ptags} }})
-        .then(tags => {
-            Utils.findCourseByCode(Course, id)
-            .then(course => {
-                if (course) {
-                    course.removeTags(tags).then(() => {
-                        Utils.getCourse(course).then(result => {
-                            return reply(result);
-                       });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + 'does not exists.');
+        Tag.findAll({
+            where: {
+                name: {
+                    $in: ptags
                 }
-            });
-        })
-        .catch(err => reply.badImplementation(err));
+            }
+        }).then(tags => {
+            return P.all([Utils.findCourseByCode(Course, id), tags]);
+        }).spread((course, tags) => {
+            if (course) {
+                return course.removeTags(tags).then(() => Utils.getCourse(course));
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(reply).catch(err => {
+            if (err.statusCode === 404) {
+               return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
@@ -832,23 +846,28 @@ exports.deleteTeachers = {
         const pteachers = request.payload.teachers;
         const id = request.params.id;
 
-        User
-        .findAll({where: { username: { $in: pteachers } }})
-        .then(teachers => {
-            Utils.findCourseByCode(Course, id)
-            .then(course => {
-                if (course) {
-                    course.removeTeachers(teachers).then(() => {
-                        Utils.getCourse(course).then(result => {
-                            return reply(result);
-                        });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + 'does not exists.');
+
+        User.findAll({
+            where: {
+                username: {
+                    $in: pteachers
                 }
-            });
-        })
-        .catch(err => reply.badImplementation(err));
+            }
+        }).then(teachers => {
+            return P.all([Utils.findCourseByCode(Course, id), teachers]);
+        }).spread((course, teachers) => {
+            if (course) {
+                return course.removeTeachers(teachers).then(() => Utils.getCourse(course));
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(reply).catch(err => {
+            if (err.statusCode === 404) {
+               return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
