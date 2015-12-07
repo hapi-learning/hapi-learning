@@ -640,23 +640,29 @@ exports.addTags = {
         const Course = this.models.Course;
         const id     = request.params.id;
 
-        Tag
-        .findAll({where: { name: { $in: request.payload.tags } }})
-        .then(tags => {
-            Utils.findCourseByCode(Course, request.params.id)
-            .then(course => {
-                if (course) {
-                    course.addTags(tags).then(() => {
-                       Utils.getCourse(course).then(result => {
-                           return reply(result);
-                       });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + ' does not exists.');
+        Tag.findAll({
+            where: {
+                name: {
+                    $in: request.payload.tags
                 }
-            });
-        })
-        .catch(reply.badImplementation);
+            }
+        }).then(function(tags) {
+            return P.all([Utils.findCourseByCode(Course, id), tags]);
+        }).spread(function(course, tags) {
+            if (course) {
+                return P.all([course, course.addTags(tags)]);
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).spread(function(course) {
+            return Utils.getCourse(course);
+        }).then(reply).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
@@ -679,23 +685,29 @@ exports.addTeachers = {
         const Course = this.models.Course;
         const id     = request.params.id;
 
-        User
-        .findAll({where: { username: { $in: request.payload.teachers } }})
-        .then(teachers => {
-            Utils.findCourseByCode(Course, request.params.id)
-            .then(course => {
-                if (course) {
-                    course.addTeachers(teachers).then(() => {
-                        Utils.getCourse(course).then(result => {
-                            return reply(result);
-                        });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + ' does not exists.');
+        User.findAll({
+            where: {
+                username: {
+                    $in: request.payload.teachers
                 }
-            });
-        })
-        .catch(err => reply.badImplementation(err));
+            }
+        }).then(function(teachers) {
+            return P.all([Utils.findCourseByCode(Course, id), teachers]);
+        }).spread(function(course, teachers) {
+            if (course) {
+               return P.all([course, course.addTeachers(teachers)]);
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).spread(function(course) {
+            return Utils.getCourse(course);
+        }).then(reply).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
@@ -789,23 +801,27 @@ exports.deleteTags = {
         const ptags  = request.payload.tags;
         const id     = request.params.id;
 
-        Tag
-        .findAll({where: { name: { $in: ptags} }})
-        .then(tags => {
-            Utils.findCourseByCode(Course, id)
-            .then(course => {
-                if (course) {
-                    course.removeTags(tags).then(() => {
-                        Utils.getCourse(course).then(result => {
-                            return reply(result);
-                       });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + 'does not exists.');
+        Tag.findAll({
+            where: {
+                name: {
+                    $in: ptags
                 }
-            });
-        })
-        .catch(err => reply.badImplementation(err));
+            }
+        }).then(tags => {
+            return P.all([Utils.findCourseByCode(Course, id), tags]);
+        }).spread((course, tags) => {
+            if (course) {
+                return course.removeTags(tags).then(() => Utils.getCourse(course));
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(reply).catch(err => {
+            if (err.statusCode === 404) {
+               return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
@@ -830,23 +846,28 @@ exports.deleteTeachers = {
         const pteachers = request.payload.teachers;
         const id = request.params.id;
 
-        User
-        .findAll({where: { username: { $in: pteachers } }})
-        .then(teachers => {
-            Utils.findCourseByCode(Course, id)
-            .then(course => {
-                if (course) {
-                    course.removeTeachers(teachers).then(() => {
-                        Utils.getCourse(course).then(result => {
-                            return reply(result);
-                        });
-                    });
-                } else {
-                    return reply.notFound('The course ' + id + 'does not exists.');
+
+        User.findAll({
+            where: {
+                username: {
+                    $in: pteachers
                 }
-            });
-        })
-        .catch(err => reply.badImplementation(err));
+            }
+        }).then(teachers => {
+            return P.all([Utils.findCourseByCode(Course, id), teachers]);
+        }).spread((course, teachers) => {
+            if (course) {
+                return course.removeTeachers(teachers).then(() => Utils.getCourse(course));
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(reply).catch(err => {
+            if (err.statusCode === 404) {
+               return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
     }
 };
 
