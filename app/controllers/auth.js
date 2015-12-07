@@ -266,11 +266,11 @@ exports.getNews = {
             return News.findAll({
                 where: {
                     $or: [{
-                        code: {
+                        course: {
                             $in: codes
                         }
                     }, {
-                        code: null
+                        course: null
                     }]
                 }
             });
