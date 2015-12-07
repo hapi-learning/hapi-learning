@@ -14,21 +14,21 @@ angular.module('hapi-learning')
             internals.subscribedCourses = [];
 
             exports.add = function (course) {
-            
+
                 var teachers = _.map(course.teachers, function(teacher) { return teacher.username; });
                 var tags     = _.map(course.tags, function(tag) { return tag.name; });
 
-				return Restangular.all('courses')
-				.post({
-					code : course.code,
-					name : course.name,
-					homepage : course.homepage,
-					teachers : teachers,
+                return Restangular.all('courses')
+                .post({
+                    code : course.code,
+                    name : course.name,
+                    homepage : course.homepage,
+                    teachers : teachers,
                     tags : tags
-				})
-				.then(function (course) {
-					return course;
-				});                
+                })
+                .then(function (course) {
+                    return course;
+                });
             };
 
             /**
@@ -139,8 +139,8 @@ angular.module('hapi-learning')
                         return internals.subscribedCourses;
                     } else {
                         return Restangular
-                            .one('users', profile.username)
-                            .getList('courses')
+                            .all('me')
+                            .get('courses')
                             .then(function (subscribedCourses) {
                                 internals.subscribedCourses = subscribedCourses;
                                 internals.fetchedSubscribed = true;
