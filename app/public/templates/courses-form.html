@@ -83,7 +83,7 @@
     <fieldset class="form-group">
         <div>
             <label>Tags</label>
-            <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="course.tags" title="Course tags" placeholder="Add tags" add-from-autocomplete-only="true" display-property="name">
+            <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="course.tags" title="Course tags" placeholder="Add tags" add-from-autocomplete-only="true" display-property="name" clearable>
                 <auto-complete min-length="0" source="loadTags($query)"></auto-complete>
             </tags-input>
         </div>
@@ -102,8 +102,8 @@
         
         <br />
         
-        <input class="btn btn-success" type="button" value="OK" ng-click="closeThisDialog('Some value')"/>
-        <a ui-sref="root.course.main({code: course.code})" ng-click="closeThisDialog('Some value')">
+        <input class="btn btn-success" type="button" value="OK" ng-click="closeThisDialog() || clearFields()"/>
+        <a ui-sref="root.course.main({code: course.code})" ng-click="closeThisDialog() || clearFields()">
             <input class="btn btn-primary" type="button" value="Go to course" />
         </a>
     </script>

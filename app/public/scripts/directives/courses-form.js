@@ -45,7 +45,6 @@ angular.module('hapi-learning')
                         .then(function (course) {
                             console.log('Course added!');
                             ngDialog.open({ template: 'course-added', scope: scope });
-                            scope.clearFields();
                         })
                         .catch(function (error) {
                             console.log(error);
