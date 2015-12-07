@@ -115,9 +115,7 @@ exports.getAll = {
             } else {
                 const promises = _.map(results.rows, (r => Utils.getCourse(r, request.query.tags)));
                 // Wait for all promises to end
-                Promise
-                    .all(promises)
-                    .then(values => {
+                Promise.all(promises).then(values => {
 
                         // Need an alternative to that...
                         if (request.query.tags) {
@@ -150,19 +148,21 @@ exports.get = {
         const Course = this.models.Course;
         const id = request.params.id;
 
-        Utils.findCourseByCode(Course, id)
-        .then(result => {
-            if (result) // If found
-            {
-
-                Utils.getCourse(result).then(course => reply(course));
+        Utils.findCourseByCode(Course, id).then(result => {
+            if (result) {
+                return Utils.getCourse(result);
+            } else {
+                throw { statusCode: 404, message: 'Course not found'};
             }
-            else // If not found
-            {
-                return reply.notFound('Cannot find course ' + id);
+        }).then(function(result) {
+            return reply(result);
+        }).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
             }
-        })
-        .catch(err => reply.badImplementation(err));
+        });
 
     }
 };

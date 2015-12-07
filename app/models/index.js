@@ -35,8 +35,6 @@ exports.register = function(server, options, next)
 
     void (function setAssociations(m) {
 
-
-
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
 
@@ -87,12 +85,6 @@ exports.register = function(server, options, next)
             targetKey : 'code'
         });
 
-        m.Course.hasMany(m.News, {
-            foreignKey: {
-                name: 'course',
-                allowNull: true
-            }
-        });
 
     })(models);
 
