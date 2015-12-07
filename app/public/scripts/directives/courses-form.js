@@ -6,6 +6,9 @@ angular.module('hapi-learning')
             restrict: 'E',
             templateUrl: 'templates/courses-form.html',
             link: function (scope, elem, attrs) {
+                
+                scope.validName = undefined;
+                scope.validCode = undefined;
 
                 scope.course = {
                     name: null,
@@ -13,6 +16,26 @@ angular.module('hapi-learning')
                     homepage: null,
                     teachers: [],
                     tags: []
+                };
+                
+                scope.checkName = function($event) {
+                    
+                    var names = CoursesFactory.loadNames()
+                        .then(function (names) {
+                            var pnames = _.map(names, function(name) { return name.name; });
+                            
+                            scope.validName = !(pnames.indexOf(scope.course.name) !== -1);
+                        });
+                };
+                
+                scope.checkCode = function($event) {
+                    
+                    var names = CoursesFactory.loadCodes()
+                        .then(function (codes) {
+                            var pcodes = _.map(codes, function(code) { return code.code; });
+                            
+                            scope.validCode = !(pcodes.indexOf(scope.course.code) !== -1);
+                        });
                 };
 
                 scope.postCourse = function () {            

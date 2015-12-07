@@ -8,15 +8,32 @@
 
     <fieldset class="form-group">
         <div>
-            <label>Name (required)</label>
-            <input type="text" class="form-control" name="name" ng-model="course.name" title="Course name" placeholder="Algorithmique, Atelier logiciel..." required />
+            <div ng-class="{'has-error': courseForm.name.$dirty && !validName}">
+                <label>Name (required)</label>
+                <input type="text" class="form-control" name="name" ng-model="course.name" title="Course name" placeholder="Algorithmique, Atelier logiciel..." ng-keyup="checkName($event)" required />
+            </div>
+            
+            <br />
+            
+            <div class="alert alert-danger" ng-show="courseForm.name.$dirty && !validName">
+                A course with that name already exists.
+            </div>
+
         </div>
     </fieldset>
 
     <fieldset class="form-group">
         <div>
-            <label>Code (required)</label>
-            <input type="text" class="form-control" name="code" ng-model="course.code" title="Course short name" placeholder="ALG, ATL..." required />
+            <div ng-class="{'has-error': courseForm.code.$dirty && !validCode}">
+                <label>Code (required)</label>
+                <input type="text" class="form-control" name="code" ng-model="course.code" title="Course short name" placeholder="ALG, ATL..." ng-keyup="checkCode($event)" required />
+            </div>
+            
+            <br />
+            
+            <div class="alert alert-danger" ng-show="courseForm.code.$dirty && !validCode">
+                A course with that code already exists.
+            </div>
         </div>
     </fieldset>
 

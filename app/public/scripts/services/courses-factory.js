@@ -87,6 +87,13 @@ angular.module('hapi-learning')
                     select: ['code']
                 });
             };
+        
+            exports.loadNames = function() {
+                return Restangular.all('courses').customGET('', {
+                    pagination: false,
+                    select: ['name']
+                });
+            };
 
             /**
                 Load a specific course
