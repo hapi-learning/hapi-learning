@@ -6,7 +6,6 @@ const P    = require('bluebird');
 const _    = require('lodash');
       
 const Utils        = require('../utils/sequelize');
-const MailNotifier = require('../utils/mail-notifier'); 
 
 const internals = {};
 
@@ -68,6 +67,7 @@ exports.post = {
         const User = this.models.User;
         const Course = this.models.Course;
         const News = this.models.News;
+        const MailNotifier = request.server.plugins['mail-notifier']['mail-notifier'];
 
         const username = request.payload.username;
         const code = request.payload.code;
@@ -92,7 +92,7 @@ exports.post = {
 
                             news.course = code;
 
-                            Course.getUsers().then(users => {
+                            course.getUsers().then(users => {
                                 const promises = _.map(users, user => {
                                     if (user.get('notify'))
                                         return MailNotifier.notifyNews(news, user);

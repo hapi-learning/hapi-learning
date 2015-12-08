@@ -17,8 +17,8 @@ exports.register = function(server, options, next) {
                 
                 to: user.get('email'),
                 from: process.env.OFFICIAL_EMAIL_ADDRESS,
-                subject: 'News : ' + news.get('subject'),
-                html : news.get('content')
+                subject: 'News : ' + news.subject,
+                html : news.content
             }, 
             function(err) {
                 if (err)
