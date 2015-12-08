@@ -33,11 +33,12 @@
 
         <div class="form-group">
             <label class="control-label col-md-2">Notify news by email:</label>
-            <div class="col-md-10">
-                <span e-class="form-control" e-type="checkbox" e-title=""
-                      editable-checkbox="profile.notify" e-name="notify"
-                      ng-bind="profile.notify" e-required>
-                </span>
+            <div class="col-md-10" style="padding-left:35px">
+                <div e-class="form-control" e-type="checkbox"
+                      editable-checkbox="profile.notify" e-name="notify">
+                    <span ng-if="profile.notify === true">yes</span>
+                    <span ng-if="profile.notify === false">no</span>
+                </div>
             </div>
         </div>
         
@@ -50,7 +51,6 @@
                 </span>
             </div>
         </div>
-
 
         <div class="form-group" ng-show="profileForm.$visible">
             <label class="control-label col-md-2">New password:</label>
