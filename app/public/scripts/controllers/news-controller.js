@@ -2,4 +2,6 @@
 
 angular
     .module('hapi-learning')
-    .controller('NewsCtrl', ['$scope', function ($scope) { }]);
+    .controller('NewsCtrl', ['$rootScope', '$scope', function ($rootScope, $scope) {
+        $rootScope.titlePage = 'News';
+    }]);

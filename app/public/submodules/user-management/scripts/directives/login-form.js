@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('hapi-learning.um')
-    .directive('loginForm', ['$state', '$stateParams', 'LoginFactory', 'UM_CONFIG',
-                function($state, $stateParams, LoginFactory, UM_CONFIG) {
+    .directive('loginForm', ['$rootScope', '$state', '$stateParams', 'LoginFactory', 'UM_CONFIG',
+                function($rootScope, $state, $stateParams, LoginFactory, UM_CONFIG) {
     return {
         restrict: 'A',
         templateUrl: 'submodules/user-management/templates/login-form.html',
         link: function(scope, elem, attrs) {
+
+            $rootScope.titlePage = 'Login';
 
             scope.user = {};
             scope.invalidCredentials = false;
