@@ -56,7 +56,7 @@ exports.post = {
     validate: {
         payload: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            code: Joi.string().min(1).max(255).description('Course related code'),
+            code: Joi.string().min(1).max(255).allow(null).description('Course related code'),
             subject: Joi.string().min(1).max(255).required().description('Subject news'),
             content: Joi.string().required().description('News content'),
             priority : Joi.string().valid('info', 'warning', 'danger').description('News priority')
