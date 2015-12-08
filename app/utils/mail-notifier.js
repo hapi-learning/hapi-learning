@@ -11,12 +11,22 @@ exports.register = function(server, options, next) {
         
     MailNotifier.notifyNews = function(news, user) {
         
-        sendgrid.send({
-            to: user.get('email'),
-            from: process.env.OFFICIAL_EMAIL_ADDRESS,
-            subject: 'News :' + news.get('subject'),
-            html : news.get('content')
-        })   
+        return new P(function(resolve, reject){
+            
+            sendgrid.send({
+                
+                to: user.get('email'),
+                from: process.env.OFFICIAL_EMAIL_ADDRESS,
+                subject: 'News : ' + news.get('subject'),
+                html : news.get('content')
+            }, 
+            function(err) {
+                if (err)
+                    reject(err);
+                else 
+                    resolve();
+            });
+        })  
     }
     
     server.expose('mail-notifier', MailNotifier);

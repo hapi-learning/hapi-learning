@@ -93,12 +93,14 @@ exports.post = {
                             news.course = code;
 
                             Course.getUsers().then(users => {
-                                _.forEach(users, user => {
+                                const promises = _.map(users, user => {
                                     if (user.get('notify'))
-                                        MailNotifier.notifyNews(news, user);             
-                                    });
-
-                                tail();
+                                        return MailNotifier.notifyNews(news, user);
+                                    else
+                                        return P.resolve();
+                                });
+                                
+                                P.all(promises).then(tail);
                             }); 
 
                             News.create(news)
@@ -112,15 +114,18 @@ exports.post = {
                     })
                     .catch((error) => reply.conflict(error));
                 } else {  
-
+                    
                     User.findAll().then(users => {
-                        _.forEach(users, user => {
+                        const promises = _.map(users, user => {
                             if (user.get('notify'))
-                                MailNotifier.notifyNews(news, user); 
+                                return MailNotifier.notifyNews(news, user);
+                            else
+                                return P.resolve();
+                        });
 
-                            tail();
-                        })});
-
+                        P.all(promises).then(tail);
+                    }); 
+                    
                     News.create(news)
                         .then(news => reply(Utils.removeDates(news)).code(201))
                         .catch((error) => reply.conflict(error));
