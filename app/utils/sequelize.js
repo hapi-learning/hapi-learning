@@ -92,11 +92,6 @@ internals.findUser = function(User, username)
     });
 };
 
-internals.getSubscribedUsers(Course, courseCode)
-{
-    // to do
-}
-
 module.exports = {
     removeDates: function (result) {
         if (Array.isArray(result)) {
@@ -109,6 +104,5 @@ module.exports = {
     findCourseByCode: internals.findCourseByCode,
     getUser: internals.getUser,
     findUser: internals.findUser,
-    extractCourse : internals.extractCourse,
-    getSubscribedUsers : internals.getSuscribedUsers;
+    extractCourse : internals.extractCourse
 };

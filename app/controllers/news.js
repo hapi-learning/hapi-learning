@@ -75,56 +75,61 @@ exports.post = {
         const content = request.payload.content;
         const priority = request.payload.priority;
 
-        Utils.findUser(User, username)
-            .then(user => {
-                if (user) {
-                    const news = {
-                                subject: subject,
-                                content: content,
-                                user: username
-                            }
-                    
-                    if (code) {
-                        Utils.findCourseByCode(Course, code)
-                            .then(course => {
-                                if (course) {
-                                    
-                                    news.course   = code;
-                                    news.priority = priority
-                                    
-                                    News.create(news)
-                                        .then(news => reply(Utils.removeDates(news)).code(201))
-                                        .catch((error) => reply.conflict(error));
-                                    
-                                    Utils.getSubscribedUsers(Course, code).then(users => 
-                                            _.forEach(users, user => {
-                                                     if (user.notify)
-                                                        MailNotifier.notifyNews(news, user);             
-                                            }));
-                                }
-                                else {
-                                    return reply.badData('Invalid course');
-                                }
-                            })
-                            .catch((error) => reply.conflict(error));
-                    }
-                    else {  
-                        
-                        News.create(news)
-                            .then(news => reply(Utils.removeDates(news)).code(201))
-                            .catch((error) => reply.conflict(error));
-                        
-                        User.findAll().then(users => 
-                                            _.forEach(users, user => {
-                                                     if (user.notify)
-                                                        MailNotifier.notifyNews(news, user);             
-                                            }));
-                    }
+        const tail = request.tail('mails-notification');
+        
+        Utils.findUser(User, username).then(user => {
+            if (user) {
+                const news = {
+                    subject: subject,
+                    content: content,
+                    user: username,
+                    priority: priority
+                };
+
+                if (code) {
+                    Utils.findCourseByCode(Course, code).then(course => {
+                        if (course) {
+
+                            news.course = code;
+
+                            Course.getUsers().then(users => {
+                                _.forEach(users, user => {
+                                    if (user.get('notify'))
+                                        MailNotifier.notifyNews(news, user);             
+                                    });
+
+                                tail();
+                            }); 
+
+                            News.create(news)
+                                .then(news => reply(Utils.removeDates(news)).code(201))
+                                .catch((error) => reply.conflict(error));
+
+                        }
+                        else {
+                            return reply.badData('Invalid course');
+                        }
+                    })
+                    .catch((error) => reply.conflict(error));
+                } else {  
+
+                    User.findAll().then(users => {
+                        _.forEach(users, user => {
+                            if (user.get('notify'))
+                                MailNotifier.notifyNews(news, user); 
+
+                            tail();
+                        })});
+
+                    News.create(news)
+                        .then(news => reply(Utils.removeDates(news)).code(201))
+                        .catch((error) => reply.conflict(error));
                 }
-                else {
-                    return reply.badData('Invalid user');
-                }
-            })
-            .catch(error => reply.badImplementation(error));
+            }
+            else {
+                return reply.badData('Invalid user');
+            }
+        })
+        .catch(error => reply.badImplementation(error));
     }
 };
