@@ -62,6 +62,10 @@ UPLOAD_MAX=20970000
 # The expiration time of the token
 TOKEN_EXP=7200
 
+#Mails
+SENDGRID_KEY=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 
+OFFICIAL_EMAIL_ADDRESS=hapilearning@gmail.com
+
 ```
 
 

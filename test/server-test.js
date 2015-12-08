@@ -30,12 +30,14 @@ const internals = {
                     }
                 }
             ],
+            '../app/utils/mail-notifier': [{
+                select: ['api']  
+            }],
             '../app/utils/storage': [
                 {
                     select: ['api'],
                     options: {
-                        root: __dirname,
-                        test: true
+                        root: __dirname
                     }
                 }],
             '../app/controllers': [{select: ['api']}],
