@@ -37,6 +37,10 @@ angular.module('hapi-learning')
                     profile.phoneNumber = data.phoneNumber;
                 }
 
+                if (data.notify !== scope.notify) {
+                    profile.notify = data.notify;
+                }
+                
                 if (data.email !== scope.profile.email) {
                     if (!validateEmail(data.email)) {
                         var message = 'Invalid email';

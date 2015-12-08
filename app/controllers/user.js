@@ -234,7 +234,8 @@ exports.patch = {
             email: Joi.string().email().description('User email'),
             firstName: Joi.string().max(255).allow('').description('User first name'),
             lastName: Joi.string().max(255).allow('').description('User last name'),
-            phoneNumber: Joi.string().max(255).allow('').description('User phone number')
+            phoneNumber: Joi.string().max(255).allow('').description('User phone number'),
+            notify: Joi.boolean()
         }
     },
     handler: internals.updateHandler
