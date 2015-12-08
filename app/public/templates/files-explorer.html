@@ -74,7 +74,7 @@
             </a>
         </div>
 
-        <div class="col-md-2 col-lg-1">
+        <div class="col-md-2 col-lg-1" if-group="teacher admin">
             <button class="btn btn-default btn-block dropdown-toggle"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-plus"></span> <span class="caret"></span>
@@ -86,23 +86,25 @@
             </ul>
         </div>
 
-        <div class="col-md-2 col-lg-1 pull-right" ng-show="showHidden">
-            <button popover-trigger="mouseenter" popover-placement="top"
-                    uib-popover="Click to hide hidden files"
-                    popover-popup-delay="700"
-                    class="btn btn-default btn-block" ng-click="showHidden = false">
-                <span class="glyphicon glyphicon-eye-open"></span>
-            </button>
-        </div>
+       <div if-group="teacher admin">
+            <div class="col-md-2 col-lg-1 pull-right" ng-show="showHidden">
+                <button popover-trigger="mouseenter" popover-placement="top"
+                        uib-popover="Click to hide hidden files"
+                        popover-popup-delay="700"
+                        class="btn btn-default btn-block" ng-click="showHidden = false">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </button>
+            </div>
 
-        <div class="col-md-2 col-lg-1 pull-right" ng-show="!showHidden" >
-            <button popover-trigger="mouseenter" popover-placement="top"
-                    uib-popover="Click to show hidden files"
-                    popover-popup-delay="700"
-                    class="btn btn-default btn-block" ng-click="showHidden = true">
-                <span class="glyphicon glyphicon-eye-close"></span>
-            </button>
-        </div>
+            <div class="col-md-2 col-lg-1 pull-right" ng-show="!showHidden" >
+                <button popover-trigger="mouseenter" popover-placement="top"
+                        uib-popover="Click to show hidden files"
+                        popover-popup-delay="700"
+                        class="btn btn-default btn-block" ng-click="showHidden = true">
+                    <span class="glyphicon glyphicon-eye-close"></span>
+                </button>
+            </div>
+       </div>
 
         <div class="col-md-2 pull-right">
             <a ng-href="{{download()}}">
@@ -174,8 +176,8 @@
                     <td class="col-md-1">Size</td>
                     <td class="col-md-1">Download</td>
                     <td class="col-md-1">Last updated</td>
-                    <td class="col-md-1">Visibility</td>
-                    <td class="col-md-2">Edit</td>
+                    <td if-group="teacher admin" class="col-md-1">Visibility</td>
+                    <td if-group="teacher admin" class="col-md-2">Edit</td>
                 </tr>
             </thead>
             <tbody>
@@ -239,7 +241,7 @@
                     <td class="col-md-1" am-time-ago="file.updated_at"></td>
 
                     <!-- HIDDEN -->
-                    <td class="col-md-1">
+                    <td class="col-md-1" if-group="teacher admin">
                         <div e-title="Hidden" e-name="hidden" e-form="fileExplorer"
                               editable-checkbox="file.hidden">
                             <span ng-if="file.hidden === true">
@@ -254,7 +256,7 @@
                     </td>
 
                     <!-- EDIT -->
-                    <td class="col-md-2">
+                    <td class="col-md-2" if-group="teacher admin">
                         <form editable-form name="fileExplorer"
                               ng-show="fileExplorer.$visible"
                               class="form-buttons form-inline"

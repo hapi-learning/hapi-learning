@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/lab -v",
+	"build": "npm install && bower install && gulp",
 	"prestart": "npm install && bower install",
     "start": "node ."
   },
