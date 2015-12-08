@@ -53,6 +53,7 @@ const vendorScripts = [
         'app/public/lib/showdown/dist/showdown.min.js',
         'app/public/lib/ng-showdown/dist/ng-showdown.min.js',
         'app/public/lib/ng-prettyjson/dist/ng-prettyjson.min.js',
+        'app/public/lib/ng-dialog/js/ngDialog.min.js'
 ];
 
 const vendorCss = [
@@ -62,7 +63,10 @@ const vendorCss = [
     'app/public/lib/ng-tags-input/ng-tags-input.bootstrap.css',
     'app/public/lib/angular-loading-bar/build/loading-bar.min.css',
     'app/public/lib/angular-xeditable/dist/css/xeditable.css',
-    'app/public/lib/ng-prettyjson/dist/ng-prettyjson.min.css'
+    'app/public/lib/ng-prettyjson/dist/ng-prettyjson.min.css',
+    'app/public/lib/ng-dialog/css/ngDialog.min.css',
+    'app/public/lib/ng-dialog/css/ngDialog-theme-default.min.css',
+    'app/public/lib/ng-dialog/css/ngDialog-theme-plain.min.css'
 ];
 
 const pipes = {};

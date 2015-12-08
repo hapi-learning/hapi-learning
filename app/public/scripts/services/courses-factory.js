@@ -13,9 +13,22 @@ angular.module('hapi-learning')
             internals.fetchedSubscribed = false;
             internals.subscribedCourses = [];
 
-            exports.add = function (value) {
-                // TO-DO
-                internals.courses.push(value);
+            exports.add = function (course) {
+
+                var teachers = _.map(course.teachers, function(teacher) { return teacher.username; });
+                var tags     = _.map(course.tags, function(tag) { return tag.name; });
+
+                return Restangular.all('courses')
+                .post({
+                    code : course.code,
+                    name : course.name,
+                    homepage : course.homepage,
+                    teachers : teachers,
+                    tags : tags
+                })
+                .then(function (course) {
+                    return course;
+                });
             };
 
             /**
@@ -74,6 +87,13 @@ angular.module('hapi-learning')
                     select: ['code']
                 });
             };
+        
+            exports.loadNames = function() {
+                return Restangular.all('courses').customGET('', {
+                    pagination: false,
+                    select: ['name']
+                });
+            };
 
             /**
                 Load a specific course
@@ -122,12 +142,12 @@ angular.module('hapi-learning')
             exports.getSubscribed = function () {
 
                 return LoginFactory.getProfile().then(function (profile) {
-                    if (internals.subscribedCourses.length > 0) {
+                    if (internals.fetchedSubscribed) {
                         return internals.subscribedCourses;
                     } else {
                         return Restangular
-                            .one('users', profile.username)
-                            .getList('courses')
+                            .all('me')
+                            .get('courses')
                             .then(function (subscribedCourses) {
                                 internals.subscribedCourses = subscribedCourses;
                                 internals.fetchedSubscribed = true;
@@ -139,17 +159,9 @@ angular.module('hapi-learning')
 
             };
 
-            exports.get = function (index) {
-                if (index) {
-                    return internals.courses[index];
-                }
-                else {
-                    return internals.courses;
-                }
-            };
-
             exports.clear = function () {
-                internals.courses = [];
+                internals.subscribedCourses = [];
+                internals.fetchedSubscribed = false;
             };
 
 

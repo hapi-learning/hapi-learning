@@ -226,6 +226,19 @@ describe('Controller.Course', () => {
             });
         });
 
+        it ('Should return 404 not found', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses/ABCDEF',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).to.equal(404);
+                done();
+            });
+        });
+
     });
 
     describe('#getAll', () => {

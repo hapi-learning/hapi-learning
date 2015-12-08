@@ -18,7 +18,8 @@ angular.module('hapi-learning', [
         'angular.filter',
         'xeditable',
         'ng-showdown',
-        'ngPrettyJson'])
+        'ngPrettyJson',
+        'ngDialog'])
 
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.type('FilePath', {

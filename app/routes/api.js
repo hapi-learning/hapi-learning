@@ -18,10 +18,12 @@ exports.register = function (server, options, next) {
 
     server.route([
 
-        {method: 'POST',  path: '/login',  config: Controllers.Auth.login},
-        {method: 'POST',  path: '/logout', config: Controllers.Auth.logout},
-        {method: 'GET',   path: '/me',     config: Controllers.Auth.me},
-        {method: 'PATCH', path: '/me',     config: Controllers.Auth.patchMe},
+        {method: 'POST',  path: '/login',      config: Controllers.Auth.login},
+        {method: 'POST',  path: '/logout',     config: Controllers.Auth.logout},
+        {method: 'GET',   path: '/me',         config: Controllers.Auth.me},
+        {method: 'GET',   path: '/me/courses', config: Controllers.Auth.getCourses},
+        {method: 'GET',   path: '/me/news',    config: Controllers.Auth.getNews},
+        {method: 'PATCH', path: '/me',         config: Controllers.Auth.patchMe},
 
         // Users routes
         {method: 'GET',    path: '/users',                                   config: Controllers.User.getAll},

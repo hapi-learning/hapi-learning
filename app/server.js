@@ -25,7 +25,7 @@ const internals = {
             host: process.env.WEB_HOST || 'localhost',
             port: process.env.WEB_PORT || 8080,
             routes: {
-                cors: true,
+                cors: process.env.WEB_CORS === 'true',
                 files: {
                     relativeTo: Path.join(__dirname, program.prod ? 'dist' : 'public')
                 }
@@ -35,7 +35,7 @@ const internals = {
             host: process.env.API_HOST || 'localhost',
             port: process.env.API_PORT || 8088,
             routes: {
-                cors: true
+                cors: process.env.API_CORS === 'true'
             },
             labels: ['api']
         }],
@@ -54,12 +54,12 @@ const internals = {
                     select: ['api'],
                     options: {
                         connection: 'api',
-                        name: null,
-                        username: null,
-                        password: null,
-                        host: null,
-                        dialect: 'sqlite',
-                        storage: 'database.sqlite',
+                        name: process.env.DB_NAME || null,
+                        username: process.env.DB_USERNAME || null,
+                        password: process.env.DB_PASSWORD || null,
+                        host: process.env.DB_HOST || null,
+                        dialect: process.env.DB_DIALECT || null,
+                        storage: process.env.DB_STORAGE || null,
                         logging: program.verbose ? console.log : false
                     }
                 }
@@ -68,11 +68,10 @@ const internals = {
                 {
                     select: ['api'],
                     options: {
-                        root: __dirname,
+                        root: process.env.STORAGE_PATH || __dirname,
                         documents: 'documents',
                         courses: 'courses',
-                        storage: 'storage',
-                        test: false
+                        storage: 'storage'
                     }
                 }],
             './utils/mail-notifier': [{select : ['api'] }],
@@ -272,7 +271,7 @@ const compose = function() {
 }
 
 if (program.flush) {
-    rmdir(Path.join(__dirname, 'storage'), compose);
+    rmdir(Path.join(process.env.STORAGE_PATH || __dirname, 'storage'), compose);
 } else {
     compose();
 }

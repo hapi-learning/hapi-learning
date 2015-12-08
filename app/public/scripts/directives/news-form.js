@@ -4,7 +4,8 @@ angular.module('hapi-learning')
     .directive('newsForm', [
     'CoursesFactory',
     'NewsFactory',
-    function (CoursesFactory, NewsFactory) {
+    'ngDialog',
+    function (CoursesFactory, NewsFactory, ngDialog) {
             return {
                 restrict: 'E',
                 templateUrl: 'templates/news-form.html',
@@ -29,6 +30,7 @@ angular.module('hapi-learning')
                         if (scope.complete()) {
                             NewsFactory.add(scope.news)
                                 .then(function (news) {
+                                    ngDialog.open({ template: 'news-added', scope: scope });
                                     scope.clearFields();
                                 })
                                 .catch(function (error) {

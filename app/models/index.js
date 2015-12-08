@@ -6,7 +6,7 @@ const Path      = require('path');
 const _         = require('lodash');
 
 
-exports.register = function(server, options, next) 
+exports.register = function(server, options, next)
 {
     let models = {};
 
@@ -34,8 +34,6 @@ exports.register = function(server, options, next)
     });
 
     void (function setAssociations(m) {
-
-
 
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
@@ -86,6 +84,7 @@ exports.register = function(server, options, next)
             },
             targetKey : 'code'
         });
+
 
     })(models);
 
