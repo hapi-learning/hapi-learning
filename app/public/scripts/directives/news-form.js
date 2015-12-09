@@ -49,10 +49,10 @@ angular.module('hapi-learning')
                     };
 
                     scope.complete = function () {
-                        return scope.news.course &&
+                        return ((scope.news.course || !scope.code) &&
                             scope.news.subject &&
                             scope.news.content &&
-                            scope.news.priority;
+                            scope.news.priority);
                     };
 
                     if (scope.code) {

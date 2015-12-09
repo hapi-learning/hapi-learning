@@ -3,11 +3,13 @@
     <div ng-if="errorPostHomepage">
         <div class="alert alert-danger" ng-bind="errorPostHomepage"></div>
     </div>
-    <div>
 
-        <button ng-if="!editing" style="color: black" class="btn btn-link pull-right" ng-click="editHomepage()">
-            <span class="fa fa-pencil-square-o fa-lg"></span>
-        </button>
+    <div>
+        <div if-group="teacher admin">
+            <button ng-if="!editing" style="color: black" class="btn btn-link pull-right" ng-click="editHomepage()">
+                <span class="fa fa-pencil-square-o fa-lg"></span>
+            </button>
+        </div>
 
 
         <md-editor onsave="saveEdit($content)" oncancel="cancelEdit()"

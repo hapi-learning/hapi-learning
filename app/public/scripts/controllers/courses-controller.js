@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .controller('CoursesCtrl', ['$scope', 'CoursesFactory', 'TagsFactory',
-    function ($scope, CoursesFactory, TagsFactory) {
+    .controller('CoursesCtrl', ['$rootScope', '$scope', 'CoursesFactory', 'TagsFactory',
+    function ($rootScope, $scope, CoursesFactory, TagsFactory) {
+
+        $rootScope.titlePage = 'Courses';
 
         var internals = {};
         internals.limit = 10;

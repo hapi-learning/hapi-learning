@@ -51,7 +51,7 @@
                             <span> News</span>
                         </a>
                     </li>
-                    <li ui-sref-active="active">
+                    <li ui-sref-active="active" if-group="teacher admin">
                         <a ui-sref="root.course.admin({code: course.code})">
                             <span class="fa fa-cog fa-lg"></span>
                             <span> Administration</span>

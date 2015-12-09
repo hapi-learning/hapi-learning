@@ -2,10 +2,13 @@
 
 angular.module('hapi-learning')
     .controller('AdminCtrl', [
+        '$rootScope',
         '$scope',
         'TeachersFactory',
         'UsersFactory',
-        'TagsFactory', function ($scope, TeachersFactory, UsersFactory, TagsFactory) {
+        'TagsFactory', function ($rootScope, $scope, TeachersFactory, UsersFactory, TagsFactory) {
+
+        $rootScope.titlePage = 'Administration';
 
         $scope.roles = [{
             value: 3,
@@ -90,7 +93,7 @@ angular.module('hapi-learning')
 
         $scope.loadTeachers = function ($query) {
             return TeachersFactory.load().then(function (teachers) {
-                
+
                     var query     = $query.toLowerCase();
 
                     return teachers.filter(function (teacher) {
@@ -108,10 +111,10 @@ angular.module('hapi-learning')
                     console.log(error);
                 });
         };
-            
+
         $scope.loadTags = function ($query) {
             return TagsFactory.load().then(function (tags) {
-                
+
                     var query = $query.toLowerCase();
 
                     return tags.filter(function (tag) {

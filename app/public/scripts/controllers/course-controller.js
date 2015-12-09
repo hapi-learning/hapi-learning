@@ -14,6 +14,8 @@ angular.module('hapi-learning')
     function ($rootScope, $scope, $stateParams, CoursesFactory, LoginFactory,
             FilesFactory, $state, Restangular, $http) {
 
+            $rootScope.titlePage = 'Course - ' + $stateParams.code;
+
             $scope.$state = $state; // for the active class
 
             $scope.update = false;

@@ -3,8 +3,10 @@
 angular
     .module('hapi-learning')
     .controller('HomeCtrl', [
-        '$scope', 'CoursesFactory',
-        function ($scope, CoursesFactory) {
+        '$rootScope', '$scope', 'CoursesFactory',
+        function ($rootScope, $scope, CoursesFactory) {
+
+            $rootScope.titlePage = 'Home';
 
             CoursesFactory.getSubscribed()
                 .then(function(courses) {

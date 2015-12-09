@@ -1,2 +1,4 @@
 angular.module('hapi-learning')
-    .controller('ProfileCtrl', ['$scope', function ($scope) { }]);
+    .controller('ProfileCtrl', ['$rootScope', '$scope', function ($rootScope, $scope) {
+        $rootScope.titlePage = 'Profile';
+    }]);
