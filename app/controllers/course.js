@@ -212,9 +212,7 @@ exports.getDocuments = {
         const course  = request.params.id;
         const hidden  = request.query.hidden;
 
-        Storage
-        .download(course, path, hidden)
-        .then(function(results) {
+        Storage.download(course, path, hidden).then(function(results) {
 
             const isFile = results.isFile;
             const result = results.result;

@@ -548,9 +548,11 @@ const load = function() {
                             const documents = _.map(files, f => {
                                 const d = {};
                                 d.prefix = baseUrl;
-
-
-                                d.name = Path.join(f.get('directory'), f.get('name'));
+                                if (f.get('directory') === '/') {
+                                    d.name = f.get('name');
+                                } else {
+                                    d.name = Path.join(f.get('directory'), f.get('name'));
+                                }
                                 return d;
                             });
 
