@@ -47,7 +47,7 @@ DB_STORAGE=database.sqlite
 
 # Others
 
-#Add your own auth key (key used to create hashed passwords)
+#Add your own auth key (key used to generate the token)
 AUTH_KEY=9FDS954QLBNQbraF9K9yBJZ0I95CR8269FDS954QLBNQbraF9K9yBJZ0I95CR826
 
 # Maximum size of files to upload in bytes
