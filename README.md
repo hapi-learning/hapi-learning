@@ -2,7 +2,7 @@
 
 ## Documentation
 
-You can find the API documentation [here](fknop.github.io/hapi-learning-docs)
+You can find the API documentation [here](http://fknop.github.io/hapi-learning-docs)
 
 ## How to use
 
