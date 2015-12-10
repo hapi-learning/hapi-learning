@@ -3,7 +3,15 @@
   "version": "1.0.0",
   "description": "e-learning platform built with hapijs and angular",
   "apidoc": {
-	"title": "hapi-learning API documentation"
+	"title": "hapi-learning API documentation",
+	"order": [
+		"GetCourses",
+		"GetCourse",
+		"GetCourseHomepage",
+		"GetCourseTree",
+		"GetCourseDocuments",
+		"GetCourseStudents"
+	]
   },
   "main": "index.js",
   "scripts": {

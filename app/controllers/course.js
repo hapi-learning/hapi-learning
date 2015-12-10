@@ -208,6 +208,26 @@ exports.get = {
     }
 };
 
+/**
+ * @api {get} /courses/:id/homepage Get a course homepage
+ * @apiName GetCourseHomepage
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ/homepage
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
+
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {String} 200 The homepage content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.getHomepage = {
     description: 'Get the course\' homepage',
     validate: {
@@ -229,7 +249,29 @@ exports.getHomepage = {
 };
 
 
-// WORKS - How to unit test this ?
+/**
+ * @api {get} /courses/:id/documents/:path Get a course documents
+ * @apiName GetCourseDocuments
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ/documents/folder1/folder2/doc
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
+ * @apiParam (path) {String} [path=/] The documents path.
+ *
+ * @apiParam (query) {Boolean} [hidden=false] True to see hidden files.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {Stream} 200 The files to download.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.getDocuments = {
     description: 'Get a ZIP containing documents or a file',
     auth: 'jwt-ignore-exp',
@@ -302,7 +344,29 @@ exports.getDocuments = {
 };
 
 
-
+/**
+ * @api {get} /courses/:id/documents/:path Get the list of documents in a directory
+ * @apiName GetCourseTree
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ/tree/folder1/folder2/doc
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
+ * @apiParam (path) {String} [path=/] The documents path.
+ *
+ * @apiParam (query) {Boolean} [hidden=false] True to see hidden files.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An object with the parent directory and the files.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.getTree = {
     description: 'Get course folder tree',
     validate: {
@@ -348,7 +412,26 @@ exports.getTree = {
     }
 };
 
-
+/**
+ * @api {get} /courses/:id/students Get all the students subscribed to a course
+ * @apiName GetCourseStudents
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ/students
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of users (students).
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.getStudents = {
     description: 'Get students following the course',
     validate: {
