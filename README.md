@@ -69,23 +69,13 @@ OFFICIAL_EMAIL_ADDRESS=hapilearning@gmail.com
 ```
 
 
-Install dependencies:
-
-```bash
-$ cd hapi-learning
-$ npm install
-$ cd app/public
-$ bower install
-```
 
 Start the app: (go back to the root folder)
 ```
 $ npm start
 ```
-or
-```
-$ node .
-```
+
+npm start installs the dependencies.
 
 Start the node tests :
 
