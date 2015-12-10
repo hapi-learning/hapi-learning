@@ -1,17 +1,8 @@
 # eLearning
 
-## Links
-
-Framapad : https://lite6.framapad.org/p/atl2016-e12-elearning
-Google Sheets : https://docs.google.com/spreadsheets/d/1RvT8Yisf4I6zTw3u3PwaiVU_Fisp1x2lrA5AXp8Ckrw/edit#gid=0
-
-## Live demo:
-
-http://23.239.132.192:8080/#/
-
-https://gitlab.com/fknop/ATL3-hapi-learning/hooks/23950/test to deploy it with latest master, should be automatic
-
 ## How to use
+
+#### Clone the project
 
 ssh:
 ```
@@ -22,6 +13,8 @@ https:
 ```
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
+
+#### Configure your environments variables
 
 Create a .env file in the root folder and change the options below:
 
@@ -54,6 +47,7 @@ DB_STORAGE=database.sqlite
 
 # Others
 
+#Add your own auth key (key used to generate the token)
 AUTH_KEY=9FDS954QLBNQbraF9K9yBJZ0I95CR8269FDS954QLBNQbraF9K9yBJZ0I95CR826
 
 # Maximum size of files to upload in bytes
@@ -63,29 +57,31 @@ UPLOAD_MAX=20970000
 TOKEN_EXP=7200
 
 #Mails
-SENDGRID_KEY=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 
-OFFICIAL_EMAIL_ADDRESS=hapilearning@gmail.com
+SENDGRID_KEY= # ADD SENDGRID KEY
+OFFICIAL_EMAIL_ADDRESS= # ADD SENDGRID MAIL
 
 ```
 
+#### Start the app 
 
-
-Start the app: (go back to the root folder)
 ```
 $ npm start
 ```
 
-npm start installs the dependencies.
+npm start will install the dependencies `npm install` and `bower install` in the prestart script.
 
-Start the node tests :
+#### Arguments on startup
+
+* -P (--prod) : start the server in production mode, will be using gulp dist directory instead of public
+* -f (--flush) : deletes database and the storage folder 
+* -v (--verbose) : verbose mode for logging
+
+#### The tests
 
 ```
 $ npm test
 ```
 
-## Hapi-pagination
-
-Plugin hapi-pagination (not for the course) : https://github.com/fknop/hapi-pagination
 
 ## Directory Layout
 
@@ -151,3 +147,8 @@ plugins/                --> plugins that we write ourselves
 
 
 ```
+
+## Notes
+
+The hapi-permissions plugins is still in development, and not used in the project yet.
+
