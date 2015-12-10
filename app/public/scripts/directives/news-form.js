@@ -59,8 +59,7 @@ angular.module('hapi-learning')
                         scope.codes = [scope.code];
                         scope.news.course = scope.code;
                         elem.find('#courseSelect').prop('disabled', true);
-                    }
-                    else {
+                    } else {
                         CoursesFactory.loadCodes()
                             .then(function (response) {
                                 scope.codes = _.map(response, 'code');

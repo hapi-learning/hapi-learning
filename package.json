@@ -13,8 +13,20 @@
     "type": "git",
     "url": "git+ssh://git@gitlab.com/fknop/ATL3-hapi-learning.git"
   },
-  "author": "",
-  "license": "ISC",
+  "contributors": [{
+      "name": "Florian Knop",
+      "email": "florian_knop@hotmail.com"
+  }, {
+	  "name": "Simon Placentino",
+	  "email": "Sim@bp-650.net"
+  }, {
+	  "name": "Gatien Bovyn",
+	  "email": "gatien.bovyn@gmail.com"
+  }, {
+	  "name": "Paul Kriwin",
+	  "email": "39171@heb.be"
+  }],
+  "license": "GPLv3",
   "bugs": {
     "url": "https://gitlab.com/fknop/ATL3-hapi-learning/issues"
   },

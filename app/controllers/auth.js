@@ -234,7 +234,8 @@ exports.getCourses = {
     description: 'Get the courses (subscribed)',
     handler: function (request, reply) {
 
-        Utils.findUser(this.models.User, request.decoded.username).then(function(user) {
+        Utils.findUser(this.models.User, request.decoded.username)
+            .then(function(user) {
             return user.getCourses();
         }).then(function(results) {
             const promises = _.map(results, c => Utils.getCourse(c));
