@@ -19,3 +19,7 @@ npm-debug.log
 # Storages folder content
 app/storage
 #
+
+# Docs - hapi-learning-docs repo
+docs
+

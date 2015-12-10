@@ -36,8 +36,29 @@ internals.checkForbiddenPath = function(path) {
 
 
 /**
- * /!\ Needs to search with tags in the select statement...
- * For now pagination with tags filters does not work
+ * @api {get} /courses Get all courses
+ * @apiName GetCourses
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (query) {String[]} [select] Names of fields to select.
+ * @apiParam (query) {String} [codename] Get by code or name of the course (OR condition).
+ * @apiParam (query) {String} [code] Get by code of the course.
+ * @apiParam (query) {String} [name] Get by name of the course.
+ * @apiParam (query) {String[]} [tags] Get by tags of the course.
+ * @apiParam (query) {Boolean} [pagination=true] Enable / disable the pagination.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An object with metadata and array of results
+ * if pagination is true or an array of results if pagination is false.
+ *
+ * @apiError {json} 400 Validation error.
+ *
  */
 exports.getAll = {
     description: 'List all the courses',
@@ -137,7 +158,26 @@ exports.getAll = {
     }
 };
 
+/**
+ * @api {get} /courses/:id Get one course
+ * @apiName GetCourse
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
 
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The course object.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.get = {
     description: 'Get info for one course',
     validate: {

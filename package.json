@@ -2,6 +2,9 @@
   "name": "hapi-learning",
   "version": "1.0.0",
   "description": "e-learning platform built with hapijs and angular",
+  "apidoc": {
+	"title": "hapi-learning API documentation"
+  },
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/lab -v",
