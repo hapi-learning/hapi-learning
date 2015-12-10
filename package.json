@@ -10,7 +10,19 @@
 		"GetCourseHomepage",
 		"GetCourseTree",
 		"GetCourseDocuments",
-		"GetCourseStudents"
+		"GetCourseStudents",
+		"PostCourse",
+		"PostDocument",
+		"CreateFolder",
+		"PostHomepage",
+		"UpdateFile",
+		"AddTags",
+		"AddTeachers",
+		"PatchCourse",
+		"DeleteCourse",
+		"DeleteCourseTags",
+		"DeleteCourseTeachers",
+		"DeleteCourseDocuments"
 	]
   },
   "main": "index.js",

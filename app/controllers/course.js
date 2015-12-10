@@ -460,7 +460,32 @@ exports.getStudents = {
     }
 };
 
-
+/**
+ * @api {post} /courses Post a course
+ * @apiName PostCourse
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl -X POST http://localhost/courses -H "Content-Type: application/json" \
+ *           -H "Authorization: private_token" -d '{"name": "Course Name", "code": "Course code"}'
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (payload) {String} name The course name.
+ * @apiParam (payload) {String} code The course code.
+ * @apiParam (payload) {String} [homepage] The course homepage.
+ * @apiParam (payload) {String[]} [teachers] Array of teachers username.
+ * @apiParam (payload) {String[]} [tags] Array of tags name.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 201 The created course.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 409 Course already exists.
+ * @apiError {json} 422 Tag or teacher does not exists.
+ *
+ */
 exports.post = {
     auth: {
         scope: ['admin', 'teacher']
@@ -473,7 +498,7 @@ exports.post = {
         payload: {
             name: Joi.string().min(1).max(255).required().description('Course name'),
             code: Joi.string().min(1).max(255).required().description('Course code'),
-            homepage: Joi.string().description('Course homepage'),
+            homepage: Joi.string().default('').description('Course homepage'),
             teachers: Joi.array().items(Joi.string()).description('Teachers'),
             tags: Joi.array().items(Joi.string()).description('Tags')
         }
@@ -548,6 +573,27 @@ exports.post = {
     }
 };
 
+/**
+ * @api {post} /courses/:id/documents/:path Upload a document
+ * @apiName PostDocument
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ * @apiParam (path) {String} [path=/] The path where to upload the document.
+ *
+ * @apiParam (query) {Boolean} [hidden=false] True if the file is hidden, false otherwise.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 201 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.postDocument = {
     description: 'Upload a file to a course',
     auth: {
@@ -591,7 +637,7 @@ exports.postDocument = {
 
         // needs a better verification, but will do it for now.
         if (internals.checkForbiddenPath(path)) {
-            return reply.forbidden();
+            return reply.badRequest('Invalid path');
         }
 
         const course = request.params.id;
@@ -601,7 +647,7 @@ exports.postDocument = {
 
         const upload = function() {
             Storage.createOrReplaceFile(course, path, file, hidden).then(function() {
-                return reply('File : ' + filename + ' successfuly uploaded').code(201);
+                return reply().code(201);
             }).catch(function(err) {
                 return reply.conflict(err);
             });
@@ -611,6 +657,28 @@ exports.postDocument = {
     }
 };
 
+/**
+ * @api {post} /courses/:id/folders/:path Create a folder
+ * @apiName CreateFolder
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ * @apiParam (path) {String} path The path where to create the folder.
+ *
+ * @apiParam (query) {Boolean} [hidden=false] True if the file is hidden, false otherwise.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 201 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ * @apiError {json} 409 Folder already exists.
+ *
+ */
 exports.createFolder = {
     description: 'Create a folder to a course',
     auth: {
@@ -635,7 +703,7 @@ exports.createFolder = {
 
         // needs a better verification, but will do it for now.
         if (internals.checkForbiddenPath(path)) {
-            return reply.forbidden();
+            return reply.badRequest('Invalid path');
         }
 
         const createFolder = function() {
@@ -660,6 +728,26 @@ exports.createFolder = {
     }
 };
 
+/**
+ * @api {post} /courses/:id/homepage Post homepage
+ * @apiName PostHomepage
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiParam (payload) {String} content The homepage content.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 201 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.postHomepage = {
     description: 'Post the course\' homepage',
     auth: {
@@ -691,9 +779,34 @@ exports.postHomepage = {
     }
 };
 
-
+/**
+ * @api {patch} /courses/:id/documents Update existing file
+ * @apiName UpdateFile
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ * @apiParam (path) {String} path The file path (cannot be /).
+ *
+ * @apiParam (payload) {String} [name] The new file name.
+ * @apiParam (payload) {String} [hidden] True if the file is to be hidden.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The updated file.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ * @apiError {json} 409 Conflict error - name already exists.
+ *
+ */
 exports.updateFile = {
     description: 'Create a file or folder of a course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         params: {
             id: Joi.string().required().description('Course code'),
@@ -744,9 +857,33 @@ exports.updateFile = {
 };
 
 
-// Tags that does not exists will be ignored
+/**
+ * @api {post} /courses/:id/tags Add tags to course
+ * @apiName AddTags
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiDescription Tags that does not exists will be ignored (no 422 returned).
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiParam (payload) {String[]} tags An array of tag names.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The updated course.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.addTags = {
     description: 'Add a list of tags to the course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         params: {
             id: Joi.string().required().description('Course code'),
@@ -787,9 +924,33 @@ exports.addTags = {
     }
 };
 
-// Teachers that does not exists will be ignored
+/**
+ * @api {post} /courses/:id/tags Add teachers to course
+ * @apiName AddTeachers
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiDescription Teachers that does not exists will be ignored (no 422 returned).
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiParam (payload) {String[]} teachers An array of teachers names.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The updated course.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.addTeachers = {
     description: 'Add a list of teachers to the course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         options: {
             stripUnknown: true
@@ -832,9 +993,34 @@ exports.addTeachers = {
     }
 };
 
-
+/**
+ * @api {patch} /courses/:id Update an existing course
+ * @apiName PatchCourse
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiParam (payload) {String[]} tags An array of tag names.
+ * @apiParam (payload) {String[]} tags An array of tag names.
+ * @apiParam (payload) {String[]} tags An array of tag names.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 200 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ * @apiError {json} 409 Course name or code already exists.
+ *
+ */
 exports.patch = {
     description: 'Modify a course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         options: {
             stripUnknown: true
@@ -854,20 +1040,19 @@ exports.patch = {
         const newId   = request.payload.code;
         const Storage = this.storage;
 
-        const renameFolder = function(returnValue) {
+        const renameFolder = function() {
             Storage.renameCourse(id, newId)
-                .then(() => reply(returnValue))
+                .then(reply)
                 .catch(err => reply.badImplementation(err));
         };
 
         Course
         .update(request.payload, { where: { code: { $eq: request.params.id } } })
         .then(values => {
-            const toReturn = { count: values[0] };
             if (newId && values[0] !== 0) {
-                return renameFolder(toReturn);
+                return renameFolder();
             } else {
-                return reply(toReturn);
+                return reply.notFound();
             }
 
         })
@@ -875,9 +1060,29 @@ exports.patch = {
     }
 };
 
-
+/**
+ * @api {delete} /courses/:id Delete a course
+ * @apiName DeleteCourse
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 204 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.delete = {
     description: 'Delete a course',
+    auth: {
+        scope: ['admin']
+    },
     validate: {
         params: {
             id: Joi.string().required().description('Course code')
@@ -894,16 +1099,43 @@ exports.delete = {
             }
         })
         .then(count => {
-            const tail = request.tail('Delete course folder');
-            Storage.deleteCourse(request.params.id).then(tail);
-            return reply({count: count});
+            if (count === 0) {
+                return reply.notFound();
+            } else {
+                const tail = request.tail('Delete course folder');
+                Storage.deleteCourse(request.params.id).then(tail);
+                return reply().code(204);
+            }
         })
         .catch(err => reply.badImplementation(err));
     }
 };
 
+/**
+ * @api {delete} /courses/:id/tags Delete course tags
+ * @apiName DeleteCourseTags
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiParam (payload) {String[]} tags The tags to be removed from the course.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 204 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.deleteTags = {
     description: 'Delete a list of tags from the course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         options: {
             stripUnknown: true
@@ -936,7 +1168,9 @@ exports.deleteTags = {
             } else {
                 throw { statusCode: 404, message: 'Course not found' };
             }
-        }).then(reply).catch(err => {
+        }).then(function() {
+            return reply().code(204);
+        }).catch(err => {
             if (err.statusCode === 404) {
                return reply.notFound(err.message);
             } else {
@@ -946,8 +1180,31 @@ exports.deleteTags = {
     }
 };
 
+/**
+ * @api {delete} /courses/:id/teachers Delete course teachers
+ * @apiName DeleteCourseTeachers
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiParam (payload) {String[]} teachers An array of teachers usernames to be removed from the course.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 204 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
+ */
 exports.deleteTeachers = {
     description: 'Delete a list of teachers from the course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         options: {
             stripUnknown: true
@@ -982,7 +1239,9 @@ exports.deleteTeachers = {
             } else {
                 throw { statusCode: 404, message: 'Course not found' };
             }
-        }).then(reply).catch(err => {
+        }).then(function() {
+            return reply().code(204);
+        }).catch(err => {
             if (err.statusCode === 404) {
                return reply.notFound(err.message);
             } else {
@@ -994,11 +1253,30 @@ exports.deleteTeachers = {
 
 
 /**
- * When returning not found, files may already have been deleted.
- * Page reloading may be necessary !
+ * @api {delete} /courses/:id/documents Delete course documents
+ * @apiName DeleteCourseDocuments
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} id The course id (code).
+ *
+ * @apiParam (payload) {String[]} files An array files to be deleted from the course.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 202 Accepted.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Course not found.
+ *
  */
 exports.deleteDocument = {
     description: 'Delete a document from a course',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         params: {
             id: Joi.string().required().description('Course code')
