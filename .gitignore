@@ -1,6 +1,5 @@
 # Databases
-database.sqlite
-test_database.sqlite
+*.sqlite
 #
 
 # Modules & libraries
