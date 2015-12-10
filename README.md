@@ -1,16 +1,5 @@
 # eLearning
 
-## Links
-
-Framapad : https://lite6.framapad.org/p/atl2016-e12-elearning
-Google Sheets : https://docs.google.com/spreadsheets/d/1RvT8Yisf4I6zTw3u3PwaiVU_Fisp1x2lrA5AXp8Ckrw/edit#gid=0
-
-## Live demo:
-
-http://23.239.132.192:8080/#/
-
-https://gitlab.com/fknop/ATL3-hapi-learning/hooks/23950/test to deploy it with latest master, should be automatic
-
 ## How to use
 
 ssh:
@@ -63,8 +52,8 @@ UPLOAD_MAX=20970000
 TOKEN_EXP=7200
 
 #Mails
-SENDGRID_KEY=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 
-OFFICIAL_EMAIL_ADDRESS=hapilearning@gmail.com
+SENDGRID_KEY= # ADD SENDGRID KEY
+OFFICIAL_EMAIL_ADDRESS= # ADD SENDGRID MAIL
 
 ```
 
