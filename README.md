@@ -146,3 +146,8 @@ plugins/                --> plugins that we write ourselves
 
 
 ```
+
+## Notes
+
+The hapi-permissions plugins is still in development, and not used in the project yet.
+
