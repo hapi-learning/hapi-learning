@@ -2,6 +2,8 @@
 
 ## How to use
 
+#### Clone the project
+
 ssh:
 ```
 $ git clone git@gitlab.com:fknop/ATL3-hapi-learning.git hapi-learning
@@ -11,6 +13,8 @@ https:
 ```
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
+
+#### Configure your environments variables
 
 Create a .env file in the root folder and change the options below:
 
@@ -57,24 +61,26 @@ OFFICIAL_EMAIL_ADDRESS= # ADD SENDGRID MAIL
 
 ```
 
+#### Start the app 
 
-
-Start the app: (go back to the root folder)
 ```
 $ npm start
 ```
 
-npm start installs the dependencies.
+npm start will install the dependencies `npm install` and `bower install` in the prestart script.
 
-Start the node tests :
+#### Arguments on startup
+
+* -P (--prod) : start the server in production mode, will be using gulp dist directory instead of public
+* -f (--flush) : deletes database and the storage folder 
+* -v (--verbose) : verbose mode for logging
+
+#### The tests
 
 ```
 $ npm test
 ```
 
-## Hapi-pagination
-
-Plugin hapi-pagination (not for the course) : https://github.com/fknop/hapi-pagination
 
 ## Directory Layout
 
