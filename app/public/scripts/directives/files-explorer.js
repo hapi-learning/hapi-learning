@@ -60,14 +60,17 @@ angular.module('hapi-learning')
                     var name = scope.folder.name;
                     var hidden = scope.folder.hidden;
 
-                    var path = $stateParams.path + '/' + name;
+                    if (name) {
+                        var path = $stateParams.path + '/' + name;
 
-                    FilesFactory.createFolder(scope.code, path, hidden).then(function() {
-                        scope.cleanFolderName();
-                        scope.getList($stateParams.path, scope.showHidden);
-                    }).catch(function(error) {
-                        scope.folderError = true;
-                    });
+                        FilesFactory.createFolder(scope.code, path, hidden).then(function() {
+                            scope.cleanFolderName();
+                            scope.getList($stateParams.path, scope.showHidden);
+                        }).catch(function(error) {
+                            scope.folderError = true;
+                        });
+                    }
+
                 };
 
                 scope.cleanUploadError = function() {
