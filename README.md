@@ -1,5 +1,9 @@
 # eLearning
 
+## Documentation
+
+You can find the API documentation [here](fknop.github.io/hapi-learning-docs)
+
 ## How to use
 
 #### Clone the project
