@@ -4,6 +4,28 @@ const Joi = require('joi');
 
 const Utils = require('../utils/sequelize');
 
+/**
+ * @api {get} /tags/:name Get one tag
+ * @apiName GetTag
+ * @apiGroup Tags
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/tags/XYZ
+ *
+ * @apiDescription Not very useful route because tag is just a name, but still exists.
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String[]} name The tag name.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The tag.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 404 Tag not found.
+ *
+ */
 exports.get = {
     description: 'Returns a specific tag',
     validate: {
@@ -37,6 +59,21 @@ exports.get = {
     }
 };
 
+/**
+ * @api {get} /tags/:name Get all tags
+ * @apiName GetTags
+ * @apiGroup Tags
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/tags
+ *
+ * @apiPermission all users.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of tags.
+ *
+ */
 exports.getAll = {
     description: 'Returns all tags',
     handler: function (request, reply) {
@@ -53,8 +90,27 @@ exports.getAll = {
     }
 };
 
+/**
+ * @api {post} /tags Post a tag
+ * @apiName PostTag
+ * @apiGroup Tags
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (payload) {String} name The tag name.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The created tag.
+ *
+ * @apiError {json} 409 Tag already exists.
+ */
 exports.post = {
     description: 'Create a new tag',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate : {
         payload : {
             name: Joi.string().min(1).max(255).required().description('Tag name')
@@ -72,8 +128,27 @@ exports.post = {
     }
 };
 
+/**
+ * @api {delete} /tags Delete a tag
+ * @apiName DeleteTag
+ * @apiGroup Tags
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiParam (path) {String} name The tag name.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The created tag.
+ *
+ * @apiError {json} 409 Tag already exists.
+ */
 exports.delete = {
     description: 'Delete a specific tag',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         params : {
             name: Joi.string().min(1).max(255).required().description('Tag name')

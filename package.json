@@ -22,7 +22,11 @@
 		"DeleteCourse",
 		"DeleteCourseTags",
 		"DeleteCourseTeachers",
-		"DeleteCourseDocuments"
+		"DeleteCourseDocuments",
+		"GetTags",
+		"GetTag",
+		"PostTag",
+		"DeleteTag"
 	]
   },
   "main": "index.js",
