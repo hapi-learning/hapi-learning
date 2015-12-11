@@ -5,6 +5,7 @@
   "apidoc": {
 	"title": "hapi-learning API documentation",
 	"order": [
+		"Login",
 		"GetCourses",
 		"GetCourse",
 		"GetCourseHomepage",

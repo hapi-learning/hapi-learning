@@ -13,9 +13,34 @@ const _ = require('lodash');
  * is invalid.
  * If the user has previously logout (and invalidate his token). The handler
  * first try to get this token from the invalidated tokens stored in the cache.
- * If the cache hit and the time to live is over 30 minutes, this token is returned.
+ * If the cache hit and the time to live is over 1 hour, this token is returned.
  *
  * The username OR the email can be given to login (both being unique id's).
+ */
+
+
+/**
+ * @api {post} /login Authentificate
+ * @apiName Login
+ * @apiGroup Auth
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl -X POST http://localhost/login -H "Content-Type: application/json" \
+             -d '{ "username": "user", "password": "password" }'
+ *
+ * @apiPermission all users.
+ *
+ * @apiDescription You have to provide the username OR the email.
+ *
+ * @apiParam (payload) {String} [username] The username.
+ * @apiParam (payload) {String} [email] The email.
+ * @apiParam (payload) {String} password The password.
+ *
+ * @apiSuccess {json} 200 The private token.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Bad credentials.
+ *
  */
 exports.login = {
     description: 'Login and returns a token',
@@ -69,7 +94,7 @@ exports.login = {
                     // then drop the token from the cache.
                     Cache.get(key, function (err, cached) {
 
-                        if (cached && cached.ttl > 1800000) {
+                        if (cached && cached.ttl > 3600000) {
                             Cache.drop(key, function (err) {
                                 return reply({
                                     token: cached.item
@@ -110,6 +135,25 @@ exports.login = {
  * the former is added to the "deleted tokens" cache.
  * The invalidated tokens cache can still be retrieved with a login.
  * The deleted tokens cannot be retrieved.
+ */
+
+/**
+ * @api {post} /logout Logout
+ * @apiName Logout
+ * @apiGroup Auth
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl -X POST http://localhost/logout -H "Authorization: private_token"
+ *
+ * @apiPermission all users.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 204 No content
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ *
  */
 exports.logout = {
     description: 'Logout and revoke the token',

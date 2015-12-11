@@ -23,6 +23,7 @@ const Utils = require('../utils/sequelize');
  * @apiSuccess {json} 200 The tag.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 404 Tag not found.
  *
  */
@@ -73,6 +74,8 @@ exports.get = {
  *
  * @apiSuccess {json} 200 An array of tags.
  *
+ * @apiError {json} 401 Invalid token or token expired.
+ *
  */
 exports.getAll = {
     description: 'Returns all tags',
@@ -104,6 +107,8 @@ exports.getAll = {
  *
  * @apiSuccess {json} 200 The created tag.
  *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 409 Tag already exists.
  */
 exports.post = {
@@ -142,6 +147,8 @@ exports.post = {
  *
  * @apiSuccess {json} 200 The created tag.
  *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 409 Tag already exists.
  */
 exports.delete = {

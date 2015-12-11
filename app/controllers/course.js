@@ -58,6 +58,7 @@ internals.checkForbiddenPath = function(path) {
  * if pagination is true or an array of results if pagination is false.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
  *
  */
 exports.getAll = {
@@ -175,6 +176,7 @@ exports.getAll = {
  * @apiSuccess {json} 200 The course object.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -225,6 +227,7 @@ exports.get = {
  * @apiSuccess {String} 200 The homepage content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -269,6 +272,7 @@ exports.getHomepage = {
  * @apiSuccess {Stream} 200 The files to download.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -364,6 +368,7 @@ exports.getDocuments = {
  * @apiSuccess {json} 200 An object with the parent directory and the files.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -429,6 +434,7 @@ exports.getTree = {
  * @apiSuccess {json} 200 An array of users (students).
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -482,6 +488,8 @@ exports.getStudents = {
  * @apiSuccess {json} 201 The created course.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 409 Course already exists.
  * @apiError {json} 422 Tag or teacher does not exists.
  *
@@ -591,6 +599,8 @@ exports.post = {
  * @apiSuccess 201 No content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -675,6 +685,8 @@ exports.postDocument = {
  * @apiSuccess 201 No content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  * @apiError {json} 409 Folder already exists.
  *
@@ -745,6 +757,8 @@ exports.createFolder = {
  * @apiSuccess 201 No content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -798,6 +812,8 @@ exports.postHomepage = {
  * @apiSuccess {json} 200 The updated file.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  * @apiError {json} 409 Conflict error - name already exists.
  *
@@ -876,6 +892,8 @@ exports.updateFile = {
  * @apiSuccess {json} 200 The updated course.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -943,6 +961,8 @@ exports.addTags = {
  * @apiSuccess {json} 200 The updated course.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -1012,6 +1032,8 @@ exports.addTeachers = {
  * @apiSuccess 204 No content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  * @apiError {json} 409 Course name or code already exists.
  *
@@ -1077,6 +1099,8 @@ exports.patch = {
  * @apiSuccess 204 No content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -1130,6 +1154,8 @@ exports.delete = {
  * @apiSuccess 204 No content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -1199,6 +1225,8 @@ exports.deleteTags = {
  * @apiSuccess 204 No content.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
@@ -1271,6 +1299,8 @@ exports.deleteTeachers = {
  * @apiSuccess 202 Accepted.
  *
  * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 Course not found.
  *
  */
