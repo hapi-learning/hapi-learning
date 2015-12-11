@@ -253,7 +253,7 @@ exports.me = {
 };
 
 /**
- * @api {patch} /me Path current user informations
+ * @api {patch} /me Update current user informations
  * @apiName PatchMe
  * @apiGroup Auth
  * @apiVersion 1.0.0
