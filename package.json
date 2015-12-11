@@ -26,6 +26,7 @@
     "test": "node_modules/.bin/lab -v",
 	"build": "npm install && bower install && gulp",
 	"prestart": "npm install && bower install",
+	"start-prod": "npm run build && node . -P",
     "start": "node ."
   },
   "repository": {
