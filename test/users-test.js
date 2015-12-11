@@ -351,7 +351,7 @@ describe('Controller.User', () => {
     });
 
     describe('#put', () => {
-        it('should return 1 : number of updates', done => {
+        it('should return 204 no content (ok)', done => {
             const request = {
                 method: 'PUT',
                 url: '/users/Johnny',
@@ -361,11 +361,11 @@ describe('Controller.User', () => {
 
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response.count).equal(1);
+                expect(res.request.response.statusCode).to.equal(204);
                 done();
             });
         });
-        it('should return 0 : number of updates', done => {
+        it('should return 404 not found', done => {
             const request = {
                 method: 'PUT',
                 url: '/users/IDoNotExist',
@@ -374,15 +374,14 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(0);
+                expect(res.request.response.statusCode).to.equal(404);
                 done();
             });
         });
     });
 
     describe('#patch', () => {
-        it('should return 1 : number of updates', done => {
+        it('should return 204 no content (ok)', done => {
             const request = {
                 method: 'PATCH',
                 url: '/users/Johnny',
@@ -391,12 +390,12 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(1);
+                expect(res.request.response.statusCode).to.equal(204);
                 done();
             });
         });
-        it('should return 1 because PATCH is not PUT (field not required)', done => {
+
+        it('should return 204 no content (ok)', done => {
             const request = {
                 method: 'PATCH',
                 url: '/users/Johnny',
@@ -405,12 +404,11 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(1);
+                expect(res.request.response.statusCode).to.equal(204);
                 done();
             });
         });
-        it('should return 0 : number of updates', done => {
+        it('should return 404 not found', done => {
             const request = {
                 method: 'PATCH',
                 url: '/users/IDoNotExist',
@@ -419,15 +417,14 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(0);
+                expect(res.request.response.statusCode).to.equal(404);
                 done();
             });
         });
     });
 
     describe('#put', () => {
-        it('should return 1 : number of updates', done => {
+        it('should return 204 no content (ok)', done => {
             const request = {
                 method: 'PUT',
                 url: '/users/Johnny',
@@ -436,8 +433,7 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(1);
+                expect(res.request.response.statusCode).to.equal(204);
                 done();
             });
         });
@@ -455,7 +451,7 @@ describe('Controller.User', () => {
                 done();
             });
         });
-        it('should return 0 : number of updates', done => {
+        it('should return 404 not found', done => {
             const request = {
                 method: 'PUT',
                 url: '/users/IDoNotExist',
@@ -464,8 +460,7 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(0);
+                expect(res.request.response.statusCode).to.equal(404);
                 done();
             });
         });
