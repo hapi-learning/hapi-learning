@@ -4,6 +4,9 @@
   "description": "e-learning platform built with hapijs and angular",
   "apidoc": {
 	"title": "hapi-learning API documentation",
+	"template": {
+		"forceLanguage": "en"
+	},
 	"order": [
 		"Login", "Logout", "Me", "PatchMe",	"MeCourses", "MeCoursesNews",
 		"GetCourses", "GetCourse", "GetCourseHomepage", "GetCourseTree",
