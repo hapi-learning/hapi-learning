@@ -291,7 +291,7 @@ exports.addTags = {
 };
 
 /**
- * @api {delete} /users/:username Add user's tags
+ * @api {delete} /users/:username Delete user
  * @apiName DeleteUser
  * @apiGroup Users
  * @apiVersion 1.0.0
@@ -359,6 +359,7 @@ exports.delete = {
  * @apiError {json} 400 Validation error.
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 User not found.
  * @apiError {json} 409 Conflict User's username or email already exists.
  *
  */
@@ -408,6 +409,7 @@ exports.put = {
  * @apiError {json} 400 Validation error.
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 User not found.
  * @apiError {json} 409 Conflict User's username or email already exists.
  *
  */
@@ -432,6 +434,25 @@ exports.patch = {
     handler: internals.updateHandler
 };
 
+/**
+ * @api {get} /users/:username/tags Get user tags
+ * @apiName GetUserTags
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} username The user's username.
+
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of tag.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 404 User not found.
+ *
+ */
 exports.getTags = {
     description: 'Get the user\'s tag',
     validate: {
@@ -486,10 +507,26 @@ exports.getFolders = {
     }
 };
 
+/**
+ * @api {get} /users/:username/courses Get user subscribed courses.
+ * @apiName GetUserCourses
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} username The user's username.
+
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of courses.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 404 User not found.
+ *
+ */
 exports.getCourses = {
-    auth: {
-        scope: ['admin', '{params.username}']
-    },
     description: 'Get the courses (subscribed)',
     validate: {
         params: {
@@ -523,7 +560,27 @@ exports.getCourses = {
     }
 };
 
+/**
+ * @api {post} /users/:username/subscribe/:crsId Subscribe to course
+ * @apiName UserSubscribe
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and concerned user.
+ *
+ * @apiParam (path) {String} username The user's username.
+ * @apiParam (path) {String} crsId The course code.
 
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The subscribed course.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 User not found or course not found.
+ *
+ */
 exports.subscribeToCourse = {
     auth: {
         scope: ['admin', '{params.username}']
@@ -540,36 +597,63 @@ exports.subscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        Utils.findUser(User, request.params.username)
-        .then(user => {
+        let userToUpdate;
+        Utils.findUser(User, request.params.username).then(user => {
             if (user) {
-                user.getCourses({where : {code : request.params.crsId}})
-                .then(courses => {
-                    if (courses.length > 0) {
-                        reply.conflict('Course ' + request.params.crsId + ' already subscribed');
-                    } else {
-                        Course.findOne({where : {code : request.params.crsId}})
-                        .then(course => {
-                            if (course) {
-                                user.addCourse(course);
-
-                                Utils.getCourse(course).then(result => reply(result));
-                            } else {
-                                return reply.notFound('Course ' + request.params.crsId + ' not found');
-                            }
-                        })
-                        .catch(error => reply.badImplementation(error));
-                    }
-                })
-                .catch(error => reply.badImplementation(error));
+                userToUpdate = user;
+                return user.getCourses({where : {code : request.params.crsId}});
             } else {
-                return reply.notFound('User ' + request.params.username + ' not found');
+                throw { statusCode: 404, message: 'User not found' };
             }
-        })
-        .catch(error => reply.badImplementation(error));
+        }).then(courses => {
+            if (courses.length > 0) {
+                throw { statusCode: 409, message: 'Already subscribed' };
+            } else {
+                return Course.findOne({ where: { code: request.params.crsId }});
+            }
+        }).then(course => {
+            if (course) {
+                return userToUpdate.addCourse(course).then(() => Utils.getCourse(course));
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(course => {
+            return reply(course);
+        }).catch(err => {
+            switch(err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                    break;
+                case 409:
+                    return reply.conflict(err.message);
+                default:
+                    return reply.badImplementation(err);
+            }
+        });
     }
 };
 
+/**
+ * @api {post} /users/:username/subscribe/:crsId Unsubscribe to course
+ * @apiName UserUnsubscribe
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and concerned user.
+ *
+ * @apiParam (path) {String} username The user's username.
+ * @apiParam (path) {String} crsId The course code.
+
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The unsubscribed course.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 User not found or course not found.
+ *
+ */
 exports.unsubscribeToCourse = {
     auth: {
         scope: ['admin', '{params.username}']
