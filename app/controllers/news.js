@@ -4,11 +4,27 @@ const Hoek = require('hoek');
 const Joi  = require('joi');
 const P    = require('bluebird');
 const _    = require('lodash');
-      
+
 const Utils        = require('../utils/sequelize');
 
 const internals = {};
 
+
+/**
+ * @api {get} /news Get all news
+ * @apiName GetManyNews
+ * @apiGroup News
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission all users.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of news ordered by descendant date.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ *
+ */
 exports.getAll = {
     description: 'Returns every news',
     handler: function (request, reply) {
@@ -23,6 +39,25 @@ exports.getAll = {
     }
 };
 
+/**
+ * @api {get} /news/:id Get a news
+ * @apiName GetOneNews
+ * @apiGroup News
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam {Number} id The news id.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The news.
+ *
+ * @apiError {json} 404 News not found.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ *
+ */
 exports.get = {
     description: 'Returns a specific news',
     validate: {
@@ -51,8 +86,27 @@ exports.get = {
     }
 };
 
+/**
+ * @api {post} /news Post a news
+ * @apiName PostNews
+ * @apiGroup News
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and teachers.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 201 The created news.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ *
+ */
 exports.post = {
     description: 'Create a news',
+    auth: {
+        scope: ['admin', 'teacher']
+    },
     validate: {
         payload: {
             username: Joi.string().min(1).max(30).required().description('User personal ID'),
@@ -76,7 +130,7 @@ exports.post = {
         const priority = request.payload.priority;
 
         const tail = request.tail('mails-notification');
-        
+
         Utils.findUser(User, username).then(user => {
             if (user) {
                 const news = {
@@ -99,9 +153,9 @@ exports.post = {
                                     else
                                         return P.resolve();
                                 });
-                                
+
                                 P.all(promises).then(tail);
-                            }); 
+                            });
 
                             News.create(news)
                                 .then(news => reply(Utils.removeDates(news)).code(201))
@@ -113,8 +167,8 @@ exports.post = {
                         }
                     })
                     .catch((error) => reply.conflict(error));
-                } else {  
-                    
+                } else {
+
                     User.findAll().then(users => {
                         const promises = _.map(users, user => {
                             if (user.get('notify'))
@@ -124,8 +178,8 @@ exports.post = {
                         });
 
                         P.all(promises).then(tail);
-                    }); 
-                    
+                    });
+
                     News.create(news)
                         .then(news => reply(Utils.removeDates(news)).code(201))
                         .catch((error) => reply.conflict(error));

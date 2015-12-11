@@ -4,7 +4,24 @@ const Joi = require('joi');
 const _ = require('lodash');
 const Utils = require('../utils/sequelize');
 
-
+/**
+ * @api {get} /roles/:name Get a role
+ * @apiName GetRole
+ * @apiGroup Roles
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin.
+ *
+ * @apiParam (path) {String} name The role name.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The role.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 Role not found.
+ */
 exports.get = {
     description: 'Returns a specific role',
     auth: {
@@ -41,6 +58,21 @@ exports.get = {
     }
 };
 
+/**
+ * @api {get} /roles Get all roles
+ * @apiName GetRoles
+ * @apiGroup Roles
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 All the roles.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ */
 exports.getAll = {
 
     description: 'Returns all roles',
@@ -61,6 +93,22 @@ exports.getAll = {
     }
 };
 
+/**
+ * @api {post} /roles Post a role
+ * @apiName PostRole
+ * @apiGroup Roles
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 201 The created role.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 409 Conflict - role name already exists.
+ */
 exports.post = {
     description: 'Create a new role',
     auth: {
@@ -83,6 +131,23 @@ exports.post = {
     }
 };
 
+/**
+ * @api {delete} /roles Delete a role
+ * @apiName DeleteRole
+ * @apiGroup Roles
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin.
+ *
+ * @apiParam (path) {String} name the role name.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 204 No content.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ */
 exports.delete = {
     description: 'Delete a specific role',
     auth: {
@@ -102,7 +167,7 @@ exports.delete = {
                 name : request.params.name
             }
         })
-        .then(count => reply({count : count}))
+        .then(count => reply().code(204))
         .catch(error => reply.badImplementation(error));
     }
 };

@@ -32,7 +32,10 @@
 		"GetTags",
 		"GetTag",
 		"PostTag",
-		"DeleteTag"
+		"DeleteTag",
+		"GetManyNews",
+		"GetOneNews",
+		"PostNews"
 	]
   },
   "main": "index.js",
