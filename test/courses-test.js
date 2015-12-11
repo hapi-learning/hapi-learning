@@ -283,11 +283,12 @@ describe('Controller.Course', () => {
             method: 'DELETE',
             url: '/courses/ANL3'
         };
-        it ('Should return 1', done => {
+        it ('Should delete the course with 204', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response.count).to.equal(1);
+                expect(response).to.not.exists();
+                expect(res.request.response.statusCode).to.equal(204);
 
                 // Not clean ...
                 setTimeout(() => {
@@ -300,11 +301,11 @@ describe('Controller.Course', () => {
             });
         });
 
-        it ('Should return 0', done => {
+        it ('Should return 404 not found because deleted', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
-                expect(response.count).to.equal(0);
+                expect(res.request.response.statusCode).to.equal(404);
                 done();
             });
         });
@@ -365,26 +366,24 @@ describe('Controller.Course', () => {
             }
         };
 
-        it ('Should return the number of rows updated (0)', done => {
+        it ('Should return 404 not found', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, {url : '/courses/ABCD'});
             copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
 
-                const response = res.request.response.source;
-
-                expect(response.count).to.equal(0);
+                expect(res.request.response.statusCode).to.equal(404);
 
                 done();
             });
         });
 
-        it ('Should return the number of rows updated (1)', done => {
+        it ('Should return 204 no content', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
 
-                expect(response.count).to.equal(1);
+                expect(res.request.response.statusCode).to.equal(204);
 
                 fs.stat(Path.join(__dirname, 'storage/courses/ATL3G'), function(err, stats) {
                     expect(err).to.be.null();
@@ -543,13 +542,10 @@ describe('Controller.Course', () => {
             }
         };
 
-        it('Should return the course with the without the deleted tags', done => {
+        it('Should return 204 no content (ok)', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
-                const response = res.request.response.source;
-
-                const allTags = ['3e', 'Java'];
-                expect(response.tags).to.only.include(allTags);
+                expect(res.request.response.statusCode).to.equal(204);
                 done();
             });
         });
@@ -559,8 +555,7 @@ describe('Controller.Course', () => {
             const copyRequest = Hoek.applyToDefaults(request, { url: '/courses/ATL/tags'});
             copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
-                const response = res.request.response.source;
-                expect(response.statusCode).to.equal(404);
+                expect(res.request.response.statusCode).to.equal(404);
                 done();
             });
         });
@@ -588,16 +583,10 @@ describe('Controller.Course', () => {
             }
         };
 
-        it('Should return the course with the new teachers', done => {
+        it('Should return 204 no content', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
-                const response = res.request.response.source;
-
-                const allTeachers = ['SRV', 'FPL'];
-
-                const usernames = _.map(response.teachers, (t => t.username));
-
-                expect(usernames).to.only.include(allTeachers);
+                expect(res.request.response.statusCode).to.equal(204);
                 done();
             });
         });
@@ -710,14 +699,14 @@ describe('Controller.Course', () => {
             });
         });
 
-        it ('Should return 403 forbidden path', done => {
+        it ('Should return 400 invalid path', done => {
 
             const copyRequest = Hoek.applyToDefaults(request, {
                 url: '/courses/ATL3G/folders/../../ANL3/documents/folder'
             });
             copyRequest.headers = internals.headers;
             server.inject(copyRequest, res => {
-                expect(res.request.response.statusCode).equal(403);
+                expect(res.request.response.statusCode).equal(400);
                 done();
             });
         });
@@ -804,7 +793,7 @@ describe('Controller.Course', () => {
             });
         });
 
-        it ('Should return 403 forbidden path', done => {
+        it ('Should return 400 invalid path', done => {
             const form = new FormData();
 
             const headers = form.getHeaders();
@@ -819,7 +808,7 @@ describe('Controller.Course', () => {
                     headers: headers
                 }, res => {
                     const response = res.request.response.source;
-                    expect(response.statusCode).to.equal(403);
+                    expect(response.statusCode).to.equal(400);
                     done();
                 });
             });

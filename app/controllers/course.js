@@ -1009,7 +1009,7 @@ exports.addTeachers = {
  *
  * @apiheader {String} Authorization The user's private token.
  *
- * @apiSuccess 200 No content.
+ * @apiSuccess 204 No content.
  *
  * @apiError {json} 400 Validation error.
  * @apiError {json} 404 Course not found.
@@ -1042,7 +1042,9 @@ exports.patch = {
 
         const renameFolder = function() {
             Storage.renameCourse(id, newId)
-                .then(reply)
+                .then(function() {
+                    return reply().code(204);
+                })
                 .catch(err => reply.badImplementation(err));
         };
 
