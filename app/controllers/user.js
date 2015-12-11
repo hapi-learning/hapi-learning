@@ -196,7 +196,7 @@ exports.getTeachers = {
  * @apiError {json} 400 Validation error.
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
- * @apiError {json} 409 Conflict User's username or email already exists.
+ * @apiError {json} 409 User's username or email already exists.
  *
  */
 exports.post = {
@@ -360,7 +360,7 @@ exports.delete = {
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 User not found.
- * @apiError {json} 409 Conflict User's username or email already exists.
+ * @apiError {json} 409 User's username or email already exists.
  *
  */
 exports.put = {
@@ -410,7 +410,7 @@ exports.put = {
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 User not found.
- * @apiError {json} 409 Conflict User's username or email already exists.
+ * @apiError {json} 409 User's username or email already exists.
  *
  */
 exports.patch = {
@@ -579,6 +579,7 @@ exports.getCourses = {
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
  * @apiError {json} 404 User not found or course not found.
+ * @apiError {json} 409 Already subscribed.
  *
  */
 exports.subscribeToCourse = {
@@ -601,7 +602,7 @@ exports.subscribeToCourse = {
         Utils.findUser(User, request.params.username).then(user => {
             if (user) {
                 userToUpdate = user;
-                return user.getCourses({where : {code : request.params.crsId}});
+                return user.getCourses({where : {code : request.params.crsId}, joinTableAttributes: []});
             } else {
                 throw { statusCode: 404, message: 'User not found' };
             }
@@ -651,7 +652,7 @@ exports.subscribeToCourse = {
  * @apiError {json} 400 Validation error.
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
- * @apiError {json} 404 User not found or course not found.
+ * @apiError {json} 404 User not found or course not found (or already unsubscribed).
  *
  */
 exports.unsubscribeToCourse = {
@@ -670,36 +671,31 @@ exports.unsubscribeToCourse = {
         const Course = this.models.Course;
         const User   = this.models.User;
 
-        Utils.findUser(User, request.params.username)
-        .then(user => {
+        let userToUpdate;
+        Utils.findUser(User, request.params.username).then(user => {
             if (user) {
-                user.getCourses({where : {code : request.params.crsId}, joinTableAttributes: []})
-                .then(courses => {
-                    if (courses.length > 0) {
-                        user.removeCourse(courses)
-                        .then(count => {
-                            if (count > 0)
-                            {
-                                return reply(Utils.removeDates(courses)[0]);
-                            }
-                            else
-                            {
-                                return reply.notFound('Course ' + request.params.crsId + ' can not be subscribed');
-                            }
-                        })
-                        .catch(error => reply.badImplementation(error));
-                    } else {
-                        return reply.notFound('Course ' + request.params.crsId + ' is not subscribed by the user');
-                    }
-                })
-                .catch(error => reply.badImplementation(error));
+                userToUpdate = user;
+                return user.getCourses({where : {code : request.params.crsId}, joinTableAttributes: []});
             } else {
-                return reply.notFound('User ' + request.params.username + ' not found');
+                throw { statusCode: 404, message: 'User not found' };
             }
-
-
-        })
-        .catch(error => reply.badImplementation(error));
+        }).spread(course => {
+            if (course) {
+                return userToUpdate.removeCourse(course).then(() => Utils.getCourse(course));
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(course => {
+            return reply(course);
+        }).catch(err => {
+            switch(err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                    break;
+                default:
+                    return reply.badImplementation(err);
+            }
+        });
     }
 };
 
