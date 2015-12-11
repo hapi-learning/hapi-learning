@@ -35,7 +35,11 @@
 		"DeleteTag",
 		"GetManyNews",
 		"GetOneNews",
-		"PostNews"
+		"PostNews",
+		"GetRoles",
+		"GetRole",
+		"PostRole",
+		"DeleteRole"
 	]
   },
   "main": "index.js",

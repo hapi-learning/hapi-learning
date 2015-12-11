@@ -5,7 +5,7 @@ const _ = require('lodash');
 const Utils = require('../utils/sequelize');
 
 /**
- * @api {get} /roles/:name Get a role
+ * @api {get} /roles/:name Get role
  * @apiName GetRole
  * @apiGroup Roles
  * @apiVersion 1.0.0
@@ -94,7 +94,7 @@ exports.getAll = {
 };
 
 /**
- * @api {post} /roles Post a role
+ * @api {post} /roles Post role
  * @apiName PostRole
  * @apiGroup Roles
  * @apiVersion 1.0.0
@@ -132,7 +132,7 @@ exports.post = {
 };
 
 /**
- * @api {delete} /roles Delete a role
+ * @api {delete} /roles Delete role
  * @apiName DeleteRole
  * @apiGroup Roles
  * @apiVersion 1.0.0
