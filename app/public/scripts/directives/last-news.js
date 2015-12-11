@@ -14,7 +14,6 @@ angular.module('hapi-learning')
                 templateUrl: 'templates/last-news.html',
                 link: function (scope, element, attrs) {
                     scope.news = [];
-                    scope.fetched = false;
 
                     // Si les dernières news sont spécifiques à un cours, il n'y a pas de nombre
                     NewsFactory.load(scope.code ? null : scope.count)
@@ -34,9 +33,7 @@ angular.module('hapi-learning')
                             }
                             else {
                                 scope.news = news;
-                            }
 
-                            scope.fetched = true;
                         })
                         .catch(function (err) {
                             console.log(err);
