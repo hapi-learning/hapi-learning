@@ -50,6 +50,8 @@ internals.checkForbiddenPath = function(path) {
  * @apiParam (query) {String} [code] Get by code of the course.
  * @apiParam (query) {String} [name] Get by name of the course.
  * @apiParam (query) {String[]} [tags] Get by tags of the course.
+ * @apiParam (query) {Number} [limit=25] Limit of results per page.
+ * @apiParam (query) {Number} [page=1] Page number.
  * @apiParam (query) {Boolean} [pagination=true] Enable / disable the pagination.
  *
  * @apiheader {String} Authorization The user's private token.

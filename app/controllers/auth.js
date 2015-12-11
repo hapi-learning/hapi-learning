@@ -306,7 +306,7 @@ exports.patchMe = {
 };
 
 /**
- * @api {get} /me/courses Subscribed current user courses
+ * @api {get} /me/courses Get current user's subscribed courses
  * @apiName MeCourses
  * @apiGroup Auth
  * @apiVersion 1.0.0
@@ -339,7 +339,7 @@ exports.getCourses = {
 };
 
 /**
- * @api {get} /me/news Subscribed current user courses news
+ * @api {get} /me/news Get current user's subscribed courses news
  * @apiName MeCoursesNews
  * @apiGroup Auth
  * @apiVersion 1.0.0

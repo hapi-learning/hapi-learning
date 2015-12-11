@@ -147,6 +147,7 @@ exports.post = {
  *
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 Role not found.
  */
 exports.delete = {
     description: 'Delete a specific role',
@@ -167,7 +168,7 @@ exports.delete = {
                 name : request.params.name
             }
         })
-        .then(count => reply().code(204))
+        .then(count => count === 0 ? reply.notFound() : reply().code(204))
         .catch(error => reply.badImplementation(error));
     }
 };

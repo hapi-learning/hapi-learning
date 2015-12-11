@@ -324,7 +324,7 @@ describe('Controller.User', () => {
     });
 
     describe('#delete', () => {
-        it('should return 1 : number of deletations', done => {
+        it('should return 204 no content (deleted)', done => {
             const request = {
                 method: 'DELETE',
                 url: '/users/Johnny',
@@ -332,12 +332,11 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(1);
+                expect(res.request.response.statusCode).to.equal(204);
                 done();
             });
         });
-        it('should return 0 : number of deletations', done => {
+        it('should return 404 not found', done => {
             const request = {
                 method: 'DELETE',
                 url: '/users/Johnny',
@@ -345,8 +344,7 @@ describe('Controller.User', () => {
             };
 
             server.inject(request, res => {
-                const response = res.request.response.source;
-                expect(response.count).equal(0);
+                expect(res.request.response.statusCode).to.equal(404);
                 done();
             });
         });

@@ -40,14 +40,32 @@ internals.schemaUserPOST = function(){
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
 };
 
+/**
+ * @api {get} /users/:username Get one user
+ * @apiName GetUser
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/users/XYZ
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} username The user's username.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The user.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 404 User not found.
+ *
+ */
 exports.get = {
     description: 'Get one user',
     validate: {
         params: {
             username: Joi.string().min(1).max(255).required().description('User personal ID')
-        },
-        query: {
-            tags: Joi.array().items(Joi.string().required())
         }
     },
     handler: function (request, reply) {
@@ -67,25 +85,74 @@ exports.get = {
     }
 };
 
+/**
+ * @api {get} /users Get all users
+ * @apiName GetUsers
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/users
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (query) {Number} [limit=25] Number of results per page.
+ * @apiParam (query) {Number} [page=1] Page number.
+ * @apiParam (query) {Boolean} [pagination=true] Enable / disable pagination.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The users with a meta object if pagination is true.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ *
+ */
 exports.getAll = {
     description: 'Get all users',
     handler: function(request, reply) {
 
         const User = this.models.User;
+        const pagination = request.query.pagination;
 
-        User.findAndCountAll({
-                limit: request.query.limit,
-                offset: (request.query.page - 1) * request.query.limit,
-                attributes: {
-                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+        const options = {};
+        options.attributes = {
+            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+        };
+
+        if (pagination) {
+            options.limit = request.query.limit;
+            options.offset = (request.query.page - 1) * request.query.limit;
+        }
+
+        User.findAndCountAll(options)
+            .then(results => {
+                if (pagination) {
+                    return reply.paginate(Utils.removeDates(results.rows), results.count);
+                } else {
+                    return reply(results.rows);
                 }
             })
-            .then(results => reply.paginate(Utils.removeDates(results.rows), results.count))
             .catch(err => reply.badImplementation(err));
     }
 };
 
-
+/**
+ * @api {get} /teachers Get all teachers
+ * @apiName GetTeachers
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/teachers
+ *
+ * @apiPermission all users.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of teachers.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ *
+ */
 exports.getTeachers = {
     description: 'Get only teachers',
     handler: function(request, reply) {
@@ -103,7 +170,35 @@ exports.getTeachers = {
     }
 };
 
-
+/**
+ * @api {post} /users Post user
+ * @apiName PostUser
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin.
+ *
+ * @apiDescription It is possible to provide an array of user instead of just one
+ * object, in that case, the return value will be the count of user created.
+ *
+ * @apiParam (payload) {String} username The user's username.
+ * @apiParam (payload) {String} password The user's password.
+ * @apiParam (payload) {String} email The user's email.
+ * @apiParam (payload) {String} [firstName] The user's first name.
+ * @apiParam (payload) {String} [lastName] The user's last name.
+ * @apiParam (payload) {String} [phoneNumber] The user's phone number.
+ * @apiParam (payload) {Number=1,2,3} [role_id=3] The user's role id (1 = admin, 2 = teacher, 3 = user).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 201 The created user (if one), the count of users created (if many).
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 409 User's username or email already exists.
+ *
+ */
 exports.post = {
     auth: {
         scope: ['admin']
@@ -134,6 +229,30 @@ exports.post = {
     }
 };
 
+/**
+ * @api {post} /users/:username/tags Add user's tags
+ * @apiName AddTagsUser
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and concerned user.
+ *
+ * @apiDescription Non existing tags will be ignored.
+ *
+ * @apiParam (path) {String} username The user's username.
+ *
+ * @apiParam (payload) {String[]} tags An array of tags name.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The updated user.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 User not found.
+ *
+ */
 exports.addTags = {
     auth: {
         scope: ['admin', '{params.username}']
@@ -150,8 +269,6 @@ exports.addTags = {
     handler : function(request, reply) {
         const Tag  = this.models.Tag;
         const User = this.models.User;
-
-
         const id = request.params.username;
 
         Tag.findAll({where: { name: { $in: request.payload.tags } }})
@@ -173,6 +290,26 @@ exports.addTags = {
     }
 };
 
+/**
+ * @api {post} /users/:username/tags Add user's tags
+ * @apiName AddTagsUser
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin.
+ *
+ * @apiParam (path) {String} username The user's username.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 204 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 404 User not found.
+ *
+ */
 exports.delete = {
     auth: {
         scope: ['admin']
@@ -192,7 +329,7 @@ exports.delete = {
                 username : { $eq: request.params.username }
             }
         })
-        .then(count => reply({count : count}))
+        .then(count => count === 0 ? reply.notFound() : reply().code(204))
         .catch(err => reply.badImplementation(err));
     }
 };
