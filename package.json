@@ -6,6 +6,11 @@
 	"title": "hapi-learning API documentation",
 	"order": [
 		"Login",
+		"Logout",
+		"Me",
+		"PatchMe",
+		"MeCourses",
+		"MeCoursesNews",
 		"GetCourses",
 		"GetCourse",
 		"GetCourseHomepage",

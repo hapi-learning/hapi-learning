@@ -30,7 +30,9 @@ const _ = require('lodash');
  *
  * @apiPermission all users.
  *
- * @apiDescription You have to provide the username OR the email.
+ * @apiDescription You have to provide the username OR the email. <br/>
+ * After the login, you have to provide the private token returned
+ * by the login in EVERY request in the Authorization header.
  *
  * @apiParam (payload) {String} [username] The username.
  * @apiParam (payload) {String} [email] The email.
@@ -152,7 +154,6 @@ exports.login = {
  * @apiSuccess 204 No content
  *
  * @apiError {json} 401 Invalid token or token expired.
- * @apiError {json} 403 Forbidden - insufficient permissions.
  *
  */
 exports.logout = {
@@ -205,8 +206,21 @@ exports.logout = {
 };
 
 /**
- * Parses the token and returns
- * the user informations.
+ * @api {get} /me Get current user informations
+ * @apiName Me
+ * @apiGroup Auth
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/me -H "Authorization: private_token"
+ *
+ * @apiPermission all users.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 200 Connected user informations.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ *
  */
 exports.me = {
     description: 'Get current user',
@@ -239,8 +253,27 @@ exports.me = {
 };
 
 /**
- * Parses the token and returns
- * the user informations.
+ * @api {patch} /me Path current user informations
+ * @apiName PatchMe
+ * @apiGroup Auth
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (payload) password The new password.
+ * @apiParam (payload) email The new email.
+ * @apiParam (payload) firstName The new first name.
+ * @apiParam (payload) lastName The new last name.
+ * @apiParam (payload) phoneNumber The new phone number.
+ * @apiParam (payload) notify The new value of notify (news).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 204 No content.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 409 Conflict with the new username or email.
+ *
  */
 exports.patchMe = {
     description: 'Update current user',
@@ -267,13 +300,26 @@ exports.patchMe = {
                     }
                 }
             )
-            .then(result => reply({
-                count: result[0] || 0
-            }))
+            .then(result => reply().code(204))
             .catch(error => reply.conflict(error));
     }
 };
 
+/**
+ * @api {get} /me/courses Subscribed current user courses
+ * @apiName MeCourses
+ * @apiGroup Auth
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission all users.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 200 All the subscribed current user courses.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ *
+ */
 exports.getCourses = {
     description: 'Get the courses (subscribed)',
     handler: function (request, reply) {
@@ -292,6 +338,21 @@ exports.getCourses = {
     }
 };
 
+/**
+ * @api {get} /me/news Subscribed current user courses news
+ * @apiName MeCoursesNews
+ * @apiGroup Auth
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission all users.
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess 200 All the subscribed current user courses news.
+ *
+ * @apiError {json} 401 Invalid token or token expired.
+ *
+ */
 exports.getNews = {
     description: 'Get news of subscribed courses',
     handler: function (request, reply) {
