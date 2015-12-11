@@ -53,7 +53,7 @@
 	  "name": "Paul Kriwin",
 	  "email": "39171@heb.be"
   }],
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/fknop/hapi-learning/issues"
   },

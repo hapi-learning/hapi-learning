@@ -11,6 +11,10 @@ angular.module('hapi-learning')
             const internals = {
                 news: [],
                 fetched: false,
+                clear: function() {
+                    fetched = false;
+                    news = [];
+                },
                 slice: function (count) {
                     // count has to be a number :
                     // slice(0, ..) with null return empty, negative numbers return truncated array, ...
@@ -59,6 +63,10 @@ angular.module('hapi-learning')
                         });
                 });
             };
+
+            $rootScope.$on('um.end-session', function() {
+                internals.clear();
+            });
 
             return exports;
     }]);
