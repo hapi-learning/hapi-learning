@@ -14,7 +14,7 @@
 		"GetTag", "PostTag", "DeleteTag", "GetManyNews", "GetOneNews",
 		"PostNews", "GetRoles",	"GetRole", "PostRole", "DeleteRole",
 		"GetUsers",	"GetUser", "GetTeachers", "GetUserTags",
-		"GetUserCourses", "AddTagsUser", "UserSubscribe", "UserUnsubscribe",
+		"GetUserCourses", "AddTagsUser", "PostUser", "UserSubscribe", "UserUnsubscribe",
 		"PatchUser", "PutUser", "DeleteUser"
 	]
   },
