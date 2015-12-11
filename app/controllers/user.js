@@ -22,7 +22,7 @@ internals.updateHandler = function(request, reply) {
             }
         }
     )
-    .then(result => reply({count : result[0] || 0}))
+    .then(result => result[0] === 0 ? reply.notFound() : reply().code(204))
     .catch(error => reply.conflict(error));
 };
 
@@ -196,7 +196,7 @@ exports.getTeachers = {
  * @apiError {json} 400 Validation error.
  * @apiError {json} 401 Invalid token or token expired.
  * @apiError {json} 403 Forbidden - insufficient permissions.
- * @apiError {json} 409 User's username or email already exists.
+ * @apiError {json} 409 Conflict User's username or email already exists.
  *
  */
 exports.post = {
@@ -291,8 +291,8 @@ exports.addTags = {
 };
 
 /**
- * @api {post} /users/:username/tags Add user's tags
- * @apiName AddTagsUser
+ * @api {delete} /users/:username Add user's tags
+ * @apiName DeleteUser
  * @apiGroup Users
  * @apiVersion 1.0.0
  *
@@ -335,7 +335,33 @@ exports.delete = {
 };
 
 
+/**
+ * @api {put} /users/:username Update user (PUT)
+ * @apiName PutUser
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and concerned user.
+ *
+ * @apiParam (path) {String} username The user's username.
 
+ * @apiParam (payload) {String} password The user's password.
+ * @apiParam (payload) {String} email The user's email.
+ * @apiParam (payload) {String} firstName The user's first name.
+ * @apiParam (payload) {String} lastName The user's last name.
+ * @apiParam (payload) {String} phoneNumber The user's phone number.
+ * @apiParam (payload) {Boolean} notify True if the user wants to be notified (news).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 204 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 409 Conflict User's username or email already exists.
+ *
+ */
 exports.put = {
     auth: {
         scope: ['admin', '{params.username}']
@@ -350,13 +376,41 @@ exports.put = {
             email: Joi.string().min(1).max(255).required().description('User email'),
             firstName: Joi.string().min(1).max(255).required().description('User first name'),
             lastName: Joi.string().min(1).max(255).required().description('User last name'),
-            phoneNumber: Joi.string().min(1).max(255).required().description('User phone number')
+            phoneNumber: Joi.string().min(1).max(255).required().description('User phone number'),
+            notify: Joi.boolean()
         }
     },
 
     handler: internals.updateHandler
 };
 
+/**
+ * @api {patch} /users/:username Update user (PATCH)
+ * @apiName PatchUser
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiPermission admin and concerned user.
+ *
+ * @apiParam (path) {String} username The user's username.
+
+ * @apiParam (payload) {String} [password] The user's password.
+ * @apiParam (payload) {String} [email] The user's email.
+ * @apiParam (payload) {String} [firstName] The user's first name.
+ * @apiParam (payload) {String} [lastName] The user's last name.
+ * @apiParam (payload) {String} [phoneNumber] The user's phone number.
+ * @apiParam (payload) {Boolean} [notify] True if the user wants to be notified (news).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 204 No content.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 403 Forbidden - insufficient permissions.
+ * @apiError {json} 409 Conflict User's username or email already exists.
+ *
+ */
 exports.patch = {
     auth: {
         scope: ['admin', '{params.username}']
