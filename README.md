@@ -33,7 +33,7 @@ API_HOST=localhost
 API_PORT=8088
 API_CORS=true
 
-# Database : will be created int root folder
+# Database : will be created in root folder
 
 DB_DIALECT=sqlite
 DB_STORAGE=database.sqlite
@@ -124,7 +124,7 @@ app/                        --> app folder
     public/                 --> angular app
         index.html          --> entry point for angular app
         favicons/           --> differents favicons
-        lib/                --> lib folder (bower components comes here)
+        lib/                --> lib folder (bower components come here)
         scripts/            --> scripts for main module
             app.js          --> Angular main app configuration
             controllers/    --> controllers for main module
