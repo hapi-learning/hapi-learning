@@ -1,4 +1,6 @@
-# eLearning
+# hapi-learning 
+
+> Building an e-learning platform with HapiJS and AngularJS
 
 ## Documentation
 
