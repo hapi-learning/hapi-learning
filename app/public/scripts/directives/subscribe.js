@@ -41,7 +41,6 @@ angular.module('hapi-learning')
                         if (value) {
                             CoursesFactory.getSubscribed()
                                 .then(function (courses) {
-
                                     scope.subscribed = _.find(courses, 'code', value) ? true : false;
                                     scope.available = true;
                                 })
