@@ -88,6 +88,10 @@ You can run server using `node`
 ```
 $ node . -fv
 ```
+or
+```
+$ npm start -- -fv
+```
 
 #### The tests
 

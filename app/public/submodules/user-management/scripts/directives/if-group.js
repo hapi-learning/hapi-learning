@@ -12,31 +12,57 @@ angular.module('hapi-learning.um')
             restrict: ngIf.restrict,
             link: function(scope, element, attrs) {
                 var args = arguments;
-                var done = false;
-                $rootScope.$watch('user', function(user) {
-                    if (user && !done) {
-                        var groups = attrs.ifGroup.split(' ');
-                        var role = user.Role.name;
-                        var initialNgIf = attrs.ngIf;
-                        var ifEvaluator;
+                var initialNgIf = attrs.ngIf;
+                var ifEvaluator;
+                var user = $rootScope.$user;
 
-                        var hasRole = groups.indexOf(role) !== -1;
+                if (user) {
+                    var groups = attrs.ifGroup.split(' ');
+                    var role = user.Role.name;
+                    var hasRole = groups.indexOf(role) !== -1;
 
-                        if (initialNgIf) {
-                            ifEvaluator = function() {
-                                return scope.$eval(initialNgIf) && hasRole;
-                            };
-                        } else {
-                            ifEvaluator = function() {
-                                return hasRole;
-                            };
-                        }
-
-                        attrs.ngIf = ifEvaluator;
-                        ngIf.link.apply(ngIf, args);
-                        done = true;
+                    if (initialNgIf) {
+                        ifEvaluator = function() {
+                            return scope.$eval(initialNgIf) && hasRole;
+                        };
+                    } else {
+                        ifEvaluator = function() {
+                            return hasRole;
+                        };
                     }
-                });
+                } else {
+                    ifEvaluator = function() {
+                        return false;
+                    };
+                }
+
+                attrs.ngIf = ifEvaluator;
+                ngIf.link.apply(ngIf, args);
+            }
+        };
+    }])
+    .directive('showGroup', ['$rootScope',
+                function($rootScope) {
+
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs) {
+
+                elem.addClass('ng-hide');
+
+                var groups = attrs['showGroup'].split(' ');
+                var user = $rootScope.$user;
+
+                if (user) {
+                    var role = user.Role.name;
+                    var hasRole = (groups.indexOf(role) !== -1);
+
+                    if (hasRole) {
+                        elem.removeClass('ng-hide');
+                    } else {
+                        elem.addClass('ng-hide');
+                    }
+                }
             }
         };
     }]);

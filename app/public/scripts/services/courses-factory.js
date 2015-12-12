@@ -111,12 +111,13 @@ angular.module('hapi-learning')
             /!\ WIP : Does not return course atm, so subscribed course is clear.
         **/
         exports.subscribe = function (code) {
-            return LoginFactory.getProfile().then(function (profile) {
-                return Restangular.one('users', profile.username).customPOST({}, 'subscribe/' + code);
-            }).then(function (course) {
-                internals.subscribedCourses.push(course);
-                return course;
-            });
+            return Restangular
+                .one('users', $rootScope.$user.username)
+                .customPOST({}, 'subscribe/' + code)
+                .then(function (course) {
+                    internals.subscribedCourses.push(course);
+                    return course;
+                });
         };
 
         /**
@@ -125,15 +126,16 @@ angular.module('hapi-learning')
             from local subscribed courses.
         **/
         exports.unsubscribe = function (code) {
-            return LoginFactory.getProfile().then(function (profile) {
-                return Restangular.one('users', profile.username).customPOST({}, 'unsubscribe/' + code);
-            }).then(function (object) {
-                _.remove(internals.subscribedCourses, function (course) {
-                    return course.code === code;
-                });
+                return Restangular
+                    .one('users', $rootScope.$user.username)
+                    .customPOST({}, 'unsubscribe/' + code)
+                    .then(function (object) {
+                        _.remove(internals.subscribedCourses, function (course) {
+                            return course.code === code;
+                        });
 
-                return object;
-            });
+                    return object;
+                });
         };
 
         /**
@@ -142,20 +144,18 @@ angular.module('hapi-learning')
         **/
         exports.getSubscribed = function () {
 
-            return LoginFactory.getProfile().then(function (profile) {
-                if (internals.fetchedSubscribed) {
-                    return internals.subscribedCourses;
-                } else {
-                    return Restangular
-                        .all('me')
-                        .get('courses')
-                        .then(function (subscribedCourses) {
-                            internals.subscribedCourses = subscribedCourses;
-                            internals.fetchedSubscribed = true;
-                            return internals.subscribedCourses;
-                        });
-                }
-            });
+            if (internals.fetchedSubscribed) {
+                return $q.resolve(internals.subscribedCourses);
+            } else {
+                return Restangular
+                    .all('me')
+                    .get('courses')
+                    .then(function (subscribedCourses) {
+                        internals.subscribedCourses = subscribedCourses;
+                        internals.fetchedSubscribed = true;
+                        return internals.subscribedCourses;
+                    });
+            }
 
 
         };

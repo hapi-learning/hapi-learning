@@ -15,14 +15,15 @@ angular.module('hapi-learning')
 
                 scope.path = $stateParams.path;
                 scope.files = {};
-                scope.uploading = false;
-                scope.fetching = null;
 
-                scope.folder = {};
-                scope.creatingFolder = false;
-                scope.folderError = false;
-                scope.uploadError = false;
-                scope.showHidden = $stateParams.showHidden;
+                scope.states = {
+                    uploading: false,
+                    fetching: null,
+                    creatingFolder: false,
+                    folderError: false,
+                    uploadError: false,
+                    showHidden: $stateParams.showHidden
+                }
 
                 scope.getUploadPath = function() {
                     return FilesFactory.getUploadPath(scope.code, $stateParams.path);
@@ -30,29 +31,29 @@ angular.module('hapi-learning')
 
                 scope.getList = function(path, showHidden) {
 
-                    scope.fetching = true;
+                    scope.states.fetching = true;
                     return $q(function(resolve, reject) {
                         FilesFactory.getList(scope.code, path, showHidden).then(function(results) {
                             scope.files.dir = results.dir;
                             scope.files.files = results.files;
-                            scope.fetching = false;
+                            scope.states.fetching = false;
                             resolve();
                         }).catch(reject);
                     });
                 };
 
-                scope.$watch('showHidden', function(value) {
+                scope.$watch('states.showHidden', function(value) {
                     scope.getList($stateParams.path, value);
                 });
 
                 scope.cleanFolderError = function() {
-                    scope.folderError = false;
+                    scope.states.folderError = false;
                 };
 
                 scope.cleanFolderName = function() {
                     scope.folder = {};
-                    scope.creatingFolder = false;
-                    scope.cleanFolderError;
+                    scope.states.creatingFolder = false;
+                    scope.states.cleanFolderError;
                 };
 
                 scope.createFolder = function() {
@@ -65,36 +66,36 @@ angular.module('hapi-learning')
 
                         FilesFactory.createFolder(scope.code, path, hidden).then(function() {
                             scope.cleanFolderName();
-                            scope.getList($stateParams.path, scope.showHidden);
+                            scope.getList($stateParams.path, scope.states.showHidden);
                         }).catch(function(error) {
-                            scope.folderError = true;
+                            scope.states.folderError = true;
                         });
                     }
 
                 };
 
                 scope.cleanUploadError = function() {
-                    scope.uploadError = false;
+                    scope.states.uploadError = false;
                 };
 
                 scope.download = function() {
-                    return FilesFactory.getDownloadPath(scope.code, $stateParams.path, scope.showHidden);
-                    //return FilesFactory.download(scope.code, $stateParams.path, scope.showHidden);
+                    return FilesFactory.getDownloadPath(scope.code, $stateParams.path, scope.states.showHidden);
+                    //return FilesFactory.download(scope.code, $stateParams.path, scope.states.showHidden);
                 };
 
                 scope.getDownloadPath = function(file) {
-                    return FilesFactory.getDownloadPath(scope.code, $stateParams.path + '/' + file, scope.showHidden);
+                    return FilesFactory.getDownloadPath(scope.code, $stateParams.path + '/' + file, scope.states.showHidden);
                 }
 
                 scope.downloadFile = function(file) {
-                    return FilesFactory.download(scope.code, $stateParams.path + '/' + file, scope.showHidden);
+                    return FilesFactory.download(scope.code, $stateParams.path + '/' + file, scope.states.showHidden);
                 };
 
                 scope.goToAbsolutePath = function(path) {
                     $state.go('root.course.documents', {
                         code: scope.code,
                         path: path,
-                        showHidden: scope.showHidden
+                        showHidden: scope.states.showHidden
                     });
                 };
 
@@ -105,7 +106,7 @@ angular.module('hapi-learning')
                     $state.go('root.course.documents', {
                         code: scope.code,
                         path: $stateParams.path + tmp + path,
-                        showHidden: scope.showHidden
+                        showHidden: scope.states.showHidden
                     });
                 };
 
@@ -133,7 +134,7 @@ angular.module('hapi-learning')
 
                         // If files are hidden and updated is hidden,
                         // remove it from the list
-                        if (!scope.showHidden && file.hidden) {
+                        if (!scope.states.showHidden && file.hidden) {
                             _.pullAt(scope.files.files, index);
                         } else {
                             scope.files.files[index].name = file.name;
@@ -153,7 +154,7 @@ angular.module('hapi-learning')
                         return true;
                     }).catch(function(err) {
                         if (err.status === 409 || err.status === 400) {
-                            scope.folderError = true;
+                            scope.states.folderError = true;
                             return err.statusText;
                         }
                     });
@@ -174,7 +175,7 @@ angular.module('hapi-learning')
 
                     FilesFactory.deleteDocument(scope.code, path)
                         .then(function() {
-                            scope.getList($stateParams.path, scope.showHidden);
+                            scope.getList($stateParams.path, scope.states.showHidden);
                         }).catch(function() {
                             console.log('error - cannot delete');
                         });
@@ -182,24 +183,24 @@ angular.module('hapi-learning')
                 };
 
                 $rootScope.$on('upload-complete', function() {
-                    scope.getList($stateParams.path, scope.showHidden);
+                    scope.getList($stateParams.path, scope.states.showHidden);
                 });
 
                 $rootScope.$on('upload-error', function() {
-                    scope.uploadError = true;
+                    scope.states.uploadError = true;
                 });
 
 
                 // Set this back if bug appears again.
 
                 if (scope.code) {
-                    scope.getList($stateParams.path, scope.showHidden);
+                    scope.getList($stateParams.path, scope.states.showHidden);
                 } else {
                     // The code can be undefined because of asynchronous calls
                     scope.$watch('code', function(value) {
 
                         if (value) {
-                            scope.getList($stateParams.path, scope.showHidden);
+                            scope.getList($stateParams.path, scope.states.showHidden);
                         }
                     });
                 }
