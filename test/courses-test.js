@@ -355,24 +355,24 @@ describe('Controller.Course', () => {
 
         });
     });
-    
+
     describe('#getTeachers', () => {
         const request = {
             method: 'GET',
             url: '/courses/ATL3/teachers'
         };
 
-        it ('Should return empty array', done => {
+        it ('Should return 2 teachers', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
-                expect(response).to.have.length(0);
+                expect(response).to.have.length(2);
                 done();
             });
         });
 
-        it ('Should return an array with 1 teacher', done => {
+        it ('Should return an array with 3 teachers', done => {
             request.headers = internals.headers;
             const Course = server.plugins.models.models.Course;
             const user = {
@@ -387,39 +387,38 @@ describe('Controller.Course', () => {
             Course
                 .findOne({where: { code: { $eq: 'ATL3'}}})
                 .then(course => {
-                    course.createTeacher(user)
-                        .then(() => {
-                            server.inject(request, res => {
-                                const response = res.request.response.source;
-                                expect(response).to.be.an.array();
-                                expect(response).to.have.length(1);
-                                done();
-                            });
+                    course.createTeacher(user).then(() => {
+                        server.inject(request, res => {
+                            const response = res.request.response.source;
+                            expect(response).to.be.an.array();
+                            expect(response).to.have.length(3);
+                            done();
+                        });
                     });
                 });
 
 
         });
     });
-    
-    
+
+
     describe('#getTags', () => {
         const request = {
             method: 'GET',
             url: '/courses/ATL3/tags'
         };
 
-        it ('Should return empty array', done => {
+        it ('Should return an array with 2 tags', done => {
             request.headers = internals.headers;
             server.inject(request, res => {
                 const response = res.request.response.source;
                 expect(response).to.be.an.array();
-                expect(response).to.have.length(0);
+                expect(response).to.have.length(2);
                 done();
             });
         });
 
-        it ('Should return an array with 1 tag', done => {
+        it ('Should return an array with 3 tags', done => {
             request.headers = internals.headers;
             const Course = server.plugins.models.models.Course;
             const tag = {
@@ -427,14 +426,13 @@ describe('Controller.Course', () => {
             };
 
             Course
-                .findOne({where: { code: { $eq: 'ATL3'}}})
-                .then(course => {
+                .findOne({where: { code: { $eq: 'ATL3'}}}).then(course => {
                     course.createTag(tag)
                         .then(() => {
                             server.inject(request, res => {
                                 const response = res.request.response.source;
                                 expect(response).to.be.an.array();
-                                expect(response).to.have.length(1);
+                                expect(response).to.have.length(3);
                                 done();
                             });
                     });
@@ -443,8 +441,8 @@ describe('Controller.Course', () => {
 
         });
     });
-    
-    
+
+
 
     describe('#patch', () => {
         const request = {
@@ -496,9 +494,9 @@ describe('Controller.Course', () => {
                 expect(response.code).to.equal(request.payload.code);
                 expect(response.name).to.equal(request.payload.name);
                 expect(response.teachers).to.be.an.array();
-                expect(response.teachers).to.have.length(users.length);
+                expect(response.teachers).to.have.length(users.length + 1);
                 expect(response.tags).to.be.an.array();
-                expect(response.tags).to.have.length(tags.length);
+                expect(response.tags).to.have.length(tags.length + 1);
 
                 done();
             });
@@ -519,18 +517,17 @@ describe('Controller.Course', () => {
             const Models = server.plugins.models.models;
             const Tag = Models.Tag;
             request.headers = internals.headers;
-             const createTags = new Promise((resolve, reject) => {
+            const createTags = new Promise((resolve, reject) => {
                 let promises = [];
                 moreTags.forEach(t => promises.push(Tag.create(t)));
                 Promise.all(promises).then(resolve);
             });
 
-            createTags
-            .then(() => {
+            createTags.then(() => {
                 server.inject(request, res => {
                     const response = res.request.response.source;
 
-                    const allTags = ['3e', 'Java', '2e', 'NodeJS', '1e'];
+                    const allTags = ['3e', 'Java', '2e', 'labo', 'NodeJS', '1e'];
                     expect(response.tags).to.only.include(allTags);
                     done();
                 });
@@ -587,7 +584,7 @@ describe('Controller.Course', () => {
                 server.inject(request, res => {
                     const response = res.request.response.source;
 
-                    const allTeachers = ['SRV', 'FPL', 'ABS', 'ADT'];
+                    const allTeachers = ['SRV', 'FPL', 'julien2004', 'ABS', 'ADT'];
 
                     const usernames = _.map(response.teachers, (t => t.username));
 

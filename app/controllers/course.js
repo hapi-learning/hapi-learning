@@ -554,6 +554,8 @@ exports.getTags = {
             } else {
                 throw { statusCode: 404, message: 'Course not found' };
             }
+        }).then(function(tags) {
+            return reply(Utils.removeDates(tags));
         }).catch(function(err) {
             if (err.statusCode === 404) {
                 return reply.notFound(err.message);
