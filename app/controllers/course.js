@@ -469,6 +469,102 @@ exports.getStudents = {
 };
 
 /**
+ * @api {get} /courses/:id/teachers Get all the teachers giving a course
+ * @apiName GetCourseTeachers
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ/teachers
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of users (teachers).
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 404 Course not found.
+ *
+ */
+exports.getTeachers = {
+    description: 'Get teachers giving the course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code')
+        }
+    },
+    handler: function (request, reply) {
+        const Course = this.models.Course;
+
+        Utils.findCourseByCode(Course, request.params.id).then(course => {
+            if (course) {
+                return course.getTeachers({joinTableAttributes: []});
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(function(users) {
+            return reply(Utils.removeDates(users));
+        }).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
+    }
+};
+
+/**
+ * @api {get} /courses/:id/tags Get all the tags related to a course
+ * @apiName GetCourseTags
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ/tags
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
+ *
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 An array of tags.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 404 Course not found.
+ *
+ */
+exports.getTags = {
+    description: 'Get tags related to the course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code')
+        }
+    },
+    handler: function (request, reply) {
+        const Course = this.models.Course;
+
+        Utils.findCourseByCode(Course, request.params.id).then(course => {
+            if (course) {
+                return course.getTags({joinTableAttributes: []});
+            } else {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
+    }
+};
+
+/**
  * @api {post} /courses Post a course
  * @apiName PostCourse
  * @apiGroup Courses
