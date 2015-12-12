@@ -327,7 +327,7 @@ describe('Controller.Course', () => {
             });
         });
 
-        it ('Should return an array with 1 users', done => {
+        it ('Should return an array with 1 user', done => {
             request.headers = internals.headers;
             const Course = server.plugins.models.models.Course;
             const user = {
@@ -355,6 +355,96 @@ describe('Controller.Course', () => {
 
         });
     });
+    
+    describe('#getTeachers', () => {
+        const request = {
+            method: 'GET',
+            url: '/courses/ATL3/teachers'
+        };
+
+        it ('Should return empty array', done => {
+            request.headers = internals.headers;
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(0);
+                done();
+            });
+        });
+
+        it ('Should return an array with 1 teacher', done => {
+            request.headers = internals.headers;
+            const Course = server.plugins.models.models.Course;
+            const user = {
+                username: 'julien2004',
+                password: 'jsstrofor',
+                firstName: 'Julien',
+                lastName: 'Keke',
+                email: 'bg2004@hotmail.fr',
+                role: 2
+            };
+
+            Course
+                .findOne({where: { code: { $eq: 'ATL3'}}})
+                .then(course => {
+                    course.createTeacher(user)
+                        .then(() => {
+                            server.inject(request, res => {
+                                const response = res.request.response.source;
+                                expect(response).to.be.an.array();
+                                expect(response).to.have.length(1);
+                                done();
+                            });
+                    });
+                });
+
+
+        });
+    });
+    
+    
+    describe('#getTags', () => {
+        const request = {
+            method: 'GET',
+            url: '/courses/ATL3/tags'
+        };
+
+        it ('Should return empty array', done => {
+            request.headers = internals.headers;
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(0);
+                done();
+            });
+        });
+
+        it ('Should return an array with 1 tag', done => {
+            request.headers = internals.headers;
+            const Course = server.plugins.models.models.Course;
+            const tag = {
+                name: 'labo'
+            };
+
+            Course
+                .findOne({where: { code: { $eq: 'ATL3'}}})
+                .then(course => {
+                    course.createTag(tag)
+                        .then(() => {
+                            server.inject(request, res => {
+                                const response = res.request.response.source;
+                                expect(response).to.be.an.array();
+                                expect(response).to.have.length(1);
+                                done();
+                            });
+                    });
+                });
+
+
+        });
+    });
+    
+    
 
     describe('#patch', () => {
         const request = {
@@ -416,8 +506,6 @@ describe('Controller.Course', () => {
     });
 
     describe('#addTags', () => {
-
-
 
         const request = {
             method: 'POST',
