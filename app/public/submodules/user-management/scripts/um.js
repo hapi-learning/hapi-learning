@@ -94,7 +94,7 @@ angular.module('hapi-learning.um', [
                 })
                 .then(function (response) {
                     AuthStorage.remove('token');
-                    $rootScope.$user = null;
+                    delete $rootScope.$user;
                     $rootScope.$emit(UM_CONFIG.END_SESSION_EVENT);
                     $state.go(UM_CONFIG.LOGIN_STATE);
                     resolve();
@@ -179,15 +179,17 @@ angular.module('hapi-learning.um', [
                     // Redirects to the after login state when connected
                     if (toState.name === UM_CONFIG.LOGIN_STATE && LoginFactory.isConnected()) {
                         event.preventDefault();
+                        console.log('what');
                         $state.go(UM_CONFIG.AFTER_LOGIN_STATE);
                     // Redirects to the login state when not connected
                     } else if (toState.name !== UM_CONFIG.LOGIN_STATE && !LoginFactory.isConnected()) {
                         event.preventDefault();
-                        console.log(fromState);
+
                         $rootScope.$previous = {
-                            $state: fromState,
-                            $stateParams: fromParams
+                            $state: toState,
+                            $stateParams: toParams
                         };
+
 
                         $state.go(UM_CONFIG.LOGIN_STATE)
                     }
