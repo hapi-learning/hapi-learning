@@ -12,8 +12,8 @@ angular.module('hapi-learning')
                 news: [],
                 fetched: false,
                 clear: function() {
-                    fetched = false;
-                    news = [];
+                    this.fetched = false;
+                    this.news = [];
                 },
                 slice: function (count) {
                     // count has to be a number :
