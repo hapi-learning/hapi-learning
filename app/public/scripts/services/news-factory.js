@@ -36,7 +36,7 @@ angular.module('hapi-learning')
                     });
                 },
                 loadSpecific: function (code) {
-                    return Restangular.all('courses').one(code).get('news');
+                    return Restangular.one('courses', code).one('news').get();
                 },
                 add: function (news) {
                     return LoginFactory.getProfile().then(function (profile) {
