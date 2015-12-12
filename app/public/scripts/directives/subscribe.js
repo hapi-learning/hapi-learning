@@ -3,7 +3,8 @@
 angular.module('hapi-learning')
     .directive('subscribe', [
     'CoursesFactory',
-    function (CoursesFactory) {
+    '$rootScope',
+    function (CoursesFactory, $rootScope) {
             return {
                 restrict: 'E',
                 scope: {
@@ -18,9 +19,8 @@ angular.module('hapi-learning')
                     scope.subscribe = function () {
                         CoursesFactory.subscribe(scope.code)
                             .then(function (course) {
-
                                 scope.subscribed = true;
-
+                                $rootScope.$emit('subscribe', course);
                             })
                             .catch(function (error) {
                                 console.log(error);
@@ -31,6 +31,7 @@ angular.module('hapi-learning')
                         CoursesFactory.unsubscribe(scope.code)
                             .then(function (course) {
                                 scope.subscribed = false;
+                                $rootScope.$emit('unsubscribe', course);
                             })
                             .catch(function (error) {
                                 console.log(error);
