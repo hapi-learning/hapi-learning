@@ -179,12 +179,12 @@ angular.module('hapi-learning.um', [
                     // Redirects to the after login state when connected
                     if (toState.name === UM_CONFIG.LOGIN_STATE && LoginFactory.isConnected()) {
                         event.preventDefault();
-                        console.log('what');
-                        $state.go(UM_CONFIG.AFTER_LOGIN_STATE);
+                        $state.go(fromState.name, fromParams);
                     // Redirects to the login state when not connected
                     } else if (toState.name !== UM_CONFIG.LOGIN_STATE && !LoginFactory.isConnected()) {
                         event.preventDefault();
 
+                        console.log(toState);
                         $rootScope.$previous = {
                             $state: toState,
                             $stateParams: toParams
