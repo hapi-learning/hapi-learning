@@ -46,22 +46,20 @@ angular.module('hapi-learning')
             };
 
             exports.add = function (news) {
-                return LoginFactory.getProfile().then(function (profile) {
-                    return Restangular.all('news').post({
-                            username: profile.username,
-                            code: news.course ? news.course : null,
-                            content: news.content,
-                            subject: news.subject,
-                            priority: news.priority
-                        })
-                        .then(function (news) {
-                            if (internals.fetched) {
-                                internals.news.push(news);
-                            }
-                            $rootScope.$emit('news_added', news);
-                            return news;
-                        });
-                });
+                return Restangular.all('news').post({
+                        username: $rootScope.$user.username,
+                        code: news.course ? news.course : null,
+                        content: news.content,
+                        subject: news.subject,
+                        priority: news.priority
+                    })
+                    .then(function (news) {
+                        if (internals.fetched) {
+                            internals.news.push(news);
+                        }
+                        $rootScope.$emit('news_added', news);
+                        return news;
+                    });
             };
 
             $rootScope.$on('um.end-session', function() {
