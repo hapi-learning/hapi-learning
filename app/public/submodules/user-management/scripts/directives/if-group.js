@@ -40,4 +40,29 @@ angular.module('hapi-learning.um')
                 ngIf.link.apply(ngIf, args);
             }
         };
+    }])
+    .directive('showGroup', ['$rootScope',
+                function($rootScope) {
+
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs) {
+
+                elem.addClass('ng-hide');
+
+                var groups = attrs['showGroup'].split(' ');
+                var user = $rootScope.$user;
+
+                if (user) {
+                    var role = user.Role.name;
+                    var hasRole = (groups.indexOf(role) !== -1);
+
+                    if (hasRole) {
+                        elem.removeClass('ng-hide');
+                    } else {
+                        elem.addClass('ng-hide');
+                    }
+                }
+            }
+        };
     }]);

@@ -42,13 +42,13 @@
 <div>
 
 
-    <div class="row" ng-if="folderError" ng-click="cleanFolderError()">
+    <div class="row" ng-if="states.folderError" ng-click="cleanFolderError()">
        <div class="col-md-12 alert alert-danger error-message">
             <span>Invalid file / folder name</span>
        </div>
     </div>
 
-    <div ng-if="uploadError">
+    <div ng-if="states.uploadError">
        <div class="alert alert-danger alert-dismissible error-message"
             ng-click="cleanUploadError()" aria-label="close">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -68,7 +68,7 @@
     <div class="row">
        <div class="col-md-3 col-lg-2">
             <a ng-disabled="files.dir === null"
-               ng-click="(fetching || files.dir === null) || goToParent()"
+               ng-click="(states.fetching || files.dir === null) || goToParent()"
                class="btn btn-block btn-success">
                 <span class="glyphicon glyphicon-arrow-left"></span> Parent directory
             </a>
@@ -81,26 +81,26 @@
             </button>
 
             <ul class="dropdown-menu">
-                <li><a class="dropdown-btn" ng-click="creatingFolder = true">Create directory</a></li>
-                <li><a class="dropdown-btn" ng-click="uploading = true">Upload file(s)</a></li>
+                <li><a class="dropdown-btn" ng-click="states.creatingFolder = true">Create directory</a></li>
+                <li><a class="dropdown-btn" ng-click="states.uploading = true">Upload file(s)</a></li>
             </ul>
         </div>
 
        <div if-group="teacher admin">
-            <div class="col-md-2 col-lg-1 pull-right" ng-show="showHidden">
+            <div class="col-md-2 col-lg-1 pull-right" ng-show="states.showHidden">
                 <button popover-trigger="mouseenter" popover-placement="top"
                         uib-popover="Click to hide hidden files"
                         popover-popup-delay="700"
-                        class="btn btn-default btn-block" ng-click="showHidden = false">
+                        class="btn btn-default btn-block" ng-click="states.showHidden = false">
                     <span class="glyphicon glyphicon-eye-open"></span>
                 </button>
             </div>
 
-            <div class="col-md-2 col-lg-1 pull-right" ng-show="!showHidden" >
+            <div class="col-md-2 col-lg-1 pull-right" ng-show="!states.showHidden" >
                 <button popover-trigger="mouseenter" popover-placement="top"
                         uib-popover="Click to show hidden files"
                         popover-popup-delay="700"
-                        class="btn btn-default btn-block" ng-click="showHidden = true">
+                        class="btn btn-default btn-block" ng-click="states.showHidden = true">
                     <span class="glyphicon glyphicon-eye-close"></span>
                 </button>
             </div>
@@ -115,9 +115,9 @@
             </a>
         </div>
 
-        <div class="col-md-3 col-lg-2" ng-show="uploading">
+        <div class="col-md-3 col-lg-2" ng-show="states.uploading">
             <button class="btn btn-danger btn-block"
-                     ng-click="uploading = false">
+                     ng-click="states.uploading = false">
                 <span class="glyphicon glyphicon-floppy-remove"></span>
                 Finish upload
             </button>
@@ -129,7 +129,7 @@
 
    <br/>
 
-   <div class="row" ng-if="creatingFolder">
+   <div class="row" ng-if="states.creatingFolder">
 
         <div class="col-lg-3 col-md-5 col-lg-offset-2">
            <div class="form">
@@ -255,8 +255,10 @@
                         </div>
                     </td>
 
+
                     <!-- EDIT -->
-                    <td class="col-md-2" if-group="teacher admin">
+
+                    <td class="col-md-2" show-group="teacher admin">
                         <form editable-form name="fileExplorer"
                               ng-show="fileExplorer.$visible"
                               class="form-buttons form-inline"
@@ -265,7 +267,7 @@
                                       updateFile($data, $index)">
 
 
-                            <div>
+                            <div if-group="teacher admin">
                                 <!-- Confirm -->
                                 <button type="submit" class="btn btn-primary btn-sm"
                                         ng-disabled="fileExplorer.$waiting">
@@ -286,17 +288,20 @@
                         </form>
                             <div ng-show="!fileExplorer.$visible">
 
-                                    <!-- Edit -->
-                                    <button class="btn btn-default btn-sm" style="color: black" ng-click="fileExplorer.$show()">
-                                        <span class="fa fa-pencil-square-o fa-lg">
-                                        </span>
-                                    </button>
+                                   <div if-group="teacher admin">
+                                        <!-- Edit -->
+                                        <button class="btn btn-default btn-sm" style="color: black"
+                                           ng-click="fileExplorer.$show()">
+                                            <span class="fa fa-pencil-square-o fa-lg">
+                                            </span>
+                                        </button>
 
-                                    <!-- Delete -->
-                                    <button class="btn btn-danger btn-sm" ng-click="removeFile($index)">
-                                        <span class="fa fa-minus fa-lg">
-                                        </span>
-                                    </button>
+                                        <!-- Delete -->
+                                        <button class="btn btn-danger btn-sm" ng-click="removeFile($index)">
+                                            <span class="fa fa-minus fa-lg">
+                                            </span>
+                                        </button>
+                                   </div>
                             </div>
 
                     </td>
@@ -305,12 +310,12 @@
             </tbody>
         </table>
     </div>
-    <div style="text-align: center" class="col-md-12" ng-if="files.files.length === 0 && !uploading">
+    <div style="text-align: center" class="col-md-12" ng-if="files.files.length === 0 && !states.uploading">
         <span class="fa fa-ban fa-2x">
             No files
         </span>
     </div>
 
-    <upload ng-if="uploading" path="getUploadPath()"></upload>
+    <upload ng-if="states.uploading" path="getUploadPath()"></upload>
 
 </div>
