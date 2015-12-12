@@ -12,31 +12,32 @@ angular.module('hapi-learning.um')
             restrict: ngIf.restrict,
             link: function(scope, element, attrs) {
                 var args = arguments;
-                var done = false;
-                $rootScope.$watch('user', function(user) {
-                    if (user && !done) {
-                        var groups = attrs.ifGroup.split(' ');
-                        var role = user.Role.name;
-                        var initialNgIf = attrs.ngIf;
-                        var ifEvaluator;
+                var initialNgIf = attrs.ngIf;
+                var ifEvaluator;
+                var user = $rootScope.$user;
 
-                        var hasRole = groups.indexOf(role) !== -1;
+                if (user) {
+                    var groups = attrs.ifGroup.split(' ');
+                    var role = user.Role.name;
+                    var hasRole = groups.indexOf(role) !== -1;
 
-                        if (initialNgIf) {
-                            ifEvaluator = function() {
-                                return scope.$eval(initialNgIf) && hasRole;
-                            };
-                        } else {
-                            ifEvaluator = function() {
-                                return hasRole;
-                            };
-                        }
-
-                        attrs.ngIf = ifEvaluator;
-                        ngIf.link.apply(ngIf, args);
-                        done = true;
+                    if (initialNgIf) {
+                        ifEvaluator = function() {
+                            return scope.$eval(initialNgIf) && hasRole;
+                        };
+                    } else {
+                        ifEvaluator = function() {
+                            return hasRole;
+                        };
                     }
-                });
+                } else {
+                    ifEvaluator = function() {
+                        return false;
+                    };
+                }
+
+                attrs.ngIf = ifEvaluator;
+                ngIf.link.apply(ngIf, args);
             }
         };
     }]);

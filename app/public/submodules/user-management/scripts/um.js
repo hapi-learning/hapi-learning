@@ -52,14 +52,14 @@ angular.module('hapi-learning.um', [
 
         exports.getProfile = function() {
             return $q(function(resolve, reject) {
-                if (!internals.profile) {
+                if (!$rootScope.$user) {
                     internals.loadProfile().then(function(profile) {
-                        internals.profile = profile;
+                        $rootScope.$user = profile;
                         $rootScope.$emit(UM_CONFIG.BEGIN_SESSION_EVENT);
-                        resolve(internals.profile);
+                        resolve($rootScope.$user);
                     }).catch(reject);
                 } else {
-                    resolve(internals.profile);
+                    resolve($rootScope.$user);
                 }
             });
         };
@@ -78,8 +78,7 @@ angular.module('hapi-learning.um', [
                 })
                 .then(function(response) {
                     AuthStorage.set('token', response.data.token);
-                    resolve();
-                    //internals.loadProfile().then(resolve).catch(reject);
+                    exports.getProfile().then(resolve);
                 }, function(error) {
                     reject(error);
                 });
@@ -95,7 +94,7 @@ angular.module('hapi-learning.um', [
                 })
                 .then(function (response) {
                     AuthStorage.remove('token');
-                    delete internals.profile;
+                    delete $rootScope.$user;
                     $rootScope.$emit(UM_CONFIG.END_SESSION_EVENT);
                     $state.go(UM_CONFIG.LOGIN_STATE);
                     resolve();
@@ -180,30 +179,24 @@ angular.module('hapi-learning.um', [
                     // Redirects to the after login state when connected
                     if (toState.name === UM_CONFIG.LOGIN_STATE && LoginFactory.isConnected()) {
                         event.preventDefault();
-                        $state.go(UM_CONFIG.AFTER_LOGIN_STATE);
+                        $state.go(fromState.name, fromParams);
                     // Redirects to the login state when not connected
                     } else if (toState.name !== UM_CONFIG.LOGIN_STATE && !LoginFactory.isConnected()) {
                         event.preventDefault();
+
+                        console.log(toState);
+                        $rootScope.$previous = {
+                            $state: toState,
+                            $stateParams: toParams
+                        };
+
+
                         $state.go(UM_CONFIG.LOGIN_STATE)
                     }
             });
         }
-    ])
-    .run(['$rootScope', 'LoginFactory', 'UM_CONFIG',
-          function($rootScope, LoginFactory, UM_CONFIG) {
+    ]);
 
-        $rootScope.user = null;
-
-        $rootScope.$on(UM_CONFIG.BEGIN_SESSION_EVENT, function() {
-            LoginFactory.getProfile().then(function(user) {
-               $rootScope.user = user;
-            });
-        });
-
-        $rootScope.$on(UM_CONFIG.END_SESSION_EVENT, function() {
-            $rootScope.user = null;
-        });
-    }]);
 
 
 

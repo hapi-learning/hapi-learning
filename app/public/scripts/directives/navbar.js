@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .directive('navbar', ['LoginFactory', function(LoginFactory) {
+    .directive('navbar', ['LoginFactory', '$rootScope', function(LoginFactory, $rootScope) {
     return {
         restrict: 'A',
         templateUrl: 'templates/navbar.html',
@@ -13,9 +13,7 @@ angular.module('hapi-learning')
                 LoginFactory.logout();
             };
 
-            LoginFactory.getProfile().then(function(profile) {
-                scope.profile = profile;
-            });
+            scope.profile = $rootScope.$user;
         }
     };
 }]);
