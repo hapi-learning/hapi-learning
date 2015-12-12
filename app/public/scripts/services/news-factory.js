@@ -8,63 +8,52 @@ angular.module('hapi-learning')
     '$rootScope',
         function ($q, Restangular, LoginFactory, $rootScope) {
 
-            const internals = {
-                news: [],
-                fetched: false,
-                clear: function() {
-                    this.fetched = false;
-                    this.news = [];
-                },
-                slice: function (count) {
-                    // count has to be a number :
-                    // slice(0, ..) with null return empty, negative numbers return truncated array, ...
-                    if (typeof count === 'number' && count > 0 && count <= internals.news.length) {
-                        return internals.news.slice(0, count);
-                    }
-                    else {
-                        return internals.news;
-                    }
-                }
-            };
-
-            const exports = {};
-
-            exports.load = function (count) {
-                return $q(function(resolve) {
-                    resolve(internals.fetched);
-                }).then(function(fetched) {
-                    if (fetched) {
-                        return internals.slice(count);
-                    }  else {
-                        return Restangular.all('news').getList().then(function(news) {
-                            internals.news = news;
-                            internals.fetched = true;
-                            return internals.slice(count);
-                        });
-                    }
-                });
-            };
-
-            exports.add = function (news) {
-                return Restangular.all('news').post({
-                        username: $rootScope.$user.username,
-                        code: news.course ? news.course : null,
-                        content: news.content,
-                        subject: news.subject,
-                        priority: news.priority
-                    })
-                    .then(function (news) {
-                        if (internals.fetched) {
-                            internals.news.push(news);
+            const exports = {
+                load: function (options) {
+                    return $q(function (resolve) {
+                        if (options.subscribed) {
+                            return resolve(Restangular.all('me').get('news'));
                         }
-                        $rootScope.$emit('news_added', news);
-                        return news;
+                        else {
+                            return resolve(Restangular.all('news').getList());
+                        }
+                    }).then(function (news) {
+                        if (options.code) {
+                            return _.filter(news, function (news) {
+                                return news.course === options.code;
+                            });
+                        }
+                        else {
+                            return news;
+                        }
+                    }).then(function (news) {
+                        if (typeof options.count === 'number' && options.count > 0 && options.count <= news.length) {
+                            return news.slice(0, options.count);
+                        }
+                        else {
+                            return news;
+                        }
                     });
-            };
-
-            $rootScope.$on('um.end-session', function() {
-                internals.clear();
-            });
+                },
+                loadSpecific: function (code) {
+                    return Restangular.all('courses').one(code).get('news');
+                },
+                add: function (news) {
+                    return LoginFactory.getProfile().then(function (profile) {
+                        return Restangular.all('news').post({
+                                username: profile.username,
+                                code: news.course ? news.course : null,
+                                content: news.content,
+                                subject: news.subject,
+                                priority: news.priority
+                            })
+                            .then(function (news) {
+                                $rootScope.$emit('news_added', news);
+                                return news;
+                            });
+                    });
+                }
+            };  
 
             return exports;
     }]);

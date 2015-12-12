@@ -9,37 +9,58 @@ angular.module('hapi-learning')
                 restrict: 'E',
                 scope: {
                     count: '=',
-                    code: '='
+                    code: '=',
+                    subscribed: '='
                 },
                 templateUrl: 'templates/last-news.html',
                 link: function (scope, element, attrs) {
                     scope.news = [];
 
-                    // Si les dernières news sont spécifiques à un cours, il n'y a pas de nombre
-                    NewsFactory.load(scope.code ? null : scope.count)
-                        .then(function (news) {
-                            if (scope.code) {
-                                scope.news = _.filter(news, function (n) {
-                                    return n.course === scope.code;
-                                });
-                                // specific course news are a sub array of all news
-                                // so there is no data binding; a signal must be send if a news is added
-                                $rootScope.$on('news_added', function (event, news) {
-                                    if (!scope.code || news.code === scope.code) {
-                                        var tmp = [news].concat(scope.news);
-                                        scope.news = _.map(tmp, function(news) {return news;});
-                                    }
+                    var options = {
+                        count: scope.count,
+                        subscribed: scope.subscribed ? true : false,
+                        code: scope.code
+                    };
+
+                    var on_handlers = {
+                        news_add: function (event, news) {
+                            if (!scope.code || news.code === scope.code) {
+                                var tmp = [news].concat(scope.news);
+                                scope.news = _.map(tmp, function (news) {
+                                    return news;
                                 });
                             }
-                            else {
-                                scope.news = news;
+                        },
+                        unsubscribe: function (event, course) {
+                            _.remove(scope.news, function (news) {
+                                news.course !== course.code;
+                            });
+                        },
+                        subscribe: function (event, course) {
+                            NewsFactory.loadSpecific(course.code)
+                            .then(function (news) {
+                                scope.news = scope.news.concat(news);
+                            })
+                            .catch(function (error){
+                                console.log(error);
+                            });
+                        }
+                    };
+
+
+                    NewsFactory.load(options)
+                        .then(function (news) {
+                            scope.news = news;
+                            $rootScope.$on('news_added', on_handlers.news_add);
+                            if (!scope.code)
+                            {
+                                $rootScope.$on('unsubscribe', on_handlers.unsubscribe);
+                                $rootScope.$on('subscribe', on_handlers.subscribe);
                             }
                         })
                         .catch(function (err) {
                             console.log(err);
                         });
-
-
                 }
             };
 }]);
