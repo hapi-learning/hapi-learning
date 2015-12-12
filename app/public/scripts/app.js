@@ -123,10 +123,16 @@ angular.module('hapi-learning', [
         storeProvider.setStore('localStorage');
     }])
 
-    .run(['Restangular', 'API', 'UM_CONFIG', function (Restangular, API, UM_CONFIG) {
+    .run(['Restangular', 'API', 'UM_CONFIG', 'AuthStorage', '$rootScope', 'LoginFactory',
+          function (Restangular, API, UM_CONFIG, AuthStorage, $rootScope, LoginFactory) {
         API.then(function(response) {
             UM_CONFIG.API_PREFIX = response.data.api;
             Restangular.setBaseUrl(response.data.api);
+            var token = AuthStorage.get('token');
+            if (token && !$rootScope.$user) {
+                LoginFactory.getProfile();
+            }
+
         });
 
     }])

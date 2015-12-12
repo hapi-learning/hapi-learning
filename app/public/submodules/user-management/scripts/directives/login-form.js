@@ -18,7 +18,13 @@ angular.module('hapi-learning.um')
                 LoginFactory
                     .login(scope.user)
                     .then(function() {
-                        $state.go(UM_CONFIG.AFTER_LOGIN_STATE);
+                        if ($rootScope.$previous) {
+                            var previous = $rootScope.$previous;
+                            delete $rootScope.$previous;
+                            $state.go(previous.$state.name, previous.$stateParams);
+                        } else {
+                            $state.go(UM_CONFIG.AFTER_LOGIN_STATE);
+                        }
                     })
                     .catch(function() {
                         scope.invalidCredentials = true;
