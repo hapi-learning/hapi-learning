@@ -33,7 +33,7 @@ API_HOST=localhost
 API_PORT=8088
 API_CORS=true
 
-# DB
+# Database : will be created int root folder
 
 DB_DIALECT=sqlite
 DB_STORAGE=database.sqlite
@@ -74,13 +74,24 @@ $ npm start
 
 npm start will install the dependencies `npm install` and `bower install` in the prestart script.
 
+
 #### Arguments on startup
+
+You can run server using `node`
 
 * -P (--prod) : start the server in production mode, will be using gulp dist directory instead of public
 * -f (--flush) : deletes database and the storage folder 
 * -v (--verbose) : verbose mode for logging
 
+*Exemple* : 
+
+```
+$ node . -fv
+```
+
 #### The tests
+
+There is an alternative database created for tests, you will find it in root folder.
 
 ```
 $ npm test
@@ -94,7 +105,7 @@ $ npm test
 Directory Layout :
 
 
-app/                          --> app folder
+app/                        --> app folder
     server.js               --> server (node entry point)
     package.json
     routes/                 --> routes folder
@@ -109,13 +120,17 @@ app/                          --> app folder
         index.js            --> entry point (loads all the handlers and exports them)
         user.js             --> handlers for the user resource
     utils/                  --> utils folder (contains some logic)
+    storage/                --> uploaded files come here
     public/                 --> angular app
         index.html          --> entry point for angular app
+        favicons/           --> differents favicons
+        lib/                --> lib folder (bower components comes here)
         scripts/            --> scripts for main module
-            app.js
+            app.js          --> Angular main app configuration
             controllers/    --> controllers for main module
             services/       --> services for main module (factory, service, provider)
             directives/     --> directives for main module
+        templates/          --> every HTML templates used in scripts/directives/
         styles/             --> styles for main module
         views/              --> views for main modules
         test/               --> test folder for main module
@@ -128,7 +143,7 @@ app/                          --> app folder
                     directives/
                 styles/
                 views/
-                test/   --> test for module1
+                test/       --> test for module1
             module2/
                 scripts/
                     app.js
@@ -137,9 +152,11 @@ app/                          --> app folder
                     directives/
                 styles/
                 views/
-                test/   --> test folder for mudule2
-test/                   --> test folder (for the backend)
-plugins/                --> plugins that we write ourselves
+                test/       --> test folder for mudule2
+                
+test/                       --> test folder (for the backend)
+
+plugins/                    --> plugins that we write ourselves
         plugin1/
             package.json
             test/           --> test folder
