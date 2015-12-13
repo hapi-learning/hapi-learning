@@ -8,7 +8,14 @@ You can find the API documentation [here](http://fknop.github.io/hapi-learning-d
 
 ## How to use
 
-#### Clone the project
+### 1. requirements
+
++ **Node >= v4** : available on [Node.js](https://nodejs.org/en/)** beware of old version on `apt` repositories
++ **npm** (*comes with node but you can update it* : `(sudo) npm install -g npm`)
++ **bower** (*used for frontend libs*) : `(sudo) npm install -g bower`
++ **git** (*to clone this repo*) : available on [https://git-scm.com/](https://git-scm.com/) or avaible with `apt` and alternatives.
+
+### 2. Clone the project
 
 ssh:
 ```
@@ -20,9 +27,9 @@ https:
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
 
-#### Configure your environments variables
+### 4. Configure your environments variables
 
-Create a .env file in the root folder and change the options below:
+Create a `.env` file in the root folder and change the options below:
 
 ```
 # Connections
@@ -68,7 +75,7 @@ OFFICIAL_EMAIL_ADDRESS= # ADD SENDGRID MAIL
 
 ```
 
-#### Start the app 
+### 5. Start the app 
 
 ```
 $ npm start
@@ -77,7 +84,7 @@ $ npm start
 npm start will install the dependencies `npm install` and `bower install` in the prestart script.
 
 
-#### Arguments on startup
+### 5(alternative). Arguments on startup
 
 You can run server using `node`
 
@@ -95,7 +102,7 @@ or
 $ npm start -- -fv
 ```
 
-#### The tests
+## The tests
 
 There is an alternative database created for tests, you will find it in root folder.
 
@@ -175,7 +182,16 @@ plugins/                    --> plugins that we write ourselves
 
 ```
 
+## License
+
+[See licence document inside this repo](LICENSE)
+
 ## Notes
 
-The hapi-permissions plugins is still in development, and not used in the project yet.
++ The hapi-permissions plugins is still in development, and not used in the project yet.
++ You can find `hapi-pagination` on [github](https://github.com/fknop/hapi-pagination) or [npm](https://www.npmjs.com/package/hapi-pagination)
 
+## Thanks
+
++ Thanks to everyone in the team, we hope this project will grow ideas inside students' head.
++ Thanks to every contributosr
