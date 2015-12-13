@@ -369,7 +369,7 @@ exports.getNews = {
             return _.map(courses, c => c.get('code'));
         }).then(function (codes) {
 
-            return News.findAll({
+            const options = {
                 where: {
                     $or: [{
                         course: {
@@ -378,8 +378,16 @@ exports.getNews = {
                     }, {
                         course: null
                     }]
-                }
-            });
+                },
+                order: 'date DESC'
+            };
+
+            if (request.query.pagination) {
+                options.limit  = request.query.limit;
+                options.offset = (request.query.page - 1) * request.query.limit;
+            }
+
+            return News.findAll(options);
 
         }).then(function (news) {
             return reply(news);

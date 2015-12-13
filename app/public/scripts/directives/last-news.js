@@ -22,7 +22,7 @@ angular.module('hapi-learning')
                         code: scope.code
                     };
 
-                    var on_handlers = {
+           /*         var on_handlers = {
                         news_add: function (event, news) {
                             if (!scope.code || news.code === scope.code) {
                                 var tmp = [news].concat(scope.news);
@@ -45,7 +45,7 @@ angular.module('hapi-learning')
                                 console.log(error);
                             });
                         }
-                    };
+                    };*/
 
 
                     NewsFactory.load(options)

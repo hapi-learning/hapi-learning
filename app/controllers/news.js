@@ -31,9 +31,16 @@ exports.getAll = {
 
         const News = this.models.News;
 
-        News.findAll({
-                order: 'date DESC'
-            })
+        const options = {
+            order: 'date DESC'
+        };
+
+        if (request.query.pagination) {
+            options.limit  = request.query.limit;
+            options.offset = (request.query.page - 1) * request.query.limit;
+        }
+
+        News.findAll(options)
             .then(news => reply(Utils.removeDates(news)))
             .catch(error => reply.badImplementation(error));
     }
