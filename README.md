@@ -27,7 +27,7 @@ https:
 $ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
 ```
 
-### 4. Configure your environments variables
+### 3. Configure your environments variables
 
 Create a `.env` file in the root folder and change the options below:
 
@@ -75,7 +75,7 @@ OFFICIAL_EMAIL_ADDRESS= # ADD SENDGRID MAIL
 
 ```
 
-### 5. Start the app 
+### 4. Start the app 
 
 ```
 $ npm start
@@ -84,7 +84,7 @@ $ npm start
 npm start will install the dependencies `npm install` and `bower install` in the prestart script.
 
 
-### 5(alternative). Arguments on startup
+### 4(alternative). Arguments on startup
 
 You can run server using `node`
 
