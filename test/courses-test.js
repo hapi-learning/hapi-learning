@@ -355,6 +355,78 @@ describe('Controller.Course', () => {
 
         });
     });
+    
+   describe('#getNews', () => {
+        const request = {
+            method: 'GET',
+            url: '/courses/ATL3/news'
+        };
+
+        it ('Should return empty array', done => {
+            request.headers = internals.headers;
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(0);
+                done();
+            });
+        });
+       
+        it ('Should return an array with 1 news', done => {
+            request.headers = internals.headers;
+            const News = server.plugins.models.models.News;
+            const news = {
+                subject: 'news1',
+                content: 'CONTENT1',
+                course: 'ATL3',
+                priority: 'danger',
+                user: 'kevin2004'
+            };
+
+            News.create(news)
+                .then(() => {
+                    server.inject(request, res => {
+                        const response = res.request.response.source;
+                        expect(response).to.be.an.array();
+                        expect(response).to.have.length(1);
+                        done();
+                    });
+                });
+            });
+       
+        it ('Should return an array with 3 news', done => {
+            request.headers = internals.headers;
+            const News = server.plugins.models.models.News;
+            const news = [{
+                subject: 'news2',
+                content: 'CONTENT2',
+                course: 'ATL3',
+                priority: 'danger',
+                user: 'kevin2004'
+            },{
+                subject: 'news3',
+                content: 'CONTENT3',
+                priority: 'warning',
+                course: 'ATL3',
+                user: 'kevin2004'
+            }];
+
+            const createNews = new Promise((resolve, reject) => {
+                let promises = [];
+                news.forEach(n => promises.push(News.create(n)));
+                Promise.all(promises).then(resolve);
+            });
+
+            createNews.then(() => {
+                    server.inject(request, res => {
+                        const response = res.request.response.source;
+                        expect(response).to.be.an.array();
+                        expect(response).to.have.length(3);
+                        done();
+                    });
+                });
+            });
+    });
 
     describe('#getTeachers', () => {
         const request = {

@@ -213,6 +213,67 @@ exports.get = {
 };
 
 /**
+ * @api {get} /courses/:id/news Get every news related to a course
+ * @apiName GetNews
+ * @apiGroup Courses
+ * @apiVersion 1.0.0
+ * @apiExample {curl} Example usage:
+ *      curl http://localhost/courses/XYZ/news
+ *
+ * @apiPermission all users.
+ *
+ * @apiParam (path) {String} id Id of the course (code).
+
+ * @apiheader {String} Authorization The user's private token.
+ *
+ * @apiSuccess {json} 200 The news array.
+ *
+ * @apiError {json} 400 Validation error.
+ * @apiError {json} 401 Invalid token or token expired.
+ * @apiError {json} 404 Course not found.
+ *
+ */
+exports.getNews = {
+    description: 'Get every news related to this course',
+    validate: {
+        params: {
+            id: Joi.string().required().description('Course code')
+        }
+    },
+    handler: function (request, reply) {
+        const News = this.models.News;
+        const Course = this.models.Course;
+        const id = request.params.id;
+
+        Utils.findCourseByCode(Course, id)
+        .then(course => {
+            if (course)
+            {
+                return News.findAll({
+                    where : {
+                        course : { 
+                            $eq : id
+                        }
+                    }
+                });
+            }
+            else
+            {
+                throw { statusCode: 404, message: 'Course not found' };
+            }
+        }).then(news => {
+            return reply(Utils.removeDates(news));
+        }).catch(function(err) {
+            if (err.statusCode === 404) {
+                return reply.notFound(err.message);
+            } else {
+                return reply.badImplementation(err);
+            }
+        });
+    }
+};
+
+/**
  * @api {get} /courses/:id/homepage Get a course homepage
  * @apiName GetCourseHomepage
  * @apiGroup Courses
