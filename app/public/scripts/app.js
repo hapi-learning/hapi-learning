@@ -125,12 +125,12 @@ angular.module('hapi-learning', [
     }])
     
     .config(['$translateProvider', function ($translateProvider) {
-        $translateProvider.useStaticFilesProvider({
-            prefix: 'lang-',
+        $translateProvider.useStaticFilesLoader({
+            prefix: '../translations/locale-',
             suffix: '.json'
         });
  
-        $translateProvider.determinePreferredLanguage();
+        $translateProvider.preferredLanguage('fr_BE');
     }])
 
     .run(['Restangular', 'API', 'UM_CONFIG', 'AuthStorage', '$rootScope', 'LoginFactory',
