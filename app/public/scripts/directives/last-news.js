@@ -23,7 +23,7 @@ angular.module('hapi-learning')
                         }
                     };
 
-                    internals.options.limit = scope.count ? scope.count : 10;
+                    internals.options.limit = scope.count ? scope.count : 5;
 
 
                     scope.scrollDisabled = function() {
@@ -61,10 +61,12 @@ angular.module('hapi-learning')
                     }
 
                     $rootScope.$on('unsubscribe', function() {
-                        internals.options.page = 1;
-                        internals.totalCount = null;
-                        internals.pageCount = null;
-                        scope.getNews(true);
+                        if (!scope.code) {
+                            internals.options.page = 1;
+                            internals.totalCount = null;
+                            internals.pageCount = null;
+                            scope.getNews(true);
+                        }
                     });
 
                 }
