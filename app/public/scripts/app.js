@@ -19,7 +19,8 @@ angular.module('hapi-learning', [
         'xeditable',
         'ng-showdown',
         'ngPrettyJson',
-        'ngDialog'])
+        'ngDialog',
+        'pascalprecht.translate'])
 
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.type('FilePath', {
@@ -121,6 +122,15 @@ angular.module('hapi-learning', [
 
     .config(['storeProvider', function(storeProvider) {
         storeProvider.setStore('localStorage');
+    }])
+    
+    .config(['$translateProvider', function ($translateProvider) {
+        $translateProvider.useStaticFilesProvider({
+            prefix: 'lang-',
+            suffix: '.json'
+        });
+ 
+        $translateProvider.determinePreferredLanguage();
     }])
 
     .run(['Restangular', 'API', 'UM_CONFIG', 'AuthStorage', '$rootScope', 'LoginFactory',
