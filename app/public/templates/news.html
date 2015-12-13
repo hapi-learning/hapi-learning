@@ -1,26 +1,27 @@
-<div class="alert alert-{{news.priority}}">
-    <div class="row">
-        <div class="col-md-9">
-            <strong>
-                <news-link news="news"></news-link>
-                <span ng-if="news.course">-</span> 
-                <span ng-bind="news.subject"></span>
-            </strong>
+<div>
+    <div class="alert alert-{{news.priority}}">
+        <div class="row">
+            <div class="col-md-9">
+                <strong>
+                    <news-link news="news"></news-link>
+                    <span ng-if="news.course">-</span>
+                    <span ng-bind="news.subject"></span>
+                </strong>
+            </div>
+            <div class="col-md-3">
+                <span ng-bind="(news.date | date)"></span>
+            </div>
         </div>
-        <div class="col-md-3">
-            <span ng-bind="(news.date | date)"></span>
-        </div>
+
     </div>
 
+    <blockquote>
+        <p>
+            <span ng-bind="news.content"></span>
+        </p>
+        <footer>
+            <cite title="{{news.user}}" ng-bind="news.user"></cite>
+        </footer>
+    </blockquote>
 </div>
 
-<blockquote>
-    <p>
-        <span ng-bind="news.content"></span>
-    </p>
-    <footer>
-        <cite title="{{news.user}}" ng-bind="news.user"></cite>
-    </footer>
-</blockquote>
-<small>
-</small>

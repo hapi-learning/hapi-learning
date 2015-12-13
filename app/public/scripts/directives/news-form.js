@@ -40,7 +40,7 @@ angular.module('hapi-learning')
 
                     scope.clearFields = function () {
                         scope.news = {
-                            course: null,
+                            course: scope.code,
                             subject: null,
                             content: null,
                             priority: null
