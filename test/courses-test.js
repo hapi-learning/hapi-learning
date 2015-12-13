@@ -407,6 +407,7 @@ describe('Controller.Course', () => {
                 subject: 'news3',
                 content: 'CONTENT3',
                 priority: 'warning',
+                course: 'ATL3',
                 user: 'kevin2004'
             }];
 
@@ -424,7 +425,7 @@ describe('Controller.Course', () => {
                         done();
                     });
                 });
-            }).catch(error => console.log(error));
+            });
     });
 
     describe('#getTeachers', () => {
