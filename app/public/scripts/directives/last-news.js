@@ -33,8 +33,9 @@ angular.module('hapi-learning')
                         },
                         unsubscribe: function (event, course) {
                             _.remove(scope.news, function (news) {
-                                news.course !== course.code;
+                                news.course === course.code;
                             });
+
                         },
                         subscribe: function (event, course) {
                             NewsFactory.loadSpecific(course.code)
