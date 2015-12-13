@@ -262,7 +262,6 @@ exports.getNews = {
                 throw { statusCode: 404, message: 'Course not found' };
             }
         }).then(news => {
-            console.log(news);
             return reply(Utils.removeDates(news));
         }).catch(function(err) {
             if (err.statusCode === 404) {

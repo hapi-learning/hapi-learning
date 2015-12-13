@@ -399,13 +399,13 @@ describe('Controller.Course', () => {
             const News = server.plugins.models.models.News;
             const news = [{
                 subject: 'news2',
-                content: 'CONTENT1',
+                content: 'CONTENT2',
                 course: 'ATL3',
                 priority: 'danger',
                 user: 'kevin2004'
             },{
                 subject: 'news3',
-                content: 'CONTENT2',
+                content: 'CONTENT3',
                 priority: 'warning',
                 user: 'kevin2004'
             }];
@@ -424,7 +424,7 @@ describe('Controller.Course', () => {
                         done();
                     });
                 });
-            });
+            }).catch(error => console.log(error));
     });
 
     describe('#getTeachers', () => {
