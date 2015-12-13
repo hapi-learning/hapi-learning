@@ -245,6 +245,8 @@ exports.getNews = {
         const Course = this.models.Course;
         const id = request.params.id;
 
+        const pagination = request.query.pagination;
+
         internals.checkCourse(Course, id, reply, function() {
 
             const options = {
@@ -252,12 +254,18 @@ exports.getNews = {
                 order: 'date DESC'
             };
 
-            if (request.query.pagination) {
+            if (pagination) {
                 options.limit  = request.query.limit;
                 options.offset = (request.query.page - 1) * request.query.limit;
             }
 
-            News.findAndCountAll(options).then(results => reply.paginate(Utils.removeDates(results.rows), results.count));
+            News.findAndCountAll(options).then(results => {
+                if (pagination) {
+                    return reply.paginate(Utils.removeDates(results.rows), results.count);
+                } else {
+                    return reply(Utils.removeDates(results.rows));
+                }
+            });
         });
     }
 };

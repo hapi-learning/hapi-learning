@@ -47,7 +47,7 @@ const internals = {
                     select: ['api'],
                     options: {
                         routes: {
-                            include: ['/courses', '/users']
+                            include: ['/courses', '/users', '/news', '/me/news', '/courses/{id}/news']
                         },
                         meta: {
                             self: {

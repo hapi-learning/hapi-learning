@@ -360,6 +360,8 @@ exports.getNews = {
         const User = this.models.User;
         const News = this.models.News;
 
+        const pagination = request.query.pagination;
+
         Utils.findUser(User, request.decoded.username).then(function (user) {
             return user.getCourses({
                 attributes: ['code'],
@@ -382,7 +384,7 @@ exports.getNews = {
                 order: 'date DESC'
             };
 
-            if (request.query.pagination) {
+            if (pagination) {
                 options.limit  = request.query.limit;
                 options.offset = (request.query.page - 1) * request.query.limit;
             }
@@ -390,7 +392,11 @@ exports.getNews = {
             return News.findAndCountAll(options);
 
         }).then(function (results) {
-            return reply.paginate(results.rows, results.count);
+            if (pagination) {
+                return reply.paginate(results.rows, results.count);
+            } else {
+                return reply(results.rows);
+            }
         }).catch(function(error) {
             return reply.badImplementation(error);
         });

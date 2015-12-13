@@ -30,18 +30,25 @@ exports.getAll = {
     handler: function (request, reply) {
 
         const News = this.models.News;
+        const pagination = request.query.pagination;
 
         const options = {
             order: 'date DESC'
         };
 
-        if (request.query.pagination) {
+        if (pagination) {
             options.limit  = request.query.limit;
             options.offset = (request.query.page - 1) * request.query.limit;
         }
 
         News.findAndCountAll(options)
-            .then(results => reply.paginate(Utils.removeDates(results.rows), results.count))
+            .then(results => {
+                if (pagination) {
+                    return reply.paginate(Utils.removeDates(results.rows), results.count);
+                } else {
+                    return reply(Utils.removeDates(results.rows));
+                }
+            })
             .catch(error => reply.badImplementation(error));
     }
 };
