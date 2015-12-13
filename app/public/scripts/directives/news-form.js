@@ -28,14 +28,8 @@ angular.module('hapi-learning')
 
                     scope.postNews = function () {
                         if (scope.complete()) {
-                            NewsFactory.add(scope.news)
-                                .then(function (news) {
-                                    ngDialog.open({ template: 'news-added', scope: scope });
-                                    scope.clearFields();
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+                            ngDialog.open({template: 'news-added', scope: scope });
+                            scope.clearFields();
                         }
                     };
 

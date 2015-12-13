@@ -4,63 +4,69 @@ angular.module('hapi-learning')
     .directive('lastNews', [
     'NewsFactory',
     '$rootScope',
-    function (NewsFactory, $rootScope) {
+    '$timeout',
+    function (NewsFactory, $rootScope, $timeout) {
             return {
                 restrict: 'E',
                 scope: {
                     count: '=',
-                    code: '=',
-                    subscribed: '='
+                    code: '='
                 },
                 templateUrl: 'templates/last-news.html',
                 link: function (scope, element, attrs) {
+
                     scope.news = [];
 
-                    var options = {
-                        count: scope.count,
-                        subscribed: scope.subscribed ? true : false,
-                        code: scope.code
-                    };
-
-                    var on_handlers = {
-                        news_add: function (event, news) {
-                            if (!scope.code || news.code === scope.code) {
-                                var tmp = [news].concat(scope.news);
-                                scope.news = _.map(tmp, function (news) {
-                                    return news;
-                                });
-                            }
-                        },
-                        unsubscribe: function (event, course) {
-                            _.remove(scope.news, function (news) {
-                                return news.course === course.code;
-                            });
-                        },
-                        subscribe: function (event, course) {
-                            NewsFactory.loadSpecific(course.code)
-                            .then(function (news) {
-                                scope.news = scope.news.concat(news);
-                            })
-                            .catch(function (error){
-                                console.log(error);
-                            });
+                    const internals = {
+                        options: {
+                            page: 1
                         }
                     };
 
+                    internals.options.limit = scope.count ? scope.count : 10;
 
-                    NewsFactory.load(options)
-                        .then(function (news) {
-                            scope.news = news;
-                            $rootScope.$on('news_added', on_handlers.news_add);
-                            if (!scope.code)
-                            {
-                                $rootScope.$on('unsubscribe', on_handlers.unsubscribe);
-                                $rootScope.$on('subscribe', on_handlers.subscribe);
+
+                    scope.scrollDisabled = function() {
+
+                        var predicate = (typeof scope.count !== 'undefined');
+                        if (internals.pageCount) {
+                            predicate = predicate || (internals.options.page > internals.pageCount);
+                        }
+
+                        console.log(predicate);
+
+                        return predicate;
+                    };
+
+                    scope.getNews = function(reset) {
+                        if (scope.code) {
+                            internals.options.code = scope.code;
+                        }
+
+                        NewsFactory.get(internals.options).then(function(response) {
+                            if (reset) {
+                                scope.news = [].concat(response.results);
+                            } else {
+                                scope.news = scope.news.concat(response.results);
                             }
-                        })
-                        .catch(function (err) {
-                            console.log(err);
+
+                            internals.totalCount = response.meta.totalCount;
+                            internals.pageCount = response.meta.pageCount;
+                            internals.options.page++;
                         });
+                    };
+
+                    if (scope.count) {
+                        $timeout(scope.getNews(false));
+                    }
+
+                    $rootScope.$on('unsubscribe', function() {
+                        internals.options.page = 1;
+                        internals.totalCount = null;
+                        internals.pageCount = null;
+                        scope.getNews(true);
+                    });
+
                 }
             };
 }]);
