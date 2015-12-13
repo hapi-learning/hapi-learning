@@ -24,6 +24,15 @@ angular.module('hapi-learning')
                     } else {
                         return this.getSubscribedNews(options);
                     }
+                },
+                add: function (news) {
+                    return Restangular.all('news').post({
+                            username: $rootScope.$user.username,
+                            code: news.course ? news.course : null,
+                            content: news.content,
+                            subject: news.subject,
+                            priority: news.priority
+                        });
                 }
             };
 
