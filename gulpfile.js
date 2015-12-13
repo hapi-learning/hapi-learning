@@ -53,7 +53,8 @@ const vendorScripts = [
         'app/public/lib/showdown/dist/showdown.min.js',
         'app/public/lib/ng-showdown/dist/ng-showdown.min.js',
         'app/public/lib/ng-prettyjson/dist/ng-prettyjson.min.js',
-        'app/public/lib/ng-dialog/js/ngDialog.min.js'
+        'app/public/lib/ng-dialog/js/ngDialog.min.js',
+        'app/public/lib/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
 ];
 
 const vendorCss = [

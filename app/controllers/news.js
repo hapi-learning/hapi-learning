@@ -40,8 +40,8 @@ exports.getAll = {
             options.offset = (request.query.page - 1) * request.query.limit;
         }
 
-        News.findAll(options)
-            .then(news => reply(Utils.removeDates(news)))
+        News.findAndCountAll(options)
+            .then(results => reply.paginate(Utils.removeDates(results.rows), results.count))
             .catch(error => reply.badImplementation(error));
     }
 };

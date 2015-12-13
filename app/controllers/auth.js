@@ -387,10 +387,10 @@ exports.getNews = {
                 options.offset = (request.query.page - 1) * request.query.limit;
             }
 
-            return News.findAll(options);
+            return News.findAndCountAll(options);
 
-        }).then(function (news) {
-            return reply(news);
+        }).then(function (results) {
+            return reply.paginate(results.rows, results.count);
         }).catch(function(error) {
             return reply.badImplementation(error);
         });
