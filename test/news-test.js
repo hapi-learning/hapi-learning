@@ -236,7 +236,7 @@ describe('Controller.News', () => {
         it('should return statusCode 200 and every news', done => {
             const request = {
                 method: 'GET',
-                url: '/news',
+                url: '/news?pagination=false',
                 headers: internals.headers
             };
 

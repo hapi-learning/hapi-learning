@@ -28,8 +28,7 @@ angular.module('hapi-learning')
 
                     scope.postNews = function () {
                         if (scope.complete()) {
-                            NewsFactory.add(scope.news)
-                                .then(function (news) {
+                            NewsFactory.add(scope.news).then(function (news) {
                                     ngDialog.open({ template: 'news-added', scope: scope });
                                     scope.clearFields();
                                 })
@@ -41,7 +40,7 @@ angular.module('hapi-learning')
 
                     scope.clearFields = function () {
                         scope.news = {
-                            course: null,
+                            course: scope.code,
                             subject: null,
                             content: null,
                             priority: null

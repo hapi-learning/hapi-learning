@@ -245,30 +245,27 @@ exports.getNews = {
         const Course = this.models.Course;
         const id = request.params.id;
 
-        Utils.findCourseByCode(Course, id)
-        .then(course => {
-            if (course)
-            {
-                return News.findAll({
-                    where : {
-                        course : { 
-                            $eq : id
-                        }
-                    }
-                });
+        const pagination = request.query.pagination;
+
+        internals.checkCourse(Course, id, reply, function() {
+
+            const options = {
+                where: { course: { $eq: id } },
+                order: 'date DESC'
+            };
+
+            if (pagination) {
+                options.limit  = request.query.limit;
+                options.offset = (request.query.page - 1) * request.query.limit;
             }
-            else
-            {
-                throw { statusCode: 404, message: 'Course not found' };
-            }
-        }).then(news => {
-            return reply(Utils.removeDates(news));
-        }).catch(function(err) {
-            if (err.statusCode === 404) {
-                return reply.notFound(err.message);
-            } else {
-                return reply.badImplementation(err);
-            }
+
+            News.findAndCountAll(options).then(results => {
+                if (pagination) {
+                    return reply.paginate(Utils.removeDates(results.rows), results.count);
+                } else {
+                    return reply(Utils.removeDates(results.rows));
+                }
+            });
         });
     }
 };
