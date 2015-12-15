@@ -25,15 +25,12 @@ angular.module('hapi-learning')
 
                     internals.options.limit = scope.count ? scope.count : 5;
 
-
                     scope.scrollDisabled = function() {
 
                         var predicate = (typeof scope.count !== 'undefined');
                         if (internals.pageCount) {
                             predicate = predicate || (internals.options.page > internals.pageCount);
                         }
-
-                        console.log(predicate);
 
                         return predicate;
                     };
