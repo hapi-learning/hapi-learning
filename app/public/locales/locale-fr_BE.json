@@ -36,34 +36,69 @@
         }
     },
     "FORM": {
-        "COURSE": {
-            "LABEL": "Nom (requis)",
-            "INVALID": "Cours portant ce nom déjà existant"
+        "NEWS": {
+            "COURSE": {
+                "LABEL": "Cours",
+                "DEFAULT": "Choisissez un cours"
+            },
+            "PRIORITY": {
+                "LABEL": "Priorité",
+                "DEFAULT": "Choisissez une priorité"
+            },
+            "SUBJECT": {
+                "LABEL": "Sujet",
+                "PLACEHOLDER": "Sujet de l'annonce"
+            },
+            "CONTENT": {
+                "LABEL": "Contenu",
+                "PLACEHOLDER": "Écrivez votre annonce ici"
+            },
+            "BUTTONS": {
+                "SUBMIT": "Soumettre",
+                "GOTO_NEWS": "Voir les news"
+            },
+            "FEEDBACK": "Cours ajouté avec succès !"
         },
-        "CODE": {
-            "LABEL": "Code (requis)",
-            "INVALID": "Cours portant ce code déjà existant"
+        "COURSES": {
+            "TEACHERS": {
+                "LABEL": "@:GENERAL.TEACHERS"
+            },
+            "TAGS": {
+                "LABEL": "@:GENERAL.TAGS"
+            },
+            "DESCRIPTION": {
+                "LABEL": "Description du cours"
+            },
+            "NAME": {
+                "LABEL": "Nom (requis)",
+                "PLACEHOLDER": "Algorithmique, Atelier logiciel...",
+                "INVALID": "Cours portant ce nom déjà existant"
+            },
+            "CODE": {
+                "LABEL": "Code (requis)",
+                "PLACEHOLDER": "ALG, ATL...",
+                "INVALID": "Cours portant ce code déjà existant"
+            },
+            "BUTTONS": {
+                "CREATE": "Créer le nouveau cours",
+                "RESET": "@:GENERAL.RESET",
+                "GOTO_ADDED": "Aller au cours créé"
+            },
+            "FEEDBACK": "Cours ajouté avec succès !"
         },
-        "DESCRIPTION": {
-            "LABEL": "Description du cours"
-        }
-    },
-    "PLACEHOLDER": {
-        "COURSE": "Algorithmique, Atelier logiciel...",
-        "CODE": "ALG, ATL...",
-        "LOGIN": "Identifiant..",
-        "PASSWORD": "Mot de passe.."
-    },
-    "FEEDBACK": {
-        "COURSE": {
-            "SUBJECT": "Cours ajouté avec succès !"
+        "LOGIN": {
+            "LOGIN": {
+                "PLACEHOLDER": "Identifiant.."
+            },
+            "PASSWORD": {
+                "PLACEHOLDER": "Mot de passe.."
+            },
+            "BUTTONS": {
+                "LABEL": "Se connecter"
+            }
         }
     },
     "BUTTONS": {
-        "LOGOUT": "Déconnexion",
-        "FORM": {
-            "CREATE_COURSE": "Créer le nouveau cours",
-            "GOTO_COURSE": "Aller au cours créé"
-        }
+        "LOGOUT": "Déconnexion"
     }
 }

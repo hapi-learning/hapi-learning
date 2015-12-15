@@ -9,14 +9,14 @@
     <fieldset class="form-group">
         <div>
             <div ng-class="{'has-error': courseForm.name.$dirty && !validName}">
-                <label translate>FORM.COURSE.LABEL</label>
-                <input type="text" class="form-control" name="name" ng-model="course.name" title="Course name" placeholder="{{'PLACEHOLDER.COURSE' | translate}}" ng-keyup="checkName($event)" required />
+                <label translate>FORM.COURSES.NAME.LABEL</label>
+                <input type="text" class="form-control" name="name" ng-model="course.name" title="Course name" placeholder="{{'FORM.COURSES.NAME.PLACEHOLDER' | translate}}" ng-keyup="checkName($event)" required />
             </div>
             
             <br />
             
             <div class="alert alert-danger" ng-show="courseForm.name.$dirty && !validName" translate>
-                FORM.COURSE.INVALID
+                FORM.COURSES.NAME.INVALID
             </div>
 
         </div>
@@ -25,20 +25,20 @@
     <fieldset class="form-group">
         <div>
             <div ng-class="{'has-error': courseForm.code.$dirty && !validCode}">
-                <label translate>FORM.CODE.LABEL</label>
-                <input type="text" class="form-control" name="code" ng-model="course.code" title="Course short name" placeholder="{{'PLACEHOLDER.CODE' | translate}}" ng-keyup="checkCode($event)" required />
+                <label translate>FORM.COURSES.CODE.LABEL</label>
+                <input type="text" class="form-control" name="code" ng-model="course.code" title="Course short name" placeholder="{{'FORM.COURSES.CODE.PLACEHOLDER' | translate}}" ng-keyup="checkCode($event)" required />
             </div>
             
             <br />
             
             <div class="alert alert-danger" ng-show="courseForm.code.$dirty && !validCode" translate>
-                FORM.CODE.INVALID
+                FORM.COURSES.CODE.INVALID
             </div>
         </div>
     </fieldset>
 
     <fieldset class="form-group">
-        <label translate>COURSE_FORM_DESCRIPTION_LABEL</label>
+        <label translate>FORM.COURSES.DESCRIPTION.LABEL</label>
 
         <md-editor content="course.homepage"># Course name
 
@@ -55,7 +55,7 @@
 
     <fieldset class="form-group">
         <div>
-            <label translate>TEACHERS_LABEL</label>
+            <label translate>FORM.COURSES.TEACHERS.LABEL</label>
             <tags-input class="ti-input-sm" name="teachers" ng-model="course.teachers" title="Teachers short names" placeholder="Add a teacher" add-from-autocomplete-only="true" display-property="username">
                 <auto-complete min-length="0" source="loadTeachers($query)" template="teacher-template"></auto-complete>
             </tags-input>
@@ -82,7 +82,7 @@
     
     <fieldset class="form-group">
         <div>
-            <label translate>TAGS_LABEL</label>
+            <label translate>FORM.COURSES.TAGS.LABEL</label>
             <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="course.tags" title="Course tags" placeholder="Add tags" add-from-autocomplete-only="true" display-property="name" clearable>
                 <auto-complete min-length="0" source="loadTags($query)"></auto-complete>
             </tags-input>
@@ -93,18 +93,18 @@
     <br />
 
     <fieldset class="form-group">
-        <input type="submit" ng-click="postCourse()" class="btn btn-primary" value="{{'COURSE_FORM_BUTTON_CREATE' | translate}}" ng-disabled="!complete() || !validName || !validCode" />
-        <input type="reset" class="btn btn-warning" value="{{'RESET' | translate}}" />
+        <input type="submit" ng-click="postCourse()" class="btn btn-primary" value="{{'FORM.COURSES.BUTTONS.CREATE' | translate}}" ng-disabled="!complete() || !validName || !validCode" />
+        <input type="reset" class="btn btn-warning" value="{{'FORM.COURSES.BUTTONS.RESET' | translate}}" />
     </fieldset>
     
     <script type="text/ng-template" id="course-added">
-        <h2 translate>COURSE_FORM_FEEDBACK_H2</h2>
+        <h2 translate>FORM.COURSES.FEEDBACK</h2>
         
         <br />
         
         <input class="btn btn-success" type="button" value="{{'OK' | translate}}" ng-click="closeThisDialog() || clearFields()"/>
         <a ui-sref="root.course.main({code: course.code})" ng-click="closeThisDialog() || clearFields()">
-            <input class="btn btn-primary" type="button" value="{{'COURSE_FORM_FEEDBACK_GOTO' | translate}}" />
+            <input class="btn btn-primary" type="button" value="{{'FORM.COURSES.BUTTONS.GOTO_ADDED' | translate}}" />
         </a>
     </script>
 
