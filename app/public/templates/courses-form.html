@@ -9,14 +9,14 @@
     <fieldset class="form-group">
         <div>
             <div ng-class="{'has-error': courseForm.name.$dirty && !validName}">
-                <label translate>COURSE_FORM_NAME_LABEL</label>
-                <input type="text" class="form-control" name="name" ng-model="course.name" title="Course name" placeholder="{{'COURSE_FORM_PLACEHOLDER_NAME' | translate}}" ng-keyup="checkName($event)" required />
+                <label translate>FORM.COURSE.LABEL</label>
+                <input type="text" class="form-control" name="name" ng-model="course.name" title="Course name" placeholder="{{'PLACEHOLDER.COURSE' | translate}}" ng-keyup="checkName($event)" required />
             </div>
             
             <br />
             
             <div class="alert alert-danger" ng-show="courseForm.name.$dirty && !validName" translate>
-                COURSE_FORM_NAME_INVALID
+                FORM.COURSE.INVALID
             </div>
 
         </div>
@@ -25,14 +25,14 @@
     <fieldset class="form-group">
         <div>
             <div ng-class="{'has-error': courseForm.code.$dirty && !validCode}">
-                <label translate>COURSE_FORM_CODE_LABEL</label>
-                <input type="text" class="form-control" name="code" ng-model="course.code" title="Course short name" placeholder="{{'COURSE_FORM_PLACEHOLDER_CODE' | translate}}" ng-keyup="checkCode($event)" required />
+                <label translate>FORM.CODE.LABEL</label>
+                <input type="text" class="form-control" name="code" ng-model="course.code" title="Course short name" placeholder="{{'PLACEHOLDER.CODE' | translate}}" ng-keyup="checkCode($event)" required />
             </div>
             
             <br />
             
             <div class="alert alert-danger" ng-show="courseForm.code.$dirty && !validCode" translate>
-                COURSE_FORM_CODE_INVALID
+                FORM.CODE.INVALID
             </div>
         </div>
     </fieldset>

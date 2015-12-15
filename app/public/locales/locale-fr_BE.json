@@ -50,7 +50,9 @@
     },
     "PLACEHOLDER": {
         "COURSE": "Algorithmique, Atelier logiciel...",
-        "CODE": "ALG, ATL..."
+        "CODE": "ALG, ATL...",
+        "LOGIN": "Identifiant..",
+        "PASSWORD": "Mot de passe.."
     },
     "FEEDBACK": {
         "COURSE": {
