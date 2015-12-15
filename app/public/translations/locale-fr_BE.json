@@ -1,50 +1,67 @@
 {
-    "OK" : "Ok",
-    "CANCEL" : "Annuler",
-    "RESET" : "Réinitialiser",
-    
-    "ADMIN_H1" : "Administration",
-	"ADMIN_COURSES_H1" : "Créer de nouveaux cours",
-    "ADMIN_NEWS_H1" : "Poster de nouvelles annonces",
-    "ADMIN_TAGS_H1" : "Ajouter de nouveaux tags",
-    "ADMIN_USERS_H1" : "Créer de nouveaux utilisateurs",
-    "ADMIN_COURSES" : "Cours",
-    "ADMIN_NEWS" : "Annonces",
-    "ADMIN_USERS" : "Utilisateurs",
-    "ADMIN_TAGS" : "Tags",
-    "ADMIN_FORBIDDEN_ACCESS" : "Vous n'avez pas accès à cette page !",
-    
-    "COURSE_NEWS_H2" : "Poster une nouvelle annonce pour le cours",
-    "COURSE_NAV_HOME_SPAN" : "Principal",
-    "COURSE_NAV_DOCUMENTS_SPAN" : "Documents",
-    "COURSE_NAV_NEWS_SPAN" : "Annonces",
-    "COURSE_NAV_ADMINISTRATION_SPAN" : "Administration",
-    
-    "COURSE_FORM_NAME_LABEL" : "Nom (requis)",
-    "COURSE_FORM_NAME_INVALID" : "Cours portant ce nom déjà existant",
-    "COURSE_FORM_CODE_LABEL" : "Code (requis)",
-    "COURSE_FORM_CODE_INVALID" : "Cours portant ce code déjà existant",
-    "COURSE_FORM_DESCRIPTION_LABEL" : "Description du cours",
-    "COURSE_FORM_HOMEPAGE_TEMPLATE" : "",
-    "COURSE_FORM_FEEDBACK_H2" : "Cours ajouté avec succès !",
-    "COURSE_FORM_FEEDBACK_GOTO" : "Aller au cours créé",
-    "COURSE_FORM_BUTTON_CREATE" : "Créer le nouveau cours",
-    "COURSE_FORM_PLACEHOLDER_NAME" : "Algorithmique, Atelier logiciel...",
-    "COURSE_FORM_PLACEHOLDER_CODE" : "ALG, ATL...",
-    
-    "TEACHERS_LABEL" : "Enseignants",
-    "TAGS_LABEL" : "Tags",
-    
-    "COURSES_H1" : "Cours",
-    
-    "HOME_NEWS_H1" : "Annonces récentes",
-    "HOME_COURSES_H1" : "Mes cours",
-    
-    "NEWS_H1" : "Toutes les annonces",
-    
-    "PROFILE_H1" : "Mettez à jour votre profil",
-    
-    "USERS_H1" : "Utilisateurs",
-    
-    "LOGIN" : "Connexion"
+    "GENERAL": {
+        "OK": "Ok",
+        "CANCEL": "Annuler",
+        "LOGIN": "Connexion",
+        "RESET": "Réinitialiser",
+        "COURSES": "Cours",
+        "NEWS": "Annonces",
+        "USERS": "Utilisateurs",
+        "TAGS": "Tags",
+        "TEACHERS": "Enseignants",
+        "ADMIN": "Administration",
+        "ERROR": {
+            "FORBIDDEN": "Vous n'avez pas accès à cette page !"
+        }
+    },
+    "TITLE": {
+        "HOME_NEWS": "Annonces récentes",
+        "HOME_COURSES": "Mes cours",
+        "NEWS": "Toutes les annonces",
+        "PROFILE": "Mettez à jour votre profil"
+    },
+    "ADMIN": {
+        "COURSES": "Créer de nouveaux cours",
+        "NEWS": "Poster de nouvelles annonces",
+        "TAGS": "Ajouter de nouveaux tags",
+        "USERS": "Créer de nouveaux utilisateurs"
+    },
+    "COURSE": {
+        "NAV_HOME": "Principal",
+        "NAV_DOCUMENTS": "Documents",
+        "NAV_NEWS": "Annonces",
+        "NAV_ADMINISTRATION": "Administration",
+        "ADMIN": {
+            "NEWS": "Poster une nouvelle annonce pour le cours"
+        }
+    },
+    "FORM": {
+        "COURSE": {
+            "LABEL": "Nom (requis)",
+            "INVALID": "Cours portant ce nom déjà existant"
+        },
+        "CODE": {
+            "LABEL": "Code (requis)",
+            "INVALID": "Cours portant ce code déjà existant"
+        },
+        "DESCRIPTION": {
+            "LABEL": "Description du cours"
+        }
+    },
+    "PLACEHOLDER": {
+        "COURSE": "Algorithmique, Atelier logiciel...",
+        "CODE": "ALG, ATL..."
+    },
+    "FEEDBACK": {
+        "COURSE": {
+            "SUBJECT": "Cours ajouté avec succès !"
+        }
+    },
+    "BUTTONS": {
+        "LOGOUT": "Déconnexion",
+        "FORM": {
+            "CREATE_COURSE": "Créer le nouveau cours",
+            "GOTO_COURSE": "Aller au cours créé"
+        }
+    }
 }
