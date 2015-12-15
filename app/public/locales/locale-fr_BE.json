@@ -36,6 +36,58 @@
         }
     },
     "FORM": {
+        "USERS": {
+            "IMPORT": {
+                "LABEL": "Importer depuis un fichier JSON",
+                "CONTENT" : "Voici le contenu du fichier",
+                "INVALIDS": {
+                    "FILE": "Le fichier sélectionné n'est pas un fichier JSON valide",
+                    "SCHEMA": "Le fichier sélectionné n'a pas une structure JSON valide",
+                    "CONFLICT": "Certains utilisateurs existent déjà"
+                },
+                "BUTTONS": {
+                    "SELECT": "Choisir...",
+                    "SAVE": "Enregistrer",
+                    "CANCEL": "@:GENERAL.CANCEL"
+                },
+                "PLACEHOLDER": "Pas de fichier sélectionné",
+                "FEEDBACK": "{{number}} utilisateurs ont été ajouté"
+            },
+            "USERNAME": {
+                "LABEL": "Nom d'utilisateur (requis)",
+                "PLACEHOLDER": "@:FORM.USERS.USERNAME.LABEL"
+            },
+            "FIRSTNAME": {
+                "LABEL": "Prénom",
+                "PLACEHOLDER": "@:FORM.USERS.FIRSTNAME.LABEL"
+            },
+            "LASTNAME": {
+                "LABEL": "Nom",
+                "PLACEHOLDER": "@:FORM.USERS.LASTNAME.LABEL"
+            },
+            "PASSWORD": {
+                "LABEL": "Mot de passe",
+                "PLACEHOLDER": "●●●●●●●●"
+            },
+            "EMAIL": {
+                "LABEL": "Adresse mail (requis)",
+                "PLACEHOLDER": "42424@heb.be"
+            },
+            "TYPE": {
+                "LABEL": "Type d'utilisateur"
+            },
+            "BUTTONS": {
+                "CREATE": "Créer le nouvel utilisateur",
+                "RESET": "@:GENERAL.RESET"
+            }
+        },
+        "TAGS": {
+            "LABEL": "Tags",
+            "PLACEHOLDER": "Ajoutez un tag",
+            "BUTTONS": {
+                "SUBMIT": "Soumettre"
+            }
+        },
         "NEWS": {
             "COURSE": {
                 "LABEL": "Cours",
