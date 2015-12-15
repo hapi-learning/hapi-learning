@@ -1,6 +1,5 @@
 'use strict';
 
-const Hoek = require('hoek');
 const Joi = require('joi');
 Joi.phone = require('joi-phone');
 const P = require('bluebird');
@@ -160,7 +159,7 @@ exports.getTeachers = {
         const User = this.models.User;
 
         User.findAll({
-                where: {role_id: 2},
+                where: { role_id: 2 },
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
@@ -624,7 +623,6 @@ exports.subscribeToCourse = {
             switch(err.statusCode) {
                 case 404:
                     return reply.notFound(err.message);
-                    break;
                 case 409:
                     return reply.conflict(err.message);
                 default:
@@ -668,7 +666,6 @@ exports.unsubscribeToCourse = {
     },
     handler: function(request, reply) {
 
-        const Course = this.models.Course;
         const User   = this.models.User;
 
         let userToUpdate;
@@ -691,7 +688,6 @@ exports.unsubscribeToCourse = {
             switch(err.statusCode) {
                 case 404:
                     return reply.notFound(err.message);
-                    break;
                 default:
                     return reply.badImplementation(err);
             }
@@ -751,7 +747,7 @@ exports.addFolders = {
                         user.getFolders()
                         .then(folders => reply(Utils.removeDates(folders)))
                         .catch(error => reply.badImplementation(error));
-                    })
+                    });
 
 
                 })
@@ -766,7 +762,7 @@ exports.addFolders = {
     }
 };
 
-exports.addCourseToFolder = {
+/*exports.addCourseToFolder = {
     auth: {
         scope: ['admin', '{params.username}']
     },
@@ -782,47 +778,42 @@ exports.addCourseToFolder = {
 
         const User   = this.models.User;
         const Folder = this.models.Folder;
-        const Course = this.models.course
+        const Course = this.models.course;
 
-        internals.findUser(User, request.params.username)
-        .then(user => {
+        internals.findUser(User, request.params.username).then(user => {
             if (user)
             {
-                user.getFolders()
-                    .then(userFolders =>
-                        {
-                            let folder = _.find(userFolders,
-                                                userFolder => userFolder.name === request.params.folderName);
-                            if (folder)
-                                user.getCourses({where : {code : request.params.crsId}})
-                                    .then(userCourse => {
+                user.getFolders().then(userFolders => {
+                    const folder = _.find(userFolders, (userFolder) => userFolder.name === request.params.folderName);
+                    if (folder)
+                        user.getCourses({where : {code : request.params.crsId}}).then(userCourse => {
 
-                                        if (userCourse)
-                                        {
-                                            folder.addCourse(userCourse);
+                            if (userCourse)
+                            {
+                                folder.addCourse(userCourse);
 
-                                            let oldFolder =
-                                                _.find(userFolders, userFolder =>
-                                                                    (_.find(folder.getCourses, course =>
-                                                                            course.crsId === request.params.crsId)
-                                                                            !== undefined));
-                                            if (oldFolder)
-                                                oldFolder.removeCourse(userCourse);
-                                        }
-                                        else
-                                            return reply.notFound('User did not suscribe to course ' +
-                                                                  request.params.crsId);
-                                    })
-                                    .catch(error => reply.badImplementation(error));
+                                let oldFolder = _.find(userFolders, function (userFolder) {
+                                    (_.find(folder.getCourses, function(course) =>
+                                            course.crsId === request.params.crsId)
+                                            !== undefined)
+                                }); // WHAT
+                                if (oldFolder)
+                                    oldFolder.removeCourse(userCourse);
+                            }
                             else
-                                return reply.notFound('User doesn\'t own the folder ' + request.params.folderName);
+                                return reply.notFound('User did not suscribe to course ' +
+                                                      request.params.crsId);
                         })
-                    .catch(error => reply.badImplementation(error));
+                        .catch(error => reply.badImplementation(error));
+                    else
+                        return reply.notFound('User doesn\'t own the folder ' + request.params.folderName);
+                })
+                .catch(error => reply.badImplementation(error));
             }
             else
                 return reply.notFound('User ' + request.params.username + ' not found');
         })
         .catch(error => reply.badImplementation(error));
     }
-};
+};*/
 

@@ -183,20 +183,20 @@ exports.post = {
                     .catch((error) => reply.conflict(error));
                 } else {
 
-                    User.findAll().then(users => {
-                        const promises = _.map(users, user => {
-                            if (user.get('notify'))
-                                return MailNotifier.notifyNews(news, user);
-                            else
-                                return P.resolve();
+                    News.create(news).then(news => {
+                        User.findAll().then(users => {
+                            const promises = _.map(users, user => {
+                                if (user.get('notify'))
+                                    return MailNotifier.notifyNews(news, user);
+                                else
+                                    return P.resolve();
+                            });
+
+                            P.all(promises).then(tail);
                         });
 
-                        P.all(promises).then(tail);
-                    });
-
-                    News.create(news)
-                        .then(news => reply(Utils.removeDates(news)).code(201))
-                        .catch((error) => reply.conflict(error));
+                        return reply(Utils.removeDates(news)).code(201);
+                    }).catch((error) => reply.conflict(error));
                 }
             }
             else {
