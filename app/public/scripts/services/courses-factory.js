@@ -170,5 +170,7 @@ angular.module('hapi-learning')
         });
 
 
+        exports.getSubscribed();
+
         return exports;
 }]);

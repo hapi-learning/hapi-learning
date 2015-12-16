@@ -360,6 +360,8 @@ exports.getNews = {
         const User = this.models.User;
         const News = this.models.News;
 
+        const pagination = request.query.pagination;
+
         Utils.findUser(User, request.decoded.username).then(function (user) {
             return user.getCourses({
                 attributes: ['code'],
@@ -369,7 +371,7 @@ exports.getNews = {
             return _.map(courses, c => c.get('code'));
         }).then(function (codes) {
 
-            return News.findAll({
+            const options = {
                 where: {
                     $or: [{
                         course: {
@@ -378,11 +380,23 @@ exports.getNews = {
                     }, {
                         course: null
                     }]
-                }
-            });
+                },
+                order: 'date DESC'
+            };
 
-        }).then(function (news) {
-            return reply(news);
+            if (pagination) {
+                options.limit  = request.query.limit;
+                options.offset = (request.query.page - 1) * request.query.limit;
+            }
+
+            return News.findAndCountAll(options);
+
+        }).then(function (results) {
+            if (pagination) {
+                return reply.paginate(results.rows, results.count);
+            } else {
+                return reply(results.rows);
+            }
         }).catch(function(error) {
             return reply.badImplementation(error);
         });

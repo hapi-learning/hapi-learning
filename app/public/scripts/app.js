@@ -20,8 +20,8 @@ angular.module('hapi-learning', [
         'ng-showdown',
         'ngPrettyJson',
         'ngDialog',
-        'pascalprecht.translate'])
-
+        'pascalprecht.translate',
+        'infinite-scroll'])
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.type('FilePath', {
             encode: function(value) {
@@ -153,3 +153,5 @@ angular.module('hapi-learning', [
     .run(function(amMoment) {
         amMoment.changeLocale('en');
     });
+
+angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 250)

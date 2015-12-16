@@ -355,11 +355,11 @@ describe('Controller.Course', () => {
 
         });
     });
-    
+
    describe('#getNews', () => {
         const request = {
             method: 'GET',
-            url: '/courses/ATL3/news'
+            url: '/courses/ATL3/news?pagination=false'
         };
 
         it ('Should return empty array', done => {
@@ -371,7 +371,7 @@ describe('Controller.Course', () => {
                 done();
             });
         });
-       
+
         it ('Should return an array with 1 news', done => {
             request.headers = internals.headers;
             const News = server.plugins.models.models.News;
@@ -393,7 +393,7 @@ describe('Controller.Course', () => {
                     });
                 });
             });
-       
+
         it ('Should return an array with 3 news', done => {
             request.headers = internals.headers;
             const News = server.plugins.models.models.News;

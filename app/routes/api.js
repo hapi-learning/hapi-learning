@@ -40,7 +40,7 @@ exports.register = function (server, options, next) {
         {method: 'POST',   path: '/users/{username}/unsubscribe/{crsId}',    config: Controllers.User.unsubscribeToCourse},
 
         {method: 'POST',   path: '/users/{username}/folders',         config: Controllers.User.addFolders},
-        {method: 'POST',   path: '/users/{username}/folders/{folderName}/{crsId}', config: Controllers.User.addCourseToFolder},
+       // {method: 'POST',   path: '/users/{username}/folders/{folderName}/{crsId}', config: Controllers.User.addCourseToFolder},
         {method: 'PUT',    path: '/users/{username}',                  config: Controllers.User.put},
         {method: 'PATCH',  path: '/users/{username}',                  config: Controllers.User.patch},
         {method: 'DELETE', path: '/users/{username}',                  config: Controllers.User.delete},

@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/fknop/hapi-learning.svg)](https://travis-ci.org/fknop/hapi-learning)
+[![Dependency Status](https://david-dm.org/fknop/hapi-learning.svg)](https://david-dm.org/fknop/hapi-learning)
+
 # hapi-learning 
 
 > Building an e-learning platform with HapiJS and AngularJS

@@ -30,11 +30,25 @@ exports.getAll = {
     handler: function (request, reply) {
 
         const News = this.models.News;
+        const pagination = request.query.pagination;
 
-        News.findAll({
-                order: 'date DESC'
+        const options = {
+            order: 'date DESC'
+        };
+
+        if (pagination) {
+            options.limit  = request.query.limit;
+            options.offset = (request.query.page - 1) * request.query.limit;
+        }
+
+        News.findAndCountAll(options)
+            .then(results => {
+                if (pagination) {
+                    return reply.paginate(Utils.removeDates(results.rows), results.count);
+                } else {
+                    return reply(Utils.removeDates(results.rows));
+                }
             })
-            .then(news => reply(Utils.removeDates(news)))
             .catch(error => reply.badImplementation(error));
     }
 };
@@ -169,20 +183,20 @@ exports.post = {
                     .catch((error) => reply.conflict(error));
                 } else {
 
-                    User.findAll().then(users => {
-                        const promises = _.map(users, user => {
-                            if (user.get('notify'))
-                                return MailNotifier.notifyNews(news, user);
-                            else
-                                return P.resolve();
+                    News.create(news).then(news => {
+                        User.findAll().then(users => {
+                            const promises = _.map(users, user => {
+                                if (user.get('notify'))
+                                    return MailNotifier.notifyNews(news, user);
+                                else
+                                    return P.resolve();
+                            });
+
+                            P.all(promises).then(tail);
                         });
 
-                        P.all(promises).then(tail);
-                    });
-
-                    News.create(news)
-                        .then(news => reply(Utils.removeDates(news)).code(201))
-                        .catch((error) => reply.conflict(error));
+                        return reply(Utils.removeDates(news)).code(201);
+                    }).catch((error) => reply.conflict(error));
                 }
             }
             else {
