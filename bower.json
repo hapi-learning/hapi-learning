@@ -36,7 +36,8 @@
     "ng-prettyjson": "~0.2.0",
     "ng-dialog": "~0.5.6",
     "angular-translate": "~2.8.1",
-    "angular-translate-loader-static-files": "~2.8.1"
+    "angular-translate-loader-static-files": "~2.8.1",
+    "bootstrap-filestyle": "~1.2.1"
   },
   "resolutions": {
     "angular": "~1.4.7"
