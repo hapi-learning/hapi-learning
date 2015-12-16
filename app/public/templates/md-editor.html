@@ -23,7 +23,7 @@
 
         <form class="form-inline pull-right" ng-submit="write()">
             <div class="form-group">
-                <label>Font size: </label>
+                <label><span translate>FORM.COURSES.DESCRIPTION.FONTSIZE</span>: </label>
                 <select ng-change="setFontSize(selectedFontSize)"
                       class="form-control" ng-model="selectedFontSize"
                       ng-options="size as size for size in fontSizes"

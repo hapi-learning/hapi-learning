@@ -10,22 +10,22 @@
     }
 </style>
 <div nv-file-drop uploader="uploader" filters="queueLimit, customFilter">
-    <div class="well my-drop-zone" type="file" nv-file-over uploader="uploader" ng-click="fileChooser()">
-        Drag and drop files to upload
+    <div class="well my-drop-zone" type="file" nv-file-over uploader="uploader" ng-click="fileChooser()" translate>
+        FILE-EXPLORER.UPLOAD.DRAGNDROP
     </div>
 
-    <input type="file" class="file" id="fileSelect" nv-file-select uploader="uploader" multiple />
+    <input type="file" class="file filestyle" id="fileSelect" nv-file-select uploader="uploader" multiple />
     <br/>
 
     <table class="table">
         <thead>
             <tr>
-                <th class="col-md-4">Name</th>
-                <th class="col-md-2" ng-show="uploader.isHTML5">Size</th>
-                <th class="col-md-2" ng-show="uploader.isHTML5">Progress</th>
-                <th class="col-md-1">Status</th>
-                <th class="col-md-1">Visibility</th>
-                <th class="col-md-2">Actions</th>
+                <th class="col-md-4" translate>FILE-EXPLORER.UPLOAD.TABLE.NAME</th>
+                <th class="col-md-2" ng-show="uploader.isHTML5" translate>FILE-EXPLORER.UPLOAD.TABLE.SIZE</th>
+                <th class="col-md-2" ng-show="uploader.isHTML5" translate>FILE-EXPLORER.UPLOAD.TABLE.PROGRESS</th>
+                <th class="col-md-1" translate>FILE-EXPLORER.UPLOAD.TABLE.STATUS</th>
+                <th class="col-md-1" translate>FILE-EXPLORER.UPLOAD.TABLE.VISIBILITY</th>
+                <th class="col-md-2" translate>FILE-EXPLORER.UPLOAD.TABLE.ACTIONS</th>
             </tr>
         </thead>
         <tbody>
@@ -50,11 +50,11 @@
                 <td nowrap>
                     <button type="button" class="btn btn-primary btn-xs"
                              ng-click="toggleFileVisible(item)" ng-show="isVisible(item)">
-                        <span class="glyphicon glyphicon-eye-open"></span> Visible
+                        <span class="glyphicon glyphicon-eye-open"></span><span translate>FILE-EXPLORER.UPLOAD.VISIBILITY.VISIBLE</span>
                     </button>
                     <button type="button" class="btn btn-warning btn-xs"
                              ng-click="toggleFileVisible(item)" ng-show="!isVisible(item)">
-                        <span class="glyphicon glyphicon-eye-close"></span> Hidden
+                        <span class="glyphicon glyphicon-eye-close"></span><span translate>FILE-EXPLORER.UPLOAD.VISIBILITY.HIDDEN</span>
                     </button>
                 </td>
 
@@ -62,16 +62,16 @@
                 <td nowrap>
                     <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()"
                        ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                        <span class="glyphicon glyphicon-upload"></span> Upload
+                        <span class="glyphicon glyphicon-upload"></span><span translate>FILE-EXPLORER.UPLOAD.BUTTONS.UPLOAD</span>
                     </button>
 
                     <button type="button" class="btn btn-warning btn-xs"
                             ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        <span class="glyphicon glyphicon-ban-circle"></span><span translate>FILE-EXPLORER.UPLOAD.BUTTONS.CANCEL</span>
                     </button>
 
                     <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                        <span class="glyphicon glyphicon-trash"></span> Remove
+                        <span class="glyphicon glyphicon-trash"></span><span translate>FILE-EXPLORER.UPLOAD.BUTTONS.REMOVE</span>
                     </button>
                 </td>
 
@@ -81,20 +81,20 @@
 
     <div>
         <div>
-            Queue progress:
+            <span translate>FILE-EXPLORER.UPLOAD.QUEUE</span>
             <div class="progress" style="">
                 <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
             </div>
         </div>
 
         <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
-            <span class="glyphicon glyphicon-upload"></span> Upload all
+            <span class="glyphicon glyphicon-upload"></span><span translate>FILE-EXPLORER.UPLOAD.BUTTONS.UPLOAD-ALL</span>
         </button>
         <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
-            <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+            <span class="glyphicon glyphicon-ban-circle"></span><span translate>FILE-EXPLORER.UPLOAD.BUTTONS.CANCEL-ALL</span>
         </button>
         <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
-            <span class="glyphicon glyphicon-trash"></span> Remove all
+            <span class="glyphicon glyphicon-trash"></span><span translate>FILE-EXPLORER.UPLOAD.BUTTONS.REMOVE-ALL</span>
         </button>
     </div>
 

@@ -2,16 +2,17 @@
 
     <fieldset class="form-group">
         <div>
-            <label>Tags</label>
-            <tags-input min-length="1" class="ti-input-sm" name="tags" title="Tags" ng-model="tags"></tags-input>
+            <label translate>FORM.TAGS.LABEL</label>
+            <tags-input min-length="1" class="ti-input-sm" name="tags" title="Tags" ng-model="tags"
+                        placeholder="{{'FORM.TAGS.PLACEHOLDER' | translate}}"></tags-input>
         </div>
     </fieldset>
 
     <br />
 
     <div>
-        <button class="btn btn-primary" ng-click="createTags()">
-            Submit
+        <button class="btn btn-primary" ng-click="createTags()" translate>
+            FORM.TAGS.BUTTONS.SUBMIT
         </button>
     </div>
 

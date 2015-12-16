@@ -44,7 +44,7 @@
 
     <div class="row" ng-if="states.folderError" ng-click="cleanFolderError()">
        <div class="col-md-12 alert alert-danger error-message">
-            <span>Invalid file / folder name</span>
+            <span translate>FILE-EXPLORER.INVALID.NAME</span>
        </div>
     </div>
 
@@ -54,10 +54,10 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <span><strong>Uploading error!</strong><br/>
+            <span><strong translate>FILE-EXPLORER.ERROR</strong><br/>
             <ul>
-                <li>The file cannot be a folder (use create folder button)</li>
-                <li>The file must be less than 20Mb</li>
+                <li translate>FILE-EXPLORER.INVALID.TYPE</li>
+                <li translate>FILE-EXPLORER.INVALID.SIZE</li>
             </ul>
             </span>
        </div>
@@ -70,7 +70,8 @@
             <a ng-disabled="files.dir === null"
                ng-click="(states.fetching || files.dir === null) || goToParent()"
                class="btn btn-block btn-success">
-                <span class="glyphicon glyphicon-arrow-left"></span> Parent directory
+                <span class="glyphicon glyphicon-arrow-left"></span> 
+                <span translate>FILE-EXPLORER.BUTTONS.PARENT</span>
             </a>
         </div>
 
@@ -81,8 +82,8 @@
             </button>
 
             <ul class="dropdown-menu">
-                <li><a class="dropdown-btn" ng-click="states.creatingFolder = true">Create directory</a></li>
-                <li><a class="dropdown-btn" ng-click="states.uploading = true">Upload file(s)</a></li>
+                <li><a class="dropdown-btn" ng-click="states.creatingFolder = true" translate>FILE-EXPLORER.BUTTONS.CREATEDIR</a></li>
+                <li><a class="dropdown-btn" ng-click="states.uploading = true" translate>FILE-EXPLORER.BUTTONS.UPLOAD</a></li>
             </ul>
         </div>
 
@@ -98,7 +99,7 @@
 
             <div class="col-md-2 col-lg-1 pull-right" ng-show="!states.showHidden" >
                 <button popover-trigger="mouseenter" popover-placement="top"
-                        uib-popover="Click to show hidden files"
+                        uib-popover="{{'FILE-EXPLORER.BUTTONS.SHOW' | translate}}"
                         popover-popup-delay="700"
                         class="btn btn-default btn-block" ng-click="states.showHidden = true">
                     <span class="glyphicon glyphicon-eye-close"></span>
@@ -110,7 +111,7 @@
             <a ng-href="{{download()}}">
                 <button class="btn btn-primary btn-block">
                    <span class="glyphicon glyphicon-cloud-download"></span>
-                   <span class="hidden-md">Download</span>
+                   <span class="hidden-md" translate>FILE-EXPLORER.BUTTONS.DOWNLOAD</span>
                 </button>
             </a>
         </div>
@@ -119,7 +120,7 @@
             <button class="btn btn-danger btn-block"
                      ng-click="states.uploading = false">
                 <span class="glyphicon glyphicon-floppy-remove"></span>
-                Finish upload
+                <span translate>FILE-EXPLORER.BUTTONS.FINISH</span>           
             </button>
         </div>
 
@@ -137,7 +138,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <input class="form-control" ng-model="folder.name"
-                               type="text" placeholder="Folder"/>
+                               type="text" placeholder="{{'FILE-EXPLORER.FOLDER.PLACEHOLDER' | translate}}"/>
                        <div class="input-group-btn">
 
                             <button class="btn btn-default"
@@ -157,7 +158,7 @@
                     <label class="checkbox-inline">
                             <input ng-model="folder.hidden"
                                 type="checkbox" value="false"/>
-                                <strong>Hidden</strong>
+                                <strong translate>FILE-EXPLORER.FOLDER.HIDDEN</strong>
                     </label>
                 </div>
             </div>
@@ -171,13 +172,13 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <td class="col-md-1">File type</td>
-                    <td class="col-md-5">Name</td>
-                    <td class="col-md-1">Size</td>
-                    <td class="col-md-1">Download</td>
-                    <td class="col-md-1">Last updated</td>
-                    <td if-group="teacher admin" class="col-md-1">Visibility</td>
-                    <td if-group="teacher admin" class="col-md-2">Edit</td>
+                    <td class="col-md-1" translate>FILE-EXPLORER.TABLE.TYPE</td>
+                    <td class="col-md-5" translate>FILE-EXPLORER.TABLE.NAME</td>
+                    <td class="col-md-1" translate>FILE-EXPLORER.TABLE.SIZE</td>
+                    <td class="col-md-1" translate>FILE-EXPLORER.TABLE.DOWNLOAD</td>
+                    <td class="col-md-1" translate>FILE-EXPLORER.TABLE.UPDATED</td>
+                    <td if-group="teacher admin" class="col-md-1" translate>FILE-EXPLORER.TABLE.VISIBILITY</td>
+                    <td if-group="teacher admin" class="col-md-2" translate>FILE-EXPLORER.TABLE.EDIT</td>
                 </tr>
             </thead>
             <tbody>
@@ -218,7 +219,7 @@
                      <!-- SIZE -->
                     <td class="col-md-1">
                         <div ng-if="file.type === 'f'">
-                            {{file.size | byteFmt: 2}}
+                            <span ng-bind="file.size | byteFmt: 2"></span>
                         </div>
                     </td>
 
@@ -311,9 +312,7 @@
         </table>
     </div>
     <div style="text-align: center" class="col-md-12" ng-if="files.files.length === 0 && !states.uploading">
-        <span class="fa fa-ban fa-2x">
-            No files
-        </span>
+        <span class="fa fa-ban fa-2x" translate>FILE-EXPLORER.NO_FILE</span>
     </div>
 
     <upload ng-if="states.uploading" path="getUploadPath()"></upload>
