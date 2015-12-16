@@ -1,10 +1,12 @@
 {
     "GENERAL": {
         "OK": "Ok",
+        "SAVE": "Enregister",
         "CANCEL": "Annuler",
         "LOGIN": "Connexion",
         "LOGOUT": "Déconnexion",
         "RESET": "Réinitialiser",
+        "EDIT": "Modifier",
         "COURSES": "Cours",
         "NEWS": "Annonces",
         "USERS": "Utilisateurs",
@@ -13,11 +15,15 @@
         "ADMIN": "Administration",
         "UPLOAD": "Envoyer",
         "DOWNLOAD": "Télécharger",
+        "HIDDEN": "●●●●●●●●",
+        "YES": "Oui",
+        "NO": "Non",
         "ERROR": {
             "FORBIDDEN": "Vous n'avez pas accès à cette page !"
         }
     },
     "NAV": {
+        "TOGGLE": "Dérouler la navigation",
         "HOME": "Mes cours",
         "SETTINGS": "Paramètres du compte",
         "NEWS": "@:GENERAL.NEWS",
@@ -38,10 +44,17 @@
         "USERS": "Créer de nouveaux utilisateurs"
     },
     "COURSE": {
-        "NAV_HOME": "Principal",
-        "NAV_DOCUMENTS": "Documents",
-        "NAV_NEWS": "Annonces",
-        "NAV_ADMINISTRATION": "Administration",
+        "SUBSCRIBE": "S'inscrire",
+        "UNSUBSCRIBE": "Se désinscrire",
+        "NAV": {
+            "HOME": "Principal",
+            "DOCUMENTS": "Documents",
+            "NEWS": "Annonces",
+            "ADMINISTRATION": "Administration"
+        },
+        "HOME": {
+            "POST-ERROR": "Erreur lors de la sauvegarde de la page de garde"
+        },
         "ADMIN": {
             "NEWS": "Poster une nouvelle annonce pour le cours"
         }
@@ -50,9 +63,9 @@
         "EMPTY": "Pas de fichiers sélectionnés",
         "ERROR": "Erreur d'envoi de fichier",
         "INVALID": {
-            "NAME": "Nom de fichier ou de dossier invalide",
+            "NO_FILE": "Nom de fichier ou de dossier invalide",
             "TYPE": "Le fichier ne peut pas être un dossier",
-            "SIZE": "Le fichier doit faire moins de 20Mib"
+            "SIZE": "Le fichier doit faire moins de 20Mo"
         },
         "BUTTONS": {
             "PARENT": "Dossier parent",
@@ -77,6 +90,34 @@
         }
     },
     "FORM": {
+        "PROFILE": {
+            "FIRSTNAME": {
+                "LABEL": "Prénom"
+            },
+            "LASTNAME": {
+                "LABEL": "Nom"
+            },
+            "EMAIL": {
+                "LABEL": "Email"
+            },
+            "NOTIFY": {
+                "LABEL": "Notification par mail",
+                "YES": "@:GENERAL.YES",
+                "NO": "@:GENERAL.NO"
+            },
+            "PASSWORD": {
+                "LABEL": "Mot de passe",
+                "PLACEHOLDER": "@:GENERAL.HIDDEN",
+                "CONFIRM": "@:FORM.PROFILE.PASSWORD.LABEL"
+            },
+            "PHONE": {
+                "LABEL": "Numéro de téléphone",
+                "PLACEHOLDER": "+32 482 48 19 55"
+            }
+        },
+        "SEARCH": {
+            "PLACEHOLDER": "Nom ou code du cours"
+        },
         "USERS": {
             "IMPORT": {
                 "LABEL": "Importer depuis un fichier JSON",
@@ -88,7 +129,7 @@
                 },
                 "BUTTONS": {
                     "SELECT": "Choisir...",
-                    "SAVE": "Enregistrer",
+                    "SAVE": "@:GENERAL.SAVE",
                     "CANCEL": "@:GENERAL.CANCEL"
                 },
                 "PLACEHOLDER": "Pas de fichier sélectionné",
@@ -108,7 +149,7 @@
             },
             "PASSWORD": {
                 "LABEL": "Mot de passe",
-                "PLACEHOLDER": "●●●●●●●●"
+                "PLACEHOLDER": "@:GENERAL.HIDDEN"
             },
             "EMAIL": {
                 "LABEL": "Adresse mail (requis)",
@@ -154,13 +195,16 @@
         },
         "COURSES": {
             "TEACHERS": {
-                "LABEL": "@:GENERAL.TEACHERS"
+                "LABEL": "@:GENERAL.TEACHERS",
+                "PLACEHOLDER": "Ajouter un enseignant"
             },
             "TAGS": {
-                "LABEL": "@:GENERAL.TAGS"
+                "LABEL": "@:GENERAL.TAGS",
+                "PLACEHOLDER": "Ajouter un tag"
             },
             "DESCRIPTION": {
-                "LABEL": "Description du cours"
+                "LABEL": "Description du cours",
+                "FONTSIZE": "Taille de la police"
             },
             "NAME": {
                 "LABEL": "Nom (requis)",
@@ -180,14 +224,17 @@
             "FEEDBACK": "Cours ajouté avec succès !"
         },
         "LOGIN": {
-            "LOGIN": {
+            "INVALID": "Données de connexion invalides, essayez un autre nom d'utilisateur/mot de passe",
+            "USERNAME": {
                 "PLACEHOLDER": "Identifiant.."
             },
             "PASSWORD": {
                 "PLACEHOLDER": "Mot de passe.."
             },
             "BUTTONS": {
-                "LABEL": "Se connecter"
+                "LABEL": "Se connecter",
+                "RESET": "@:GENERAL.RESET",
+                "BACK": "Retour à la page de connexion"
             }
         }
     }

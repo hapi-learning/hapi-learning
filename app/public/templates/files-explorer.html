@@ -312,7 +312,7 @@
         </table>
     </div>
     <div style="text-align: center" class="col-md-12" ng-if="files.files.length === 0 && !states.uploading">
-        <span class="fa fa-ban fa-2x" translate>FILE-EXPLORER.EMPTY</span>
+        <span class="fa fa-ban fa-2x" translate>FILE-EXPLORER.NO_FILE</span>
     </div>
 
     <upload ng-if="states.uploading" path="getUploadPath()"></upload>

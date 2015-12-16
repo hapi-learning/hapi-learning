@@ -56,7 +56,7 @@
     <fieldset class="form-group">
         <div>
             <label translate>FORM.COURSES.TEACHERS.LABEL</label>
-            <tags-input class="ti-input-sm" name="teachers" ng-model="course.teachers" title="Teachers short names" placeholder="Add a teacher" add-from-autocomplete-only="true" display-property="username">
+            <tags-input class="ti-input-sm" name="teachers" ng-model="course.teachers" title="Teachers short names" placeholder="{{'FORM.COURSES.TEACHERS.PLACEHOLDER' | translate}}" add-from-autocomplete-only="true" display-property="username">
                 <auto-complete min-length="0" source="loadTeachers($query)" template="teacher-template"></auto-complete>
             </tags-input>
         </div>
@@ -83,7 +83,7 @@
     <fieldset class="form-group">
         <div>
             <label translate>FORM.COURSES.TAGS.LABEL</label>
-            <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="course.tags" title="Course tags" placeholder="Add tags" add-from-autocomplete-only="true" display-property="name" clearable>
+            <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="course.tags" title="Course tags" placeholder="{{'FORM.COURSES.TAGS.PLACEHOLDER' | translate}}" add-from-autocomplete-only="true" display-property="name" clearable>
                 <auto-complete min-length="0" source="loadTags($query)"></auto-complete>
             </tags-input>
         </div>

@@ -80,7 +80,7 @@
     <div class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
+                <span class="sr-only" translate>NAV.TOGGLE</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -104,32 +104,32 @@
             <ul class="nav">
                 <li ui-sref-active="active">
                     <a ui-sref="root.home">
-                        <span class="fa fa-home"></span> Home
+                        <span class="fa fa-home"></span><span translate>NAV.HOME</span>
                     </a>
                 </li>
                 <li ui-sref-active="active">
                     <a ui-sref="root.profile">
-                        <span class="fa fa-user"></span> Account Settings
+                        <span class="fa fa-user"></span><span translate>NAV.SETTINGS</span>
                     </a>
                 </li>
                 <li ui-sref-active="active">
                     <a ui-sref="root.news">
-                        <span class="fa fa-newspaper-o"></span> News
+                        <span class="fa fa-newspaper-o"></span><span translate>NAV.NEWS</span>
                     </a>
                 </li>
                 <li ui-sref-active="active">
                     <a ui-sref="root.courses">
-                        <span class="fa fa-th-list"></span> Courses
+                        <span class="fa fa-th-list"></span><span translate>NAV.COURSES</span>
                     </a>
                 </li>
                 <li if-group="admin" ui-sref-active="active">
                     <a ui-sref="root.admin.courses">
-                        <span class="fa fa-cog"></span> Administration
+                        <span class="fa fa-cog"></span><span translate>NAV.ADMIN</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" ng-click="logout()">
-                        <span class="fa fa-sign-out"></span> Logout
+                        <span class="fa fa-sign-out"></span><span translate>NAV.LOGOUT</span>
                     </a>
                 </li>
             </ul>

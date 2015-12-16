@@ -35,26 +35,26 @@
                     <li ui-sref-active="active">
                         <a ui-sref="root.course.main({code: course.code})">
                             <span class="glyphicon glyphicon-book"></span>
-                            <span translate>COURSE.NAV_HOME</span>
+                            <span translate>COURSE.NAV.HOME</span>
 
                         </a>
                     </li>
                     <li ng-class="{active: $state.includes('root.course.documents')}">
                         <a ui-sref="root.course.documents({code: course.code, path: ''})">
                             <span class="glyphicon glyphicon-folder-open"></span>
-                            <span translate>COURSE.NAV_DOCUMENTS</span>
+                            <span translate>COURSE.NAV.DOCUMENTS</span>
                         </a>
                     </li>
                     <li ui-sref-active="active">
                         <a ui-sref="root.course.news({code: course.code})">
                             <span class="fa fa-newspaper-o fa-lg"></span>
-                            <span translate>COURSE.NAV_NEWS</span>
+                            <span translate>COURSE.NAV.NEWS</span>
                         </a>
                     </li>
                     <li ui-sref-active="active" if-group="teacher admin">
                         <a ui-sref="root.course.admin({code: course.code})">
                             <span class="fa fa-cog fa-lg"></span>
-                            <span translate>COURSE.NAV_ADMINISTRATION</span>
+                            <span translate>COURSE.NAV.ADMINISTRATION</span>
                         </a>
                     </li>
 

@@ -131,7 +131,7 @@ angular.module('hapi-learning', [
         });
  
         $translateProvider.preferredLanguage('fr_BE');
-        $translateProvider.useSanitizeValueStrategy('sanitize');
+        $translateProvider.useSanitizeValueStrategy('escape');
     }])
 
     .run(['Restangular', 'API', 'UM_CONFIG', 'AuthStorage', '$rootScope', 'LoginFactory',
