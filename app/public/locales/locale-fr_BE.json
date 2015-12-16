@@ -1,7 +1,7 @@
 {
     "GENERAL": {
         "OK": "Ok",
-        "SAVE": "Enregister",
+        "SAVE": "Enregistrer",
         "CANCEL": "Annuler",
         "LOGIN": "Connexion",
         "LOGOUT": "Déconnexion",
@@ -95,7 +95,7 @@
                 "NAME": "Nom",
                 "SIZE": "Taille",
                 "PROGRESS": "Progrès",
-                "STATUS": "Status",
+                "STATUS": "Statut",
                 "VISIBILITY": "Visibilité",
                 "ACTIONS": "Actions"
             },
