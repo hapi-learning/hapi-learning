@@ -3,6 +3,7 @@
         "OK": "Ok",
         "CANCEL": "Annuler",
         "LOGIN": "Connexion",
+        "LOGOUT": "Déconnexion",
         "RESET": "Réinitialiser",
         "COURSES": "Cours",
         "NEWS": "Annonces",
@@ -10,9 +11,19 @@
         "TAGS": "Tags",
         "TEACHERS": "Enseignants",
         "ADMIN": "Administration",
+        "UPLOAD": "Envoyer",
+        "DOWNLOAD": "Télécharger",
         "ERROR": {
             "FORBIDDEN": "Vous n'avez pas accès à cette page !"
         }
+    },
+    "NAV": {
+        "HOME": "Mes cours",
+        "SETTINGS": "Paramètres du compte",
+        "NEWS": "@:GENERAL.NEWS",
+        "COURSES": "@:GENERAL.COURSES",
+        "ADMIN": "@:GENERAL.ADMIN",
+        "LOGOUT": "@:GENERAL.LOGOUT"
     },
     "TITLE": {
         "HOME_NEWS": "Annonces récentes",
@@ -35,11 +46,41 @@
             "NEWS": "Poster une nouvelle annonce pour le cours"
         }
     },
+    "FILE-EXPLORER": {
+        "EMPTY": "Pas de fichiers sélectionnés",
+        "ERROR": "Erreur d'envoi de fichier",
+        "INVALID": {
+            "NAME": "Nom de fichier ou de dossier invalide",
+            "TYPE": "Le fichier ne peut pas être un dossier",
+            "SIZE": "Le fichier doit faire moins de 20Mib"
+        },
+        "BUTTONS": {
+            "PARENT": "Dossier parent",
+            "CREATEDIR": "Créer un dossier",
+            "UPLOAD": "Envoyer des fichiers",
+            "SHOW": "Afficher les fichiers cachés",
+            "DOWNLOAD": "@:GENERAL.DOWNLOAD",
+            "FINISH": "Terminer l'envoi"
+        },
+        "FOLDER": {
+            "PLACEHOLDER": "Nom du dossier",
+            "HIDDEN": "caché"
+        },
+        "TABLE": {
+            "TYPE": "Type",
+            "NAME": "Nom",
+            "SIZE": "Taille",
+            "DOWNLOAD": "@:GENERAL.DOWNLOAD",
+            "UPDATED": "Mis à jour",
+            "VISIBILITY": "Visibilité",
+            "EDIT": "Éditer"
+        }
+    },
     "FORM": {
         "USERS": {
             "IMPORT": {
                 "LABEL": "Importer depuis un fichier JSON",
-                "CONTENT" : "Voici le contenu du fichier",
+                "CONTENT": "Voici le contenu du fichier",
                 "INVALIDS": {
                     "FILE": "Le fichier sélectionné n'est pas un fichier JSON valide",
                     "SCHEMA": "Le fichier sélectionné n'a pas une structure JSON valide",
@@ -149,8 +190,5 @@
                 "LABEL": "Se connecter"
             }
         }
-    },
-    "BUTTONS": {
-        "LOGOUT": "Déconnexion"
     }
 }
