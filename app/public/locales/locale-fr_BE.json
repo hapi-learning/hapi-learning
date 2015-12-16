@@ -60,7 +60,7 @@
         }
     },
     "FILE-EXPLORER": {
-        "EMPTY": "Pas de fichiers sélectionnés",
+        "NO_FILE": "Pas de fichiers sélectionnés",
         "ERROR": "Erreur d'envoi de fichier",
         "INVALID": {
             "NO_FILE": "Nom de fichier ou de dossier invalide",
@@ -87,6 +87,31 @@
             "UPDATED": "Mis à jour",
             "VISIBILITY": "Visibilité",
             "EDIT": "Éditer"
+        },
+        "UPLOAD": {
+            "DRAGNDROP": "Glissez un fichier à ajouter ici",
+            "QUEUE": "Envoi en cours",
+            "TABLE": {
+                "NAME": "Nom",
+                "SIZE": "Taille",
+                "PROGRESS": "Progrès",
+                "STATUS": "Status",
+                "VISIBILITY": "Visibilité",
+                "ACTIONS": "Actions"
+            },
+            "VISIBILITY": {
+                "VISIBLE": "Visible",
+                "HIDDEN": "Caché"
+            },
+            "BUTTONS": {
+                "SELECT": "Choisir..",
+                "UPLOAD": "@:GENERAL.UPLOAD",
+                "CANCEL": "@:GENERAL.CANCEL",
+                "REMOVE": "Supprimer",
+                "UPLOAD-ALL": "Tout envoyer",
+                "CANCEL-ALL": "Tout annuler",
+                "REMOVE-ALL": "Tout supprimer"
+            }
         }
     },
     "FORM": {
@@ -191,7 +216,7 @@
                 "SUBMIT": "Soumettre",
                 "GOTO_NEWS": "Voir les news"
             },
-            "FEEDBACK": "Cours ajouté avec succès !"
+            "FEEDBACK": "News ajouté avec succès !"
         },
         "COURSES": {
             "TEACHERS": {
