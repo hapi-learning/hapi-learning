@@ -3,7 +3,7 @@
 const Joi = require('joi');
 const JWT = require('jsonwebtoken');
 const Bcrypt = require('bcrypt-nodejs');
-const uuid = require('node-uuid');
+const Uuid = require('node-uuid');
 const Boom = require('boom');
 const Utils = require('../utils/sequelize');
 const _ = require('lodash');
@@ -143,6 +143,7 @@ exports.forgot = {
 
         const User = this.models.User;
         const PRR  = this.models.PasswordResetRequest;
+        const Mailers = this.mailers;
 
         User.findOne({
             attributes: {
@@ -153,24 +154,22 @@ exports.forgot = {
             }
         }).then(function(user) {
             if (user) {
-
-                const uuid = uuid.v1();
+                const uuid = Uuid.v1();
 
                 // No need to wait for this
-                user.addPasswordResetRequest({
+            /*    user.addPasswordResetRequest({
                     guid: uuid
-                });
+                });*/
 
                 return {user: user, uuid: uuid};
             } else {
                 throw {}; // No need for an error - finally block
             }
         }).then(function(infos) {
-            const Mailers = this.mailers;
             const uri = request.server.select('web').info.uri + '/#/reset/' + infos.uuid;
             return Mailers.sendPasswordReset(infos.user, uri);
         }).finally(function() {
-            return reply().code(201);
+            return reply().code(202);
         });
 
     }

@@ -9,7 +9,7 @@ const hogan    = require('hogan.js');
 const newsTemplate = Fs.readFileSync(Path.join(__dirname, 'mail-templates/news.hjs'), 'utf-8');
 const forgotTemplate = Fs.readFileSync(Path.join(__dirname, 'mail-templates/forgot.hjs'), 'utf-8');
 const compiledNewsTemplate = hogan.compile(newsTemplate);
-const compiledForgotTemplte = hogan.compile(forgotTemplate);
+const compiledForgotTemplate = hogan.compile(forgotTemplate);
 
 
 const internals = {
@@ -51,7 +51,7 @@ exports.register = function(server, options, next) {
             from: process.env.OFFICIAL_EMAIL_ADDRESS,
             subject: 'Forgot password',
             html: compiledForgotTemplate.render(data)
-        })
+        });
     };
 
     server.expose('mailers', Mailers);
