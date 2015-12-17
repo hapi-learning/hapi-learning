@@ -162,15 +162,11 @@ exports.forgot = {
                     guid: uuid
                 });
 
-                return {user: user, uuid: uuid};
-
+                const uri = request.server.select('web').info.uri + '/#/reset/' + uuid;
+                return Mailers.sendPasswordReset(user, uri);
             } else {
                 throw {}; // No need for an error - finally block
             }
-        }).then(function(infos) {
-            // Wrong if load balancer, proxy, etc.
-            const uri = request.server.select('web').info.uri + '/#/reset/' + infos.uuid;
-            return Mailers.sendPasswordReset(infos.user, uri);
         }).finally(function() {
             return reply().code(202);
         });
