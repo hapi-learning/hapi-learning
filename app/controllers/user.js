@@ -94,6 +94,7 @@ exports.get = {
  *
  * @apiPermission all users.
  *
+ * @apiParam (search) {String} A search field (username, last name, first name, email).
  * @apiParam (query) {Number} [limit=25] Number of results per page.
  * @apiParam (query) {Number} [page=1] Page number.
  * @apiParam (query) {Boolean} [pagination=true] Enable / disable pagination.
