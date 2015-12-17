@@ -3,6 +3,8 @@
 
 # hapi-learning 
 
+[![Join the chat at https://gitter.im/fknop/hapi-learning](https://badges.gitter.im/fknop/hapi-learning.svg)](https://gitter.im/fknop/hapi-learning?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > Building an e-learning platform with HapiJS and AngularJS
 
 ## Documentation
