@@ -154,18 +154,21 @@ exports.forgot = {
             }
         }).then(function(user) {
             if (user) {
+
                 const uuid = Uuid.v1();
 
                 // No need to wait for this
-            /*    user.addPasswordResetRequest({
+                user.createPasswordResetRequest({
                     guid: uuid
-                });*/
+                });
 
                 return {user: user, uuid: uuid};
+
             } else {
                 throw {}; // No need for an error - finally block
             }
         }).then(function(infos) {
+            // Wrong if load balancer, proxy, etc.
             const uri = request.server.select('web').info.uri + '/#/reset/' + infos.uuid;
             return Mailers.sendPasswordReset(infos.user, uri);
         }).finally(function() {

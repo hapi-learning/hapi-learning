@@ -1,5 +1,7 @@
 'use strict';
 
+const Bcrypt = require('bcrypt-nodejs');
+
 module.exports = function(sequelize, DataTypes) {
     return sequelize.define('PasswordResetRequest', {
         guid: {
@@ -20,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         disabled: {
             type: DataTypes.BOOLEAN,
-            defautlValue: false,
+            defaultValue: false,
             unique: false,
             allowNull: false,
             field: 'disabled'
