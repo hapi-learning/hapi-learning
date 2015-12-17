@@ -21,7 +21,7 @@ angular.module('hapi-learning')
             $scope.update = false;
             $scope.course = null;
             $scope.editing = false;
-            $scope.errorPostHomepage = null;
+            $scope.errorPostHomepage = false;
 
 
 
@@ -78,16 +78,16 @@ angular.module('hapi-learning')
                     'homepage').then(function(res) {
                         $scope.course.description = content;
                         $scope.editing = false;
-                        $scope.errorPostHomepage = null;
+                        $scope.errorPostHomepage = false;
                     }).catch(function() {
                         $scope.editing = true;
-                        $scope.errorPostHomepage = 'Error saving the homepage';
+                        $scope.errorPostHomepage = true;
                     });
             };
 
             $scope.cancelEdit = function() {
                 $scope.editing = false;
-                $scope.errorPostHomepage = null;
+                $scope.errorPostHomepage = false;
             };
 
 

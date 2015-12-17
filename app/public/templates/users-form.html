@@ -2,39 +2,39 @@
 
     <fieldset class="form-group">
         <div>
-            <label>Username (required)</label>
+            <label translate>FORM.USERS.USERNAME.LABEL</label>
             <input type="text" class="form-control" name="username"
                    ng-model="userForm.username"
-                   title="Username" placeholder="Username" required />
+                   title="Username" placeholder="{{'FORM.USERS.USERNAME.PLACEHOLDER' | translate}}" required />
         </div>
     </fieldset>
 
     <fieldset class="form-group">
         <div class="row">
             <div class="col-xs-6">
-                <label>First name</label>
+                <label translate>FORM.USERS.FIRSTNAME.LABEL</label>
                 <input type="text" class="form-control" ng-model="userForm.firstName"
-                       name="firstname" title="First name" placeholder="First name" />
+                       name="firstname" title="First name" placeholder="{{'FORM.USERS.FIRSTNAME.PLACEHOLDER' | translate}}" />
             </div>
 
             <div class="col-xs-6">
-                <label>Last name</label>
+                <label translate>FORM.USERS.LASTNAME.LABEL</label>
                 <input type="text" class="form-control" ng-model="userForm.lastName"
-                       name="lastname" title="Last name" placeholder="Last name" />
+                       name="lastname" title="Last name" placeholder="{{'FORM.USERS.LASTNAME.PLACEHOLDER' | translate}}" />
             </div>
         </div>
     </fieldset>
 
     <fieldset class="form-group">
-        <label>Password (required)</label>
+        <label translate>FORM.USERS.PASSWORD.LABEL</label>
         <input type="password" class="form-control" ng-model="userForm.password"
-               name="password" title="Password" placeholder="●●●●●●●●" required />
+               name="password" title="Password" placeholder="{{'FORM.USERS.PASSWORD.PLACEHOLDER' | translate}}" required />
     </fieldset>
 
     <fieldset class="form-group">
-        <label>Email (required)</label>
+        <label translate>FORM.USERS.EMAIL.LABEL</label>
         <input type="email" class="form-control" ng-model="userForm.email"
-               name="email" placeholder="42424@heb.be" required />
+               name="email" placeholder="{{'FORM.USERS.EMAIL.PLACEHOLDER' | translate}}" required />
     </fieldset>
 
     <br />
@@ -49,35 +49,35 @@
 
 
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">
-            Create new user
+        <button type="submit" class="btn btn-primary" translate>
+            FORM.USERS.BUTTONS.CREATE
         </button>
-        <button type="button" ng-click="resetUserForm()" class="btn btn-warning">
-            Reset
+        <button type="button" ng-click="resetUserForm()" class="btn btn-warning" translate>
+            FORM.USERS.BUTTONS.RESET
         </button>
     </div>
 
 </form>
 
-<h2>Import from file</h2>
+<h2 translate>FORM.USERS.IMPORT.LABEL</h2>
 
 <div ng-if="usersFileNotValid" ng-click="removeNotValidError()">
-    <div class="alert alert-danger">The file is not a valid JSON file</div>
+    <div class="alert alert-danger" translate>FORM.USERS.IMPORT.INVALIDS.FILE</div>
 </div>
 
 <div ng-if="schemaNotValid" ng-click="removeNotValidError()">
-    <div class="alert alert-danger">The JSON schema is invalid</div>
+    <div class="alert alert-danger" translate>FORM.USERS.IMPORT.INVALIDS.SCHEMA</div>
 </div>
 
 <div ng-if="conflicts" ng-click="removeNotValidError()">
-    <div class="alert alert-danger">Conflicts! Some users already exist !</div>
+    <div class="alert alert-danger" translate>FORM.USERS.IMPORT.INVALIDS.CONFLICT</div>
 </div>
 
 <div ng-if="countAddedUsers" ng-click="removeCountAddedUsers()">
-    <div class="alert alert-success"><span ng-bind="countAddedUsers"></span> users added !</div>
+    <div class="alert alert-success"><span translate="FORM.USERS.IMPORT.FEEDBACK" translate-values="{number : countAddedUsers}"></span></div>
 </div>
 
-<input type="file" accept=".json" on-read-file="showUsersFileContent($fileContent)" />
+<input type="file" accept=".json" on-read-file="showUsersFileContent($fileContent)" class="filestyle" />
 
 <br/>
 
@@ -86,25 +86,25 @@
     <div>
         <button class="btn btn-primary" ng-click="uploadUsers()">
             <span class="fa fa-floppy-o fa-lg"></span>
-            Save
+            <span translate>FORM.USERS.IMPORT.BUTTONS.SAVE</span>
         </button>
         <button class="btn btn-default" ng-click="resetUploadUsers()">
             <span class="fa fa-ban fa-lg"></span>
-            Cancel
+            <span translate>FORM.USERS.IMPORT.BUTTONS.CANCEL</span>
         </button>
     </div>
 
-    <h2>File content is:</h2>
+    <h2 translate>FORM.USERS.IMPORT.CONTENT</h2>
     <pre pretty-json="usersFileContent"></pre>
     <br/>
     <div>
         <button class="btn btn-primary" ng-click="uploadUsers()">
             <span class="fa fa-floppy-o fa-lg"></span>
-            Save
+            <span translate>FORM.USERS.IMPORT.BUTTONS.SAVE</span>
         </button>
         <button class="btn btn-default" ng-click="resetUploadUsers()">
             <span class="fa fa-ban fa-lg"></span>
-            Cancel
+            <span translate>FORM.USERS.IMPORT.BUTTONS.CANCEL</span>
         </button>
     </div>
 </div>

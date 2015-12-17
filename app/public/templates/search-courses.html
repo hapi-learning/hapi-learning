@@ -3,7 +3,7 @@
         <span class="col-sm-4">
             <input class="form-control"
                    type="text"
-                   placeholder="Course name or code"
+                   placeholder="{{'FORM.SEARCH.PLACEHOLDER' | translate}}"
                    ng-change="load()"
                    ng-model="coursesFilter"/>
         </span>
@@ -13,7 +13,7 @@
 <br />
 
 <div>
-    <label>Tags</label>
+    <label translate>GENERAL.TAGS</label>
 
     <div>
         <span data-toggle="buttons" ng-repeat="tag in tags track by $index">

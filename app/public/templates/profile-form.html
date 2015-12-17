@@ -4,7 +4,7 @@
           onbeforesave="updateProfile($data)" oncancel="removeErrors()">
 
        <div class="form-group">
-            <label class="control-label col-md-2">First name: </label>
+           <label class="control-label col-md-2"><span translate>FORM.PROFILE.FIRSTNAME.LABEL</span>: </label>
             <div class="col-md-10">
                 <span e-class="form-control" editable-text="profile.firstName"
                       e-name="firstName"
@@ -13,7 +13,7 @@
        </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Last name:</label>
+            <label class="control-label col-md-2"><span translate>FORM.PROFILE.LASTNAME.LABEL</span>:</label>
             <div class="col-md-10">
                  <span e-class="form-control" editable-text="profile.lastName"
                       e-name="lastName"
@@ -22,7 +22,7 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Email:</label>
+            <label class="control-label col-md-2"><span translate>FORM.PROFILE.EMAIL.LABEL</span>:</label>
             <div class="col-md-10">
                 <span e-class="form-control" e-type="email"
                       e-ng-change="checkEmail(profile.email)"
@@ -32,42 +32,42 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Notify news by email:</label>
+            <label class="control-label col-md-2"><span translate>FORM.PROFILE.NOTIFY.LABEL</span>:</label>
             <div class="col-md-10" style="padding-left:35px">
                 <div e-class="form-control" e-type="checkbox"
                       editable-checkbox="profile.notify" e-name="notify">
-                    <span ng-if="profile.notify === true">yes</span>
-                    <span ng-if="profile.notify === false">no</span>
+                    <span ng-if="profile.notify === true" translate>FORM.PROFILE.NOTIFY.YES</span>
+                    <span ng-if="profile.notify === false" translate>FORM.PROFILE.NOTIFY.NO</span>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Phone number:</label>
+            <label class="control-label col-md-2"><span translate>FORM.PROFILE.PHONE.LABEL</span>:</label>
             <div class="col-md-10">
                 <span e-class="form-control" editable-text="profile.phoneNumber" e-name="phoneNumber"
-                      ng-bind="profile.phoneNumber" e-placeholder="Phone number">
+                      ng-bind="profile.phoneNumber" e-placeholder="{{'FORM.PROFILE.PHONE.PLACEHOLDER' | translate}}">
 
                 </span>
             </div>
         </div>
 
         <div class="form-group" ng-show="profileForm.$visible">
-            <label class="control-label col-md-2">New password:</label>
+            <label class="control-label col-md-2"><span translate>FORM.PROFILE.PASSWORD.LABEL</span>:</label>
             <div class="col-md-10">
               <span e-type="password" editable-text="newPassword"
                     e-class="form-control"
-                    e-name="newPassword" e-placeholder="●●●●●●●●">
+                    e-name="newPassword" e-placeholder="{{'FORM.PROFILE.PASSWORD.PLACEHOLDER' | translate}}">
              </span>
             </div>
         </div>
 
         <div class="form-group" ng-show="profileForm.$visible">
-            <label class="control-label col-md-2">Confirm new password:</label>
+            <label class="control-label col-md-2"><span translate>FORM.PROFILE.PASSWORD.CONFIRM</span>:</label>
             <div class="col-md-10">
                 <span e-type="password" e-class="form-control"
                       editable-text="confirmPassword"
-                      e-name="confirmPassword" e-placeholder="●●●●●●●●">
+                      e-name="confirmPassword" e-placeholder="{{'FORM.PROFILE.PASSWORD.PLACEHOLDER' | translate}}">
                 </span>
 
             </div>
@@ -79,21 +79,20 @@
 
         <div class="buttons col-md-offset-2 col-md-2">
             <button type="button" class="btn btn-default"
-                    ng-click="profileForm.$show()" ng-show="!profileForm.$visible">
-                Edit
+                    ng-click="profileForm.$show()" ng-show="!profileForm.$visible" translate>
+                GENERAL.EDIT
             </button>
 
             <span ng-show="profileForm.$visible">
                 <button type="submit" class="btn btn-primary"
-                        ng-disabled="profileForm.$waiting"
-                        >
-                    Save
+                        ng-disabled="profileForm.$waiting" translate>
+                    GENERAL.SAVE
                 </button>
 
                 <button type="button" class="btn btn-default"
                         ng-disabled="profileForm.$waiting"
-                        ng-click="profileForm.$cancel()">
-                    Cancel
+                        ng-click="profileForm.$cancel()" translate>
+                    GENERAL.CANCEL
                 </button>
 
             </span>

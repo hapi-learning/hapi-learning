@@ -20,8 +20,8 @@ angular.module('hapi-learning', [
         'ng-showdown',
         'ngPrettyJson',
         'ngDialog',
+        'pascalprecht.translate',
         'infinite-scroll'])
-
     .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.type('FilePath', {
             encode: function(value) {
@@ -122,6 +122,16 @@ angular.module('hapi-learning', [
 
     .config(['storeProvider', function(storeProvider) {
         storeProvider.setStore('localStorage');
+    }])
+    
+    .config(['$translateProvider', function ($translateProvider) {
+        $translateProvider.useStaticFilesLoader({
+            prefix: '../locales/locale-',
+            suffix: '.json'
+        });
+ 
+        $translateProvider.preferredLanguage('en_US');
+        $translateProvider.useSanitizeValueStrategy('escape');
     }])
 
     .run(['Restangular', 'API', 'UM_CONFIG', 'AuthStorage', '$rootScope', 'LoginFactory',

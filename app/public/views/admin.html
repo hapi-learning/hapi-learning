@@ -1,7 +1,7 @@
 <div ng-controller="AdminCtrl">
    <div if-group="admin" class="container-fluid">
-    <h1 class="page-header">
-        Administration
+    <h1 class="page-header" translate>
+        GENERAL.ADMIN
     </h1>
 
     <div class="row">
@@ -11,26 +11,26 @@
                     <li ui-sref-active="active">
                         <a ui-sref="root.admin.courses">
                             <span class="glyphicon glyphicon-book"></span>
-                            <span> Courses</span>
+                            <span translate>GENERAL.COURSES</span>
 
                         </a>
                     </li>
                     <li ui-sref-active="active">
                         <a ui-sref="root.admin.users">
                             <span class="fa fa-users fa-lg"></span>
-                            <span> Users</span>
+                            <span translate>GENERAL.USERS</span>
                         </a>
                     </li>
                     <li ui-sref-active="active">
                         <a ui-sref="root.admin.news">
                             <span class="fa fa-newspaper-o fa-lg"></span>
-                            <span> News</span>
+                            <span translate>GENERAL.NEWS</span>
                         </a>
                     </li>
                     <li ui-sref-active="active">
                         <a ui-sref="root.admin.tags">
                             <span class="fa fa-hashtag fa-lg"></span>
-                            <span> Tags</span>
+                            <span translate>GENERAL.TAGS</span>
                         </a>
                     </li>
 
@@ -46,8 +46,7 @@
 <div if-group="user teacher">
 
     <div class="page-header">
-        <h1>You don't have access to this page !</h1>
-
+        <h1 translate>GENERAL.ERROR.FORBIDDEN</h1>
    </div>
 </div>
 

@@ -2,8 +2,8 @@
 
 // Import restangular for now because it stores the base url
 angular.module('hapi-learning')
-    .directive('upload', ['$rootScope', 'FileUploader', 'Restangular', 'AuthStorage',
-                          function ($rootScope, FileUploader, Restangular, AuthStorage) {
+    .directive('upload', ['$rootScope', 'FileUploader', 'Restangular', 'AuthStorage', '$translate',
+                          function ($rootScope, FileUploader, Restangular, AuthStorage, $translate) {
         return {
             restrict: 'E',
             templateUrl: 'templates/upload.html',
@@ -47,6 +47,15 @@ angular.module('hapi-learning')
                         scope.fileChooser = function () {
                             angular.element('#fileSelect').trigger('click');
                         };
+                        
+                        $translate('FILE-EXPLORER.UPLOAD.BUTTONS.SELECT').then(function (button) {
+                            elem.find(':file').filestyle({
+                                buttonName: "btn-primary",
+                                buttonText: button,
+                                badge: false,
+                                input: false
+                            });
+                        });
                     }
                 };
             }
