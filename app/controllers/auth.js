@@ -3,6 +3,7 @@
 const Joi = require('joi');
 const JWT = require('jsonwebtoken');
 const Bcrypt = require('bcrypt-nodejs');
+const uuid = require('node-uuid');
 const Boom = require('boom');
 const Utils = require('../utils/sequelize');
 const _ = require('lodash');
@@ -127,6 +128,51 @@ exports.login = {
                     reply(Boom.unauthorized('Invalid username and/or password'));
                 }
             });
+    }
+};
+
+exports.forgot = {
+    description: 'Forgot password request',
+    auth: false,
+    validate: {
+        payload: {
+            email: Joi.email().required()
+        }
+    },
+    handler: function(request, reply) {
+
+        const User = this.models.User;
+        const PRR  = this.models.PasswordResetRequest;
+
+        User.findOne({
+            attributes: {
+                exclude: ['password']
+            },
+            where: {
+                email: request.payload.email
+            }
+        }).then(function(user) {
+            if (user) {
+
+                const uuid = uuid.v1();
+
+                // No need to wait for this
+                user.addPasswordResetRequest({
+                    guid: uuid
+                });
+
+                return {user: user, uuid: uuid};
+            } else {
+                throw {}; // No need for an error - finally block
+            }
+        }).then(function(infos) {
+
+            const uri = request.server.select('web').info.uri + '/#/reset/' + infos.uuid;
+            // Send mail
+        }).finally(function() {
+            return reply().code(201);
+        });
+
     }
 };
 
