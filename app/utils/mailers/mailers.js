@@ -9,21 +9,11 @@ const hogan    = require('hogan.js');
 const newsTemplate         = Fs.readFileSync(Path.join(__dirname, 'mail-templates/news.hjs'), 'utf-8');
 const compiledNewsTemplate = hogan.compile(newsTemplate);
 
-exports.register = function(server, options, next) {
 
-    const MailNotifier = {};
-
-    MailNotifier.notifyNews = function(news, user) {
-
-        return new P(function(resolve, reject){
-
-            sendgrid.send({
-
-                to: user.get('email'),
-                from: process.env.OFFICIAL_EMAIL_ADDRESS,
-                subject: 'News : ' + news.subject,
-                html : compiledNewsTemplate.render(news)
-            }, function(err) {
+const internals = {
+    sendgrid: function(options) {
+        return new P(function(resolve, reject) {
+            sendgrid.send(options, function(err) {
                 if (err) {
                     reject(err);
                 } else {
@@ -32,8 +22,31 @@ exports.register = function(server, options, next) {
             });
         });
     };
+};
 
-    server.expose('mailers', MailNotifier);
+exports.register = function(server, options, next) {
+
+    const Mailers = {};
+
+    Mailers.notifyNews = function(news, user) {
+        return internals.sendgrid({
+            to: user.get('email'),
+            from: process.env.OFFICIAL_EMAIL_ADDRESS,
+            subject: 'News : ' + news.subject,
+            html : compiledNewsTemplate.render(news)
+        });
+    };
+
+    Mailers.sendPasswordReset = function(email, link) {
+        return internals.sendgrid({
+            to: email,
+            from: process.env.OFFICIAL_EMAIL_ADDRESS,
+            subject: 'Forgot password',
+            html:
+        })
+    };
+
+    server.expose('mailers', Mailers);
 
     next();
 };

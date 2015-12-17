@@ -17,6 +17,13 @@ module.exports = function(sequelize, DataTypes) {
             unique: false,
             allowNull: false,
             field: 'time'
+        },
+        disabled: {
+            type: DataTypes.BOOLEAN,
+            defautlValue: false,
+            unique: false,
+            allowNull: false,
+            field: 'disabled'
         }
     },  {
         paranoid: true,
