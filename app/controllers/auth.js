@@ -166,9 +166,9 @@ exports.forgot = {
                 throw {}; // No need for an error - finally block
             }
         }).then(function(infos) {
-
+            const Mailers = this.mailers;
             const uri = request.server.select('web').info.uri + '/#/reset/' + infos.uuid;
-            // Send mail
+            return Mailers.sendPasswordReset(infos.user, uri);
         }).finally(function() {
             return reply().code(201);
         });

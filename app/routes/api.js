@@ -6,6 +6,7 @@ exports.register = function (server, options, next) {
     const Storage     = server.plugins.storage.storage;
     const Controllers = server.plugins.controllers.controllers;
     const Models      = server.plugins.models.models;
+    const Mailers     = server.plugins.mailers.mailers;
 
 
     // Sets context for handlers
@@ -13,7 +14,8 @@ exports.register = function (server, options, next) {
     server.bind({
         models: Models,
         storage: Storage,
-        cache: Cache
+        cache: Cache,
+        mailers: Mailers
     });
 
     server.route([

@@ -135,7 +135,7 @@ exports.post = {
         const User = this.models.User;
         const Course = this.models.Course;
         const News = this.models.News;
-        const Mailers = request.server.plugins.mailers.mailers;
+        const Mailers = this.mailers;
 
         const username = request.payload.username;
         const code = request.payload.code;
