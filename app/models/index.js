@@ -26,14 +26,14 @@ exports.register = function(server, options, next)
     _.forEach(files, (file) => {
         if (file !== Path.basename(__filename)) {
             const model = Path.basename(file, '.js');
-
-            const name = model.charAt(0).toUpperCase() + model.slice(1);
-
+            const name = _.capitalize(_.camelCase(model));
             models[name] = models.sequelize.import(model);
         }
     });
 
     void (function setAssociations(m) {
+
+        m.User.hasMany(m.PasswordResetRequest);
 
         // A Course has multiple Tags to describe him
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });

@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             unique: false,
             allowNull: false,
-            code: 'subject'
+            field: 'subject'
         },
         content: {
             type: DataTypes.TEXT,
