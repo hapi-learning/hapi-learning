@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Forgot password</title>
+</head>
+<body>
+    Hello {{username}},
+
+    <!-- Change hapi-learning to real uri later -->
+    <p>
+        You made a request to reset your password on hapi-learning.
+    </p>
+    <p>
+        Here is the reset link: {{resetlink}}
+    </p>
+
+    <p>
+        If you didn't make this request, don't click.
+    </p>
+
+    <p>
+        Hapi-Learning admins.
+    </p>
+</body>
+</html>

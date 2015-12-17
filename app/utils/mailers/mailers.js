@@ -6,8 +6,10 @@ const Path     = require('path');
 const Fs       = require('fs');
 const hogan    = require('hogan.js');
 
-const newsTemplate         = Fs.readFileSync(Path.join(__dirname, 'mail-templates/news.hjs'), 'utf-8');
+const newsTemplate = Fs.readFileSync(Path.join(__dirname, 'mail-templates/news.hjs'), 'utf-8');
+const forgotTemplate = Fs.readFileSync(Path.join(__dirname, 'mail-templates/forgot.hjs'), 'utf-8');
 const compiledNewsTemplate = hogan.compile(newsTemplate);
+const compiledForgotTemplte = hogan.compile(forgotTemplate);
 
 
 const internals = {
@@ -21,7 +23,7 @@ const internals = {
                 }
             });
         });
-    };
+    }
 };
 
 exports.register = function(server, options, next) {
@@ -37,12 +39,18 @@ exports.register = function(server, options, next) {
         });
     };
 
-    Mailers.sendPasswordReset = function(email, link) {
+    Mailers.sendPasswordReset = function(user, link) {
+
+        const data = {
+            username: user.get('username'),
+            resetlink: link
+        };
+
         return internals.sendgrid({
-            to: email,
+            to: user.get('email'),
             from: process.env.OFFICIAL_EMAIL_ADDRESS,
             subject: 'Forgot password',
-            html:
+            html: compiledForgotTemplate.render(data)
         })
     };
 
