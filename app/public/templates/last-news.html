@@ -1,6 +1,6 @@
 <div>
 
-<ul class="list-group" infinite-scroll="getNews(false)" infinite-scroll-disabled="scrollDisabled()">
+<ul class="list-group" infinite-scroll="getNews(false)" infinite-scroll-distance="1" infinite-scroll-disabled="scrollDisabled()">
     <li style="margin-bottom: 5px" class="list-group-item" ng-repeat="n in news">
         <news news="n"></news>
     </li>
