@@ -7,10 +7,11 @@ angular.module('hapi-learning')
             templateUrl: 'templates/back-to-top.html',
             link: function(scope, element, attrs) {
                 angular.element(window).on('scroll', function() {
+                    var elem = element.find('.back-to-top');
                     if (angular.element(this).scrollTop() > 650) {
-                        element.find('.back-to-top').fadeIn(200);
+                        elem.fadeIn(200);
                     } else {
-                        element.find('.back-to-top').fadeOut(200);
+                        elem.fadeOut(200);
                     }
                 });
 
