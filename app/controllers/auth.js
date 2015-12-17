@@ -136,7 +136,7 @@ exports.forgot = {
     auth: false,
     validate: {
         payload: {
-            email: Joi.email().required()
+            email: Joi.string().email().required()
         }
     },
     handler: function(request, reply) {

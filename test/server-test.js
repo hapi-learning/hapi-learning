@@ -30,7 +30,7 @@ const internals = {
                     }
                 }
             ],
-            '../app/utils/mail-notifier/mail-notifier': [{
+            '../app/utils/mailers/mailers': [{
                 select: ['api']
             }],
             '../app/utils/storage': [

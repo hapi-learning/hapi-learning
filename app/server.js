@@ -74,7 +74,7 @@ const internals = {
                         storage: 'storage'
                     }
                 }],
-            './utils/mail-notifier/mail-notifier': [{select : ['api'] }],
+            './utils/mailers/mailers': [{select : ['api'] }],
             './controllers': [{
                 select: ['api']
             }],

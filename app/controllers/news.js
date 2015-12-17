@@ -135,7 +135,7 @@ exports.post = {
         const User = this.models.User;
         const Course = this.models.Course;
         const News = this.models.News;
-        const MailNotifier = request.server.plugins['mail-notifier']['mail-notifier'];
+        const Mailers = request.server.plugins.mailers.mailers;
 
         const username = request.payload.username;
         const code = request.payload.code;
@@ -163,7 +163,7 @@ exports.post = {
                             course.getUsers().then(users => {
                                 const promises = _.map(users, user => {
                                     if (user.get('notify'))
-                                        return MailNotifier.notifyNews(news, user);
+                                        return Mailers.notifyNews(news, user);
                                     else
                                         return P.resolve();
                                 });
@@ -187,7 +187,7 @@ exports.post = {
                         User.findAll().then(users => {
                             const promises = _.map(users, user => {
                                 if (user.get('notify'))
-                                    return MailNotifier.notifyNews(news, user);
+                                    return Mailers.notifyNews(news, user);
                                 else
                                     return P.resolve();
                             });
