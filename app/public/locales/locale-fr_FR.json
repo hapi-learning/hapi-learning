@@ -133,7 +133,7 @@
             "PASSWORD": {
                 "LABEL": "Mot de passe",
                 "PLACEHOLDER": "@:GENERAL.HIDDEN",
-                "CONFIRM": "@:FORM.PROFILE.PASSWORD.LABEL"
+                "CONFIRM": "Confirmation mot de passe"
             },
             "PHONE": {
                 "LABEL": "Numéro de téléphone",

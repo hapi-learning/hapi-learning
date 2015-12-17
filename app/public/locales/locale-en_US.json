@@ -38,10 +38,10 @@
         "PROFILE": "Update your profile"
     },
     "ADMIN": {
-        "COURSES": "Create new courses",
+        "COURSES": "Create course(s)",
         "NEWS": "Create news",
-        "TAGS": "Create tags",
-        "USERS": "Create users"
+        "TAGS": "Create tag(s)",
+        "USERS": "Create user(s)"
     },
     "COURSE": {
         "SUBSCRIBE": "Subscribe",
@@ -53,24 +53,24 @@
             "ADMINISTRATION": "Administration"
         },
         "HOME": {
-            "POST-ERROR": "Error while saving homepage"
+            "POST-ERROR": "Error while saving the homepage"
         },
         "ADMIN": {
             "NEWS": "Create news related to course"
         }
     },
     "FILE-EXPLORER": {
-        "NO_FILE": "No file selected",
+        "NO_FILE": "No files",
         "ERROR": "Error uploading file",
         "INVALID": {
             "NO_FILE": "Invalid file or folder name",
             "TYPE": "File can not be a folder",
-            "SIZE": "File size can not be over (9000) 20Mo"
+            "SIZE": "File size can not be over 20Mo"
         },
         "BUTTONS": {
             "PARENT": "Parent directory",
             "CREATEDIR": "Create directory",
-            "UPLOAD": "Upload files",
+            "UPLOAD": "Upload file(s)",
             "SHOW": "Show hidden files",
             "DOWNLOAD": "@:GENERAL.DOWNLOAD",
             "FINISH": "Finish upload"
@@ -133,10 +133,10 @@
             "PASSWORD": {
                 "LABEL": "Password",
                 "PLACEHOLDER": "@:GENERAL.HIDDEN",
-                "CONFIRM": "@:FORM.PROFILE.PASSWORD.LABEL"
+                "CONFIRM": "Confirm password"
             },
             "PHONE": {
-                "LABEL": "Phonenumber",
+                "LABEL": "Phone number",
                 "PLACEHOLDER": "+32 482 48 19 55"
             }
         },
@@ -237,7 +237,7 @@
                 "INVALID": "Course already exists with this name"
             },
             "CODE": {
-                "LABEL": "Code (requis)",
+                "LABEL": "Code (required)",
                 "PLACEHOLDER": "ALG, TFCC...",
                 "INVALID": "Course already exists with this code"
             },
