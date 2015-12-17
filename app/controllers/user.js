@@ -108,15 +108,43 @@ exports.get = {
  */
 exports.getAll = {
     description: 'Get all users',
+    validate: {
+        options: {
+            allowUnknown: true
+        },
+        query: {
+            search: Joi.string().min(2)
+        }
+    },
     handler: function(request, reply) {
 
         const User = this.models.User;
         const pagination = request.query.pagination;
+        const search = request.query.search;
 
-        const options = {};
-        options.attributes = {
-            exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+        const options = {
+            attributes: {
+                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+            }
         };
+
+        if (search) {
+            const like = {
+                $like: '%' + search + '%'
+            };
+
+            options.where = {
+                $or: [{
+                    email: like
+                }, {
+                    username: like
+                }, {
+                    firstName: like
+                }, {
+                    lastName: like
+                }]
+            };
+        }
 
         if (pagination) {
             options.limit = request.query.limit;

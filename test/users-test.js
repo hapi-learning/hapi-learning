@@ -321,6 +321,69 @@ describe('Controller.User', () => {
                 done();
             });
         });
+
+        it('Should return one user', done => {
+            const request = {
+                method: 'GET',
+                url: '/users?search=Johnny&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(1);
+                expect(response[0].username).to.equal('Johnny');
+                done();
+            });
+
+        });
+
+        it('Should return two users', done => {
+            const request = {
+                method: 'GET',
+                url: '/users?search=hotmail&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+
+        });
+
+        it('Should return two users', done => {
+            const request = {
+                method: 'GET',
+                url: '/users?search=os&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+
+        });
+
+        it('Should return 400 bad request', done => {
+            const request = {
+                method: 'GET',
+                url: '/users?search=o&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                expect(res.statusCode).to.equal(400);
+                done();
+            });
+
+        });
     });
 
     describe('#delete', () => {

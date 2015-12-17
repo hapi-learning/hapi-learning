@@ -161,36 +161,35 @@ describe('Controller.Course', () => {
 
 
 
-            Promise.all([createTags, createUsers])
-                .then(() => {
-                    server.inject(pRequest, res => {
-                        const response = res.request.response.source;
+            Promise.all([createTags, createUsers]).then(() => {
+                server.inject(pRequest, res => {
+                    const response = res.request.response.source;
 
-                        expect(response.name).to.equal(course.name);
-                        expect(response.code).to.equal(course.code);
-                        expect(response.teachers).to.be.an.array();
-                        expect(response.teachers).to.have.length(pRequest.payload.teachers.length);
-                        expect(response.teachers).to.only.include(pRequest.payload.teachers);
+                    expect(response.name).to.equal(course.name);
+                    expect(response.code).to.equal(course.code);
+                    expect(response.teachers).to.be.an.array();
+                    expect(response.teachers).to.have.length(pRequest.payload.teachers.length);
+                    expect(response.teachers).to.only.include(pRequest.payload.teachers);
 
-                        expect(response.tags).to.be.an.array();
-                        expect(response.tags).to.have.length(pRequest.payload.tags.length);
-                        expect(response.tags).to.only.include(pRequest.payload.tags);
+                    expect(response.tags).to.be.an.array();
+                    expect(response.tags).to.have.length(pRequest.payload.tags.length);
+                    expect(response.tags).to.only.include(pRequest.payload.tags);
 
-                        fs.stat(Path.join(__dirname, 'storage/courses/ATL3'), function(err, stats) {
+                    fs.stat(Path.join(__dirname, 'storage/courses/ATL3'), function(err, stats) {
 
+                        expect(err).to.be.null();
+                        expect(stats).to.exists();
+                        expect(stats.isDirectory()).to.be.true();
+
+                        fs.stat(Path.join(__dirname, 'storage/courses/ATL3/documents'), function(err, stats) {
                             expect(err).to.be.null();
                             expect(stats).to.exists();
                             expect(stats.isDirectory()).to.be.true();
-
-                            fs.stat(Path.join(__dirname, 'storage/courses/ATL3/documents'), function(err, stats) {
-                                expect(err).to.be.null();
-                                expect(stats).to.exists();
-                                expect(stats.isDirectory()).to.be.true();
-                                done();
-                            });
+                            done();
                         });
                     });
                 });
+            });
         });
 
         it('Should return a 409 conflict because resource already exists', done => {
@@ -274,6 +273,114 @@ describe('Controller.Course', () => {
                         done();
                     });
                 });
+            });
+        });
+
+        it('Should return 1 course', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses?code=ATL3&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(1);
+                expect(response[0].code).to.equal('ATL3');
+                done();
+            });
+        });
+
+        it('Should return 2 courses', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses?code=ANL&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+        });
+
+        it('Should return 2 courses', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses?codename=ANL&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+        });
+
+        it('Should return 2 courses', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses?codename=Analyse&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(2);
+                done();
+            });
+        });
+
+        it('Should return 1 course', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses?codename=ATL&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(1);
+                done();
+            });
+        });
+
+        it('Should return 1 course', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses?codename=Atelier&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(1);
+                done();
+            });
+        });
+
+        it('Should return just the code', done => {
+            const request = {
+                method: 'GET',
+                url: '/courses?code=ATL3&select=code&pagination=false',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(response).to.be.an.array();
+                expect(response).to.have.length(1);
+                expect(response[0].code).to.equal('ATL3');
+                expect(response[0].name).to.be.undefined();
+                done();
             });
         });
     });

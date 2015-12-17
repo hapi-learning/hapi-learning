@@ -102,16 +102,17 @@ exports.getAll = {
         };
 
         if (request.query.codename) {
-            options.where = {};
-            options.where.$or = [{
-                name: {
-                    $like: request.query.codename + '%'
-                }
-            }, {
-                code: {
-                    $like: request.query.codename + '%'
-                }
-            }];
+            const like = {
+                $like: request.query.codename + '%'
+            };
+
+            options.where = {
+                $or: [{
+                    name: like
+                }, {
+                    code: like
+                }]
+            };
         }
 
         if (request.query.code) {
