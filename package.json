@@ -136,6 +136,7 @@
     "gulp": "^3.9.0",
     "gulp-add-src": "^0.2.0",
     "gulp-angular-filesort": "^1.1.1",
+    "gulp-angular-translate": "^0.1.4",
     "gulp-concat": "^2.6.0",
     "gulp-htmlhint": "^0.3.0",
     "gulp-htmlmin": "^1.2.0",

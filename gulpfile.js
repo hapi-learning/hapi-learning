@@ -3,9 +3,11 @@
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const del = require('del');
+const es = require('event-stream');
 
 
 const paths = {
+    locales: 'app/public/locales/*.json',
     scripts: ['app/public/scripts/**/*.js', 'app/public/submodules/**/*.js'],
     styles: 'app/public/styles/**/*.css',
     index: 'app/public/index.html',
@@ -26,6 +28,8 @@ const vendorScripts = [
         'app/public/lib/jquery/dist/jquery.min.js',
         'app/public/lib/bootstrap/dist/js/bootstrap.min.js',
         'app/public/lib/angular/angular.min.js',
+        'app/public/lib/angular-translate/angular-translate.min.js',
+        'app/public/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js',
 
         //angular modules
         'app/public/lib/angular-ui-router/release/angular-ui-router.min.js',
@@ -72,12 +76,16 @@ const vendorCss = [
 
 const pipes = {};
 
-
+pipes.builtLocales = function() {
+    return gulp.src(paths.locales)
+        .pipe(plugins.angularTranslate({
+            module: 'hapi-learning',
+            standalone: false
+        }));
+};
 
 pipes.orderedAppScripts = function() {
     return plugins.angularFilesort();
-    /*return gulp.src(paths.scripts)
-        .pipe(plugins.angularFilesort());*/
 };
 
 pipes.minifiedFileName = function() {
@@ -94,8 +102,10 @@ pipes.validatedAppScripts = function() {
 
 pipes.builtAppScripts = function() {
     const validatedAppScripts = pipes.validatedAppScripts();
+    const locales = pipes.builtLocales();
 
-    return validatedAppScripts
+
+    return es.merge(locales, validatedAppScripts)
         .pipe(pipes.orderedAppScripts())
         .pipe(plugins.concat('app.min.js'))
         .pipe(plugins.ngAnnotate())
