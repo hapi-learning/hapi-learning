@@ -130,7 +130,7 @@ angular.module('hapi-learning', [
             suffix: '.json'
         });
  
-        $translateProvider.preferredLanguage('en_US');
+        $translateProvider.preferredLanguage('en');
         $translateProvider.useSanitizeValueStrategy('escape');
     }])
 
