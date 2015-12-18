@@ -1,17 +1,17 @@
 'use strict';
 
-const Bcrypt = require('bcrypt-nodejs');
+//const Bcrypt = require('bcrypt-nodejs');
 
 module.exports = function(sequelize, DataTypes) {
     return sequelize.define('PasswordResetRequest', {
-        guid: {
+        uuid: {
             type: DataTypes.STRING,
             unique: true,
             allowNull: false,
-            field: 'guid',
+            field: 'guid'/*,
             set: function(value) {
                 this.setDataValue('guid', Bcrypt.hashSync(value, Bcrypt.genSaltSync()));
-            }
+            }*/
         },
         time: {
             type: DataTypes.DATE,

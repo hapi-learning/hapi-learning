@@ -159,7 +159,7 @@ exports.forgot = {
 
                 // No need to wait for this
                 user.createPasswordResetRequest({
-                    guid: uuid
+                    uuid: uuid
                 });
 
                 const uri = request.server.select('web').info.uri + '/#/reset/' + uuid;
@@ -171,6 +171,36 @@ exports.forgot = {
             return reply().code(202);
         });
 
+    }
+};
+
+exports.checkReset = {
+    description: 'Check reset UUID',
+    auth: false,
+    validate: {
+        query: {
+            uuid: Joi.string().required()
+        }
+    },
+    handler: function (request, reply) {
+
+        const PRR   = this.models.PasswordResetRequest;
+        const uuid  = request.query.uuid;
+
+        PRR.findOne({
+            where: {
+                disabled: false,
+                uuid: uuid
+            }
+        }).then(function(prr) {
+            const exp = 1000 * 60 * 60 * 24; // 1 day
+            const isExpired = Date.now() - Date.parse(prr.get('time')) > exp;
+            if (prr && !isExpired) {
+                return reply();
+            } else {
+                return reply.notFound();
+            }
+        });
     }
 };
 

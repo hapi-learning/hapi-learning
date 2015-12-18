@@ -22,6 +22,7 @@ exports.register = function (server, options, next) {
 
         {method: 'POST',  path: '/login',      config: Controllers.Auth.login},
         {method: 'POST',  path: '/forgot',     config: Controllers.Auth.forgot},
+        {method: 'GET',   path: '/reset',       config: Controllers.Auth.checkReset},
         {method: 'POST',  path: '/logout',     config: Controllers.Auth.logout},
         {method: 'GET',   path: '/me',         config: Controllers.Auth.me},
         {method: 'GET',   path: '/me/courses', config: Controllers.Auth.getCourses},
