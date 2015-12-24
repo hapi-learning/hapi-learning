@@ -38,7 +38,8 @@
     "angular-translate": "~2.8.1",
     "angular-translate-loader-static-files": "~2.8.1",
     "bootstrap-filestyle": "~1.2.1",
-    "ngInfiniteScroll": "~1.2.1"
+    "ngInfiniteScroll": "~1.2.1",
+    "angular-material": "~1.0.1"
   },
   "resolutions": {
     "angular": "~1.4.7"
