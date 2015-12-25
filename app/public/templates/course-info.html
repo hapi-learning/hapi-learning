@@ -1,34 +1,41 @@
-<div>
-    <h3>
-        <updated code="course.code"></updated>
-        <course-link course="course"></course-link>
-    </h3>
+<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <h3>
+                <updated code="course.code"></updated>
+                <course-link course="course"></course-link>
+            </h3>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <div>
+            <label translate>GENERAL.TEACHERS</label>
 
-    <div>
-        <label translate>GENERAL.TEACHERS</label>
-
-        <br />
-        <span ng-repeat="teacher in course.teachers">
-            <teacher-info teacher="teacher"></teacher-info>
-        </span>
-    </div>
-
-    <br />
-
-    <div>
-        <label translate>GENERAL.TAGS</label>
-
-        <br />
-        <span ng-repeat="tag in course.tags">
-            <tag-button style="margin: 2px;" tag="tag"></tag-button>
-        </span>
-    </div>
-
-    <br />
-
-    <div class="row">
-        <div class="col-sm-3">
-            <subscribe code="course.code"></subscribe>
+            <br />
+            <span ng-repeat="teacher in course.teachers">
+                <teacher-info teacher="teacher"></teacher-info>
+            </span>
         </div>
-    </div>
-</div>
+
+        <br />
+
+        <div>
+            <label translate>GENERAL.TAGS</label>
+
+            <br />
+            <span ng-repeat="tag in course.tags">
+                <tag-button style="margin: 2px;" tag="tag"></tag-button>
+            </span>
+        </div>
+
+        <br />
+
+    </md-card-content>
+    <md-card-footer>
+        <div class="row">
+            <div class="col-sm-3">
+                <subscribe code="course.code"></subscribe>
+            </div>
+        </div>
+    </md-card-footer>
+</md-card>

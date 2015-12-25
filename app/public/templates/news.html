@@ -1,27 +1,26 @@
-<div>
-    <div class="alert alert-{{news.priority}}">
-        <div class="row">
-            <div class="col-md-9">
+<md-card>
+    <md-card-header layout="row">
+        <div class="alert alert-{{news.priority}}" flex="100">
+            <div>
                 <strong>
                     <news-link news="news"></news-link>
                     <span ng-if="news.course">-</span>
                     <span ng-bind="news.subject"></span>
                 </strong>
             </div>
-            <div class="col-md-3">
+            <div>
                 <span ng-bind="(news.date | date)"></span>
             </div>
         </div>
+    </md-card-header>
 
-    </div>
-
-    <blockquote>
-        <p>
-            <span ng-bind="news.content"></span>
+    <md-card-content layout="row">
+        <p ng-bind="news.content">
         </p>
-        <footer>
-            <cite title="{{news.user}}" ng-bind="news.user"></cite>
-        </footer>
-    </blockquote>
-</div>
+    </md-card-content>
+
+    <md-card-footer>
+        Author: <cite title="{{news.user}}" ng-bind="news.user"></cite>
+    </md-card-footer>
+</md-card>
 

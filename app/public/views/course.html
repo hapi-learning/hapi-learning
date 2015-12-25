@@ -32,7 +32,8 @@
         <div class="col-md-12">
             <nav>
                 <md-tabs md-stretch-tabs="always" md-dynamic-height="true">
-                    <md-tab ui-sref-active="active" ui-sref="root.course.main({ code: course.code })">
+                    <md-tab md-active="$state.includes('root.course.main')"
+                            ui-sref="root.course.main({ code: course.code })">
                         <md-tab-label>
                             <span class="glyphicon glyphicon-book"></span>
                             <span class="md-no-transform" translate>COURSE.NAV.HOME</span>
@@ -40,14 +41,14 @@
                     </md-tab>
 
                     <md-tab md-active="$state.includes('root.course.documents')"
-                        ui-sref="root.course.documents({ code: course.code, path: ''})">
+                            ui-sref="root.course.documents({ code: course.code, path: ''})">
                         <md-tab-label>
                             <span class="glyphicon glyphicon-folder-open"></span>
                             <span class="md-no-transform" translate>COURSE.NAV.DOCUMENTS</span>
                         </md-tab-label>
                     </md-tab>
 
-                    <md-tab ui-sref-active="active"
+                    <md-tab md-active="$state.includes('root.course.news')"
                             ui-sref="root.course.news({ code: course.code })">
                         <md-tab-label>
                             <span class="fa fa-newspaper-o fa-lg"></span>
@@ -55,8 +56,8 @@
                         </md-tab-label>
                     </md-tab>
 
-                    <md-tab ui-sref-active="active"
-                           ui-sref="root.course.admin({ code: course.code })">
+                    <md-tab md-active="$state.includes('root.course.admin')"
+                            ui-sref="root.course.admin({ code: course.code })">
                         <md-tab-label>
                             <span class="fa fa-cog fa-lg"></span>
                             <span class="md-no-transform" translate>COURSE.NAV.ADMINISTRATION</span>
