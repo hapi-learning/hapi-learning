@@ -1,40 +1,43 @@
 <div>
-    <form name="connection" data-ng-submit="login()" data-ng-hide="connected || forgot" novalidate>
+    <form name="connection" ng-submit="login()" data-ng-hide="connected || forgot" novalidate>
 
 
         <div class="alert alert-danger" role="alert" ng-if="invalidCredentials">
             <strong translate>FORM.LOGIN.INVALID</strong>
         </div>
 
-        <fieldset class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input class="form-control" type="text"  data-ng-model="user.name" data-ng-required="true" placeholder="{{'FORM.LOGIN.USERNAME.PLACEHOLDER' | translate}}" />
-            </div>
-        </fieldset>
+        <md-input-container class="md-block md-icon-float">
+                <label>Username</label>
+                <md-icon>
+                    <span class="glyphicon glyphicon-user"></span>
+                </md-icon>
+                <input type="text" ng-model="user.name" ng-required="true"/>
+        </md-input-container>
 
-        <fieldset class="form-group">
 
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                <input class="form-control" type="password" data-ng-model="user.password" data-ng-required="true" placeholder="{{'FORM.LOGIN.PASSWORD.PLACEHOLDER' | translate}}" />
-            </div>
+        <md-input-container layout="row" class="md-block md-icon-float">
+            <label>Password</label>
+            <md-icon>
+                <span class="glyphicon glyphicon-lock"></span>
+            </md-icon>
+            <input type="password" ng-model="user.password" ng-required="true"/>
+        </md-input-container>
 
-        </fieldset>
+        <div layout="row" layout-align="start center">
+                <div flex="40" flex-xs="20">
+                    <span>
+                        <a href="#" ng-click="reset()">Forgot your password?</a>
+                    </span>
+                </div>
+                <div flex="20" flex-xs="70" flex-offset-xs="20" flex-offset="40">
+                    <md-input-container class="md-block">
+                        <md-button type="submit" class="md-raised md-primary">
+                            <span class="md-no-transform" translate>FORM.LOGIN.BUTTONS.LABEL</span>
+                        </md-button>
+                    </md-input-container>
+                </div>
+        </div>
 
-        <!--<div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me" /> Remember me
-            </label>
-        </div>-->
-
-        <fieldset class="form-group">
-            <input class="btn btn-lg btn-success btn-block" type="submit" value="{{'FORM.LOGIN.BUTTONS.LABEL' | translate}}" />
-        </fieldset>
-
-       <!-- <div>
-            <a ng-click="reset()">Forgot your password?</a>
-        </div>-->
 
     </form>
 

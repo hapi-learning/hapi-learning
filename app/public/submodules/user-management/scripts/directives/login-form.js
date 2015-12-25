@@ -14,7 +14,6 @@ angular.module('hapi-learning.um')
             scope.invalidCredentials = false;
 
             scope.login = function() {
-                console.log('Logging in ...');
                 LoginFactory
                     .login(scope.user)
                     .then(function() {

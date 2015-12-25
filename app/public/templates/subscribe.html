@@ -1,9 +1,9 @@
 <div ng-show="available">
-    <button type="button" class="btn btn-success btn-block" ng-hide="subscribed" ng-click="subscribe()">
-        <span class="glyphicon glyphicon-ok"></span> <span translate>COURSE.SUBSCRIBE</span>
-    </button>
+    <md-button type="button" class="md-raised md-primary" ng-hide="subscribed" ng-click="subscribe()">
+        <span class="glyphicon glyphicon-ok md-caption"></span> <span class="md-caption" translate>COURSE.SUBSCRIBE</span>
+    </md-button>
 
-    <button type="button" class="btn btn-danger btn-block" ng-show="subscribed" ng-click="unsubscribe()">
-        <span class="glyphicon glyphicon-remove"></span> <span translate>COURSE.UNSUBSCRIBE</span>
-    </button>
+    <md-button type="button" class="md-raised md-warn" ng-show="subscribed" ng-click="unsubscribe()">
+        <span class="md-caption glyphicon glyphicon-remove"></span> <span class="md-caption" translate>COURSE.UNSUBSCRIBE</span>
+    </md-button>
 </div>

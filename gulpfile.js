@@ -28,6 +28,7 @@ const vendorScripts = [
         'app/public/lib/jquery/dist/jquery.min.js',
         'app/public/lib/bootstrap/dist/js/bootstrap.min.js',
         'app/public/lib/angular/angular.min.js',
+        'app/public/lib/angular-material/angular-material.min.js',
         'app/public/lib/angular-translate/angular-translate.min.js',
         'app/public/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js',
 
@@ -71,7 +72,9 @@ const vendorCss = [
     'app/public/lib/ng-prettyjson/dist/ng-prettyjson.min.css',
     'app/public/lib/ng-dialog/css/ngDialog.min.css',
     'app/public/lib/ng-dialog/css/ngDialog-theme-default.min.css',
-    'app/public/lib/ng-dialog/css/ngDialog-theme-plain.min.css'
+    'app/public/lib/ng-dialog/css/ngDialog-theme-plain.min.css',
+    'app/public/lib/angular-material/angular-material.min.css',
+
 ];
 
 const pipes = {};
