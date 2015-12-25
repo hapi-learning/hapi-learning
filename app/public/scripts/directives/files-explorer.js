@@ -15,6 +15,7 @@ angular.module('hapi-learning')
 
                 scope.path = $stateParams.path;
                 scope.files = {};
+                scope.folder = {};
 
                 scope.states = {
                     uploading: false,

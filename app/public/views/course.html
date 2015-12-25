@@ -31,34 +31,38 @@
     <div class="row">
         <div class="col-md-12">
             <nav>
-                <ul class="nav nav-tabs nav-justified">
-                    <li ui-sref-active="active">
-                        <a ui-sref="root.course.main({code: course.code})">
+                <md-tabs md-stretch-tabs="always" md-dynamic-height="true">
+                    <md-tab ui-sref-active="active" ui-sref="root.course.main({ code: course.code })">
+                        <md-tab-label>
                             <span class="glyphicon glyphicon-book"></span>
-                            <span translate>COURSE.NAV.HOME</span>
+                            <span class="md-no-transform" translate>COURSE.NAV.HOME</span>
+                        </md-tab-label>
+                    </md-tab>
 
-                        </a>
-                    </li>
-                    <li ng-class="{active: $state.includes('root.course.documents')}">
-                        <a ui-sref="root.course.documents({code: course.code, path: ''})">
+                    <md-tab md-active="$state.includes('root.course.documents')"
+                        ui-sref="root.course.documents({ code: course.code, path: ''})">
+                        <md-tab-label>
                             <span class="glyphicon glyphicon-folder-open"></span>
-                            <span translate>COURSE.NAV.DOCUMENTS</span>
-                        </a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="root.course.news({code: course.code})">
-                            <span class="fa fa-newspaper-o fa-lg"></span>
-                            <span translate>COURSE.NAV.NEWS</span>
-                        </a>
-                    </li>
-                    <li ui-sref-active="active" if-group="teacher admin">
-                        <a ui-sref="root.course.admin({code: course.code})">
-                            <span class="fa fa-cog fa-lg"></span>
-                            <span translate>COURSE.NAV.ADMINISTRATION</span>
-                        </a>
-                    </li>
+                            <span class="md-no-transform" translate>COURSE.NAV.DOCUMENTS</span>
+                        </md-tab-label>
+                    </md-tab>
 
-                </ul>
+                    <md-tab ui-sref-active="active"
+                            ui-sref="root.course.news({ code: course.code })">
+                        <md-tab-label>
+                            <span class="fa fa-newspaper-o fa-lg"></span>
+                            <span class="md-no-transform" translate>COURSE.NAV.NEWS</span>
+                        </md-tab-label>
+                    </md-tab>
+
+                    <md-tab ui-sref-active="active"
+                           ui-sref="root.course.admin({ code: course.code })">
+                        <md-tab-label>
+                            <span class="fa fa-cog fa-lg"></span>
+                            <span class="md-no-transform" translate>COURSE.NAV.ADMINISTRATION</span>
+                        </md-tab-label>
+                    </md-tab>
+                </md-tabs>
             </nav>
 
             <br/>

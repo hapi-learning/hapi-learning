@@ -67,12 +67,12 @@
 
     <div class="row">
        <div class="col-md-3 col-lg-2">
-            <a ng-disabled="files.dir === null"
+            <md-button ng-disabled="(states.fetching || files.dir === null)"
                ng-click="(states.fetching || files.dir === null) || goToParent()"
-               class="btn btn-block btn-success">
+               class="md-raised md-primary">
                 <span class="glyphicon glyphicon-arrow-left"></span>
-                <span translate>FILE-EXPLORER.BUTTONS.PARENT</span>
-            </a>
+                <span class="md-no-transform" translate>FILE-EXPLORER.BUTTONS.PARENT</span>
+            </md-button>
         </div>
 
         <div class="col-md-2 col-lg-1" if-group="teacher admin">

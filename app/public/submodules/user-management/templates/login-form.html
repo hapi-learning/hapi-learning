@@ -1,65 +1,68 @@
-<div>
-    <form name="connection" ng-submit="login()" data-ng-hide="connected || forgot" novalidate>
+<md-card>
+    <md-card-content>
+
+        <form name="connection" ng-submit="login()" data-ng-hide="connected || forgot" novalidate>
+
+            <md-card-header ng-if="invalidCredentials">
+                <div class="alert alert-danger" role="alert">
+                    <strong translate>FORM.LOGIN.INVALID</strong>
+                </div>
+            </md-card-header>
+
+            <md-input-container class="md-block md-icon-float">
+                    <label>Username</label>
+                    <md-icon>
+                        <span class="glyphicon glyphicon-user"></span>
+                    </md-icon>
+                    <input type="text" ng-model="user.name" ng-required="true"/>
+            </md-input-container>
 
 
-        <div class="alert alert-danger" role="alert" ng-if="invalidCredentials">
-            <strong translate>FORM.LOGIN.INVALID</strong>
-        </div>
-
-        <md-input-container class="md-block md-icon-float">
-                <label>Username</label>
+            <md-input-container layout="row" class="md-block md-icon-float">
+                <label>Password</label>
                 <md-icon>
-                    <span class="glyphicon glyphicon-user"></span>
+                    <span class="glyphicon glyphicon-lock"></span>
                 </md-icon>
-                <input type="text" ng-model="user.name" ng-required="true"/>
-        </md-input-container>
+                <input type="password" ng-model="user.password" ng-required="true"/>
+            </md-input-container>
 
-
-        <md-input-container layout="row" class="md-block md-icon-float">
-            <label>Password</label>
-            <md-icon>
-                <span class="glyphicon glyphicon-lock"></span>
-            </md-icon>
-            <input type="password" ng-model="user.password" ng-required="true"/>
-        </md-input-container>
-
-        <div layout="row" layout-align="start center">
-                <div flex="40" flex-xs="20">
-                    <span>
-                        <a href="#" ng-click="reset()">Forgot your password?</a>
-                    </span>
-                </div>
-                <div flex="20" flex-xs="70" flex-offset-xs="20" flex-offset="40">
-                    <md-input-container class="md-block">
-                        <md-button type="submit" class="md-raised md-primary">
-                            <span class="md-no-transform" translate>FORM.LOGIN.BUTTONS.LABEL</span>
-                        </md-button>
-                    </md-input-container>
-                </div>
-        </div>
-
-
-    </form>
-
-    <form name="reset-password" data-ng-submit="reset()" data-ng-show="forgot">
-
-        <fieldset class="form-group">
-
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input class="form-control" type="text" data-ng-model="user.name" data-ng-required="true" placeholder="{{'FORM.LOGIN.USERNAME.PLACEHOLDER' | translate}}" />
+            <div layout="row" layout-align="start center">
+                <md-checkbox flex>Remember me</md-checkbox>
+                <md-content>
+                    <a href="#" ng-click="reset()" flex>Forgot your password?</a>
+                </md-content>
             </div>
 
-        </fieldset>
+            <div layout="row" layout-align="start center">
+                <md-input-container class="md-block">
+                    <md-button type="submit" class="md-raised md-primary">
+                        <span class="md-no-transform" translate>FORM.LOGIN.BUTTONS.LABEL</span>
+                    </md-button>
+                </md-input-container>
+            </div>
 
-        <fieldset class="form-group">
-            <input class="btn btn-lg btn-warning btn-block" type="submit" value="{{'FORM.LOGIN.BUTTONS.RESET' | translate}}" />
-        </fieldset>
+        </form>
 
-        <div>
-            <a ng-click="backToLogin()" translate>FORM.LOGIN.BUTTONS.BACK</a>
-        </div>
+       <!-- <form name="reset-password" data-ng-submit="reset()" data-ng-show="forgot">
 
-    </form>
-</div>
+            <fieldset class="form-group">
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input class="form-control" type="text" data-ng-model="user.name" data-ng-required="true" placeholder="{{'FORM.LOGIN.USERNAME.PLACEHOLDER' | translate}}" />
+                </div>
+
+            </fieldset>
+
+            <fieldset class="form-group">
+                <input class="btn btn-lg btn-warning btn-block" type="submit" value="{{'FORM.LOGIN.BUTTONS.RESET' | translate}}" />
+            </fieldset>
+
+            <div>
+                <a ng-click="backToLogin()" translate>FORM.LOGIN.BUTTONS.BACK</a>
+            </div>
+-->
+        </form>
+    </md-card-content>
+</md-card>
 

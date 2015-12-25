@@ -90,5 +90,9 @@ angular.module('hapi-learning')
                 $scope.errorPostHomepage = false;
             };
 
+            $scope.go = function(state, stateParams) {
+                console.log(stateParams);
+                $state.go(state, stateParams);
+            };
 
     }]);
