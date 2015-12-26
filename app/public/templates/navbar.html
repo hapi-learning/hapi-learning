@@ -1,140 +1,71 @@
 <style>
-    /* make sidebar nav vertical */
-
-    @media (max-width: 992px) {
-        .sidebar-nav .navbar .navbar-collapse {
-            padding: 0;
-            max-height: none;
-            border-color: transparent;
-            background-color: transparent;
-        }
-        .navbar-collapse.collapse {
-            display: none!important;
-        }
-        .navbar-toggle {
-            display: block;
-        }
-        /* since 3.1.0 */
-        .navbar-collapse.collapse.in {
-            display: block!important;
-        }
-        .collapsing {
-            overflow: hidden!important;
-        }
-        .h3, h3 {
-            padding-bottom: 10px;
-            padding-left: 20px;
-        }
-
-        h1 {
-            font-size: 30px;
-        }
-
-
+    .ma-sidenav {
+        background: rgb(16,108,200);
     }
 
-    @media (min-width: 992px) {
-        .sidebar-nav .navbar-default {
-            border-color: transparent;
-            background-color: transparent;
-        }
+    .sidenav-item, .sidenav-item a{
+        color: white;
+        padding: 10px;
+        cursor: pointer;
     }
 
-
-
-    @media (max-width: 767px) {
-        h1 {
-            font-size: 20px;
-        }
+    .sidenav-item.active {
+        background: hsla(0, 0%, 0%, 0.15);
     }
 
-    .sidebar-nav .navbar ul {
-        float: none;
-    }
-
-    .sidebar-nav .navbar ul:not {
-        display: block;
-    }
-
-    .sidebar-nav .navbar li {
-        float: none;
-        display: block;
-    }
-
-    .sidebar-nav .navbar li a {
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
-
-    .sidebar-nav .navbar-header {
-        float: none;
+    .sidenav-item:hover {
+        background: hsla(0, 0%, 0%, 0.3);
     }
 </style>
 
-<div class="sidebar-nav">
-    <h1 class="navbar-header hidden-xs hidden-sm">
-        <span ng-bind="profile.firstName"></span>
-        <span ng-bind="profile.lastName"></span>
-        <small><span ng-bind="profile.username"></span></small>
-    </h1>
-    <div class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-                <span class="sr-only" translate>NAV.TOGGLE</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <span class="visible-xs visible-sm navbar-brand" ng-bind="profile.username"></span>
-        </div>
-        <div class="navbar-collapse collapse sidebar-navbar-collapse">
-            <div class="visible-xs visible-sm">
+    <md-sidenav flex class="md-sidenav-left md-whiteframe-z2 ma-sidenav" md-component-id="leftSidenav"
+                md-is-locked-open="$mdMedia('gt-md')" >
 
-                <h3>
-                    <div>
-                        <span ng-bind="profile.firstName"></span>
-                        <span ng-bind="profile.lastName"></span>
-                    </div>
-                    <div>
-                        <small><span ng-bind="profile.username"></span></small>
-                    </div>
-                </h3>
+        <md-content style="color:white" class="md-toolbar-tools ma-sidenav">
+            <h1 class="navbar-header hidden-xs hidden-sm">
+                <span ng-bind="profile.firstName"></span>
+                <span ng-bind="profile.lastName"></span>
+                <small style="color:white"><span ng-bind="profile.username"></span></small>
+            </h1>
+        </md-content>
+        <md-divider></md-divider>
+        <md-content layout-padding class="ma-sidenav">
+            <div class="sidenav-item" ui-sref="root.home" ui-sref-active="active">
+                <span class="fa fa-home"></span> <span translate> NAV.HOME</span>
+            </div>
+            <div class="sidenav-item" ui-sref="root.profile" ui-sref-active="active">
+                <span class="fa fa-user"></span> <span translate>NAV.SETTINGS</span>
+            </div>
+            <div class="sidenav-item" ui-sref="root.news" ui-sref-active="active">
+                <span class="fa fa-newspaper-o"></span> <span translate>NAV.NEWS</span>
+            </div>
+            <div class="sidenav-item" ui-sref="root.courses" ui-sref-active="active">
+                <span class="fa fa-th-list"></span> <span translate>NAV.COURSES</span>
+            </div>
+            <div class="sidenav-item" if-group="admin" ui-sref="root.admin.courses" ui-sref-active="active">
+                <span class="fa fa-cog"></span> <span translate>NAV.ADMIN</span>
+            </div>
+            <md-divider></md-divider>
+            <div class="sidenav-item" ng-click="logout()">
+                <span class="fa fa-sign-out"></span> <span translate>NAV.LOGOUT</span>
             </div>
 
-            <ul class="nav">
+           <!-- <ul class="nav">
                 <li ui-sref-active="active">
-                    <a ui-sref="root.home">
-                        <span class="fa fa-home"></span> <span translate> NAV.HOME</span>
-                    </a>
                 </li>
                 <li ui-sref-active="active">
-                    <a ui-sref="root.profile">
-                        <span class="fa fa-user"></span> <span translate>NAV.SETTINGS</span>
-                    </a>
                 </li>
                 <li ui-sref-active="active">
-                    <a ui-sref="root.news">
-                        <span class="fa fa-newspaper-o"></span> <span translate>NAV.NEWS</span>
-                    </a>
                 </li>
                 <li ui-sref-active="active">
-                    <a ui-sref="root.courses">
-                        <span class="fa fa-th-list"></span> <span translate>NAV.COURSES</span>
-                    </a>
                 </li>
                 <li if-group="admin" ui-sref-active="active">
-                    <a ui-sref="root.admin.courses">
-                        <span class="fa fa-cog"></span> <span translate>NAV.ADMIN</span>
-                    </a>
                 </li>
                 <li>
-                    <a href="#" ng-click="logout()">
-                        <span class="fa fa-sign-out"></span> <span translate>NAV.LOGOUT</span>
-                    </a>
                 </li>
-            </ul>
-        </div>
-    </div>
-</div>
+            </ul>-->
+        </md-content>
+
+    </md-sidenav>
 
 
