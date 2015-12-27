@@ -1,5 +1,69 @@
-<div>
+<div layout="column">
+    <div layout="row">
+        <md-input-container flex="30" class="md-icon-float">
+            <label ng-bind="profile.firstName"></label>
+            <md-icon>
+                <span class="glyphicon glyphicon-user"></span>
+            </md-icon>
+            <input type="text" ng-required="true"/>
+        </md-input-container>
 
+        <md-input-container flex="30" flex-offset="5" class="md-icon-float">
+            <label ng-bind="profile.lastName"></label>
+            <md-icon>
+                <span class="glyphicon glyphicon-user"></span>
+            </md-icon>
+            <input type="text" ng-required="true"/>
+        </md-input-container>
+    </div>
+
+    <div layout="row">
+        <md-input-container flex="30" class="md-icon-float">
+            <label ng-bind="profile.email"></label>
+            <md-icon>
+                <span class="glyphicon glyphicon-user"></span>
+            </md-icon>
+            <input type="text" ng-required="true"/>
+        </md-input-container>
+
+        <md-input-container flex-offset="5" flex="30" class="md-icon-float">
+            <label ng-bind="profile.phoneNumber"></label>
+            <md-icon>
+                <span class="glyphicon glyphicon-phone"></span>
+            </md-icon>
+            <input type="text" ng-required="false"/>
+        </md-input-container>
+    </div>
+
+    <div layout="row" layout-align="start center">
+        <label flex="5">Notify:</label>
+        <md-switch flex-offset="5" flex="15" ng-model="profile.notify" ng-change="">
+        </md-switch>
+    </div>
+
+
+    <div layout="row">
+        <md-input-container flex="30" class="md-icon-float">
+            <label>New password</label>
+            <md-icon>
+                <span class="glyphicon glyphicon-lock"></span>
+            </md-icon>
+            <input type="text" ng-required="false"/>
+        </md-input-container>
+
+        <md-input-container flex-offset="5" flex="30" class="md-icon-float">
+            <label>Confirm password</label>
+            <md-icon>
+                <span class="glyphicon glyphicon-lock"></span>
+            </md-icon>
+            <input type="text" ng-required="false"/>
+        </md-input-container>
+    </div>
+</div>
+<br/>
+<!--
+
+   <div>
     <form editable-form name="profileForm" class="form-horizontal"
           onbeforesave="updateProfile($data)" oncancel="removeErrors()">
 
@@ -36,8 +100,8 @@
             <div class="col-md-10" style="padding-left:35px">
                 <div e-class="form-control" e-type="checkbox"
                       editable-checkbox="profile.notify" e-name="notify">
-                    <span ng-if="profile.notify === true" translate>FORM.PROFILE.NOTIFY.YES</span>
-                    <span ng-if="profile.notify === false" translate>FORM.PROFILE.NOTIFY.NO</span>
+                    <md-switch ng-model="profile.notify">
+                    </md-switch>
                 </div>
             </div>
         </div>
@@ -100,3 +164,4 @@
         </div>
     </form>
 </div>
+-->
