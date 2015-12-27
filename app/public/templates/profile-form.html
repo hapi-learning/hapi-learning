@@ -5,7 +5,7 @@
             <md-icon>
                 <span class="glyphicon glyphicon-user"></span>
             </md-icon>
-            <input type="text" ng-required="true"/>
+            <input type="text" ng-model="newProfile.firstName" ng-required="true"/>
         </md-input-container>
 
         <md-input-container flex="30" flex-offset="5" class="md-icon-float">
@@ -13,7 +13,7 @@
             <md-icon>
                 <span class="glyphicon glyphicon-user"></span>
             </md-icon>
-            <input type="text" ng-required="true"/>
+            <input type="text" ng-model="newProfile.lastName" ng-required="true"/>
         </md-input-container>
     </div>
 
@@ -21,23 +21,23 @@
         <md-input-container flex="30" class="md-icon-float">
             <label ng-bind="profile.email"></label>
             <md-icon>
-                <span class="glyphicon glyphicon-user"></span>
+                <span class="glyphicon glyphicon-envelope"></span>
             </md-icon>
-            <input type="text" ng-required="true"/>
+            <input type="text" ng-model="newProfile.email" ng-required="true"/>
         </md-input-container>
 
         <md-input-container flex-offset="5" flex="30" class="md-icon-float">
-            <label ng-bind="profile.phoneNumber"></label>
+            <label>{{profile.phoneNumber || 'Phone number'}}</label>
             <md-icon>
                 <span class="glyphicon glyphicon-phone"></span>
             </md-icon>
-            <input type="text" ng-required="false"/>
+            <input type="text" ng-model="newProfile.phoneNumber" ng-required="false"/>
         </md-input-container>
     </div>
 
     <div layout="row" layout-align="start center">
-        <label flex="5">Notify:</label>
-        <md-switch flex-offset="5" flex="15" ng-model="profile.notify" ng-change="">
+        <label flex="10" translate>FORM.PROFILE.NOTIFY.LABEL</label>
+        <md-switch aria-label="Notify" flex-offset="5" flex="15" ng-model="newProfile.notify" ng-change="">
         </md-switch>
     </div>
 
@@ -48,7 +48,7 @@
             <md-icon>
                 <span class="glyphicon glyphicon-lock"></span>
             </md-icon>
-            <input type="text" ng-required="false"/>
+            <input type="text" ng-model="newProfile.passwords.new" ng-required="false"/>
         </md-input-container>
 
         <md-input-container flex-offset="5" flex="30" class="md-icon-float">
@@ -56,9 +56,19 @@
             <md-icon>
                 <span class="glyphicon glyphicon-lock"></span>
             </md-icon>
-            <input type="text" ng-required="false"/>
+            <input type="text" ng-model="newProfile.passwords.confirm" ng-required="false"/>
         </md-input-container>
     </div>
+
+    <div layout="row">
+        <md-button flex="10" class="md-raised md-primary" ng-click="save()">
+            Save
+        </md-button>
+        <md-button flex="10" class="md-raised md-warn" ng-click="cancel()">
+            Cancel
+        </md-button>
+    </div>
+
 </div>
 <br/>
 <!--

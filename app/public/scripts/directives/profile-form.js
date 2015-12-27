@@ -5,16 +5,28 @@ angular.module('hapi-learning')
                              function(LoginFactory, ProfileFactory, $rootScope) {
     return {
         restrict: 'E',
+        scope: {},
         templateUrl: 'templates/profile-form.html',
         link: function(scope, elem, attrs) {
 
-            scope.passwords = {};
+
+            scope.profile = $rootScope.$user;
+            scope.newProfile = {
+                passwords: {}
+            };
+
+            scope.cancel = function() {
+                scope.newProfile = {
+                    passwords: {}
+                };
+
+                scope.profile = $rootScope.$user;
+            };
+
 
             scope.removeErrors = function() {
                 // Remove errors ..
             };
-
-
 
             var validateEmail = function(email) {
                 var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -40,7 +52,7 @@ angular.module('hapi-learning')
                 if (data.notify !== scope.notify) {
                     profile.notify = data.notify;
                 }
-                
+
                 if (data.email !== scope.profile.email) {
                     if (!validateEmail(data.email)) {
                         var message = 'Invalid email';
