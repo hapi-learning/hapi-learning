@@ -1,11 +1,21 @@
-<navbar layout="column"></navbar>
-<div layout="column" flex>
-<!--    <md-toolbar layout="row" layout-align="end center">
-        <md-button class="toolbar-button" aria-label="Search">
-            <md-icon class="material-icons">search</md-icon>
-        </md-button>
-    </md-toolbar>-->
-    <md-content class="md-padding page-content">
-        <div ui-view></div>
-    </md-content>
+<style>
+    .ng-scope {
+        height: 100%;
+        min-height: 100%;
+        max-height: 100%;
+    }
+</style>
+
+<div layout="row" layout-fill>
+    <navbar layout="column"></navbar>
+    <div layout="column" flex>
+    <!--    <md-toolbar layout="row" layout-align="end center">
+            <md-button class="toolbar-button" aria-label="Search">
+                <md-icon class="material-icons">search</md-icon>
+            </md-button>
+        </md-toolbar>-->
+        <md-content class="md-padding page-content">
+            <div ui-view></div>
+        </md-content>
+    </div>
 </div>

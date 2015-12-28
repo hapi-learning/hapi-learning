@@ -22,8 +22,4 @@ a, a:hover, a:active, a:focus {
 .material-icons.md-48 { font-size: 48px; }
 
 
-.ng-scope {
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-}
+
