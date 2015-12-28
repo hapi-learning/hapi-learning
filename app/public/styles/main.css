@@ -2,10 +2,7 @@ a, a:hover, a:active, a:focus {
     outline: 0;
 }
 
-/* footer should not overlap body */
-body {
-    padding-bottom: 50px;
-}
+
 
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
@@ -25,3 +22,8 @@ body {
 .material-icons.md-48 { font-size: 48px; }
 
 
+.ng-scope {
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+}
