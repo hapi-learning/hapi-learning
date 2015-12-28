@@ -17,19 +17,16 @@
     }
 
     .md-sidenav-left {
-        width: 230px;
-        min-width: 100px;
-        max-width: 230px;
+        width: 175px;
     }
-
 
 </style>
 
-<md-sidenav flex layout="column" class="md-sidenav-left md-whiteframe-z2 ma-sidenav" md-component-id="leftSidenav"
-            md-is-locked-open="$mdMedia('gt-md')" >
+<md-sidenav flex layout="column" class="md-sidenav-left md-whiteframe-z2 ma-sidenav" md-component-id="left"
+            md-is-locked-open="true" >
 
     <md-toolbar>
-        <div class="md-toolbar-tools">
+        <div hide-md ng-hide="collapsed" class="md-toolbar-tools">
             <h1 class="navbar-header hidden-xs hidden-sm">
                 <span ng-bind="profile.firstName"></span>
                 <span ng-bind="profile.lastName"></span> <br/>
@@ -41,39 +38,47 @@
     <md-content class="ma-sidenav" layout="column">
         <div ui-sref-active="active" class="sidenav-item" ui-sref="root.home">
             <md-icon class="material-icons md-24">home</md-icon>
-            <span class="md-24" translate>NAV.HOME</span>
+            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.HOME</span>
         </div>
 
         <div class="sidenav-item" ui-sref="root.profile" ui-sref-active="active">
             <md-icon class="material-icons md-24">person</md-icon>
-            <span class="md-24" translate>NAV.SETTINGS</span>
+            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.SETTINGS</span>
         </div>
         <div class="sidenav-item" ui-sref="root.news" ui-sref-active="active">
             <md-icon class="material-icons">notifications</md-icon>
-            <span class="md-24" translate>NAV.NEWS</span>
+            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.NEWS</span>
         </div>
         <div class="sidenav-item" ui-sref="root.courses" ui-sref-active="active">
             <md-icon class="material-icons">view_list</md-icon>
-             <span class="md-24" translate>NAV.COURSES</span>
+             <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.COURSES</span>
         </div>
         <div class="sidenav-item" if-group="admin" ui-sref="root.admin.courses" ui-sref-active="active">
             <md-icon class="material-icons md-24">settings</md-icon>
-            <span class="md-24" translate>NAV.ADMIN</span>
+            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.ADMIN</span>
         </div>
         <md-divider></md-divider>
         <div class="sidenav-item" ng-click="logout()">
             <md-icon class="material-icons">exit_to_app</md-icon>
-            <span class="md-24" translate>NAV.LOGOUT</span>
+            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.LOGOUT</span>
         </div>
     </md-content>
 
-    <div style="padding: 20px" layout="column" layout-align="end center" flex>
-        <md-button class="md-icon-button md-raised md-primary">
+    <div hide-md ng-hide="collapsed" style="padding: 20px" layout="column" layout-align="end center" flex>
+        <md-button ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(true)">
             <md-icon class="material-icons">keyboard_arrow_left</md-icon>
+        </md-button>
+    </div>
+
+    <div ng-hide="!collapsed" style="padding-bottom: 20px" layout="column" layout-align="end center" flex>
+        <md-button ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(false)">
+            <md-icon class="material-icons">keyboard_arrow_right</md-icon>
         </md-button>
     </div>
 
 
 </md-sidenav>
+
+
 
 
