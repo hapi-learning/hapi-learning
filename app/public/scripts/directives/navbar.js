@@ -3,7 +3,7 @@
 angular.module('hapi-learning')
     .directive('navbar', ['LoginFactory', '$rootScope', function(LoginFactory, $rootScope) {
     return {
-        restrict: 'A',
+        restrict: 'E',
         templateUrl: 'templates/navbar.html',
         link: function(scope, elem, attrs) {
 

@@ -3,51 +3,67 @@
         background: rgb(16,108,200);
     }
 
-    .sidenav-item, .sidenav-item a{
+    .sidenav-item * {
         color: white;
+    }
+
+    .sidenav-item {
         padding: 10px;
         cursor: pointer;
     }
 
-    .sidenav-item.active {
+    .sidenav-item.active, .sidenav-item:hover {
         background: hsla(0, 0%, 0%, 0.15);
     }
 
-    .sidenav-item:hover {
-        background: hsla(0, 0%, 0%, 0.3);
+    .md-sidenav-left {
+        width: 230px;
+        min-width: 100px;
+        max-width: 230px;
     }
+
+
 </style>
 
     <md-sidenav flex class="md-sidenav-left md-whiteframe-z2 ma-sidenav" md-component-id="leftSidenav"
                 md-is-locked-open="$mdMedia('gt-md')" >
 
-        <md-content style="color:white" class="md-toolbar-tools ma-sidenav">
-            <h1 class="navbar-header hidden-xs hidden-sm">
-                <span ng-bind="profile.firstName"></span>
-                <span ng-bind="profile.lastName"></span>
-                <small style="color:white"><span ng-bind="profile.username"></span></small>
-            </h1>
-        </md-content>
-        <md-divider></md-divider>
-        <md-content layout-padding class="ma-sidenav">
-            <div class="sidenav-item" ui-sref="root.home" ui-sref-active="active">
-                <span class="fa fa-home"></span> <span translate> NAV.HOME</span>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1 class="navbar-header hidden-xs hidden-sm">
+                    <span ng-bind="profile.firstName"></span>
+                    <span ng-bind="profile.lastName"></span>
+                    <small style="color:white"><span ng-bind="profile.username"></span></small>
+                </h1>
             </div>
+        </md-toolbar>
+        <md-divider></md-divider>
+        <md-content class="ma-sidenav" layout="column">
+            <div ui-sref-active="active" class="sidenav-item" ui-sref="root.home">
+                <md-icon class="material-icons md-24">home</md-icon>
+                <span class="md-24" translate>NAV.HOME</span>
+            </div>
+
             <div class="sidenav-item" ui-sref="root.profile" ui-sref-active="active">
-                <span class="fa fa-user"></span> <span translate>NAV.SETTINGS</span>
+                <md-icon class="material-icons md-24">person</md-icon>
+                <span class="md-24" translate>NAV.SETTINGS</span>
             </div>
             <div class="sidenav-item" ui-sref="root.news" ui-sref-active="active">
-                <span class="fa fa-newspaper-o"></span> <span translate>NAV.NEWS</span>
+                <md-icon class="material-icons">notifications</md-icon>
+                <span class="md-24" translate>NAV.NEWS</span>
             </div>
             <div class="sidenav-item" ui-sref="root.courses" ui-sref-active="active">
-                <span class="fa fa-th-list"></span> <span translate>NAV.COURSES</span>
+                <md-icon class="material-icons">view_list</md-icon>
+                 <span class="md-24" translate>NAV.COURSES</span>
             </div>
             <div class="sidenav-item" if-group="admin" ui-sref="root.admin.courses" ui-sref-active="active">
-                <span class="fa fa-cog"></span> <span translate>NAV.ADMIN</span>
+                <md-icon class="material-icons md-24">settings</md-icon>
+                <span class="md-24" translate>NAV.ADMIN</span>
             </div>
             <md-divider></md-divider>
             <div class="sidenav-item" ng-click="logout()">
-                <span class="fa fa-sign-out"></span> <span translate>NAV.LOGOUT</span>
+                <md-icon class="material-icons">exit_to_app</md-icon>
+                <span class="md-24" translate>NAV.LOGOUT</span>
             </div>
         </md-content>
 
