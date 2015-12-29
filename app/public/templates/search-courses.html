@@ -1,27 +1,40 @@
-<div class="row">
-    <form-group>
-        <span class="col-sm-4">
-            <input class="form-control"
-                   type="text"
-                   placeholder="{{'FORM.SEARCH.PLACEHOLDER' | translate}}"
+<div layout="row">
+    <div layout="column" flex="33">
+        <md-input-container>
+            <label><span translate>FORM.SEARCH.PLACEHOLDER</span></label>
+            <md-icon class="material-icons">
+                school
+            </md-icon>
+            <input type="text"
                    ng-change="load()"
-                   ng-model="coursesFilter"/>
-        </span>
-    </form-group>
-</div>
-
-<br />
-
-<div>
-    <label translate>GENERAL.TAGS</label>
-
-    <div>
-        <span data-toggle="buttons" ng-repeat="tag in tags track by $index">
-            <label style="margin: 2px" class="btn btn-default" ng-click="selected(tag)">
-                <input type="checkbox" ng-model="tags[$index]" ng-change="selected()">
-                #<span ng-bind="tag.name"></span>
-            </label>
-        </span>
+                   ng-model="coursesFilter" />
+        </md-input-container>
     </div>
 
 </div>
+<md-content>
+    <label translate>GENERAL.TAGS</label>
+</md-content>
+<md-chips ng-model="selectedTags" md-autocomplete-snap
+          md-require-match="true"
+          md-on-add="onTagChange()"
+          md-on-remove="onTagChange()">
+
+       <md-autocomplete
+            md-items="tag in filterTags(tagSearchText)"
+            md-item-text="tag"
+            md-search-text="tagSearchText"
+            placeholder="Search by tag(s)">
+
+            <span md-highlight-text="tagSearchText">{{tag}}</span>
+
+            <md-not-found>
+                <span translate>GENERAL.NO_MATCHES</span>
+            </md-not-found>
+
+       </md-autocomplete>
+        <!--<label style="margin: 2px" class="btn btn-default" ng-click="selected(tag)">
+            <input type="checkbox" ng-model="tags[$index]" ng-change="selected()">
+            #<span ng-bind="tag.name"></span>
+        </label>-->
+</md-chips>

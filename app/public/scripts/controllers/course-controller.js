@@ -24,14 +24,12 @@ angular.module('hapi-learning')
             $scope.errorPostHomepage = false;
 
 
-
             // If stateParams changed, update course
             if ($scope.course && $stateParams.code !== $scope.course.code) {
                 $scope.update = true;
             }
 
             if (!$scope.course || $scope.update) {
-
                 CoursesFactory.loadSpecific($stateParams.code)
                     .then(function (course) {
                         if (course) {
@@ -45,12 +43,10 @@ angular.module('hapi-learning')
                                     $scope.course.description = readme || '*This page is empty*';
                                 })
                                 .catch(function (error) {
-                                    if (error.status === 404)
-                                    {
+                                    if (error.status === 404) {
                                         $scope.course.description = '*This page is empty*';
                                     }
-                                    else
-                                    {
+                                    else {
                                         console.log(error);
                                     }
                                 });
@@ -90,9 +86,5 @@ angular.module('hapi-learning')
                 $scope.errorPostHomepage = false;
             };
 
-            $scope.go = function(state, stateParams) {
-                console.log(stateParams);
-                $state.go(state, stateParams);
-            };
 
     }]);

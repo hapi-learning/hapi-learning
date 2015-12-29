@@ -36,9 +36,13 @@
     </div>
 
     <div layout="row" layout-align="start center">
-        <label flex="10" translate>FORM.PROFILE.NOTIFY.LABEL</label>
-        <md-switch aria-label="Notify" flex-offset="5" flex="15" ng-model="newProfile.notify" ng-change="">
-        </md-switch>
+        <div flex="10">
+            <label translate>FORM.PROFILE.NOTIFY.LABEL</label>
+        </div>
+        <div>
+            <md-switch aria-label="Notify" ng-model="newProfile.notify" ng-change="">
+            </md-switch>
+        </div>
     </div>
 
 

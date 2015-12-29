@@ -20,7 +20,8 @@
         "NO": "No",
         "ERROR": {
             "FORBIDDEN": "You don't have access to this page !"
-        }
+        },
+        "NO_MATCHES": "No matches found"
     },
     "NAV": {
         "TOGGLE": "Toggle",

@@ -1,11 +1,13 @@
-<div ng-controller="AdminCtrl" flex>
-   <div if-group="admin">
-    <h1 class="page-header" translate>
-        GENERAL.ADMIN
-    </h1>
+<div ng-controller="AdminCtrl" layout="column" flex>
+   <div if-group="admin" layout="column" flex>
 
-    <div class="row">
-        <div class="col-md-12">
+        <div>
+            <h1 class="page-header" translate>
+                GENERAL.ADMIN
+            </h1>
+        </div>
+
+        <div>
             <nav>
                 <ul class="nav nav-tabs nav-justified">
                     <li ui-sref-active="active">
@@ -42,13 +44,10 @@
             <div ui-view></div>
         </div>
     </div>
-</div>
-<div if-group="user teacher">
+    <div if-group="user teacher">
 
-    <div class="page-header">
-        <h1 translate>GENERAL.ERROR.FORBIDDEN</h1>
-   </div>
-</div>
-
-
+        <div class="page-header">
+            <h1 translate>GENERAL.ERROR.FORBIDDEN</h1>
+       </div>
+    </div>
 </div>

@@ -193,7 +193,6 @@ angular.module('hapi-learning')
 
 
                 // Set this back if bug appears again.
-
                 if (scope.code) {
                     scope.getList($stateParams.path, scope.states.showHidden);
                 } else {

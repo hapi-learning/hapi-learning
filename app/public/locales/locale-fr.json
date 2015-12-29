@@ -20,7 +20,8 @@
         "NO": "Non",
         "ERROR": {
             "FORBIDDEN": "Vous n'avez pas accès à cette page !"
-        }
+        },
+        "NO_MATCHES": "Aucun résultat trouvé"
     },
     "NAV": {
         "TOGGLE": "Dérouler la navigation",

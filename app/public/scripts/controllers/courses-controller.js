@@ -17,10 +17,24 @@ angular.module('hapi-learning')
         $scope.itemsPerPages = 10;
         $scope.coursesFilter = null;
         $scope.fetching = true;
+        $scope.searchText = null;
+
+        $scope.filterTags = function (query) {
+
+            var lowercase = angular.lowercase(query);
+
+            var filter = function (tag, query) {
+                return angular.lowercase(tag).indexOf(query) === 0;
+            };
+
+            return _.filter($scope.tags, function(tag) {
+                return filter(tag, lowercase);
+            });
+        };
 
         TagsFactory.load()
             .then(function(tags) {
-                $scope.tags = tags;
+                $scope.tags = _.map(tags, 'name');
             }).catch(function() {
                 console.log('Error loading tags');
             });
@@ -55,15 +69,10 @@ angular.module('hapi-learning')
 
         };
 
-        $scope.selected = function(tag) {
-            if (_.includes($scope.selectedTags, tag.name)) {
-                _.remove($scope.selectedTags, function(t) {
-                    return t === tag.name;
-                });
-            } else {
-                $scope.selectedTags.push(tag.name);
-            }
 
+        $scope.onTagChange = function() {
+            console.log('tag-change');
+            console.log($scope.selectedTags);
             $scope.load();
         };
 
