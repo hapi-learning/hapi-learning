@@ -105,7 +105,7 @@
     "glue": "^2.4.0",
     "good": "^6.4.0",
     "good-console": "^5.1.0",
-    "hapi": "^11.0.3",
+    "hapi": "^11.1.4",
     "hapi-auth-jwt2": "^5.2.0",
     "hapi-pagination": "^1.5.1",
     "hoek": "^3.0.1",
