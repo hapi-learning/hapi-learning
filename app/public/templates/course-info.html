@@ -11,19 +11,20 @@
         <div layout="column">
             <label translate>GENERAL.TEACHERS</label>
 
-            <span ng-repeat="teacher in course.teachers">
-                <teacher-info teacher="teacher"></teacher-info>
-            </span>
+            <div>
+                <div layout="row" layout-xs="column" layout-wrap>
+                    <span layout="row" flex-sm="50" flex-xs="100" ng-repeat="teacher in course.teachers">
+                        <teacher-info layout="row" flex teacher="teacher"></teacher-info>
+                    </span>
+                </div>
+            </div>
         </div>
 
-        <br />
 
-        <div layout="column">
+        <div>
             <label translate>GENERAL.TAGS</label>
-
-            <span flex ng-repeat="tag in course.tags">
-                <tag-button style="margin: 2px;" tag="tag"></tag-button>
-            </span>
+            <md-chips layout="row" layout-wrap readonly="true" ng-model="course.tags">
+            </md-chips>
         </div>
 
         <br />

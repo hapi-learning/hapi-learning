@@ -3,15 +3,15 @@
     a:hover {
         text-decoration: none;
     }
-
 </style>
 
-<md-button flex ng-href="mailto: {{teacher.email}}">
-    <md-icon class="material-icons">
-        email
-    </md-icon>
+<md-button aria-label="mailme" style="text-align: left" flex layout="row" ng-href="mailto: {{teacher.email}}">
+        <md-icon class="material-icons">
+            email
+        </md-icon>
 
         <span ng-bind="teacher.first_name"></span>
         <span ng-bind="teacher.last_name"></span>
         (<span ng-bind="teacher.username"></span>)
+
 </md-button>

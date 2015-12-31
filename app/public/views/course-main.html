@@ -31,13 +31,11 @@
             </span>
         </div>
         <br/>
-        <div layout="column" ng-if="course.tags.length > 0">
+        <div ng-if="course.tags.length > 0">
             <label translate>GENERAL.TAGS</label>
 
-            <span ng-repeat="tag in course.tags">
-                <tag-button style="margin: 2px;" tag="tag"></tag-button>
-            </span>
-
+            <md-chips layout="row" layout-wrap readonly="true" ng-model="course.tags">
+            </md-chips>
         </div>
     </div>
 </div>
