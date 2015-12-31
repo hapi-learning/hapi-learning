@@ -8,10 +8,9 @@
         </md-card-title-text>
     </md-card-title>
     <md-card-content>
-        <div>
+        <div layout="column">
             <label translate>GENERAL.TEACHERS</label>
 
-            <br />
             <span ng-repeat="teacher in course.teachers">
                 <teacher-info teacher="teacher"></teacher-info>
             </span>
@@ -19,11 +18,10 @@
 
         <br />
 
-        <div>
+        <div layout="column">
             <label translate>GENERAL.TAGS</label>
 
-            <br />
-            <span ng-repeat="tag in course.tags">
+            <span flex ng-repeat="tag in course.tags">
                 <tag-button style="margin: 2px;" tag="tag"></tag-button>
             </span>
         </div>
@@ -32,6 +30,6 @@
 
     </md-card-content>
     <md-card-actions layout="row" layout-align="start center">
-        <subscribe code="course.code"></subscribe>
+        <subscribe flex="25" flex-sm="50" flex-xs="100" code="course.code"></subscribe>
     </md-card-actions>
 </md-card>
