@@ -70,8 +70,7 @@ angular.module('hapi-learning')
                     .one('courses', $scope.course.code)
                     .customPOST({
                         content: content
-                    },
-                    'homepage').then(function(res) {
+                    }, 'homepage').then(function(res) {
                         $scope.course.description = content;
                         $scope.editing = false;
                         $scope.errorPostHomepage = false;

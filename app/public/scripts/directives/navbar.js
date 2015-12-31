@@ -24,7 +24,7 @@ angular.module('hapi-learning')
                     return;
                 }
 
-                var w = collapse ? '50px' : '175px';
+                var w = collapse ? '50px' : '200px';
 
                 if (collapse) {
                     scope.collapsed = !scope.collapsed;

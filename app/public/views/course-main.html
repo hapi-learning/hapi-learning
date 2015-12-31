@@ -1,10 +1,11 @@
 
 <div>
+
     <div ng-if="errorPostHomepage">
         <div class="alert alert-danger" ng-bind="errorPostHomepage" translate>COURSE.HOME.POST-ERROR</div>
     </div>
 
-    <div>
+    <div flex="column">
         <div if-group="teacher admin">
             <button ng-if="!editing" style="color: black" class="btn btn-link pull-right" ng-click="editHomepage()">
                 <span class="fa fa-pencil-square-o fa-lg"></span>
@@ -21,34 +22,22 @@
 
     <br/>
 
-    <div class="col-md-12">
-
-        <br/>
-
-        <div ng-if="course.teachers.length > 0">
+    <div>
+        <div layout="column" ng-if="course.teachers.length > 0">
             <label translate>GENERAL.TEACHERS</label>
-
-            <br />
 
             <span ng-repeat="teacher in course.teachers">
                 <teacher-info teacher="teacher"></teacher-info>
             </span>
         </div>
-
-        <br />
-
-        <div ng-if="course.tags.length > 0">
+        <br/>
+        <div layout="column" ng-if="course.tags.length > 0">
             <label translate>GENERAL.TAGS</label>
-
-            <br />
 
             <span ng-repeat="tag in course.tags">
                 <tag-button style="margin: 2px;" tag="tag"></tag-button>
             </span>
 
         </div>
-
-        <br/>
-
     </div>
 </div>

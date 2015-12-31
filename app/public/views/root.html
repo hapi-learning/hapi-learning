@@ -9,13 +9,12 @@
 <div layout="row" layout-fill>
     <navbar layout="column"></navbar>
     <div layout="column" flex>
-    <!--    <md-toolbar layout="row" layout-align="end center">
-            <md-button class="toolbar-button" aria-label="Search">
-                <md-icon class="material-icons">search</md-icon>
-            </md-button>
-        </md-toolbar>-->
-        <md-content class="md-padding page-content">
-            <div ui-view></div>
+        <md-content flex style="background-color: rgba(237, 237, 237, 0.38)" class="md-padding page-content">
+            <md-card>
+                <md-card-content>
+                    <div ui-view></div>
+                </md-card-content>
+            </md-card>
         </md-content>
     </div>
 </div>

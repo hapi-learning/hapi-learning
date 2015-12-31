@@ -2,16 +2,16 @@
     <div layout="row">
         <md-input-container flex="30" class="md-icon-float">
             <label ng-bind="profile.firstName"></label>
-            <md-icon>
-                <span class="glyphicon glyphicon-user"></span>
+            <md-icon class="material-icons">
+                person
             </md-icon>
             <input type="text" ng-model="newProfile.firstName" ng-required="true"/>
         </md-input-container>
 
         <md-input-container flex="30" flex-offset="5" class="md-icon-float">
             <label ng-bind="profile.lastName"></label>
-            <md-icon>
-                <span class="glyphicon glyphicon-user"></span>
+            <md-icon class="material-icons">
+                person
             </md-icon>
             <input type="text" ng-model="newProfile.lastName" ng-required="true"/>
         </md-input-container>
@@ -20,16 +20,16 @@
     <div layout="row">
         <md-input-container flex="30" class="md-icon-float">
             <label ng-bind="profile.email"></label>
-            <md-icon>
-                <span class="glyphicon glyphicon-envelope"></span>
+            <md-icon class="material-icons">
+                email
             </md-icon>
             <input type="text" ng-model="newProfile.email" ng-required="true"/>
         </md-input-container>
 
         <md-input-container flex-offset="5" flex="30" class="md-icon-float">
             <label>{{profile.phoneNumber || 'Phone number'}}</label>
-            <md-icon>
-                <span class="glyphicon glyphicon-phone"></span>
+            <md-icon class="material-icons">
+                phone
             </md-icon>
             <input type="text" ng-model="newProfile.phoneNumber" ng-required="false"/>
         </md-input-container>
@@ -49,18 +49,18 @@
     <div layout="row">
         <md-input-container flex="30" class="md-icon-float">
             <label>New password</label>
-            <md-icon>
-                <span class="glyphicon glyphicon-lock"></span>
+            <md-icon class="material-icons">
+                lock
             </md-icon>
-            <input type="text" ng-model="newProfile.passwords.new" ng-required="false"/>
+            <input type="password" ng-model="newProfile.passwords.new" ng-required="false"/>
         </md-input-container>
 
         <md-input-container flex-offset="5" flex="30" class="md-icon-float">
             <label>Confirm password</label>
-            <md-icon>
-                <span class="glyphicon glyphicon-lock"></span>
+            <md-icon class="material-icons">
+                lock
             </md-icon>
-            <input type="text" ng-model="newProfile.passwords.confirm" ng-required="false"/>
+            <input type="password" ng-model="newProfile.passwords.confirm" ng-required="false"/>
         </md-input-container>
     </div>
 
