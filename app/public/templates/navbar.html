@@ -16,9 +16,6 @@
         background: hsla(0, 0%, 0%, 0.15);
     }
 
-    .md-sidenav-left {
-        width: 200px;
-    }
 
 </style>
 
@@ -26,8 +23,8 @@
             md-is-locked-open="true">
 
     <md-toolbar>
-        <div hide-md ng-hide="collapsed" class="md-toolbar-tools">
-            <h1 class="navbar-header hidden-xs hidden-sm">
+        <div ng-hide="collapsed" class="md-toolbar-tools">
+            <h1 class="navbar-header">
                 <span ng-bind="profile.firstName"></span>
                 <span ng-bind="profile.lastName"></span> <br/>
                 <small style="color: white"><span ng-bind="profile.username"></span></small>
@@ -41,7 +38,7 @@
             <md-tooltip hide-gt-sm md-direction="right">
                 <span translate>NAV.HOME</span>
             </md-tooltip>
-            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.HOME</span>
+            <span ng-hide="collapsed" class="md-24" translate>NAV.HOME</span>
         </div>
 
         <div class="sidenav-item" ui-sref="root.profile" ui-sref-active="active">
@@ -49,28 +46,28 @@
             <md-tooltip hide-gt-sm md-direction="right">
                 <span translate>NAV.SETTINGS</span>
             </md-tooltip>
-            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.SETTINGS</span>
+            <span ng-hide="collapsed" class="md-24" translate>NAV.SETTINGS</span>
         </div>
         <div class="sidenav-item" ui-sref="root.news" ui-sref-active="active">
             <md-icon class="material-icons">notifications</md-icon>
             <md-tooltip hide-gt-sm md-direction="right">
                 <span translate>NAV.NEWS</span>
             </md-tooltip>
-            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.NEWS</span>
+            <span ng-hide="collapsed" class="md-24" translate>NAV.NEWS</span>
         </div>
         <div class="sidenav-item" ui-sref="root.courses" ui-sref-active="active">
             <md-icon class="material-icons">view_list</md-icon>
             <md-tooltip hide-gt-sm md-direction="right">
                 <span translate>NAV.COURSES</span>
             </md-tooltip>
-             <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.COURSES</span>
+             <span ng-hide="collapsed" class="md-24" translate>NAV.COURSES</span>
         </div>
         <div class="sidenav-item" if-group="admin" ui-sref="root.admin.courses" ui-sref-active="active">
             <md-icon class="material-icons md-24">settings</md-icon>
             <md-tooltip hide-gt-sm md-direction="right">
                 <span translate>NAV.ADMIN</span>
             </md-tooltip>
-            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.ADMIN</span>
+            <span ng-hide="collapsed" class="md-24" translate>NAV.ADMIN</span>
         </div>
         <md-divider></md-divider>
         <div class="sidenav-item" ng-click="logout()">
@@ -78,11 +75,11 @@
             <md-tooltip hide-gt-sm md-direction="right">
                 <span translate>NAV.LOGOUT</span>
             </md-tooltip>
-            <span hide-md ng-hide="collapsed" class="md-24" translate>NAV.LOGOUT</span>
+            <span ng-hide="collapsed" class="md-24" translate>NAV.LOGOUT</span>
         </div>
     </md-content>
 
-    <div hide-md ng-hide="collapsed" style="padding: 20px" layout="column" layout-align="end center" flex>
+    <div ng-hide="collapsed" style="padding: 20px" layout="column" layout-align="end center" flex>
         <md-button ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(true)">
             <md-icon class="material-icons">keyboard_arrow_left</md-icon>
         </md-button>

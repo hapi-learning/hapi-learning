@@ -12,6 +12,14 @@ angular.module('hapi-learning')
             scope.collapsed = false;
             scope.collapsing = false;
 
+            scope.collapsedW = '50px';
+            scope.uncollapsedW = '200px';
+
+            var sidenav = elem.find('.md-sidenav-left');
+
+            sidenav.css({ width: '0px' });
+
+
             scope.logout = function() {
                 LoginFactory.logout();
             };
@@ -24,14 +32,14 @@ angular.module('hapi-learning')
                     return;
                 }
 
-                var w = collapse ? '50px' : '200px';
+                var w = collapse ? scope.collapsedW : scope.uncollapsedW;
 
                 if (collapse) {
                     scope.collapsed = !scope.collapsed;
                 }
 
                 scope.collapsing = true;
-                elem.find('.md-sidenav-left').animate({ width: w }, 300, function() {
+                sidenav.animate({ width: w }, 300, function() {
                     if (!collapse) {
                         scope.collapsed = !scope.collapsed;
                     }
@@ -40,6 +48,26 @@ angular.module('hapi-learning')
                     scope.$apply();
                 });
             };
+
+            scope.isSmall = function() {
+                return $mdMedia('sm') || $mdMedia('xs');
+            };
+
+            if (scope.isSmall()) {
+                sidenav.css({ width: scope.collapsedW });
+                scope.collapsed = true;
+            } else {
+                sidenav.css({ width: scope.uncollapsedW });
+                scope.collapsed = false;
+            }
+
+            scope.$watch(scope.isSmall, function(isSmall) {
+                if (isSmall && !scope.collapsed) {
+                   scope.collapse(true);
+                } else if (!isSmall && scope.collapsed) {
+                   scope.collapse(false);
+                }
+            });
         }
     };
 }]);
