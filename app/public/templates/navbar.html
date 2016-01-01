@@ -16,11 +16,25 @@
         background: hsla(0, 0%, 0%, 0.15);
     }
 
+    #avatar {
+        margin-bottom: 25px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    #avatar > img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .sidenav-bottom {
+        padding-bottom: 20px;
+    }
 
 </style>
 
 <md-sidenav flex layout="column" class="md-sidenav-left md-whiteframe-z2 ma-sidenav" md-component-id="left"
-            md-is-locked-open="true">
+            md-is-locked-open="isLockedOpen">
 
     <md-toolbar>
         <div ng-hide="collapsed" class="md-toolbar-tools">
@@ -35,7 +49,7 @@
     <md-content class="ma-sidenav" layout="column">
         <div ui-sref-active="active" class="sidenav-item" ui-sref="root.home">
             <md-icon class="material-icons md-24">home</md-icon>
-            <md-tooltip hide-gt-sm md-direction="right">
+            <md-tooltip hide-gt-sm md-direction="{{tooltipDirection}}">
                 <span translate>NAV.HOME</span>
             </md-tooltip>
             <span ng-hide="collapsed" class="md-24" translate>NAV.HOME</span>
@@ -43,28 +57,28 @@
 
         <div class="sidenav-item" ui-sref="root.profile" ui-sref-active="active">
             <md-icon class="material-icons md-24">person</md-icon>
-            <md-tooltip hide-gt-sm md-direction="right">
+            <md-tooltip hide-gt-sm md-direction="{{tooltipDirection}}">
                 <span translate>NAV.SETTINGS</span>
             </md-tooltip>
             <span ng-hide="collapsed" class="md-24" translate>NAV.SETTINGS</span>
         </div>
         <div class="sidenav-item" ui-sref="root.news" ui-sref-active="active">
             <md-icon class="material-icons">notifications</md-icon>
-            <md-tooltip hide-gt-sm md-direction="right">
+            <md-tooltip hide-gt-sm md-direction="{{tooltipDirection}}">
                 <span translate>NAV.NEWS</span>
             </md-tooltip>
             <span ng-hide="collapsed" class="md-24" translate>NAV.NEWS</span>
         </div>
         <div class="sidenav-item" ui-sref="root.courses" ui-sref-active="active">
             <md-icon class="material-icons">view_list</md-icon>
-            <md-tooltip hide-gt-sm md-direction="right">
+            <md-tooltip hide-gt-sm md-direction="{{tooltipDirection}}">
                 <span translate>NAV.COURSES</span>
             </md-tooltip>
              <span ng-hide="collapsed" class="md-24" translate>NAV.COURSES</span>
         </div>
         <div class="sidenav-item" if-group="admin" ui-sref="root.admin.courses" ui-sref-active="active">
             <md-icon class="material-icons md-24">settings</md-icon>
-            <md-tooltip hide-gt-sm md-direction="right">
+            <md-tooltip hide-gt-sm md-direction="{{tooltipDirection}}">
                 <span translate>NAV.ADMIN</span>
             </md-tooltip>
             <span ng-hide="collapsed" class="md-24" translate>NAV.ADMIN</span>
@@ -72,21 +86,27 @@
         <md-divider></md-divider>
         <div class="sidenav-item" ng-click="logout()">
             <md-icon class="material-icons">exit_to_app</md-icon>
-            <md-tooltip hide-gt-sm md-direction="right">
+            <md-tooltip hide-gt-sm md-direction="{{tooltipDirection}}">
                 <span translate>NAV.LOGOUT</span>
             </md-tooltip>
             <span ng-hide="collapsed" class="md-24" translate>NAV.LOGOUT</span>
         </div>
     </md-content>
 
-    <div ng-hide="collapsed" style="padding: 20px" layout="column" layout-align="end center" flex>
-        <md-button ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(true)">
+
+
+
+    <div class="sidenav-bottom" layout="column" layout-align="end center" flex>
+
+        <md-card id="avatar">
+            <img src="http://i.imgur.com/Bd8vkyM.png">
+        </md-card>
+
+        <md-button ng-hide="collapsed" ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(true)">
             <md-icon class="material-icons">keyboard_arrow_left</md-icon>
         </md-button>
-    </div>
 
-    <div ng-hide="!collapsed" style="padding-bottom: 20px" layout="column" layout-align="end center" flex>
-        <md-button ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(false)">
+        <md-button ng-hide="!collapsed" ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(false)">
             <md-icon class="material-icons">keyboard_arrow_right</md-icon>
         </md-button>
     </div>

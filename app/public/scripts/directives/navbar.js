@@ -8,15 +8,23 @@ angular.module('hapi-learning')
         templateUrl: 'templates/navbar.html',
         link: function(scope, elem, attrs) {
 
-            scope.profile = null;
+
+            scope.profile = $rootScope.$user;
+            scope.tooltipDirection = 'right';
+            scope.isLockedOpen = true;
             scope.collapsed = false;
             scope.collapsing = false;
-
             scope.collapsedW = '50px';
             scope.uncollapsedW = '200px';
 
-            var sidenav = elem.find('.md-sidenav-left');
+            scope.avatarWBig = '125px';
+            scope.avatarWSmall = '45px';
 
+
+            var sidenav = elem.find('.md-sidenav-left');
+            var avatar = elem.find('#avatar');
+
+            avatar.css({ width: '0px' });
             sidenav.css({ width: '0px' });
 
 
@@ -24,7 +32,6 @@ angular.module('hapi-learning')
                 LoginFactory.logout();
             };
 
-            scope.profile = $rootScope.$user;
 
             scope.collapse = function(collapse) {
 
@@ -38,7 +45,10 @@ angular.module('hapi-learning')
                     scope.collapsed = !scope.collapsed;
                 }
 
+                var avatarW = collapse ? scope.avatarWSmall : scope.avatarWBig;
+
                 scope.collapsing = true;
+                avatar.animate({ width: avatarW }, 300);
                 sidenav.animate({ width: w }, 300, function() {
                     if (!collapse) {
                         scope.collapsed = !scope.collapsed;
@@ -55,9 +65,11 @@ angular.module('hapi-learning')
 
             if (scope.isSmall()) {
                 sidenav.css({ width: scope.collapsedW });
+                avatar.css({ width: scope.avatarWSmall });
                 scope.collapsed = true;
             } else {
                 sidenav.css({ width: scope.uncollapsedW });
+                avatar.css({ width: scope.avatarWBig });
                 scope.collapsed = false;
             }
 
