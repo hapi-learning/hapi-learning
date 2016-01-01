@@ -17,7 +17,7 @@ angular.module('hapi-learning')
             scope.collapsedW = '50px';
             scope.uncollapsedW = '200px';
 
-            scope.avatarWBig = '125px';
+            scope.avatarWBig = '75px';
             scope.avatarWSmall = '45px';
 
 
@@ -48,7 +48,7 @@ angular.module('hapi-learning')
                 var avatarW = collapse ? scope.avatarWSmall : scope.avatarWBig;
 
                 scope.collapsing = true;
-                avatar.animate({ width: avatarW }, 300);
+                avatar.animate({ width: avatarW, height: avatarW }, 300);
                 sidenav.animate({ width: w }, 300, function() {
                     if (!collapse) {
                         scope.collapsed = !scope.collapsed;
@@ -65,11 +65,11 @@ angular.module('hapi-learning')
 
             if (scope.isSmall()) {
                 sidenav.css({ width: scope.collapsedW });
-                avatar.css({ width: scope.avatarWSmall });
+                avatar.css({ width: scope.avatarWSmall, height: scope.avatarWSmall });
                 scope.collapsed = true;
             } else {
                 sidenav.css({ width: scope.uncollapsedW });
-                avatar.css({ width: scope.avatarWBig });
+                avatar.css({ width: scope.avatarWBig, height: scope.avatarWBig });
                 scope.collapsed = false;
             }
 

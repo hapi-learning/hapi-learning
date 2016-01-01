@@ -6,6 +6,7 @@ angular.module('hapi-learning', [
         'hapi-learning.um',
         'ui.bootstrap',
         'ui.router',
+        'ui.gravatar',
         'ngTagsInput',
         'ngFileUpload',
         'angularFileUpload',

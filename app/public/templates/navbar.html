@@ -17,9 +17,9 @@
     }
 
     #avatar {
-        margin-bottom: 25px;
         border-radius: 50%;
         overflow: hidden;
+        cursor: pointer;
     }
 
     #avatar > img {
@@ -31,21 +31,26 @@
         padding-bottom: 20px;
     }
 
+    .profile-toolbar {
+        -webkit-box-shadow: inset 0px -25px 15px -20px rgba(0,0,0,0.15);
+        -moz-box-shadow: inset 0px -25px 15px -20px rgba(0,0,0,0.15);
+        box-shadow: inset 0px -25px 15px -20px rgba(0,0,0,0.15);
+    }
+
 </style>
 
 <md-sidenav flex layout="column" class="md-sidenav-left md-whiteframe-z2 ma-sidenav" md-component-id="left"
             md-is-locked-open="isLockedOpen">
 
-    <md-toolbar>
-        <div ng-hide="collapsed" class="md-toolbar-tools">
-            <h1 class="navbar-header">
-                <span ng-bind="profile.firstName"></span>
-                <span ng-bind="profile.lastName"></span> <br/>
-                <small style="color: white"><span ng-bind="profile.username"></span></small>
-            </h1>
+    <md-toolbar class="profile-toolbar">
+        <div layout="column" layout-align="start center">
+            <md-card ui-sref="root.profile" id="avatar">
+                <img gravatar-src="profile.email">
+            </md-card>
+            <span layout-padding ng-hide="collapsed" ng-bind="profile.username"></span>
         </div>
     </md-toolbar>
-    <md-divider></md-divider>
+    <!--<md-divider></md-divider>-->
     <md-content class="ma-sidenav" layout="column">
         <div ui-sref-active="active" class="sidenav-item" ui-sref="root.home">
             <md-icon class="material-icons md-24">home</md-icon>
@@ -98,9 +103,9 @@
 
     <div class="sidenav-bottom" layout="column" layout-align="end center" flex>
 
-        <md-card id="avatar">
-            <img src="http://i.imgur.com/Bd8vkyM.png">
-        </md-card>
+        <!--<md-card ui-sref="root.profile" id="avatar">
+            <img gravatar-src="profile.email">
+        </md-card>-->
 
         <md-button ng-hide="collapsed" ng-disabled="collapsing" class="md-icon-button md-raised md-primary" ng-click="collapse(true)">
             <md-icon class="material-icons">keyboard_arrow_left</md-icon>
