@@ -176,6 +176,7 @@ angular.module('hapi-learning.um', [
         function(LoginFactory, $state, UM_CONFIG, $rootScope) {
             $rootScope.$on('$stateChangeStart',
                 function(event, toState, toParams, fromState, fromParams) {
+
                     // Redirects to the after login state when connected
                     if (toState.name === UM_CONFIG.LOGIN_STATE && LoginFactory.isConnected()) {
                         event.preventDefault();

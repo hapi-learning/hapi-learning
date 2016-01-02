@@ -17,12 +17,9 @@ angular.module('hapi-learning')
             $rootScope.titlePage = 'Course - ' + $stateParams.code;
 
             $scope.$state = $state; // for the active class
-
             $scope.update = false;
-            $scope.course = null;
             $scope.editing = false;
             $scope.errorPostHomepage = false;
-
 
             // If stateParams changed, update course
             if ($scope.course && $stateParams.code !== $scope.course.code) {
@@ -30,19 +27,26 @@ angular.module('hapi-learning')
             }
 
             if (!$scope.course || $scope.update) {
+
                 CoursesFactory.loadSpecific($stateParams.code)
                     .then(function (course) {
+
                         if (course) {
                             $scope.course = course;
+                            $scope.update = false;
+
+                            // TODO - Load just on root.course.main
                             Restangular
                                 .service('courses')
                                 .one(course.code)
                                 .one('homepage')
                                 .get()
                                 .then(function (readme) {
+
                                     $scope.course.description = readme || '*This page is empty*';
                                 })
                                 .catch(function (error) {
+
                                     if (error.status === 404) {
                                         $scope.course.description = '*This page is empty*';
                                     }
@@ -56,8 +60,19 @@ angular.module('hapi-learning')
                         }
                     })
                     .catch(function (error) {
+
                         $state.go('root.home');
                     });
+            };
+
+
+            // Function to fix redirection with ui-sref and $scope.course.code
+            // being undefined
+            $scope.goToTab = function(state, stateParams) {
+
+                if ($scope.course && $scope.course.code) {
+                    $state.go(state, stateParams);
+                }
             };
 
             $scope.editHomepage = function() {
@@ -71,10 +86,12 @@ angular.module('hapi-learning')
                     .customPOST({
                         content: content
                     }, 'homepage').then(function(res) {
+
                         $scope.course.description = content;
                         $scope.editing = false;
                         $scope.errorPostHomepage = false;
                     }).catch(function() {
+
                         $scope.editing = true;
                         $scope.errorPostHomepage = true;
                     });

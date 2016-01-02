@@ -126,9 +126,9 @@ angular.module('hapi-learning', [
                 })
                 .state('root.course', {
                     templateUrl: '/views/course.html',
+                    controller: 'CourseCtrl',
                     abstract: true,
-                    url: '/courses/:code',
-                    controller: 'CourseCtrl'
+                    url: '/courses/:code'
                 })
                 .state('root.course.main', {
                     url: '/home',
