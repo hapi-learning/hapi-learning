@@ -124,7 +124,8 @@
                 "LABEL": "Last name"
             },
             "EMAIL": {
-                "LABEL": "Mail"
+                "LABEL": "Mail",
+                "INVALID": "Enter a valid email"
             },
             "NOTIFY": {
                 "LABEL": "Notify by mail",
@@ -134,7 +135,9 @@
             "PASSWORD": {
                 "LABEL": "Password",
                 "PLACEHOLDER": "@:GENERAL.HIDDEN",
-                "CONFIRM": "Confirm password"
+                "CONFIRM": "Confirm password",
+                "NOT_MATCHING": "Passwords do not match",
+                "TOO_SHORT": "Password must have at least 3 characters"
             },
             "PHONE": {
                 "LABEL": "Phone number",

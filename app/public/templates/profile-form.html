@@ -1,11 +1,11 @@
-<div layout="column">
+<form name="profileForm" layout="column">
     <div layout="row">
         <md-input-container flex="30" class="md-icon-float">
             <label ng-bind="profile.firstName"></label>
             <md-icon class="material-icons">
                 person
             </md-icon>
-            <input type="text" ng-model="newProfile.firstName" ng-required="true"/>
+            <input type="text" ng-model="newProfile.firstName"/>
         </md-input-container>
 
         <md-input-container flex="30" flex-offset="5" class="md-icon-float">
@@ -13,7 +13,7 @@
             <md-icon class="material-icons">
                 person
             </md-icon>
-            <input type="text" ng-model="newProfile.lastName" ng-required="true"/>
+            <input type="text" ng-model="newProfile.lastName"/>
         </md-input-container>
     </div>
 
@@ -23,7 +23,14 @@
             <md-icon class="material-icons">
                 email
             </md-icon>
-            <input type="text" ng-model="newProfile.email" ng-required="true"/>
+            <input name="email" type="text" ng-change="checkEmail(newProfile.email)" ng-model="newProfile.email" />
+
+            <!-- Error messages -->
+            <div ng-if="errors">
+                <div ng-messages="profileForm.email.$error" ng-show="errors.invalidEmail">
+                    <div translate>FORM.PROFILE.EMAIL.INVALID</div>
+                </div>
+            </div>
         </md-input-container>
 
         <md-input-container flex-offset="5" flex="30" class="md-icon-float">
@@ -40,8 +47,7 @@
             <label translate>FORM.PROFILE.NOTIFY.LABEL</label>
         </div>
         <div>
-            <md-switch aria-label="Notify" ng-model="newProfile.notify" ng-change="">
-            </md-switch>
+            <md-switch aria-label="Notify" ng-model="newProfile.notify"></md-switch>
         </div>
     </div>
 
@@ -52,7 +58,20 @@
             <md-icon class="material-icons">
                 lock
             </md-icon>
-            <input type="password" ng-model="newProfile.passwords.new" ng-required="false"/>
+            <input name="newP" type="password" ng-model="newProfile.passwords.new" />
+
+            <!-- Error messages -->
+            <div ng-if="errors">
+                <div ng-messages="profileForm.newP.$error" ng-show="errors.passwordsNotMaching">
+                    <div translate>FORM.PROFILE.PASSWORD.NOT_MATCHING</div>
+                </div>
+
+                <div ng-messages="profileForm.newP.$error" ng-show="errors.passwordMinLength">
+                    <div translate>FORM.PROFILE.PASSWORD.TOO_SHORT</div>
+                </div>
+            </div>
+
+
         </md-input-container>
 
         <md-input-container flex-offset="5" flex="30" class="md-icon-float">
@@ -60,7 +79,18 @@
             <md-icon class="material-icons">
                 lock
             </md-icon>
-            <input type="password" ng-model="newProfile.passwords.confirm" ng-required="false"/>
+            <input name="confirmP" type="password" ng-model="newProfile.passwords.confirm" />
+
+            <!-- Error messages -->
+            <div ng-if="errors">
+                <div ng-messages="profileForm.confirmP.$error" ng-show="errors && errors.passwordsNotMaching">
+                    <div translate>FORM.PROFILE.PASSWORD.NOT_MATCHING</div>
+                </div>
+
+                <div ng-messages="profileForm.confirmP.$error" ng-show="errors.passwordMinLength">
+                    <div translate>FORM.PROFILE.PASSWORD.TOO_SHORT</div>
+                </div>
+            </div>
         </md-input-container>
     </div>
 
@@ -73,109 +103,4 @@
         </md-button>
     </div>
 
-</div>
-<br/>
-<!--
-
-   <div>
-    <form editable-form name="profileForm" class="form-horizontal"
-          onbeforesave="updateProfile($data)" oncancel="removeErrors()">
-
-       <div class="form-group">
-           <label class="control-label col-md-2"><span translate>FORM.PROFILE.FIRSTNAME.LABEL</span>: </label>
-            <div class="col-md-10">
-                <span e-class="form-control" editable-text="profile.firstName"
-                      e-name="firstName"
-                      ng-bind="profile.firstName"></span>
-            </div>
-       </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2"><span translate>FORM.PROFILE.LASTNAME.LABEL</span>:</label>
-            <div class="col-md-10">
-                 <span e-class="form-control" editable-text="profile.lastName"
-                      e-name="lastName"
-                      ng-bind="profile.lastName"></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2"><span translate>FORM.PROFILE.EMAIL.LABEL</span>:</label>
-            <div class="col-md-10">
-                <span e-class="form-control" e-type="email"
-                      e-ng-change="checkEmail(profile.email)"
-                      editable-text="profile.email" e-name="email"
-                      ng-bind="profile.email" e-required></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2"><span translate>FORM.PROFILE.NOTIFY.LABEL</span>:</label>
-            <div class="col-md-10" style="padding-left:35px">
-                <div e-class="form-control" e-type="checkbox"
-                      editable-checkbox="profile.notify" e-name="notify">
-                    <md-switch ng-model="profile.notify">
-                    </md-switch>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2"><span translate>FORM.PROFILE.PHONE.LABEL</span>:</label>
-            <div class="col-md-10">
-                <span e-class="form-control" editable-text="profile.phoneNumber" e-name="phoneNumber"
-                      ng-bind="profile.phoneNumber" e-placeholder="{{'FORM.PROFILE.PHONE.PLACEHOLDER' | translate}}">
-
-                </span>
-            </div>
-        </div>
-
-        <div class="form-group" ng-show="profileForm.$visible">
-            <label class="control-label col-md-2"><span translate>FORM.PROFILE.PASSWORD.LABEL</span>:</label>
-            <div class="col-md-10">
-              <span e-type="password" editable-text="newPassword"
-                    e-class="form-control"
-                    e-name="newPassword" e-placeholder="{{'FORM.PROFILE.PASSWORD.PLACEHOLDER' | translate}}">
-             </span>
-            </div>
-        </div>
-
-        <div class="form-group" ng-show="profileForm.$visible">
-            <label class="control-label col-md-2"><span translate>FORM.PROFILE.PASSWORD.CONFIRM</span>:</label>
-            <div class="col-md-10">
-                <span e-type="password" e-class="form-control"
-                      editable-text="confirmPassword"
-                      e-name="confirmPassword" e-placeholder="{{'FORM.PROFILE.PASSWORD.PLACEHOLDER' | translate}}">
-                </span>
-
-            </div>
-        </div>
-
-
-
-        <br/>
-
-        <div class="buttons col-md-offset-2 col-md-2">
-            <button type="button" class="btn btn-default"
-                    ng-click="profileForm.$show()" ng-show="!profileForm.$visible" translate>
-                GENERAL.EDIT
-            </button>
-
-            <span ng-show="profileForm.$visible">
-                <button type="submit" class="btn btn-primary"
-                        ng-disabled="profileForm.$waiting" translate>
-                    GENERAL.SAVE
-                </button>
-
-                <button type="button" class="btn btn-default"
-                        ng-disabled="profileForm.$waiting"
-                        ng-click="profileForm.$cancel()" translate>
-                    GENERAL.CANCEL
-                </button>
-
-            </span>
-
-        </div>
-    </form>
-</div>
--->
+</form>

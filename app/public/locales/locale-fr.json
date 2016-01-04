@@ -124,7 +124,8 @@
                 "LABEL": "Nom"
             },
             "EMAIL": {
-                "LABEL": "Email"
+                "LABEL": "Email",
+                "INVALID": "Enter a valid email"
             },
             "NOTIFY": {
                 "LABEL": "Notification par mail",
@@ -134,7 +135,9 @@
             "PASSWORD": {
                 "LABEL": "Mot de passe",
                 "PLACEHOLDER": "@:GENERAL.HIDDEN",
-                "CONFIRM": "@:FORM.PROFILE.PASSWORD.LABEL"
+                "CONFIRM": "@:FORM.PROFILE.PASSWORD.LABEL",
+                "NOT_MATCHING": "Les mots de passe ne sont pas égaux",
+                "TOO_SHORT": "Le mot de passe doit contenir minimum 3 caractères"
             },
             "PHONE": {
                 "LABEL": "Numéro de téléphone",

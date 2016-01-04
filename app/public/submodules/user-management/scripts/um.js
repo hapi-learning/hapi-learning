@@ -18,9 +18,34 @@ angular.module('hapi-learning.um', [
     .factory('AuthStorage', ['store', function (store) {
             return store.getNamespacedStore('auth');
     }])
-    .factory('LoginFactory', ['$state', '$http', 'jwtHelper',
+    .factory('ProfileFactory', ['$http', 'UM_CONFIG',
+                                function($http, UM_CONFIG) {
+
+        var exports = {};
+
+        exports.update = function(profile) {
+
+            return $http({
+                method: 'PATCH',
+                url: UM_CONFIG.API_PREFIX + UM_CONFIG.API_ME_ENDPOINT,
+                data: JSON.stringify(profile)
+            });
+        };
+
+        exports.get = function() {
+            return $http({
+                url: UM_CONFIG.API_PREFIX + UM_CONFIG.API_ME_ENDPOINT,
+                method: 'GET',
+            }).then(function(response) {
+                return response.data;
+            });
+        }
+
+        return exports;
+    }])
+    .factory('LoginFactory', ['$state', '$http', 'jwtHelper', 'ProfileFactory',
                               'AuthStorage', '$q', 'UM_CONFIG', '$rootScope',
-                              function ($state, $http, jwtHelper,
+                              function ($state, $http, jwtHelper, ProfileFactory,
                                         AuthStorage, $q, UM_CONFIG, $rootScope) {
 
         var exports = {};
@@ -28,16 +53,11 @@ angular.module('hapi-learning.um', [
 
         internals.loadProfile = function() {
             return $q(function(resolve, reject) {
-                $http({
-                    url: UM_CONFIG.API_PREFIX + UM_CONFIG.API_ME_ENDPOINT,
-                    method: 'GET',
-                })
-                .then(function success(response) {
-                    var user = response.data;
-                    resolve(user);
-                }, function failure(error) {
-                    reject(error);
-                });
+                ProfileFactory.get().then(function success(response) {
+                        resolve(response);
+                    }, function failure(error) {
+                        reject(error);
+                    });
             });
 
         };
