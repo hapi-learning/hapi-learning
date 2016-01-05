@@ -1,6 +1,6 @@
 <form name="profileForm" layout="column">
-    <div layout="row">
-        <md-input-container flex="30" class="md-icon-float">
+    <div layout="row" layout-xs="column">
+        <md-input-container flex="30" flex-xs="100" class="md-icon-float">
             <label ng-bind="profile.firstName"></label>
             <md-icon class="material-icons">
                 person
@@ -8,7 +8,7 @@
             <input type="text" ng-model="newProfile.firstName"/>
         </md-input-container>
 
-        <md-input-container flex="30" flex-offset="5" class="md-icon-float">
+        <md-input-container flex="30" flex-xs="100" flex-offset-xs="0" flex-offset="5" class="md-icon-float">
             <label ng-bind="profile.lastName"></label>
             <md-icon class="material-icons">
                 person
@@ -17,8 +17,8 @@
         </md-input-container>
     </div>
 
-    <div layout="row">
-        <md-input-container flex="30" class="md-icon-float">
+    <div layout="row" layout-xs="column">
+        <md-input-container flex="30" flex-xs="100" class="md-icon-float">
             <label ng-bind="profile.email"></label>
             <md-icon class="material-icons">
                 email
@@ -33,7 +33,7 @@
             </div>
         </md-input-container>
 
-        <md-input-container flex-offset="5" flex="30" class="md-icon-float">
+        <md-input-container flex-offset="5" flex-offset-xs="0" flex-xs="100" flex="30" class="md-icon-float">
             <label>{{profile.phoneNumber || 'Phone number'}}</label>
             <md-icon class="material-icons">
                 phone
@@ -42,18 +42,18 @@
         </md-input-container>
     </div>
 
-    <div layout="row" layout-align="start center">
-        <div flex="10">
+    <div layout="column" layout-align="center start">
+        <div flex>
             <label translate>FORM.PROFILE.NOTIFY.LABEL</label>
         </div>
-        <div>
+        <div flex>
             <md-switch aria-label="Notify" ng-model="newProfile.notify"></md-switch>
         </div>
     </div>
 
 
-    <div layout="row">
-        <md-input-container flex="30" class="md-icon-float">
+    <div layout="row" layout-xs="column">
+        <md-input-container flex="30" flex-xs="100" class="md-icon-float">
             <label>New password</label>
             <md-icon class="material-icons">
                 lock
@@ -74,7 +74,7 @@
 
         </md-input-container>
 
-        <md-input-container flex-offset="5" flex="30" class="md-icon-float">
+        <md-input-container flex-offset="5" flex-offset-xs="0" flex="30" flex-xs="100" class="md-icon-float">
             <label>Confirm password</label>
             <md-icon class="material-icons">
                 lock
@@ -95,10 +95,10 @@
     </div>
 
     <div layout="row">
-        <md-button flex="10" class="md-raised md-primary" ng-click="save()">
+        <md-button flex="15" flex-xs="50" class="md-raised md-primary" ng-click="save()">
             Save
         </md-button>
-        <md-button flex="10" class="md-raised md-warn" ng-click="cancel()">
+        <md-button flex="15" flex-xs="50" class="md-raised md-warn" ng-click="cancel()">
             Cancel
         </md-button>
     </div>
