@@ -56,22 +56,9 @@ angular.module('hapi-learning', [
                 .accentPalette('purple');
 
     }])
-    .config(['$urlMatcherFactoryProvider', function($urlMatcherFactoryProvider) {
-        $urlMatcherFactoryProvider.type('FilePath', {
-            encode: function(value) {
-                return value ? value.toString() : value;
-            },
-            decode: function(value) {
-                return value ? value.toString() : value;
-            },
-            is: function(value) {
-                return this.pattern.test(value);
-            },
-            pattern: /[^\0]+/
-        });
-    }])
     .config(['$urlRouterProvider', '$stateProvider',
                 function ($urlRouterProvider, $stateProvider) {
+
             $urlRouterProvider.otherwise('/');
 
             $stateProvider
