@@ -8,11 +8,11 @@ angular
 
             $rootScope.titlePage = 'Home';
 
-            CoursesFactory.getSubscribed()
-                .then(function(courses) {
-                    if (courses) {
-                        $scope.courses = courses;
-                    }
+            CoursesFactory.getSubscribed().then(function(courses) {
+
+                if (courses) {
+                    $scope.courses = courses;
+                }
             })
             .catch(function(error) {
                 console.log(error);

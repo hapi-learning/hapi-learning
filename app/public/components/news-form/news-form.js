@@ -5,7 +5,8 @@ angular.module('hapi-learning')
     'CoursesFactory',
     'NewsFactory',
     'ngDialog',
-    function (CoursesFactory, NewsFactory, ngDialog) {
+    'lodash',
+    function (CoursesFactory, NewsFactory, ngDialog, _) {
             return {
                 restrict: 'E',
                 templateUrl: 'components/news-form/news-form.html',

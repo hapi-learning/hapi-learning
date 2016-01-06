@@ -3,11 +3,12 @@
 
 
 angular.module('hapi-learning', [
-        'ngMaterial',
         'hapi-learning.config',
         'hapi-learning.services',
         'hapi-learning.api',
         'hapi-learning.um',
+        'ngMaterial',
+        'ngLodash',
         'ui.bootstrap',
         'ui.router',
         'ui.gravatar',

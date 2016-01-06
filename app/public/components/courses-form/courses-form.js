@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .directive('coursesForm', ['CoursesFactory', 'ngDialog', function (CoursesFactory, ngDialog) {
+    .directive('coursesForm', ['CoursesFactory', 'ngDialog', 'lodash', function (CoursesFactory, ngDialog, _) {
         return {
             restrict: 'E',
             templateUrl: 'components/courses-form/courses-form.html',

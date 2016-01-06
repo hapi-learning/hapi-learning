@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('hapi-learning')
-    .controller('CoursesCtrl', ['$rootScope', '$scope', 'CoursesFactory', 'TagsFactory',
-    function ($rootScope, $scope, CoursesFactory, TagsFactory) {
+    .controller('CoursesCtrl', ['$rootScope', '$scope', 'CoursesFactory', 'TagsFactory', 'lodash',
+    function ($rootScope, $scope, CoursesFactory, TagsFactory, _) {
 
         $rootScope.titlePage = 'Courses';
 

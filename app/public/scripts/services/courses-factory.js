@@ -5,8 +5,9 @@ angular.module('hapi-learning.services')
         '$rootScope',
         'Restangular',
         '$q',
+        'lodash',
 
-    function ($rootScope, Restangular, $q) {
+    function ($rootScope, Restangular, $q, _) {
 
         var internals = {};
         var exports = {};

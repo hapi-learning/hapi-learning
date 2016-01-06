@@ -6,7 +6,8 @@ angular.module('hapi-learning')
         '$scope',
         'TeachersFactory',
         'UsersFactory',
-        'TagsFactory', function ($rootScope, $scope, TeachersFactory, UsersFactory, TagsFactory) {
+        'TagsFactory',
+        'lodash', function ($rootScope, $scope, TeachersFactory, UsersFactory, TagsFactory, _) {
 
         $rootScope.titlePage = 'Administration';
 

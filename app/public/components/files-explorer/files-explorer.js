@@ -2,8 +2,8 @@
 
 angular.module('hapi-learning')
     .directive('filesExplorer', [
-        '$rootScope', 'FilesFactory', '$q', '$state', '$stateParams',
-        function ($rootScope, FilesFactory, $q, $state, $stateParams) {
+        '$rootScope', 'FilesFactory', '$q', '$state', '$stateParams', 'lodash',
+        function ($rootScope, FilesFactory, $q, $state, $stateParams, _) {
 
         return {
             restrict: 'E',

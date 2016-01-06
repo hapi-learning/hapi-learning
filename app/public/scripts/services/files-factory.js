@@ -5,9 +5,10 @@ angular.module('hapi-learning.services')
         'Restangular',
         '$q',
         '$http',
+        '$config',
         'AuthStorage',
 
-    function(Restangular, $q, $http, AuthStorage) {
+    function(Restangular, $q, $http, $config, AuthStorage) {
 
         var internals = {};
         var exports = {};
@@ -27,7 +28,7 @@ angular.module('hapi-learning.services')
 
         internals.getUrl = function(course, path) {
             path = internals.replacePath(path);
-            return Restangular.configuration.baseUrl + '/courses/' + course + '/documents/' + path;
+            return $config.$apiPrefix + '/courses/' + course + '/documents/' + path;
         };
 
 
@@ -48,7 +49,7 @@ angular.module('hapi-learning.services')
         exports.getUploadPath = function(course, path) {
             path = internals.replacePath(path);
             path = encodeURIComponent(path);
-            return Restangular.configuration.baseUrl + '/courses/' + course + '/documents/' + path;
+            return $config.$apiPrefix + '/courses/' + course + '/documents/' + path;
         };
 
         exports.getList = function(course, path, showHidden) {
