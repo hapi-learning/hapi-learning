@@ -1,19 +1,23 @@
 'use strict';
 
+
+
 angular.module('hapi-learning', [
         'ngMaterial',
+        'hapi-learning.config',
+        'hapi-learning.services',
         'hapi-learning.api',
         'hapi-learning.um',
         'ui.bootstrap',
         'ui.router',
         'ui.gravatar',
-        'ngTagsInput',
+        'ngTagsInput',  // Remove this, use chips instead
         'ngFileUpload',
         'angularFileUpload',
         'angular-loading-bar',
         'ui.ace',
         'ui.validate',
-        'restangular',
+        'restangular', // Remove restnagular
         'angular-storage',
         'angular-jwt',
         'angularMoment',
@@ -154,11 +158,14 @@ angular.module('hapi-learning', [
         $translateProvider.useSanitizeValueStrategy('escape');
     }])
 
-    .run(['Restangular', 'API', 'UM_CONFIG', 'AuthStorage', '$rootScope', 'LoginFactory',
-          function (Restangular, API, UM_CONFIG, AuthStorage, $rootScope, LoginFactory) {
+    .run(['Restangular', 'API', '$config', 'AuthStorage', '$rootScope', 'LoginFactory',
+          function (Restangular, API, $config, AuthStorage, $rootScope, LoginFactory) {
+
         API.then(function(response) {
-            UM_CONFIG.API_PREFIX = response.data.api;
+
+            $config.$apiPrefix = response.data.api;
             Restangular.setBaseUrl(response.data.api);
+
             var token = AuthStorage.get('token');
             if (token && !$rootScope.$user) {
                 LoginFactory.getProfile();

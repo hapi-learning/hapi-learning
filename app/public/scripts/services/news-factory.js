@@ -1,12 +1,11 @@
 'use strict';
 
-angular.module('hapi-learning')
+angular.module('hapi-learning.services')
     .factory('NewsFactory', [
     '$q',
     'Restangular',
-    'LoginFactory',
     '$rootScope',
-        function ($q, Restangular, LoginFactory, $rootScope) {
+        function ($q, Restangular, $rootScope) {
 
             const exports = {
                 getCourseNews: function(options) {

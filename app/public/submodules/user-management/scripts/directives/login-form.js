@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('hapi-learning.um')
-    .directive('loginForm', ['$rootScope', '$state', '$stateParams', 'LoginFactory', 'UM_CONFIG',
-                function($rootScope, $state, $stateParams, LoginFactory, UM_CONFIG) {
+    .directive('loginForm', ['$rootScope', '$state', '$stateParams', 'LoginFactory', '$config',
+                function($rootScope, $state, $stateParams, LoginFactory, $config) {
     return {
         restrict: 'A',
         templateUrl: 'submodules/user-management/templates/login-form.html',
@@ -22,7 +22,7 @@ angular.module('hapi-learning.um')
                             delete $rootScope.$previous;
                             $state.go(previous.$state.name, previous.$stateParams);
                         } else {
-                            $state.go(UM_CONFIG.AFTER_LOGIN_STATE);
+                            $state.go($config.$afterLoginState);
                         }
                     })
                     .catch(function() {

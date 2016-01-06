@@ -1,25 +1,13 @@
 'use strict';
 
 angular.module('hapi-learning.um', [
+        'hapi-learning.config',
         'angular-jwt',
         'angular-storage',
         'ui.bootstrap'
     ])
-    .constant('UM_CONFIG', {
-        API_PREFIX: '',
-        API_LOGIN_ENDPOINT: '/login',
-        API_LOGOUT_ENDPOINT: '/logout',
-        API_ME_ENDPOINT: '/me',
-        LOGIN_STATE: 'login',
-        AFTER_LOGIN_STATE: 'root.home',
-        BEGIN_SESSION_EVENT: 'um.begin-session',
-        END_SESSION_EVENT: 'um.end-session'
-    })
-    .factory('AuthStorage', ['store', function (store) {
-            return store.getNamespacedStore('auth');
-    }])
-    .factory('ProfileFactory', ['$http', 'UM_CONFIG',
-                                function($http, UM_CONFIG) {
+    .factory('ProfileFactory', ['$http', '$config',
+                                function($http, $config) {
 
         var exports = {};
 
@@ -27,14 +15,15 @@ angular.module('hapi-learning.um', [
 
             return $http({
                 method: 'PATCH',
-                url: UM_CONFIG.API_PREFIX + UM_CONFIG.API_ME_ENDPOINT,
+                url: $config.uri($config.$apiMeEndpoint),
                 data: JSON.stringify(profile)
             });
         };
 
         exports.get = function() {
+
             return $http({
-                url: UM_CONFIG.API_PREFIX + UM_CONFIG.API_ME_ENDPOINT,
+                url: $config.uri($config.$apiMeEndpoint),
                 method: 'GET',
             }).then(function(response) {
                 return response.data;
@@ -44,38 +33,43 @@ angular.module('hapi-learning.um', [
         return exports;
     }])
     .factory('LoginFactory', ['$state', '$http', 'jwtHelper', 'ProfileFactory',
-                              'AuthStorage', '$q', 'UM_CONFIG', '$rootScope',
+                              'AuthStorage', '$q', '$config', '$rootScope',
                               function ($state, $http, jwtHelper, ProfileFactory,
-                                        AuthStorage, $q, UM_CONFIG, $rootScope) {
+                                         AuthStorage, $q, $config, $rootScope) {
 
         var exports = {};
         var internals = {};
 
         internals.loadProfile = function() {
+
             return $q(function(resolve, reject) {
                 ProfileFactory.get().then(function success(response) {
-                        resolve(response);
-                    }, function failure(error) {
-                        reject(error);
-                    });
+                    resolve(response);
+                }, function failure(error) {
+                    reject(error);
+                });
             });
 
         };
 
         internals.getToken = function() {
+
             return AuthStorage.get('token');
         };
 
         exports.isConnected = function() {
+
             return internals.getToken() !== null;
         };
 
         exports.getProfile = function() {
             return $q(function(resolve, reject) {
+
                 if (!$rootScope.$user) {
                     internals.loadProfile().then(function(profile) {
+
                         $rootScope.$user = profile;
-                        $rootScope.$emit(UM_CONFIG.BEGIN_SESSION_EVENT);
+                        $rootScope.$emit($config.$beginSessionEvent);
                         resolve($rootScope.$user);
                     }).catch(reject);
                 } else {
@@ -88,15 +82,15 @@ angular.module('hapi-learning.um', [
 
             return $q(function(resolve, reject) {
                 $http({
-                    url: UM_CONFIG.API_PREFIX + UM_CONFIG.API_LOGIN_ENDPOINT,
+                    url: $config.uri($config.$apiLoginEndpoint),
                     skipAuthorization: true,
                     method: 'POST',
                     data: {
                         username: user.name, // TODO
                         password: user.password
                     }
-                })
-                .then(function(response) {
+                }).then(function(response) {
+
                     AuthStorage.set('token', response.data.token);
                     exports.getProfile().then(resolve);
                 }, function(error) {
@@ -109,14 +103,14 @@ angular.module('hapi-learning.um', [
             return $q(function(resolve, reject) {
 
                 $http({
-                    url: UM_CONFIG.API_PREFIX +  UM_CONFIG.API_LOGOUT_ENDPOINT,
+                    url: $config.uri($config.$apiLogoutEndpoint),
                     method: 'POST'
-                })
-                .then(function (response) {
+                }).then(function (response) {
+
                     AuthStorage.remove('token');
                     delete $rootScope.$user;
-                    $rootScope.$emit(UM_CONFIG.END_SESSION_EVENT);
-                    $state.go(UM_CONFIG.LOGIN_STATE);
+                    $rootScope.$emit($config.$endSessionEvent);
+                    $state.go($config.$loginState);
                     resolve();
                 }, function (response) {
                     reject(response);
@@ -126,10 +120,11 @@ angular.module('hapi-learning.um', [
 
         return exports;
     }])
-    .factory('unauthorizedInterceptor', ['$injector', '$q', 'UM_CONFIG',
-                                         function($injector, $q, UM_CONFIG) {
+    .factory('unauthorizedInterceptor', ['$injector', '$q', '$config',
+                                         function($injector, $q, $config) {
         return {
             responseError: function(response) {
+
                 var d = $q.defer();
 
                 var $state = $injector.get('$state');
@@ -141,7 +136,7 @@ angular.module('hapi-learning.um', [
                 if (response.status === 401 && isExpired) {
 
                     AuthStorage.remove('token');
-                    $state.go(UM_CONFIG.LOGIN_STATE);
+                    $state.go($config.$loginState);
 
                     //var $uibModal = $injector.get('$uibModal');
 
@@ -173,12 +168,15 @@ angular.module('hapi-learning.um', [
             }
         }
     }])
-    .config(['$httpProvider', function($httpProvider) {
+    .config(['$httpProvider', function ($httpProvider) {
+
         $httpProvider.interceptors.push('unauthorizedInterceptor')
     }])
     .config(['$httpProvider', 'jwtInterceptorProvider',
           function($httpProvider, jwtInterceptorProvider) {
+
         jwtInterceptorProvider.tokenGetter = ['AuthStorage', function(AuthStorage) {
+
             return AuthStorage.get('token');
         }];
 
@@ -192,17 +190,18 @@ angular.module('hapi-learning.um', [
             AuthStorage.remove('token');
         }
     }])
-    .run(['LoginFactory', '$state', 'UM_CONFIG', '$rootScope',
-        function(LoginFactory, $state, UM_CONFIG, $rootScope) {
+    .run(['LoginFactory', '$state', '$config', '$rootScope',
+        function(LoginFactory, $state, $config, $rootScope) {
+
             $rootScope.$on('$stateChangeStart',
                 function(event, toState, toParams, fromState, fromParams) {
 
                     // Redirects to the after login state when connected
-                    if (toState.name === UM_CONFIG.LOGIN_STATE && LoginFactory.isConnected()) {
+                    if (toState.name === $config.$loginState && LoginFactory.isConnected()) {
                         event.preventDefault();
                         $state.go(fromState.name, fromParams);
                     // Redirects to the login state when not connected
-                    } else if (toState.name !== UM_CONFIG.LOGIN_STATE && !LoginFactory.isConnected()) {
+                    } else if (toState.name !== $config.$loginState && !LoginFactory.isConnected()) {
                         event.preventDefault();
 
                         $rootScope.$previous = {
@@ -210,8 +209,7 @@ angular.module('hapi-learning.um', [
                             $stateParams: toParams
                         };
 
-
-                        $state.go(UM_CONFIG.LOGIN_STATE)
+                        $state.go($config.$loginState)
                     }
             });
         }

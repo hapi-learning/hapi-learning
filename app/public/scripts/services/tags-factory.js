@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('hapi-learning')
+angular.module('hapi-learning.services')
     .factory('TagsFactory', ['Restangular', '$q', function (Restangular, $q) {
 
 

@@ -1,10 +1,12 @@
 'use strict';
 
-angular.module('hapi-learning')
+angular.module('hapi-learning.services')
     .factory('FilesFactory', [
         'Restangular',
         '$q',
-        '$http', 'AuthStorage',
+        '$http',
+        'AuthStorage',
+
     function(Restangular, $q, $http, AuthStorage) {
 
         var internals = {};

@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('hapi-learning')
+angular.module('hapi-learning.services')
     .factory('CoursesFactory', [
-    '$rootScope',
-    'Restangular',
-    'LoginFactory',
-    '$q',
-    function ($rootScope, Restangular, LoginFactory, $q) {
+        '$rootScope',
+        'Restangular',
+        '$q',
+
+    function ($rootScope, Restangular, $q) {
 
         var internals = {};
         var exports = {};
@@ -171,7 +171,8 @@ angular.module('hapi-learning')
             internals.fetchedSubscribed = false;
         };
 
-        $rootScope.$on('um.end-session', function() {
+        // TODO - Change with app config
+        $rootScope.$on('end-session', function() {
             exports.clear();
         });
 
