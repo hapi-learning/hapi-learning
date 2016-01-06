@@ -116,8 +116,7 @@ angular.module('hapi-learning', [
                 })
                 .state('root.profile', {
                     url: '/profile',
-                    templateUrl: '/views/profile.html',
-                    controller: 'ProfileCtrl'
+                    templateUrl: '/views/profile.html'
                 })
                 .state('root.news', {
                     url: '/news',

@@ -45,9 +45,9 @@
     <md-toolbar class="profile-toolbar">
         <div layout="column" layout-align="start center">
             <md-card ui-sref="root.profile" id="avatar">
-                <img gravatar-src="profile.email">
+                <img gravatar-src="$user.email">
             </md-card>
-            <span layout-padding ng-hide="collapsed" ng-bind="profile.username"></span>
+            <span layout-padding ng-hide="collapsed" ng-bind="$user.username"></span>
         </div>
     </md-toolbar>
     <!--<md-divider></md-divider>-->

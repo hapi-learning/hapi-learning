@@ -7,50 +7,54 @@ angular.module('hapi-learning')
     function (CoursesFactory, $rootScope) {
             return {
                 restrict: 'E',
-                scope: {
+                scope: true,
+                bindToController: {
                     code: '='
                 },
                 templateUrl: 'components/subscribe/subscribe.html',
-                link: function (scope, elem, attrs) {
+                controller: function() {
 
-                    scope.subscribed = false;
-                    scope.available = false;
+                    var self = this;
 
-                    scope.subscribe = function () {
-                        CoursesFactory.subscribe(scope.code)
-                            .then(function (course) {
-                                scope.subscribed = true;
-                                $rootScope.$emit('subscribe', course);
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                    self.fetching = true;
+                    self.subscribed = false;
+
+                    self.subscribe = function () {
+
+                        CoursesFactory.subscribe(self.code).then(function (course) {
+
+                            self.subscribed = true;
+                            $rootScope.$emit('subscribe', course);
+                        }).catch(function (error) {
+
+                            // TODO - Do something
+                            console.err(error);
+                        });
                     };
 
-                    scope.unsubscribe = function () {
-                        CoursesFactory.unsubscribe(scope.code)
-                            .then(function (course) {
-                                scope.subscribed = false;
-                                $rootScope.$emit('unsubscribe', course);
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                    self.unsubscribe = function () {
+
+                        CoursesFactory.unsubscribe(self.code).then(function (course) {
+
+                            self.subscribed = false;
+                            $rootScope.$emit('unsubscribe', course);
+                        }).catch(function (error) {
+
+                            // TODO - Do something
+                            console.err(error);
+                        });
                     };
 
-                    scope.$watch('code', function (value) {
-                        if (value) {
-                            CoursesFactory.getSubscribed()
-                                .then(function (courses) {
-                                    scope.subscribed = _.find(courses, 'code', value) ? true : false;
-                                    scope.available = true;
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
-                        }
+
+                    CoursesFactory.isSubscribed(self.code).then(function (subscribed) {
+
+                        self.subscribed = subscribed;
+                        self.fetching = false;
+                    }).catch(function (error) {
+
+                        console.err(error);
                     });
-
-                }
+                },
+                controllerAs: 'subscription'
             };
     }]);

@@ -3,13 +3,12 @@
 angular.module('hapi-learning')
     .directive('navbar', ['LoginFactory', '$rootScope', '$mdMedia',
                 function(LoginFactory, $rootScope, $mdMedia) {
+
     return {
         restrict: 'E',
         templateUrl: 'components/navbar/navbar.html',
         link: function(scope, elem, attrs) {
 
-
-            scope.profile = $rootScope.$user;
             scope.tooltipDirection = 'right';
             scope.isLockedOpen = true;
             scope.collapsed = false;
@@ -60,6 +59,7 @@ angular.module('hapi-learning')
             };
 
             scope.isSmall = function() {
+
                 return $mdMedia('sm') || $mdMedia('xs');
             };
 
@@ -73,7 +73,8 @@ angular.module('hapi-learning')
                 scope.collapsed = false;
             }
 
-            scope.$watch(scope.isSmall, function(isSmall) {
+            scope.$watch(scope.isSmall, function (isSmall) {
+
                 if (isSmall && !scope.collapsed) {
                    scope.collapse(true);
                 } else if (!isSmall && scope.collapsed) {

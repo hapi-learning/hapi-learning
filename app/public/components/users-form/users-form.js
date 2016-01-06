@@ -6,6 +6,7 @@ angular.module('hapi-learning')
             restrict: 'E',
             templateUrl: 'components/users-form/users-form.html',
             link: function (scope, element) {
+
                 $translate('FORM.USERS.IMPORT.BUTTONS.SELECT').then(function (button) {
                     element.find(':file').filestyle({
                         buttonName: "btn-primary",

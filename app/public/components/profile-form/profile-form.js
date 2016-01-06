@@ -6,6 +6,6 @@ angular.module('hapi-learning')
     return {
         restrict: 'E',
         templateUrl: 'components/profile-form/profile-form.html',
-        controller: 'ProfileCtrl'
+        controller: 'ProfileFormCtrl'
     };
 }]);

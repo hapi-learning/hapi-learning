@@ -52,7 +52,7 @@ angular.module('hapi-learning')
                         };
 
                         scope.setContent = function(content) {
-                            if (content) {
+                            if (content !== null && typeof content !== 'undefined') {
                                 scope._document.setValue(content);
                             }
                         };

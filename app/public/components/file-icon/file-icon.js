@@ -5,14 +5,16 @@ angular.module('hapi-learning')
 
     return {
         restrict: 'A',
-        scope: {
+        scope: true,
+        bindToController: {
             ext: '='
         },
         templateUrl: 'components/file-icon/file-icon.html',
-        link: function(scope, elem, attrs) {
+        controller: function () {
+
             var fa = ''
 
-            switch(scope.ext) {
+            switch(this.ext) {
                 case '.pdf':
                     fa = 'file-pdf-o';
                     break;
@@ -141,8 +143,9 @@ angular.module('hapi-learning')
                     break;
             }
 
-            scope.fa = 'fa fa-' + fa + ' fa-lg'
-        }
+            this.className = 'fa fa-' + fa + ' fa-lg'
+        },
+        controllerAs: 'icon'
     }
 
 });

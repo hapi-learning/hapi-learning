@@ -7,12 +7,6 @@ angular.module('hapi-learning')
             scope: {
                 course: '='
             },
-            templateUrl: 'components/course-info/course-info.html',
-            link: function (scope, elem, attrs) {
-
-                scope.updated = function () {
-                    return true;
-                };
-            }
+            templateUrl: 'components/course-info/course-info.html'
         };
     });

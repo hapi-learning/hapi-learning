@@ -5,12 +5,14 @@ angular.module('hapi-learning')
         return {
             restrict: 'E',
             templateUrl: 'components/courses-form/courses-form.html',
-            link: function (scope, elem, attrs) {
+            controller: ['$scope', function($scope) {
 
-                scope.validName = undefined;
-                scope.validCode = undefined;
+                var self = this;
 
-                scope.course = {
+                self.validName = null;
+                self.validCode = null;
+
+                self.course = {
                     name: null,
                     code: null,
                     homepage: null,
@@ -18,53 +20,56 @@ angular.module('hapi-learning')
                     tags: []
                 };
 
-                scope.checkName = function($event) {
+                self.checkName = function($event) {
 
-                    var names = CoursesFactory.loadNames()
-                        .then(function (names) {
-                            var pnames = _.map(names, function(name) { return name.name; });
+                    var names = CoursesFactory.loadNames().then(function (names) {
 
-                            scope.validName = !(pnames.indexOf(scope.course.name) !== -1);
-                        });
+                        var pnames = _.map(names, 'name');
+
+                        self.validName = !(pnames.indexOf(self.course.name) !== -1);
+                    });
                 };
 
-                scope.checkCode = function($event) {
+                self.checkCode = function($event) {
 
-                    var names = CoursesFactory.loadCodes()
-                        .then(function (codes) {
-                            var pcodes = _.map(codes, function(code) { return code.code; });
+                    var names = CoursesFactory.loadCodes().then(function (codes) {
 
-                            scope.validCode = !(pcodes.indexOf(scope.course.code) !== -1);
-                        });
+                        var pcodes = _.map(codes, 'code');
+                        self.validCode = !(pcodes.indexOf(self.course.code) !== -1);
+                    });
                 };
 
-                scope.postCourse = function () {
-                    scope.course.homepage = scope.getContent();
+                self.postCourse = function () {
 
-                    return CoursesFactory.add(scope.course)
-                        .then(function (course) {
-                            console.log('Course added!');
-                            ngDialog.open({ template: 'course-added', scope: scope });
-                        })
-                        .catch(function (error) {
-                            console.log(error);
+                    self.course.homepage = $scope.getContent();
+
+                    return CoursesFactory.add(self.course).then(function (course) {
+                        ngDialog.open({
+                            template: 'course-added',
+                            scope: $scope,
+                            preCloseCallback: self.clearFields
                         });
+                    }).catch(function (error) {
+                        console.err(error);
+                    });
                 }
 
-                scope.clearFields = function () {
-                    scope.course = {
+                self.clearFields = function () {
+                    self.course = {
                         name: null,
                         code: null,
                         homepage: null,
                         teachers: [],
                         tags: []
                     };
+
+                    $scope.setContent('');
                 };
 
-                scope.complete = function () {
-                    return scope.course.name && scope.course.code;
+                self.complete = function () {
+                    return self.course.name && self.course.code;
                 };
-
-            }
+            }],
+            controllerAs: 'form'
         };
     }]);

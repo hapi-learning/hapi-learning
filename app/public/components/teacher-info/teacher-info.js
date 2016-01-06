@@ -5,8 +5,11 @@ angular.module('hapi-learning')
         return {
             restrict: 'EAC',
             templateUrl: 'components/teacher-info/teacher-info.html',
-            scope: {
+            scope: true,
+            bindToController: {
                 teacher: '='
-            }
+            },
+            controller: function() {},
+            controllerAs: 'ctrl'
         };
     });

@@ -1,11 +1,12 @@
 angular.module('hapi-learning')
-    .controller('ProfileCtrl', ['$rootScope', '$scope', 'ProfileFactory', function ($rootScope, $scope, ProfileFactory) {
+    .controller('ProfileFormCtrl', ['$rootScope', '$scope', 'ProfileFactory',
+                function ($rootScope, $scope, ProfileFactory) {
 
         var internals = {};
 
         $rootScope.titlePage = 'Profile';
 
-        $scope.profile = angular.copy($rootScope.$user);
+        $scope.profile = $rootScope.$user;
 
         internals.profile = {
             passwords: {},

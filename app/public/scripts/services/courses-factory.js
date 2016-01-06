@@ -160,6 +160,12 @@ angular.module('hapi-learning')
 
         };
 
+        exports.isSubscribed = function (course) {
+            return exports.getSubscribed().then(function (courses) {
+                return _.find(courses, 'code', course) ? true : false;
+            });
+        };
+
         exports.clear = function () {
             internals.subscribedCourses = [];
             internals.fetchedSubscribed = false;

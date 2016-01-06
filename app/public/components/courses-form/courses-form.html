@@ -4,100 +4,113 @@
     }
 </style>
 
-<form name="courseForm" novalidate>
+<form name="courseForm" layout="column">
 
-    <fieldset class="form-group">
-        <div>
-            <div ng-class="{'has-error': courseForm.name.$dirty && !validName}">
-                <label translate>FORM.COURSES.NAME.LABEL</label>
-                <input type="text" class="form-control" name="name" ng-model="course.name" title="Course name" placeholder="{{'FORM.COURSES.NAME.PLACEHOLDER' | translate}}" ng-keyup="checkName($event)" required />
-            </div>
+    <div layout="row" layout-xs="column">
 
-            <br />
+        <md-input-container flex="45" md-no-float md-icon-float>
 
-            <div class="alert alert-danger" ng-show="courseForm.name.$dirty && !validName" translate>
+            <md-icon class="material-icons">
+                label
+            </md-icon>
+            <input type="text" name="name" ng-model="form.course.name"
+                   placeholder="{{'FORM.COURSES.NAME.LABEL' | translate}}"
+                   ng-keyup="form.checkName($event)" required />
+
+
+           <!-- <div class="alert alert-danger" ng-show="courseForm.name.$dirty && !validName" translate>
                 FORM.COURSES.NAME.INVALID
             </div>
+    -->
+        </md-input-container>
 
-        </div>
-    </fieldset>
+        <md-input-container flex flex-offset="5" flex-offset-xs="0" md-no-float md-icon-float>
 
-    <fieldset class="form-group">
-        <div>
-            <div ng-class="{'has-error': courseForm.code.$dirty && !validCode}">
-                <label translate>FORM.COURSES.CODE.LABEL</label>
-                <input type="text" class="form-control" name="code" ng-model="course.code" title="Course short name" placeholder="{{'FORM.COURSES.CODE.PLACEHOLDER' | translate}}" ng-keyup="checkCode($event)" required />
-            </div>
+            <md-icon>
+                label
+            </md-icon>
+            <input type="text" class="form-control" name="code" ng-model="form.course.code"
+                   placeholder="{{'FORM.COURSES.CODE.LABEL' | translate}}"
+                   ng-keyup="form.checkCode($event)" required />
 
-            <br />
 
-            <div class="alert alert-danger" ng-show="courseForm.code.$dirty && !validCode" translate>
+           <!-- <div class="alert alert-danger" ng-show="courseForm.code.$dirty && !validCode" translate>
                 FORM.COURSES.CODE.INVALID
-            </div>
-        </div>
-    </fieldset>
+            </div>-->
+        </md-input-container>
+    </div>
 
-    <fieldset class="form-group">
-        <label translate>FORM.COURSES.DESCRIPTION.LABEL</label>
-
-        <md-editor content="course.homepage">
-        </md-editor>
-    </fieldset>
-
-
-    <fieldset class="form-group">
+    <div layout="column">
         <div>
+            <label translate>FORM.COURSES.DESCRIPTION.LABEL</label>
+        </div>
+
+        <md-editor content="form.course.homepage"></md-editor>
+    </div>
+
+   <div layout="row" layout-xs="column">
+        <!-- TODO autocomplete iwth material design -->
+        <md-input-container flex md-no-float>
             <label translate>FORM.COURSES.TEACHERS.LABEL</label>
-            <tags-input class="ti-input-sm" name="teachers" ng-model="course.teachers" title="Teachers short names" placeholder="{{'FORM.COURSES.TEACHERS.PLACEHOLDER' | translate}}" add-from-autocomplete-only="true" display-property="username">
+            <tags-input class="ti-input-sm" name="teachers" ng-model="form.course.teachers"
+                        placeholder="{{'FORM.COURSES.TEACHERS.PLACEHOLDER' | translate}}"
+                        add-from-autocomplete-only="true" display-property="username">
                 <auto-complete min-length="0" source="loadTeachers($query)" template="teacher-template"></auto-complete>
             </tags-input>
-        </div>
-    </fieldset>
+        </md-input-container>
 
-    <script type="text/ng-template" id="teacher-template">
-        <div class="row">
-
-            <div class="col-md-1">
-                <span ng-bind-html="$highlight($getDisplayText())"></span>
-            </div>
-
-            <div class="col-md-11">
-                <span ng-bind="data.firstName"></span>
-                <span ng-bind="data.lastName"></span>
-            </div>
-
-        </div>
-    </script>
-
-
-    <br />
-
-    <fieldset class="form-group">
-        <div>
+        <md-input-container flex md-no-float>
             <label translate>FORM.COURSES.TAGS.LABEL</label>
-            <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="course.tags" title="Course tags" placeholder="{{'FORM.COURSES.TAGS.PLACEHOLDER' | translate}}" add-from-autocomplete-only="true" display-property="name" clearable>
+            <tags-input class="ti-input-sm" min-length="0" name="tags" ng-model="form.course.tags"
+                        placeholder="{{'FORM.COURSES.TAGS.PLACEHOLDER' | translate}}"
+                        add-from-autocomplete-only="true" display-property="name" clearable>
                 <auto-complete min-length="0" source="loadTags($query)"></auto-complete>
             </tags-input>
-        </div>
-    </fieldset>
+        </md-input-container>
 
 
-    <br />
+   </div>
 
-    <fieldset class="form-group">
-        <input type="submit" ng-click="postCourse()" class="btn btn-primary" value="{{'FORM.COURSES.BUTTONS.CREATE' | translate}}" ng-disabled="!complete() || !validName || !validCode" />
-        <input type="reset" class="btn btn-warning" value="{{'FORM.COURSES.BUTTONS.RESET' | translate}}" />
-    </fieldset>
 
-    <script type="text/ng-template" id="course-added">
-        <h2 translate>FORM.COURSES.FEEDBACK</h2>
 
-        <br />
 
-        <input class="btn btn-success" type="button" value="{{'OK' | translate}}" ng-click="closeThisDialog() || clearFields()"/>
-        <a ui-sref="root.course.main({code: course.code})" ng-click="closeThisDialog() || clearFields()">
-            <input class="btn btn-primary" type="button" value="{{'FORM.COURSES.BUTTONS.GOTO_ADDED' | translate}}" />
-        </a>
-    </script>
+    <div flex layout="row">
+        <md-button flex ng-click="form.postCourse()" class="md-raised md-primary"
+                   ng-disabled="!form.complete() || !form.validName || !form.validCode">
+            <span translate>
+                FORM.COURSES.BUTTONS.CREATE
+            </span>
+        </md-button>
+        <md-button flex type="reset" class="md-raised md-warn">
+            <span translate>
+                FORM.COURSES.BUTTONS.RESET
+            </span>
+        </md-button>
+    </div>
 
 </form>
+
+<script type="text/ng-template" id="course-added">
+    <h2 translate>FORM.COURSES.FEEDBACK</h2>
+
+
+    <input class="btn btn-success" type="button" value="{{'OK' | translate}}" ng-click="closeThisDialog()"/>
+    <a ui-sref="root.course.main({code: course.code})" ng-click="closeThisDialog()">
+        <input class="btn btn-primary" type="button" value="{{'FORM.COURSES.BUTTONS.GOTO_ADDED' | translate}}" />
+    </a>
+</script>
+
+<script type="text/ng-template" id="teacher-template">
+    <div class="row">
+
+        <div class="col-md-1">
+            <span ng-bind-html="$highlight($getDisplayText())"></span>
+        </div>
+
+        <div class="col-md-11">
+            <span ng-bind="data.firstName"></span>
+            <span ng-bind="data.lastName"></span>
+        </div>
+
+    </div>
+</script>
