@@ -7,6 +7,7 @@ angular.module('hapi-learning', [
         'hapi-learning.services',
         'hapi-learning.api',
         'hapi-learning.um',
+        'rip',
         'ngMaterial',
         'ngLodash',
         'ui.bootstrap',
@@ -159,12 +160,13 @@ angular.module('hapi-learning', [
         $translateProvider.useSanitizeValueStrategy('escape');
     }])
 
-    .run(['Restangular', 'API', '$config', 'AuthStorage', '$rootScope', 'LoginFactory',
-          function (Restangular, API, $config, AuthStorage, $rootScope, LoginFactory) {
+    .run(['Restangular', 'Rip', 'API', '$config', 'AuthStorage', '$rootScope', 'LoginFactory',
+          function (Restangular, Rip, API, $config, AuthStorage, $rootScope, LoginFactory) {
 
         API.then(function(response) {
 
             $config.$apiPrefix = response.data.api;
+            Rip.setBaseUri(response.data.api);
             Restangular.setBaseUrl(response.data.api);
 
             var token = AuthStorage.get('token');

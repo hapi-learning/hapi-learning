@@ -6,8 +6,9 @@ angular.module('hapi-learning.services')
         'Restangular',
         '$q',
         'lodash',
+        'Rip',
 
-    function ($rootScope, Restangular, $q, _) {
+    function ($rootScope, Restangular, $q, _, Rip) {
 
         var internals = {};
         var exports = {};
@@ -19,6 +20,7 @@ angular.module('hapi-learning.services')
 
             var teachers = _.map(course.teachers, function(teacher) { return teacher.username; });
             var tags     = _.map(course.tags, function(tag) { return tag.name; });
+
 
             return Restangular.all('courses')
             .post({
@@ -68,17 +70,14 @@ angular.module('hapi-learning.services')
                 where.pagination = false;
             }
 
+            var courses = new Rip.Model('courses');
+            courses.get(where).then(function (results) {
 
+                d.resolve(results);
+            }).catch(function (error) {
 
-            Restangular
-                .all('courses')
-                .customGET('', where)
-                .then(function(results) {
-                    d.resolve(results);
-                })
-                .catch(function(error) {
-                    d.reject(error);
-                });
+                d.reject(error);
+            });
 
             return d.promise;
         };
