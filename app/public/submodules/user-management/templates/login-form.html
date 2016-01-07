@@ -1,6 +1,5 @@
 <md-card>
     <md-card-content layout-padding>
-
         <form name="connection" ng-submit="login()" data-ng-hide="connected || forgot" novalidate>
 
             <md-card-header ng-if="invalidCredentials">
@@ -26,7 +25,7 @@
                 <input type="password" ng-model="user.password" ng-required="true"/>
             </md-input-container>
 
-            <div layout="row" layout-align="start center">
+            <div layout="row" layout-xs="column" layout-align-xs="start start" layout-align="start center">
                 <md-checkbox flex>Remember me</md-checkbox>
                 <md-content>
                     <a href="#" ng-click="reset()" flex>Forgot your password?</a>
@@ -41,27 +40,6 @@
                 </md-input-container>
             </div>
 
-        </form>
-
-       <!-- <form name="reset-password" data-ng-submit="reset()" data-ng-show="forgot">
-
-            <fieldset class="form-group">
-
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input class="form-control" type="text" data-ng-model="user.name" data-ng-required="true" placeholder="{{'FORM.LOGIN.USERNAME.PLACEHOLDER' | translate}}" />
-                </div>
-
-            </fieldset>
-
-            <fieldset class="form-group">
-                <input class="btn btn-lg btn-warning btn-block" type="submit" value="{{'FORM.LOGIN.BUTTONS.RESET' | translate}}" />
-            </fieldset>
-
-            <div>
-                <a ng-click="backToLogin()" translate>FORM.LOGIN.BUTTONS.BACK</a>
-            </div>
--->
         </form>
     </md-card-content>
 </md-card>
