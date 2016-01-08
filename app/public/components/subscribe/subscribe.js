@@ -12,15 +12,17 @@ angular.module('hapi-learning')
                     code: '='
                 },
                 templateUrl: 'components/subscribe/subscribe.html',
-                controller: function() {
+                controller: ['$timeout', function($timeout) {
 
                     var self = this;
 
                     self.fetching = true;
                     self.subscribed = false;
+                    self.disabled = false;
 
                     self.subscribe = function () {
 
+                        self.disabled = true;
                         CoursesFactory.subscribe(self.code).then(function (course) {
 
                             self.subscribed = true;
@@ -28,12 +30,18 @@ angular.module('hapi-learning')
                         }).catch(function (error) {
 
                             // TODO - Do something
-                            console.err(error);
+                            console.error(error);
+                        }).finally(function () {
+
+                            $timeout(function() {
+                                self.disabled = false;
+                            }, 200);
                         });
                     };
 
                     self.unsubscribe = function () {
 
+                        self.disabled = true;
                         CoursesFactory.unsubscribe(self.code).then(function (course) {
 
                             self.subscribed = false;
@@ -41,7 +49,12 @@ angular.module('hapi-learning')
                         }).catch(function (error) {
 
                             // TODO - Do something
-                            console.err(error);
+                            console.error(error);
+                        }).finally(function () {
+
+                            $timeout(function() {
+                                self.disabled = false;
+                            }, 200);
                         });
                     };
 
@@ -52,9 +65,9 @@ angular.module('hapi-learning')
                         self.fetching = false;
                     }).catch(function (error) {
 
-                        console.err(error);
+                        console.error(error);
                     });
-                },
+                }],
                 controllerAs: 'subscription'
             };
     }]);

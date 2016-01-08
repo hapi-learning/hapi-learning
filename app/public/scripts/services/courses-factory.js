@@ -13,6 +13,9 @@ angular.module('hapi-learning.services')
         var internals = {};
         var exports = {};
 
+        internals.courses = new Rip.Model('courses');
+        internals.users   = new Rip.Model('users');
+
         internals.fetchedSubscribed = false;
         internals.subscribedCourses = [];
 
@@ -70,8 +73,7 @@ angular.module('hapi-learning.services')
                 where.pagination = false;
             }
 
-            var courses = new Rip.Model('courses');
-            courses.get(where).then(function (results) {
+            internals.courses.get(where).then(function (results) {
 
                 d.resolve(results);
             }).catch(function (error) {
@@ -111,13 +113,23 @@ angular.module('hapi-learning.services')
             /!\ WIP : Does not return course atm, so subscribed course is clear.
         **/
         exports.subscribe = function (code) {
-            return Restangular
+
+            return internals.users
+                    .one($rootScope.$user.username)
+                    .one('subscribe', code)
+                    .post().then(function (course) {
+
+                        internals.subscribedCourses.push(course);
+                        return course;
+                    });
+
+          /*  return Restangular
                 .one('users', $rootScope.$user.username)
                 .customPOST({}, 'subscribe/' + code)
                 .then(function (course) {
                     internals.subscribedCourses.push(course);
                     return course;
-                });
+                });*/
         };
 
         /**
@@ -126,7 +138,21 @@ angular.module('hapi-learning.services')
             from local subscribed courses.
         **/
         exports.unsubscribe = function (code) {
-                return Restangular
+
+            return internals.users
+                .one($rootScope.$user.username)
+                .one('unsubscribe', code)
+                .post().then(function (course) {
+
+                    _.remove(internals.subscribedCourses, function (sub) {
+
+                        return sub.code === code;
+                    });
+
+                    return course;
+            });
+
+               /* return Restangular
                     .one('users', $rootScope.$user.username)
                     .customPOST({}, 'unsubscribe/' + code)
                     .then(function (object) {
@@ -135,7 +161,7 @@ angular.module('hapi-learning.services')
                         });
 
                     return object;
-                });
+                });*/
         };
 
         /**

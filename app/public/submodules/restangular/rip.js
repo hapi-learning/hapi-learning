@@ -2,7 +2,7 @@
 
 // Rest In Peace !
 angular.module('rip', ['ngLodash'])
-    .service('Rip', ['$http', 'lodash', function ($http, _) {
+    .service('Rip', ['$http', 'lodash', '$q', function ($http, _, $q) {
 
         var self = this;
         var internals = {};
@@ -13,13 +13,13 @@ angular.module('rip', ['ngLodash'])
         };
 
         internals.call = function (config) {
+            var d = $q.defer();
 
-            return new Promise(function (resolve, reject) {
+            $http(config).then(function (response) {
+                d.resolve(response.data, _.omit(response, 'data'));
+            }, d.reject);
 
-                $http(config).then(function (response) {
-                    return resolve(response.data, _.omit(response, 'data'));
-                }, reject);
-            });
+            return d.promise;
         };
 
         internals.baseUri = '';
@@ -56,7 +56,11 @@ angular.module('rip', ['ngLodash'])
         internals.UriBuilder.prototype.one = function (resource, id) {
 
             this._uri.push(resource);
-            this._uri.push(id);
+
+            if (id) {
+                this._uri.push(id);
+            }
+
             return this;
         };
 
@@ -190,15 +194,21 @@ angular.module('rip', ['ngLodash'])
             return new internals.Request(this.name).one(resource);
         };
 
+        internals.argumentsArray = function (args) {
+
+            var array = [];
+            for (var i = 0; i < args.length; ++i) {
+                array.push(args[i]);
+            }
+
+            return array;
+        };
+
         _.each(['get', 'patch', 'post', 'delete', 'call'], function (method) {
+
             self.Model.prototype[method] = function () {
 
-                var args = [];
-                for (var i = 0; i < arguments.length; ++i) {
-                    args.push(arguments[i]);
-                }
-
-                return new internals.Request(this.name)[method](...args);
+                return new internals.Request(this.name)[method](...internals.argumentsArray(arguments));
             };
         });
 
