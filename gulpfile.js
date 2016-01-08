@@ -46,7 +46,6 @@ const vendorScripts = [
         'app/public/lib/angular-ui-ace/ui-ace.min.js',
         'app/public/lib/angular-ui-validate/dist/validate.min.js',
         'app/public/lib/lodash/lodash.min.js',
-        'app/public/lib/restangular/dist/restangular.min.js',
         'app/public/lib/a0-angular-storage/dist/angular-storage.min.js',
         'app/public/lib/angular-jwt/dist/angular-jwt.min.js',
         'app/public/lib/moment/min/moment.min.js',

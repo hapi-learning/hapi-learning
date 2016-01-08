@@ -2,16 +2,18 @@
 
 angular.module('hapi-learning.services')
     .factory('FilesFactory', [
-        'Restangular',
+        'Rip',
         '$q',
         '$http',
         '$config',
         'AuthStorage',
 
-    function(Restangular, $q, $http, $config, AuthStorage) {
+    function(Rip, $q, $http, $config, AuthStorage) {
 
         var internals = {};
         var exports = {};
+
+        internals.courses = new Rip.Model('courses');
 
         internals.replacePath = function(path) {
 
@@ -27,83 +29,74 @@ angular.module('hapi-learning.services')
         };
 
         internals.getUrl = function(course, path) {
+
             path = internals.replacePath(path);
             return $config.$apiPrefix + '/courses/' + course + '/documents/' + path;
         };
 
 
         internals.get = function(course, path, showHidden) {
-            path = internals.replacePath(path);
 
-            return Restangular
-                .one('courses', course)
+            path = internals.replacePath(path);
+            return internals.courses
+                .one(course)
                 .all('tree')
-                .customGET(encodeURIComponent(path), {
+                .all(encodeURIComponent(path))
+                .get({
                     hidden: showHidden
-                })
-                .then(function(results) {
-                    return results;
                 });
         };
 
         exports.getUploadPath = function(course, path) {
+
             path = internals.replacePath(path);
             path = encodeURIComponent(path);
             return $config.$apiPrefix + '/courses/' + course + '/documents/' + path;
         };
 
         exports.getList = function(course, path, showHidden) {
+
             return internals.get(course, path, showHidden);
         };
 
         exports.updateFolder = function(course, path, newName, hidden) {
 
             path = internals.replacePath(path);
-            return Restangular
-                .one('courses', course)
-                .all('folders')
-                .customOperation('patch', encodeURIComponent(path), null, null, {
-                    name: newName,
-                    hidden: hidden
-                });
+            return internals.courses.one(course).all('folders').all(encodeURIComponent(path)).patch({
+                name: newName,
+                hidden: hidden
+            });
         };
 
         exports.updateFile = function(course, path, newName, hidden) {
 
             path = internals.replacePath(path);
-            return Restangular
-                .one('courses', course)
-                .all('documents')
-                .customOperation('patch', encodeURIComponent(path), null, null, {
-                    name: newName,
-                    hidden: hidden
-                });
+            return internals.courses.one(course).all('documents').all(encodeURIComponent(path)).patch({
+                name: newName,
+                hidden: hidden
+            });
         };
 
         exports.createFolder = function(course, path, hidden) {
 
             path = internals.replacePath(path);
-            return Restangular
-                .one('courses', course)
-                .all('folders')
-                .customPOST(null, encodeURIComponent(path), {
-                    hidden: hidden
-                });
+            return internals.courses.one(course).all('folders').all(encodeURIComponent(path)).post({
+                hidden: hidden
+            });
         };
 
         exports.deleteDocument = function(course, path) {
+
             path = internals.replacePath(path);
-            return Restangular
-                .one('courses', course)
-                .all('documents')
-                .customOperation('remove', null, null, {
-                    'Content-Type': 'application/json; charset=UTF-8'
-                }, {
-                    files: path
-                });
+            return internals.courses.one(course).all('documents').headers({
+                'Content-Type': 'application/json; charset=UTF-8'
+            }).delete({
+                files: path
+            });
         };
 
         exports.getDownloadPath = function(course, path, showHidden) {
+
             var url = internals.getUrl(course, path);
             url += '?hidden=' + showHidden;
             url += '&token=' + AuthStorage.get('token');

@@ -1,14 +1,8 @@
 'use strict';
 
-angular.module('hapi-learning.services')
-    .factory('CoursesFactory', [
-        '$rootScope',
-        'Restangular',
-        '$q',
-        'lodash',
-        'Rip',
-
-    function ($rootScope, Restangular, $q, _, Rip) {
+angular.module('hapi-learning.services').factory('CoursesFactory', [
+    '$rootScope', '$q', 'lodash', 'Rip',
+    function ($rootScope, $q, _, Rip) {
 
         var internals = {};
         var exports = {};
@@ -102,6 +96,18 @@ angular.module('hapi-learning.services')
         exports.loadSpecific = function (code) {
 
             return internals.courses.one(code).get();
+        };
+
+        exports.getHomepage = function (code) {
+
+            return internals.courses.one(code).all('homepage').get();
+        };
+
+        exports.saveHomepage = function (code, homepage) {
+
+            return internals.courses.one(code).all('homepage').post({
+                content: homepage
+            });
         };
 
         /**

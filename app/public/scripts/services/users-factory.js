@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('hapi-learning.services')
-    .factory('UsersFactory', ['Restangular', '$q', function (Restangular, $q) {
+    .factory('UsersFactory', ['Rip', '$q', function (Rip, $q) {
 
         var exports = {};
+        var internals = {};
+
+        internals.users = new Rip.Model('users');
 
         exports.create = function(users) {
-            return Restangular.all('users').customPOST(users);
+
+            return internals.users().post(users);
         };
 
         return exports;

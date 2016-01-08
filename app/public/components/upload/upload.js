@@ -1,9 +1,8 @@
 'use strict';
 
-// Import restangular for now because it stores the base url
 angular.module('hapi-learning')
-    .directive('upload', ['$rootScope', 'FileUploader', 'Restangular', 'AuthStorage', '$translate',
-                          function ($rootScope, FileUploader, Restangular, AuthStorage, $translate) {
+    .directive('upload', ['$rootScope', 'FileUploader', 'AuthStorage', '$translate',
+                          function ($rootScope, FileUploader, AuthStorage, $translate) {
         return {
             restrict: 'E',
             templateUrl: 'components/upload/upload.html',

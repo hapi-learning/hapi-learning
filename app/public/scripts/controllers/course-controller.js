@@ -9,10 +9,8 @@ angular.module('hapi-learning')
         'LoginFactory',
         'FilesFactory',
         '$state',
-        'Restangular',
-        '$http',
     function ($rootScope, $scope, $stateParams, CoursesFactory, LoginFactory,
-            FilesFactory, $state, Restangular, $http) {
+              FilesFactory, $state) {
 
             $rootScope.titlePage = 'Course - ' + $stateParams.code;
 
@@ -36,24 +34,19 @@ angular.module('hapi-learning')
                             $scope.update = false;
 
                             // TODO - Load just on root.course.main
-                            Restangular
-                                .service('courses')
-                                .one(course.code)
-                                .one('homepage')
-                                .get()
-                                .then(function (readme) {
+                            CoursesFactory.getHomepage(course.code).then(function (readme) {
 
-                                    $scope.course.description = readme || '*This page is empty*';
-                                })
-                                .catch(function (error) {
+                                $scope.course.description = readme || '*This page is empty*';
+                            })
+                            .catch(function (error) {
 
-                                    if (error.status === 404) {
-                                        $scope.course.description = '*This page is empty*';
-                                    }
-                                    else {
-                                        console.log(error);
-                                    }
-                                });
+                                if (error.status === 404) {
+                                    $scope.course.description = '*This page is empty*';
+                                }
+                                else {
+                                    console.log(error);
+                                }
+                            });
                         }
                         else {
                             $state.go('root.home');
@@ -81,20 +74,17 @@ angular.module('hapi-learning')
 
 
             $scope.saveEdit = function(content) {
-                Restangular
-                    .one('courses', $scope.course.code)
-                    .customPOST({
-                        content: content
-                    }, 'homepage').then(function(res) {
 
-                        $scope.course.description = content;
-                        $scope.editing = false;
-                        $scope.errorPostHomepage = false;
-                    }).catch(function() {
+                CoursesFactory.saveHomepage($scope.course.code, content).then(function(res) {
 
-                        $scope.editing = true;
-                        $scope.errorPostHomepage = true;
-                    });
+                    $scope.course.description = content;
+                    $scope.editing = false;
+                    $scope.errorPostHomepage = false;
+                }).catch(function() {
+
+                    $scope.editing = true;
+                    $scope.errorPostHomepage = true;
+                });
             };
 
             $scope.cancelEdit = function() {

@@ -1,39 +1,47 @@
 'use strict';
 
-angular.module('hapi-learning.services')
-    .factory('NewsFactory', [
-    '$q',
-    'Restangular',
-    '$rootScope',
-        function ($q, Restangular, $rootScope) {
+angular.module('hapi-learning.services').factory('NewsFactory', [
+    '$q', 'Rip', '$rootScope',
+    function ($q, Rip, $rootScope) {
 
-            const exports = {
-                getCourseNews: function(options) {
-                    return Restangular.one('courses', options.code).customGET('news', {
-                        limit: options.limit,
-                        page: options.page
-                    });
-                },
-                getSubscribedNews: function(options) {
-                    return Restangular.all('me').customGET('news', options);
-                },
-                get: function(options) {
-                    if (options.code) {
-                        return this.getCourseNews(options);
-                    } else {
-                        return this.getSubscribedNews(options);
-                    }
-                },
-                add: function (news) {
-                    return Restangular.all('news').post({
-                            username: $rootScope.$user.username,
-                            code: news.course ? news.course : null,
-                            content: news.content,
-                            subject: news.subject,
-                            priority: news.priority
-                        });
-                }
-            };
+        var exports = {};
+        var internals = {};
+        internals.news = new Rip.Model('news');
+        internals.courses = new Rip.Model('courses');
+        internals.me = new Rip.Model('me');
 
-            return exports;
-    }]);
+        exports.getCourseNews = function(options) {
+
+            return internals.courses.one(options.code).all('news').get({
+                limit: options.limit,
+                page: options.page
+            });
+        };
+
+        exports.getSubscribedNews = function(options) {
+
+            return internals.me.all('news').get(options);
+        };
+
+        exports.get = function(options) {
+
+            if (options.code) {
+                return exports.getCourseNews(options);
+            } else {
+                return exports.getSubscribedNews(options);
+            }
+        };
+
+        exports.add = function (news) {
+
+            return internals.news.post({
+                username: $rootScope.$user.username,
+                code: news.course ? news.course : null,
+                content: news.content,
+                subject: news.subject,
+                priority: news.priority
+            });
+        };
+
+        return exports;
+}]);

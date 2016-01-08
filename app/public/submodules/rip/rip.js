@@ -90,7 +90,7 @@ angular.module('rip', ['ngLodash'])
             };
 
             if (internals.baseHeaders) {
-                _.defaultsDeep(this._config.headers, internals.baseHeaders);
+                this._config.headers = internals.baseHeaders;
             }
         };
 
@@ -109,6 +109,9 @@ angular.module('rip', ['ngLodash'])
         internals.Request.prototype.headers = function (headers) {
 
             if (headers) {
+                if (!this._config.headers) {
+                    this._config.headers = {};
+                }
                 _.defaultsDeep(this._config.headers, headers);
             }
 
