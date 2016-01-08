@@ -4,6 +4,7 @@
 angular.module('rip', ['ngLodash'])
     .service('Rip', ['$http', 'lodash', function ($http, _) {
 
+        var self = this;
         var internals = {};
 
         internals.removeTrailingSlash = function (str) {
@@ -70,8 +71,7 @@ angular.module('rip', ['ngLodash'])
             return this._uri.join('/');
         };
 
-
-        this.Model = function (name) {
+        internals.Request = function (name) {
 
             this._uriBuilder = new internals.UriBuilder(internals.baseUri);
 
@@ -90,19 +90,19 @@ angular.module('rip', ['ngLodash'])
             }
         };
 
-        this.Model.prototype.one = function (resource, id) {
 
-            this._uriBuilder.one(resource, id);
-            return this;
-        };
 
-        this.Model.prototype.all = function (resource) {
-
+        internals.Request.prototype.all = function (resource) {
             this._uriBuilder.all(resource);
             return this;
         };
 
-        this.Model.prototype.headers = function (headers) {
+        internals.Request.prototype.one = function (resource, id) {
+            this._uriBuilder.one(resource, id);
+            return this;
+        };
+
+        internals.Request.prototype.headers = function (headers) {
 
             if (headers) {
                 _.defaultsDeep(this._config.headers, headers);
@@ -111,7 +111,7 @@ angular.module('rip', ['ngLodash'])
             return this;
         };
 
-        this.Model.prototype.data = function (data) {
+        internals.Request.prototype.data = function (data) {
 
             if (data) {
                 this._config.data = data;
@@ -120,7 +120,7 @@ angular.module('rip', ['ngLodash'])
             return this;
         };
 
-        this.Model.prototype.params = function (params) {
+        internals.Request.prototype.params = function (params) {
 
             if (params) {
                 this._config.params = params;
@@ -129,7 +129,7 @@ angular.module('rip', ['ngLodash'])
             return this;
         };
 
-        this.Model.prototype.config = function (config) {
+        internals.Request.prototype.config = function (config) {
 
             if (config) {
                 _.defaultsDeep(this._config, config);
@@ -138,7 +138,7 @@ angular.module('rip', ['ngLodash'])
             return this;
         };
 
-        this.Model.prototype.uri = function (uri) {
+        internals.Request.prototype.uri = function (uri) {
 
             if (uri && !this._custom.uri) {
                 this._config.url = uri;
@@ -148,7 +148,7 @@ angular.module('rip', ['ngLodash'])
             return this;
         };
 
-        this.Model.prototype.method = function (method) {
+        internals.Request.prototype.method = function (method) {
 
             if (method && !this._custom.method) {
                 this._config.method = method;
@@ -158,37 +158,48 @@ angular.module('rip', ['ngLodash'])
             return this;
         };
 
-        this.Model.prototype.call = function () {
-
+        internals.Request.prototype.call = function () {
+            console.log(this._config);
             return internals.call(this._config);
         };
 
-        this.Model.prototype.get = function (params) {
-
-            return this.uri(this._uriBuilder.uri()).method('GET').params(params).call();
+        internals.Request.prototype.get = function (/*params*/) {
+            console.log(arguments[0])
+            return this.uri(this._uriBuilder.uri()).method('GET').params(arguments[0]).call();
         };
 
-        this.Model.prototype.post = function (data, params) {
+        _.each(['post', 'put', 'patch', 'delete'], function (method) {
+            internals.Request.prototype[method] = function (/* data, params */) {
+                return this.uri(this._uriBuilder.uri())
+                    .method(method)
+                    .data(arguments[0])
+                    .params(arguments[1])
+                    .call();
+            };
+        });
 
-            return this.uri(this._uriBuilder.uri()).method('POST').data(data).params(params).call();
+        this.Model = this.Request = function (name) {
+            this.name = name;
         };
 
-        this.Model.prototype.put = function (data, params) {
-
-            return this.uri(this._uriBuilder.uri()).method('PUT').data(data).params(params).call();
+        this.Model.prototype.one = function (resource, id) {
+            return new internals.Request(this.name).one(resource, id);
         };
 
-        this.Model.prototype.patch = function (data, params) {
-
-            return this.uri(this._uriBuilder.uri()).method('PATCH').data(data).params(params).call();
+        this.Model.prototype.all = function (resource) {
+            return new internals.Request(this.name).one(resource);
         };
 
-        this.Model.prototype.delete = function (data, params) {
+        _.each(['get', 'patch', 'post', 'delete', 'call'], function (method) {
+            self.Model.prototype[method] = function () {
 
-            return this.uri(this._uriBuilder.uri()).method('DELETE').data(data).params(params).call();
-        };
+                var args = [];
+                for (var i = 0; i < arguments.length; ++i) {
+                    args.push(arguments[i]);
+                }
 
-        // For calls that are not models (semantics)
-        this.Request = this.Model;
+                return new internals.Request(this.name)[method](...args);
+            };
+        });
 
     }]);
