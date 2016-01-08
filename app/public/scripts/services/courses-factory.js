@@ -15,6 +15,7 @@ angular.module('hapi-learning.services')
 
         internals.courses = new Rip.Model('courses');
         internals.users   = new Rip.Model('users');
+        internals.me      = new Rip.Model('me');
 
         internals.fetchedSubscribed = false;
         internals.subscribedCourses = [];
@@ -24,17 +25,12 @@ angular.module('hapi-learning.services')
             var teachers = _.map(course.teachers, function(teacher) { return teacher.username; });
             var tags     = _.map(course.tags, function(tag) { return tag.name; });
 
-
-            return Restangular.all('courses')
-            .post({
+            return internals.courses.post({
                 code : course.code,
                 name : course.name,
                 homepage : course.homepage,
                 teachers : teachers,
                 tags : tags
-            })
-            .then(function (course) {
-                return course;
             });
         };
 
@@ -85,14 +81,16 @@ angular.module('hapi-learning.services')
         };
 
         exports.loadCodes = function() {
-            return Restangular.all('courses').customGET('', {
+
+            return internals.courses.get({
                 pagination: false,
                 select: ['code']
             });
         };
 
         exports.loadNames = function() {
-            return Restangular.all('courses').customGET('', {
+
+            return internals.courses.get({
                 pagination: false,
                 select: ['name']
             });
@@ -102,7 +100,8 @@ angular.module('hapi-learning.services')
             Load a specific course
         **/
         exports.loadSpecific = function (code) {
-            return Restangular.one('courses', code).get();
+
+            return internals.courses.one(code).get();
         };
 
         /**
@@ -122,14 +121,6 @@ angular.module('hapi-learning.services')
                         internals.subscribedCourses.push(course);
                         return course;
                     });
-
-          /*  return Restangular
-                .one('users', $rootScope.$user.username)
-                .customPOST({}, 'subscribe/' + code)
-                .then(function (course) {
-                    internals.subscribedCourses.push(course);
-                    return course;
-                });*/
         };
 
         /**
@@ -151,17 +142,6 @@ angular.module('hapi-learning.services')
 
                     return course;
             });
-
-               /* return Restangular
-                    .one('users', $rootScope.$user.username)
-                    .customPOST({}, 'unsubscribe/' + code)
-                    .then(function (object) {
-                        _.remove(internals.subscribedCourses, function (course) {
-                            return course.code === code;
-                        });
-
-                    return object;
-                });*/
         };
 
         /**
@@ -173,14 +153,11 @@ angular.module('hapi-learning.services')
             if (internals.fetchedSubscribed) {
                 return $q.resolve(internals.subscribedCourses);
             } else {
-                return Restangular
-                    .all('me')
-                    .get('courses')
-                    .then(function (subscribedCourses) {
-                        internals.subscribedCourses = subscribedCourses;
-                        internals.fetchedSubscribed = true;
-                        return internals.subscribedCourses;
-                    });
+                return internals.me.all('courses').get().then(function (courses) {
+                    internals.subscribedCourses = courses;
+                    internals.fetchedSubscribed = true;
+                    return internals.subscribedCourses;
+                });
             }
 
 

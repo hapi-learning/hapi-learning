@@ -163,12 +163,10 @@ angular.module('rip', ['ngLodash'])
         };
 
         internals.Request.prototype.call = function () {
-            console.log(this._config);
             return internals.call(this._config);
         };
 
         internals.Request.prototype.get = function (/*params*/) {
-            console.log(arguments[0])
             return this.uri(this._uriBuilder.uri()).method('GET').params(arguments[0]).call();
         };
 

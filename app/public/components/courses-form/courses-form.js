@@ -44,6 +44,7 @@ angular.module('hapi-learning')
                     self.course.homepage = $scope.getContent();
 
                     return CoursesFactory.add(self.course).then(function (course) {
+
                         ngDialog.open({
                             template: 'course-added',
                             scope: $scope,
