@@ -1,3 +1,4 @@
 angular.module('hapi-learning.services', [
-    'hapi-learning.config'
+    'hapi-learning.config',
+    'rip'
 ]);

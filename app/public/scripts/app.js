@@ -7,7 +7,6 @@ angular.module('hapi-learning', [
         'hapi-learning.services',
         'hapi-learning.api',
         'hapi-learning.um',
-        'rip',
         'ngMaterial',
         'ngLodash',
         'ui.bootstrap',
