@@ -9,7 +9,7 @@
             </md-card-header>
 
             <md-input-container class="md-block md-icon-float">
-                    <label>Username</label>
+                    <label translate>FORM.LOGIN.USERNAME.PLACEHOLDER</label>
                     <md-icon>
                         <span class="glyphicon glyphicon-user"></span>
                     </md-icon>
@@ -18,7 +18,7 @@
 
 
             <md-input-container layout="row" class="md-block md-icon-float">
-                <label>Password</label>
+                <label translate>FORM.LOGIN.PASSWORD.PLACEHOLDER</label>
                 <md-icon>
                     <span class="glyphicon glyphicon-lock"></span>
                 </md-icon>
@@ -26,9 +26,9 @@
             </md-input-container>
 
             <div layout="row" layout-xs="column" layout-align-xs="start start" layout-align="start center">
-                <md-checkbox flex>Remember me</md-checkbox>
+                <md-checkbox flex><span translate>FORM.LOGIN.BUTTONS.REMEMBER</span></md-checkbox>
                 <md-content>
-                    <a href="#" ng-click="reset()" flex>Forgot your password?</a>
+                    <a href="#" ng-click="reset()" flex><span translate>FORM.LOGIN.BUTTONS.FORGOT</span></a>
                 </md-content>
             </div>
 

@@ -255,15 +255,17 @@
         "LOGIN": {
             "INVALID": "Invalid credentials, try with another login/password",
             "USERNAME": {
-                "PLACEHOLDER": "Username..."
+                "PLACEHOLDER": "Username"
             },
             "PASSWORD": {
-                "PLACEHOLDER": "Password..."
+                "PLACEHOLDER": "Password"
             },
             "BUTTONS": {
                 "LABEL": "Log in",
                 "RESET": "@:GENERAL.RESET",
-                "BACK": "Back to connection page"
+                "BACK": "Back to connection page",
+                "REMEMBER" : "Remember me",
+                "FORGOT" : "Forgot your password ?"
             }
         }
     }
