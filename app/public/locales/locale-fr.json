@@ -255,15 +255,17 @@
         "LOGIN": {
             "INVALID": "Données de connexion invalides, essayez un autre nom d'utilisateur/mot de passe",
             "USERNAME": {
-                "PLACEHOLDER": "Identifiant.."
+                "PLACEHOLDER": "Identifiant"
             },
             "PASSWORD": {
-                "PLACEHOLDER": "Mot de passe.."
+                "PLACEHOLDER": "Mot de passe"
             },
             "BUTTONS": {
                 "LABEL": "Se connecter",
                 "RESET": "@:GENERAL.RESET",
-                "BACK": "Retour à la page de connexion"
+                "BACK": "Retour à la page de connexion",
+                "REMEMBER" : "Se souvenir de moi",
+                "FORGOT" : "Mot de passe oublié ?"
             }
         }
     }
