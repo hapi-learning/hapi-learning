@@ -14,56 +14,50 @@ angular.module('hapi-learning')
                 templateUrl: 'components/subscribe/subscribe.html',
                 controller: ['$timeout', function($timeout) {
 
-                    var self = this;
+                    var internals = {};
 
+                    var self = this;
                     self.fetching = true;
                     self.subscribed = false;
                     self.disabled = false;
 
-                    self.subscribe = function () {
+                    internals.do = function(method) {
 
                         self.disabled = true;
-                        CoursesFactory.subscribe(self.code).then(function (course) {
+                        CoursesFactory[method](self.code).then(function (course) {
 
-                            self.subscribed = true;
-                            $rootScope.$emit('subscribe', course);
-                        }).catch(function (error) {
+                            self.subscribed = (method === 'subscribe');
+                            $rootScope.$emit(method, course);
+                        })
+                        .catch(function (error) {
 
-                            // TODO - Do something
                             console.error(error);
-                        }).finally(function () {
+                        })
+                        .finally(function () {
 
-                            $timeout(function() {
+                            $timeout(function () {
+
                                 self.disabled = false;
                             }, 200);
                         });
+                    };
+
+                    self.subscribe = function () {
+
+                        internals.do('subscribe');
                     };
 
                     self.unsubscribe = function () {
 
-                        self.disabled = true;
-                        CoursesFactory.unsubscribe(self.code).then(function (course) {
-
-                            self.subscribed = false;
-                            $rootScope.$emit('unsubscribe', course);
-                        }).catch(function (error) {
-
-                            // TODO - Do something
-                            console.error(error);
-                        }).finally(function () {
-
-                            $timeout(function() {
-                                self.disabled = false;
-                            }, 200);
-                        });
+                        internals.do('unsubscribe');
                     };
-
 
                     CoursesFactory.isSubscribed(self.code).then(function (subscribed) {
 
                         self.subscribed = subscribed;
                         self.fetching = false;
-                    }).catch(function (error) {
+                    })
+                    .catch(function (error) {
 
                         console.error(error);
                     });
