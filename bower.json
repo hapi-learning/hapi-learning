@@ -39,7 +39,8 @@
     "bootstrap-filestyle": "~1.2.1",
     "ngInfiniteScroll": "~1.2.1",
     "angular-material": "~1.0.1",
-    "angular-gravatar": "~0.4.1"
+    "angular-gravatar": "~0.4.1",
+    "ng-lodash": "~0.3.0"
   },
   "resolutions": {
     "angular": "~1.4.7"
