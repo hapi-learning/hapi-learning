@@ -8,10 +8,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             unique: true,
             allowNull: false,
-            field: 'guid'/*,
-            set: function(value) {
-                this.setDataValue('guid', Bcrypt.hashSync(value, Bcrypt.genSaltSync()));
-            }*/
+            field: 'guid'
         },
         time: {
             type: DataTypes.DATE,

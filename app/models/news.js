@@ -22,8 +22,7 @@ module.exports = function(sequelize, DataTypes) {
             field: 'date'
         },
         priority: {
-            type: DataTypes.ENUM,
-            values : ['info', 'warning', 'danger'],
+            type: DataTypes.ENUM('info', 'warning', 'danger'),
             defaultValue: 'info',
             unique: false,
             allowNull: false,

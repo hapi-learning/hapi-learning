@@ -22,7 +22,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             unique: true,
             allowNull: false,
-            field: 'email'
+            field: 'email',
+            validate: {
+                isEmail: true
+            }
         },
         firstName: {
             type: DataTypes.STRING,

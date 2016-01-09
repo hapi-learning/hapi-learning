@@ -132,6 +132,7 @@ const badUser = {
     password: 'superpassword'
 };
 
+
 const badUsers = [
     {
     username: 'SRV',
@@ -189,6 +190,25 @@ const tags = [
 
 describe('Controller.User', () => {
     describe('#post', () => {
+
+        it ('Should return 400 - password too short', done => {
+            const request = {
+                method: 'POST',
+                url: '/users',
+                payload: {
+                    username: 'password2short',
+                    email: 'abcd@crapmail.dk',
+                    password: 'a'
+                },
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).to.equal(400);
+                done();
+            });
+        });
+
         it('Should return 400 response because of invalid username', done => {
             const request = {
                 method: 'POST',

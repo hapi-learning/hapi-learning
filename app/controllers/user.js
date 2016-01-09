@@ -27,8 +27,8 @@ internals.updateHandler = function(request, reply) {
 
 internals.schemaUserPOST = function(){
     const user = Joi.object().keys({
-            username: Joi.string().min(1).max(30).required().description('User personal ID'),
-            password: Joi.string().min(1).max(255).required().description('User password'),
+            username: Joi.string().min(3).max(30).required().description('User personal ID'),
+            password: Joi.string().min(3).max(255).required().description('User password'),
             email: Joi.string().email().required().description('User email'),
             firstName: Joi.string().min(1).max(255).description('User first name'),
             lastName: Joi.string().min(1).max(255).description('User last name'),
