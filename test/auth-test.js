@@ -132,4 +132,133 @@ describe('Controller.Auth', () => {
             });
         });
     });
+
+    describe('#getCourses', () => {
+
+        it ('Should return an empty array', done => {
+
+            const request = {
+                method: 'GET',
+                url: '/me/courses',
+                headers: internals.headers
+            };
+
+            server.inject(request, function (res) {
+                expect(res.request.response.source).to.be.an.array();
+                expect(res.request.response.source).to.have.length(0);
+                done();
+            });
+
+        });
+
+        it ('Should return 1 course', done => {
+
+            const request = {
+                method: 'GET',
+                url: '/me/courses',
+                headers: internals.headers
+            };
+
+            server.inject({
+                method: 'POST',
+                url: '/courses',
+                payload: {
+                    name: 'Course',
+                    code: 'ABCD'
+                },
+                headers: internals.headers
+            }, function () {
+
+                server.inject({
+                    method: 'POST',
+                    url: '/users/admin/subscribe/ABCD',
+                    headers: internals.headers
+                }, function () {
+
+                    server.inject(request, function (res) {
+                        expect(res.request.response.source).to.be.an.array();
+                        expect(res.request.response.source).to.have.length(1);
+                        done();
+                    });
+                });
+            });
+
+        });
+    });
+
+    describe('#getNews', () => {
+
+        it ('Should return empty array', done => {
+
+            const request = {
+                method: 'GET',
+                url: '/me/news',
+                headers: internals.headers
+            };
+
+            server.inject(request, function (res) {
+                expect(res.request.response.source.results).to.be.an.array();
+                expect(res.request.response.source.results).to.have.length(0);
+                expect(res.request.response.source.meta.count).to.equal(0);
+                done();
+            });
+        });
+
+        it ('Should return one news', done => {
+
+            const request = {
+                method: 'GET',
+                url: '/me/news',
+                headers: internals.headers
+            };
+
+            server.inject({
+                method: 'POST',
+                url: '/news',
+                payload: {
+                    username: 'admin',
+                    code: 'ABCD',
+                    subject: 'news',
+                    content: 'content',
+                    priority: 'info'
+                },
+                headers: internals.headers
+            }, function () {
+
+                server.inject(request, function (res) {
+                    expect(res.request.response.source.results).to.be.an.array();
+                    expect(res.request.response.source.results).to.have.length(1);
+                    done();
+                });
+            });
+        });
+
+        it ('Should return one news', done => {
+
+            const request = {
+                method: 'GET',
+                url: '/me/news',
+                headers: internals.headers
+            };
+
+            server.inject({
+                method: 'POST',
+                url: '/news',
+                payload: {
+                    username: 'admin',
+                    subject: 'news',
+                    content: 'content',
+                    priority: 'info'
+                },
+                headers: internals.headers
+            }, function () {
+
+                server.inject(request, function (res) {
+                    expect(res.request.response.source.results).to.be.an.array();
+                    expect(res.request.response.source.results).to.have.length(2);
+                    done();
+                });
+            });
+        });
+    });
 });
