@@ -15,6 +15,8 @@ const before = lab.before;
 const after = lab.after;
 const expect = Code.expect;
 
+const FormData = require('form-data');
+const streamToPromise = require('stream-to-promise');
 
 let server;
 
@@ -920,6 +922,7 @@ describe('Controller.Course', () => {
 
         it ('Should return 201 created and create the folder', done => {
             request.headers = internals.headers;
+
             server.inject(request, res => {
                 expect(res.request.response.statusCode).equal(201);
 
@@ -977,8 +980,6 @@ describe('Controller.Course', () => {
     });
 
     describe('#postDocument', () => {
-        const FormData = require('form-data');
-        const streamToPromise = require('stream-to-promise');
 
 
 
@@ -990,15 +991,18 @@ describe('Controller.Course', () => {
 
             form.append('file', fs.createReadStream(Path.join(__dirname, 'server-test.js')));
             streamToPromise(form).then(payload => {
+
                 server.inject({
                     method: 'POST',
                     url: '/courses/ATL3G/documents',
                     payload: payload,
                     headers: headers
                 }, res => {
+
                     expect(res.request.response.statusCode).to.equal(201);
                     const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/server-test.js');
                     fs.stat(path, function(err, stats) {
+
                         expect(err).to.be.null();
                         expect(stats).to.exists();
                         expect(stats.isFile()).to.be.true();
@@ -1013,6 +1017,8 @@ describe('Controller.Course', () => {
                 });
             });
         });
+
+
 
         it ('Should return 404 not found', done => {
 
@@ -1079,7 +1085,7 @@ describe('Controller.Course', () => {
         });
     });
 
-    describe('#updateFolder', () => {
+    describe('#updateFile (folder)', () => {
         it ('Should rename the folder', done => {
 
             const request = {
@@ -1104,8 +1110,10 @@ describe('Controller.Course', () => {
                     done();
                 });
             });
-        })
+        });
     });
+
+
 
     describe('#getTree', () => {
 
@@ -1141,6 +1149,147 @@ describe('Controller.Course', () => {
                 expect(files[1].type).to.equal('f');
                 expect(files[1].size).to.be.a.number();
 
+
+                done();
+            });
+        });
+
+    });
+
+    describe('#updateFile (file)', () => {
+
+        it ('Should return 201 created', done => {
+            const form = new FormData();
+
+            const headers = form.getHeaders();
+            headers.Authorization = internals.headers.Authorization;
+
+            form.append('file', fs.createReadStream(Path.join(__dirname, 'courses-test.js')));
+            streamToPromise(form).then(payload => {
+
+                server.inject({
+                    method: 'POST',
+                    url: '/courses/ATL3G/documents',
+                    payload: payload,
+                    headers: headers
+                }, res => {
+
+                    expect(res.request.response.statusCode).to.equal(201);
+                    const path = Path.join(__dirname, 'storage/courses/ATL3G/documents/courses-test.js');
+                    fs.stat(path, function(err, stats) {
+
+                        expect(err).to.be.null();
+                        expect(stats).to.exists();
+                        expect(stats.isFile()).to.be.true();
+
+                        const content = fs.readFileSync(path);
+                        const originalContent = fs.readFileSync(Path.join(__dirname, 'courses-test.js'));
+                        expect(content.length).to.equal(originalContent.length);
+                        expect(content.equals(originalContent)).to.be.true();
+
+                        done();
+                    });
+                });
+            });
+        });
+
+        it ('Should rename the file', done => {
+
+            const request = {
+                method: 'PATCH',
+                url: '/courses/ATL3G/documents/courses-test.js',
+                payload: {
+                    name: 'newfile'
+                },
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+
+                expect(res.request.response.statusCode).equal(200);
+
+                fs.stat(Path.join(__dirname, 'storage/courses/ATL3G/documents/newfile'),
+                        (err, stats) => {
+
+                    expect(err).to.be.null();
+                    expect(stats).to.exists();
+                    expect(stats.isFile()).to.be.true();
+
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('#getTree #2', () => {
+
+
+        it ('Should return 3 files', done => {
+
+            const request = {
+                method: 'GET',
+                url: '/courses/ATL3G/tree',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).to.equal(200);
+
+                expect(response.dir).to.be.null();
+
+                const files = response.files;
+
+                expect(files).to.be.an.array();
+                expect(files).to.have.length(3);
+
+                done();
+            });
+        });
+
+    });
+
+    describe('#updateFile (hidden)', () => {
+
+        it ('Should return 200', done => {
+
+            const request = {
+                method: 'PATCH',
+                url: '/courses/ATL3G/documents/newfile',
+                payload: {
+                    hidden: true
+                },
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                expect(res.request.response.statusCode).to.equal(200);
+                done();
+            });
+        });
+    });
+
+    describe('#getTree #3', () => {
+
+
+        it ('Should return 3 files', done => {
+
+            const request = {
+                method: 'GET',
+                url: '/courses/ATL3G/tree',
+                headers: internals.headers
+            };
+
+            server.inject(request, res => {
+                const response = res.request.response.source;
+                expect(res.request.response.statusCode).to.equal(200);
+
+                expect(response.dir).to.be.null();
+
+                const files = response.files;
+
+                expect(files).to.be.an.array();
+                expect(files).to.have.length(2);
 
                 done();
             });
