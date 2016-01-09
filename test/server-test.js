@@ -16,6 +16,9 @@ const internals = {
             labels: ['api']
         }],
         plugins: {
+            'hapi-qs': [{
+                select: ['api']
+            }],
             '../app/cache': [{select: ['api']}],
             '../app/utils/error' : [{select: ['api']}],
             'hapi-auth-jwt2': [{select: ['api']}],

@@ -40,6 +40,9 @@ const internals = {
             labels: ['api']
         }],
         plugins: {
+            'hapi-qs': [{
+                select: ['api', 'web']
+            }],
            './cache': [{select: ['api']}],
             './utils/error' : [{select: ['api']}],
             'hapi-auth-jwt2': [{
