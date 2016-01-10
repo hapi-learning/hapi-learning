@@ -26,17 +26,15 @@ exports.get = {
                 exclude: ['id', 'deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(result => {
-            if (result)
-            {
-                return reply(result.get({plain : true}));
+        .then((result) => {
+
+            if (result) {
+                return reply(result.get({ plain : true }));
             }
-            else
-            {
-                return reply.notFound('Cannot find permission :' + request.params.name);
-            }
+
+            return reply.notFound('Cannot find permission :' + request.params.name);
         })
-        .catch(err => reply.badImplementation(err));
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -46,7 +44,7 @@ exports.getAll = {
     },
     description: 'Returns every permissions',
 
-     handler: function (request, reply) {
+    handler: function (request, reply) {
 
         const Permission = this.models.Permission;
 
@@ -55,7 +53,7 @@ exports.getAll = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(results => reply(_.map(results, (result => result.get({plain : true})))))
-        .catch(err => reply.badImplementation(err));
+        .then((results) => reply(_.map(results, ((result) => result.get({ plain : true })))))
+        .catch((err) => reply.badImplementation(err));
     }
 };

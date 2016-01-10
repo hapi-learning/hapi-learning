@@ -56,6 +56,7 @@ exports.login = {
         }).xor('username', 'email')
     },
     handler: function (request, reply) {
+
         const User = this.models.User;
         const Role = this.models.Role;
         const Cache = this.cache;
@@ -65,7 +66,8 @@ exports.login = {
             where.username = {
                 $eq: request.payload.username
             };
-        } else {
+        }
+        else {
             where.email = {
                 $eq: request.payload.email
             };
@@ -75,59 +77,57 @@ exports.login = {
         // If so, compare the password given in the payload
         // with the hashed password in the database
         User.findOne({
-                include: [{
-                    model: Role
+            include: [{
+                model: Role
             }],
-                where: where
-            })
-            .then(result => {
+            where: where
+        })
+        .then((result) => {
+            // If the user exists and the passwords match
+            if (result && Bcrypt.compareSync(request.payload.password,
+                    result.password)) {
 
-                // If the user exists and the passwords match
-                if (result && Bcrypt.compareSync(request.payload.password,
-                        result.password)) {
-                    const key = {
-                        segment: 'InvalidatedTokens',
-                        id: result.get('username')
-                    };
+                const key = {
+                    segment: 'InvalidatedTokens',
+                    id: result.get('username')
+                };
 
-                    // Try to get the token from the cache.
-                    // If the token is in the cache and
-                    // expiration date is at least 30 minutes
-                    // from now, returns the token in the cache
-                    // then drop the token from the cache.
-                    Cache.get(key, function (err, cached) {
+                // Try to get the token from the cache.
+                // If the token is in the cache and
+                // expiration date is at least 30 minutes
+                // from now, returns the token in the cache
+                // then drop the token from the cache.
+                Cache.get(key, (ignored, cached) => {
 
-                        if (cached && cached.ttl > 3600000) {
-                            Cache.drop(key, function (err) {
-                                return reply({
-                                    token: cached.item
-                                });
-                            });
-                        } else {
+                    if (cached && cached.ttl > 3600000) {
+                        Cache.drop(key, () => reply({ token: cached.item }));
+                    }
+                    else {
 
-                            // Generate the payload based on user data
-                            const payload = {
-                                id: result.id,
-                                username: result.username,
-                                email: result.email,
-                                role: result.Role.name,
-                                isAdmin: (result.Role.name === 'admin')
-                            };
+                        // Generate the payload based on user data
+                        const payload = {
+                            id: result.id,
+                            username: result.username,
+                            email: result.email,
+                            role: result.Role.name,
+                            isAdmin: (result.Role.name === 'admin')
+                        };
 
-                            // Sign the token
-                            const token = {
-                                token: JWT.sign(payload, process.env.AUTH_KEY, {
-                                        expiresIn: parseInt(process.env.TOKEN_EXP) || 7200
-                                    })
-                            };
+                        // Sign the token
+                        const token = {
+                            token: JWT.sign(payload, process.env.AUTH_KEY, {
+                                expiresIn: parseInt(process.env.TOKEN_EXP) || 7200
+                            })
+                        };
 
-                            return reply(token);
-                        }
-                    });
-                } else {
-                    reply(Boom.unauthorized('Invalid username and/or password'));
-                }
-            });
+                        return reply(token);
+                    }
+                });
+            }
+            else {
+                reply(Boom.unauthorized('Invalid username and/or password'));
+            }
+        });
     }
 };
 
@@ -139,10 +139,10 @@ exports.forgot = {
             email: Joi.string().email().required()
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User = this.models.User;
-        const PRR  = this.models.PasswordResetRequest;
+        //const PRR  = this.models.PasswordResetRequest;
         const Mailers = this.mailers;
 
         User.findOne({
@@ -152,24 +152,22 @@ exports.forgot = {
             where: {
                 email: request.payload.email
             }
-        }).then(function(user) {
-            if (user) {
+        }).then((user) => {
 
-                const uuid = Uuid.v1();
-
-                // No need to wait for this
-                user.createPasswordResetRequest({
-                    uuid: uuid
-                });
-
-                const uri = request.server.select('web').info.uri + '/#/reset/' + uuid;
-                return Mailers.sendPasswordReset(user, uri);
-            } else {
-                throw {}; // No need for an error - finally block
+            if (!user) {
+                throw {};
             }
-        }).finally(function() {
-            return reply().code(202);
-        });
+
+            const uuid = Uuid.v1();
+
+            // No need to wait for this
+            user.createPasswordResetRequest({
+                uuid: uuid
+            });
+
+            const uri = request.server.select('web').info.uri + '/#/reset/' + uuid;
+            return Mailers.sendPasswordReset(user, uri);
+        }).finally(() => reply().code(202));
 
     }
 };
@@ -192,14 +190,16 @@ exports.checkReset = {
                 disabled: false,
                 uuid: uuid
             }
-        }).then(function(prr) {
+        }).then((prr) => {
+
             const exp = 1000 * 60 * 60 * 24; // 1 day
             const isExpired = Date.now() - Date.parse(prr.get('time')) > exp;
+
             if (prr && !isExpired) {
                 return reply();
-            } else {
-                return reply.notFound();
             }
+
+            return reply.notFound();
         });
     }
 };
@@ -251,19 +251,21 @@ exports.logout = {
 
         const cacheToken = function () {
             // Invalidate the token by adding it to the cache.
-            Cache.set(key, token, ttl, function (err) {
+            Cache.set(key, token, ttl, (err) => {
+
                 if (err) {
                     return reply.badImplementation(err);
-                } else {
-                    return reply().code(204);
                 }
+
+                return reply().code(204);
             });
         };
 
         // If user already has a token in the invalidated token -
         // Creates a entry in another segment of the cache (cannot be accessed again)
         // This token is then marked to 'deletion'.
-        Cache.get(key, function (err, cached) {
+        Cache.get(key, (ignored, cached) => {
+
             if (cached) {
 
                 const keyToDelete = {
@@ -271,7 +273,7 @@ exports.logout = {
                     id: cached.item
                 };
 
-                Cache.set(keyToDelete, cached.item, cached.ttl, function (err) {});
+                Cache.set(keyToDelete, cached.item, cached.ttl, () => {});
             }
 
             cacheToken();
@@ -316,13 +318,14 @@ exports.me = {
             attributes: {
                 exclude: ['password', 'deleted_at']
             }
-        }).then(result => {
+        }).then((result) => {
+
             if (result) {
                 return reply(result);
-            } else {
-                return reply.badImplementation();
             }
-        }).catch(err => reply.badImplementation(err));
+
+            return reply.badImplementation();
+        }).catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -359,12 +362,11 @@ exports.patchMe = {
             lastName: Joi.string().max(255).allow('').description('User last name'),
             phoneNumber: Joi.string().max(255).allow('').description('User phone number'),
             notify: Joi.boolean()
-        },
+        }
     },
     handler: function (request, reply) {
 
         const User = this.models.User;
-        const Role = this.models.Role;
         const payload = request.decoded;
 
         User.update(
@@ -374,8 +376,8 @@ exports.patchMe = {
                     }
                 }
             )
-            .then(result => reply().code(204))
-            .catch(error => reply.conflict(error));
+            .then((result) => reply().code(204))
+            .catch((error) => reply.conflict(error));
     }
 };
 
@@ -399,16 +401,10 @@ exports.getCourses = {
     handler: function (request, reply) {
 
         Utils.findUser(this.models.User, request.decoded.username)
-            .then(function(user) {
-            return user.getCourses();
-        }).then(function(results) {
-            const promises = _.map(results, c => Utils.getCourse(c));
-            return Promise.all(promises);
-        }).then(function(courses) {
-            return reply(courses);
-        }).catch(function(error) {
-            return reply.badImplementation(error);
-        });
+        .then((user)    => user.getCourses())
+        .then((results) => Promise.all(_.map(results, (c) => Utils.getCourse(c))))
+        .then(reply)
+        .catch((err)    => reply.badImplementation(err));
     }
 };
 
@@ -436,14 +432,16 @@ exports.getNews = {
 
         const pagination = request.query.pagination;
 
-        Utils.findUser(User, request.decoded.username).then(function (user) {
+        Utils.findUser(User, request.decoded.username)
+        .then((user) => {
+
             return user.getCourses({
                 attributes: ['code'],
                 joinTableAttributes: []
             });
-        }).then(function (courses) {
-            return _.map(courses, c => c.get('code'));
-        }).then(function (codes) {
+        })
+        .then((courses) => _.map(courses, (c) => c.get('code')))
+        .then((codes) => {
 
             const options = {
                 where: {
@@ -465,14 +463,13 @@ exports.getNews = {
 
             return News.findAndCountAll(options);
 
-        }).then(function (results) {
+        }).then((results) => {
+
             if (pagination) {
                 return reply.paginate(results.rows, results.count);
-            } else {
-                return reply(results.rows);
             }
-        }).catch(function(error) {
-            return reply.badImplementation(error);
-        });
+
+            return reply(results.rows);
+        }).catch((err) => reply.badImplementation(err));
     }
 };

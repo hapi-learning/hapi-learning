@@ -46,17 +46,15 @@ exports.get = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(result => {
-            if (result)
-            {
-                return reply(result.get({plain : true}));
-            }
-            else
-            {
+        .then((result) => {
+
+            if (!result) {
                 return reply.notFound('Cannot find tag :' + request.params.name);
             }
+
+            return reply(result.get({ plain : true }));
         })
-        .catch(err => reply.badImplementation(err));
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -88,8 +86,8 @@ exports.getAll = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(results => reply(Utils.removeDates(results)))
-        .catch(err => reply.badImplementation(err));
+        .then((results) => reply(Utils.removeDates(results)))
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -128,7 +126,7 @@ exports.post = {
         Tag.create({
             name : request.payload.name
         })
-        .then(result => reply(Utils.removeDates(result)).code(201))
+        .then((result) => reply(Utils.removeDates(result)).code(201))
         .catch(() => reply.conflict());
     }
 };
@@ -170,7 +168,7 @@ exports.delete = {
                 name : request.params.name
             }
         })
-        .then(count => reply({count : count}))
-        .catch(err => reply.badRequest(err));
+        .then((count) => reply({ count : count }))
+        .catch((err) => reply.badRequest(err));
     }
 };
