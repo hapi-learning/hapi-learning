@@ -11,7 +11,7 @@ const P = require('bluebird');
 
 const internals = {};
 
-internals.checkCourse = function(Course, id, reply, callback) {
+internals.checkCourse = function (Course, id, reply, callback) {
 
     Hoek.assert(Course, 'Model Course required');
     Hoek.assert(id, 'Course code required');
@@ -20,17 +20,19 @@ internals.checkCourse = function(Course, id, reply, callback) {
 
     Utils
         .findCourseByCode(Course, id)
-        .then(result => {
+        .then((result) => {
+
             if (result) {
                 return callback();
-            } else {
-                return reply.notFound('The course ' + id + ' does not exists.');
             }
+
+            return reply.notFound('The course ' + id + ' does not exists.');
         })
-        .catch(err => reply.badImplementation(err));
+        .catch((err) => reply.badImplementation(err));
 };
 
-internals.checkForbiddenPath = function(path) {
+internals.checkForbiddenPath = function (path) {
+
     return path.includes('/..') || path.includes('../');
 };
 
@@ -81,8 +83,6 @@ exports.getAll = {
     handler: function (request, reply) {
 
         const Course = this.models.Course;
-        const User = this.models.User;
-        const Tag = this.models.Tag;
         const select = request.query.select;
         const pagination = request.query.pagination;
 
@@ -99,7 +99,7 @@ exports.getAll = {
 
         if (select) {
             options.attributes = [].concat(select);
-        };
+        }
 
         if (request.query.codename) {
             const like = {
@@ -119,46 +119,50 @@ exports.getAll = {
             options.where = {};
             options.where.code = {
                 $like: request.query.code + '%'
-            }
+            };
         }
 
         if (request.query.name) {
             options.where = options.where || {};
             options.where.name = {
                 $like: request.query.name + '%'
-            }
+            };
         }
 
 
-        Course.findAndCountAll(options).then(results => {
+        Course.findAndCountAll(options).then((results) => {
 
             if (select) {
+
                 if (pagination) {
                     return reply.paginate(results.rows, results.count);
-                } else {
-                    return reply(results.rows);
                 }
-            } else {
-                const promises = _.map(results.rows, (r => Utils.getCourse(r, request.query.tags)));
-                // Wait for all promises to end
-                Promise.all(promises).then(values => {
 
-                        // Need an alternative to that...
-                        if (request.query.tags) {
-                            _.remove(values, v => v == null);
-                        }
+                return reply(results.rows);
 
-                        if (pagination) {
-                            return reply.paginate(values, results.count);
-                        } else {
-                            return reply(values);
-                        }
-                    });
             }
 
 
+            const promises = _.map(results.rows, ((r) => Utils.getCourse(r, request.query.tags)));
+            // Wait for all promises to end
+            Promise.all(promises).then((values) => {
+
+                // Need an alternative to that...
+                if (request.query.tags) {
+                    _.remove(values, (v) => v === null);
+                }
+
+                if (pagination) {
+                    return reply.paginate(values, results.count);
+                }
+
+                return reply(values);
+            });
+
+
+
         })
-        .catch(err => reply.badImplementation(err));
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -191,22 +195,27 @@ exports.get = {
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
         const id = request.params.id;
 
-        Utils.findCourseByCode(Course, id).then(result => {
+        Utils.findCourseByCode(Course, id).then((result) => {
+
             if (result) {
                 return Utils.getCourse(result);
-            } else {
-                throw { statusCode: 404, message: 'Course not found'};
             }
-        }).then(function(result) {
+
+            throw { statusCode: 404, message: 'Course not found' };
+        }).then((result) => {
+
             return reply(result);
-        }).catch(function(err) {
-            if (err.statusCode === 404) {
-                return reply.notFound(err.message);
-            } else {
-                return reply.badImplementation(err);
+        }).catch((err) => {
+
+            switch (err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                default:
+                    return reply.badImplementation(err);
             }
         });
 
@@ -242,13 +251,14 @@ exports.getNews = {
         }
     },
     handler: function (request, reply) {
+
         const News = this.models.News;
         const Course = this.models.Course;
         const id = request.params.id;
 
         const pagination = request.query.pagination;
 
-        internals.checkCourse(Course, id, reply, function() {
+        internals.checkCourse(Course, id, reply, () => {
 
             const options = {
                 where: { course: { $eq: id } },
@@ -260,12 +270,13 @@ exports.getNews = {
                 options.offset = (request.query.page - 1) * request.query.limit;
             }
 
-            News.findAndCountAll(options).then(results => {
+            News.findAndCountAll(options).then((results) => {
+
                 if (pagination) {
                     return reply.paginate(Utils.removeDates(results.rows), results.count);
-                } else {
-                    return reply(Utils.removeDates(results.rows));
                 }
+
+                return reply(Utils.removeDates(results.rows));
             });
         });
     }
@@ -300,15 +311,12 @@ exports.getHomepage = {
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
         const Storage = this.storage;
         const id = request.params.id;
 
-        const getHomepage = function() {
-            return reply.file(Storage.getHomepage(id));
-        };
-
-        return internals.checkCourse(Course, id, reply, getHomepage);
+        return internals.checkCourse(Course, id, reply, () => reply.file(Storage.getHomepage(id)));
     }
 };
 
@@ -359,48 +367,45 @@ exports.getDocuments = {
         const course  = request.params.id;
         const hidden  = request.query.hidden;
 
-        Storage.download(course, path, hidden).then(function(results) {
+        Storage.download(course, path, hidden).then((results) => {
 
             const isFile = results.isFile;
             const result = results.result;
 
-
-            if (isFile)
-            {
+            if (isFile) {
 
                 const filename = Path.basename(result).replace(/"/g, '\\"');
                 const contentDisposition = 'attachment; filename="' + filename + '"';
-                var stream = Fs.createReadStream(result);
+                const stream = Fs.createReadStream(result);
 
                 return reply(stream)
                     .header('Content-Disposition', contentDisposition)
                     .header('Content-Length', results.size);
             }
-            else
-            {
-                var stream = new StreamBuffers.ReadableStreamBuffer({
-                    frequency: 10,     // in milliseconds.
-                    chunkSize: 204800  // 200Ko
-                });
+
+            const stream = new StreamBuffers.ReadableStreamBuffer({
+                frequency: 10,     // in milliseconds.
+                chunkSize: 204800  // 200Ko
+            });
 
 
-                const pathName = path === '/' ? '' : '_' + require('path').basename(path);
-                const filename = (course + pathName + '.zip').replace(/"/g, '\\"');
-                const contentDisposition = 'attachment; filename="' + filename + '"';
-                stream.put(result);
-                stream.stop();
+            const pathName = path === '/' ? '' : '_' + require('path').basename(path);
+            const filename = (course + pathName + '.zip').replace(/"/g, '\\"');
+            const contentDisposition = 'attachment; filename="' + filename + '"';
+            stream.put(result);
+            stream.stop();
 
-                return reply(stream)
-                    .type('application/zip')
-                    .header('Content-Disposition', contentDisposition);
+            return reply(stream)
+                .type('application/zip')
+                .header('Content-Disposition', contentDisposition);
 
-            }
+
         })
-        .catch(err => {
-            switch(err.statusCode) {
+        .catch((err) => {
+
+            switch (err.statusCode) {
                 case 404:
                     return reply.notFound(err.message);
-                case 500:
                 default:
                     return reply.badImplementation(err.message);
             }
@@ -460,14 +465,16 @@ exports.getTree = {
         const id        = request.params.id;
         const hidden    = request.query.hidden;
 
-        const tree = function() {
-            Storage.getList(id, path, hidden).then(function(results) {
+        const tree = function () {
+
+            Storage.getList(id, path, hidden).then((results) => {
+
                 return reply(results);
-            }).catch(function(err) {
+            }).catch((err) => {
+
                 switch (err.statusCode) {
                     case 404:
                         return reply.notFound(err.message);
-                    case 500:
                     default:
                         return reply.badImplementation(err.message);
                 }
@@ -507,22 +514,26 @@ exports.getStudents = {
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
 
-        Utils.findCourseByCode(Course, request.params.id).then(course => {
-            if (course) {
-                return course.getUsers({joinTableAttributes: []});
-            } else {
+        Utils.findCourseByCode(Course, request.params.id).then((course) => {
+
+            if (!course) {
                 throw { statusCode: 404, message: 'Course not found' };
             }
-        }).then(function(users) {
+
+            return course.getUsers({ joinTableAttributes: [] });
+        }).then(function (users) {
+
             return reply(Utils.removeDates(users));
-        }).catch(function(err) {
+        }).catch(function (err) {
+
             if (err.statusCode === 404) {
                 return reply.notFound(err.message);
-            } else {
-                return reply.badImplementation(err);
             }
+
+            return reply.badImplementation(err);
         });
     }
 };
@@ -556,22 +567,26 @@ exports.getTeachers = {
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
 
-        Utils.findCourseByCode(Course, request.params.id).then(course => {
-            if (course) {
-                return course.getTeachers({joinTableAttributes: []});
-            } else {
+        Utils.findCourseByCode(Course, request.params.id).then((course) => {
+
+            if (!course) {
                 throw { statusCode: 404, message: 'Course not found' };
             }
-        }).then(function(users) {
+
+            return course.getTeachers({ joinTableAttributes: [] });
+        }).then(function (users) {
+
             return reply(Utils.removeDates(users));
-        }).catch(function(err) {
+        }).catch(function (err) {
+
             if (err.statusCode === 404) {
                 return reply.notFound(err.message);
-            } else {
-                return reply.badImplementation(err);
             }
+
+            return reply.badImplementation(err);
         });
     }
 };
@@ -605,22 +620,26 @@ exports.getTags = {
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
 
-        Utils.findCourseByCode(Course, request.params.id).then(course => {
-            if (course) {
-                return course.getTags({joinTableAttributes: []});
-            } else {
+        Utils.findCourseByCode(Course, request.params.id).then((course) => {
+
+            if (!course) {
                 throw { statusCode: 404, message: 'Course not found' };
             }
-        }).then(function(tags) {
+
+            return course.getTags({ joinTableAttributes: [] });
+        }).then(function (tags) {
+
             return reply(Utils.removeDates(tags));
-        }).catch(function(err) {
+        }).catch(function (err) {
+
             if (err.statusCode === 404) {
                 return reply.notFound(err.message);
-            } else {
-                return reply.badImplementation(err);
             }
+
+            return reply.badImplementation(err);
         });
     }
 };
@@ -695,7 +714,7 @@ exports.post = {
         // loading the tags, otherwise return a promise returning an empty array
         const getTags = hasTags ?
             Promise.resolve(Tag.findAll(
-                {where: {name: {$in: ptags}}}))
+                { where: { name: { $in: ptags } } }))
             : Promise.resolve([]);
 
         // If teachers has been passed to the payload, return a promise
@@ -703,39 +722,41 @@ exports.post = {
         const userExclude = ['password'];
         const getTeachers = hasTeachers ?
             Promise.resolve(User.findAll({
-                where: {username: {$in: pteachers}},
-                attributes: {exclude: userExclude}}))
+                where: { username: { $in: pteachers } },
+                attributes: { exclude: userExclude } }))
             : Promise.resolve([]);
 
         // Loads tags and teachers to be added
-        P.all([getTags, getTeachers]).spread(function(tags, teachers) {
+        P.all([getTags, getTeachers]).spread(function (tags, teachers) {
+
             const wrongTeachers = (hasTeachers && teachers.length !== pteachers.length);
             const wrongTags     = (hasTags && tags.length !== ptags.length);
 
             if (wrongTeachers || wrongTags) {
                 const message = wrongTeachers ? 'Invalid teachers(s)' : 'Invalid tag(s)';
                 throw { statusCode: 422, message: message };
-            } else {
-                return P.all([Course.create(coursePayload), tags, teachers]);
             }
-        }).spread(function(course, tags, teachers) {
+
+            return P.all([Course.create(coursePayload), tags, teachers]);
+        }).spread(function (course, tags, teachers) {
 
             return P.all([course, tags, teachers, course.addTeachers(teachers), course.addTags(tags)]);
 
-        }).spread(function(newCourse, tags, teachers) {
+        }).spread(function (newCourse, tags, teachers) {
 
             const course = newCourse.get({ plain:true });
-            course.tags = _.map(tags, (t => t.get('name', { plain:true })));
-            course.teachers = _.map(teachers, (t => t.get('username', { plain:true })));
+            course.tags = _.map(tags, ((t) => t.get('name', { plain: true })));
+            course.teachers = _.map(teachers, ((t) => t.get('username', { plain: true })));
             Storage.createCourse(course.code, homepage);
             return reply(course).code(201);
 
-        }).catch(function(err) {
+        }).catch(function (err) {
+
             if (err.statusCode === 422) {
                 return reply.badData(err.message);
-            } else {
-                return reply.conflict();
             }
+
+            return reply.conflict();
         });
     }
 };
@@ -814,10 +835,13 @@ exports.postDocument = {
         const Storage = this.storage;
         const Course = this.models.Course;
 
-        const upload = function() {
-            Storage.createOrReplaceFile(course, path, file, hidden).then(function() {
+        const upload = function () {
+
+            Storage.createOrReplaceFile(course, path, file, hidden).then(function () {
+
                 return reply().code(201);
-            }).catch(function(err) {
+            }).catch(function (err) {
+
                 return reply.conflict(err);
             });
         };
@@ -877,17 +901,18 @@ exports.createFolder = {
             return reply.badRequest('Invalid path');
         }
 
-        const createFolder = function() {
+        const createFolder = function () {
+
             Storage
                 .createFolder(course, path, request.query.hidden)
                 .then(() => reply().code(201))
-                .catch(err => {
-                    switch(err.statusCode) {
+                .catch((err) => {
+
+                    switch (err.statusCode) {
                         case 409:
                             return reply.conflict(err.message);
                         case 422:
                             return reply.badData(err.message);
-                        case 500:
                         default:
                             return reply.badImplementation(err.message);
 
@@ -936,14 +961,18 @@ exports.postHomepage = {
         }
     },
     handler: function (request, reply) {
+
         const Course = this.models.Course;
         const Storage = this.storage;
         const id = request.params.id;
 
-        const setHomepage = function() {
-            Storage.setHomepage(id, request.payload.content).then(function() {
+        const setHomepage = function () {
+
+            Storage.setHomepage(id, request.payload.content).then(function () {
+
                 return reply().code(201);
-            }).catch(function() {
+            }).catch(function () {
+
                 return reply.badImplementation();
             });
         };
@@ -1007,11 +1036,13 @@ exports.updateFile = {
             return reply.forbidden();
         }
 
-        const update = function() {
+        const update = function () {
+
             Storage
-                .update(course, path, {name: name, hidden: hidden})
+                .update(course, path, { name: name, hidden: hidden })
                 .then(file => reply(file).code(200))
                 .catch(err => {
+
                     switch(err.statusCode) {
                         case 404:
                             return reply.notFound(err.message);
@@ -1019,11 +1050,9 @@ exports.updateFile = {
                             return reply.conflict(err.message);
                         case 422:
                             return reply.badData(err.message);
-                        case 500:
                         default:
                             return reply.badImplementation(err.message);
                     }
-
             });
         };
 
@@ -1491,12 +1520,12 @@ exports.deleteDocument = {
                 }
             }));
         } else {
-             if (internals.checkForbiddenPath(files)) {
+            if (internals.checkForbiddenPath(files)) {
                 return reply.forbidden();
             }
         }
 
-        const del = function() {
+        const del = function () {
             Storage.delete(id, files)
                 .then(() => reply().code(202))
                 .catch((err) => reply.badImplementation(err));

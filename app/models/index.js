@@ -6,9 +6,9 @@ const Path      = require('path');
 const _         = require('lodash');
 
 
-exports.register = function(server, options, next)
-{
-    let models = {};
+exports.register = function (server, options, next) {
+
+    const models = {};
 
     models.sequelize = new Sequelize(
         options.name || null,
@@ -24,6 +24,7 @@ exports.register = function(server, options, next)
     const files = Fs.readdirSync(__dirname);
 
     _.forEach(files, (file) => {
+
         if (file !== Path.basename(__filename)) {
             const model = Path.basename(file, '.js');
             const name = _.capitalize(_.camelCase(model));
@@ -39,21 +40,21 @@ exports.register = function(server, options, next)
         m.Course.belongsToMany(m.Tag, { through: 'course_tags' });
 
         // A Course can have multiple Users as Titulars
-        m.Course.belongsToMany(m.User, { as: 'Teachers',  through: 'course_titulars'});
+        m.Course.belongsToMany(m.User, { as: 'Teachers',  through: 'course_titulars' });
 
 
-        m.Course.belongsToMany(m.User, { as: 'Users', through: 'user_courses'});
+        m.Course.belongsToMany(m.User, { as: 'Users', through: 'user_courses' });
 
         // An User can subscribe to many Courses (not in a Folder)
         m.User.belongsToMany(m.Course, { as: 'Courses', through: 'user_courses' });
 
         // A user has many folders, he can not share them
-        m.User.hasMany(m.Folder, {foreignKey : 'userId'});
+        m.User.hasMany(m.Folder, { foreignKey: 'userId' });
 
         // A Folder contains many Courses
-        m.Folder.belongsToMany(m.Course, { through: 'user_courses_folders'});
+        m.Folder.belongsToMany(m.Course, { through: 'user_courses_folders' });
         // A Course can be in many Folders
-        m.Course.belongsToMany(m.Folder, { through: 'user_courses_folders'});
+        m.Course.belongsToMany(m.Folder, { through: 'user_courses_folders' });
 
         // An User can have multiple Tags (for example 'A12' + 'gestion')
         m.User.belongsToMany(m.Tag, { through: 'user_tags' });

@@ -1,13 +1,11 @@
 'use strict';
 
-const Hoek = require('hoek');
 const Joi  = require('joi');
 const P    = require('bluebird');
 const _    = require('lodash');
 
 const Utils        = require('../utils/sequelize');
 
-const internals = {};
 
 
 /**
@@ -42,14 +40,15 @@ exports.getAll = {
         }
 
         News.findAndCountAll(options)
-            .then(results => {
+            .then((results) => {
+
                 if (pagination) {
                     return reply.paginate(Utils.removeDates(results.rows), results.count);
-                } else {
-                    return reply(Utils.removeDates(results.rows));
                 }
+
+                return reply(Utils.removeDates(results.rows));
             })
-            .catch(error => reply.badImplementation(error));
+            .catch((error) => reply.badImplementation(error));
     }
 };
 
@@ -84,19 +83,19 @@ exports.get = {
         const News = this.models.News;
 
         News.findOne({
-                where: {
-                    id: request.params.id
-                }
-            })
-            .then(news => {
-                if (news) {
-                    return reply(Utils.removeDates(news));
-                }
-                else {
-                    return reply.notFound('News ' + request.params.id + ' not found');
-                }
-            })
-            .catch(error => reply.badImplementation(error));
+            where: {
+                id: request.params.id
+            }
+        })
+        .then((news) => {
+
+            if (!news) {
+                return reply.notFound('News ' + request.params.id + ' not found');
+            }
+
+            return reply(Utils.removeDates(news));
+        })
+        .catch((error) => reply.badImplementation(error));
     }
 };
 
@@ -145,7 +144,8 @@ exports.post = {
 
         const tail = request.tail('mails-notification');
 
-        Utils.findUser(User, username).then(user => {
+        Utils.findUser(User, username).then((user) => {
+
             if (user) {
                 const news = {
                     subject: subject,
@@ -155,24 +155,27 @@ exports.post = {
                 };
 
                 if (code) {
-                    Utils.findCourseByCode(Course, code).then(course => {
-                        if (course) {
+                    Utils.findCourseByCode(Course, code).then((course) => {
 
+                        if (course) {
                             news.course = code;
 
-                            course.getUsers().then(users => {
-                                const promises = _.map(users, user => {
-                                    if (user.get('notify'))
+                            course.getUsers().then((users) => {
+
+                                const promises = _.map(users, (user) => {
+
+                                    if (user.get('notify')) {
                                         return Mailers.notifyNews(news, user);
-                                    else
-                                        return P.resolve();
+                                    }
+
+                                    return P.resolve();
                                 });
 
                                 P.all(promises).then(tail);
                             });
 
                             News.create(news)
-                                .then(news => reply(Utils.removeDates(news)).code(201))
+                                .then((news) => reply(Utils.removeDates(news)).code(201))
                                 .catch((error) => reply.conflict(error));
 
                         }
@@ -181,15 +184,20 @@ exports.post = {
                         }
                     })
                     .catch((error) => reply.conflict(error));
-                } else {
+                }
+                else {
 
-                    News.create(news).then(news => {
-                        User.findAll().then(users => {
-                            const promises = _.map(users, user => {
-                                if (user.get('notify'))
+                    News.create(news).then((news) => {
+
+                        User.findAll().then((users) => {
+
+                            const promises = _.map(users, (user) => {
+
+                                if (user.get('notify')) {
                                     return Mailers.notifyNews(news, user);
-                                else
-                                    return P.resolve();
+                                }
+
+                                return P.resolve();
                             });
 
                             P.all(promises).then(tail);
@@ -203,6 +211,6 @@ exports.post = {
                 return reply.badData('Invalid user');
             }
         })
-        .catch(error => reply.badImplementation(error));
+        .catch((error) => reply.badImplementation(error));
     }
 };

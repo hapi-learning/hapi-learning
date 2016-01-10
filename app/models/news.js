@@ -1,6 +1,7 @@
 'use strict';
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
+
     return sequelize.define('News', {
         subject: {
             type: DataTypes.STRING,

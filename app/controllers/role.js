@@ -44,17 +44,16 @@ exports.get = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(result => {
-            if (result)
-            {
-                return reply(result.get({plain : true}));
-            }
-            else
-            {
+        .then((result) => {
+
+            if (!result) {
                 return reply.notFound('Cannot find role :' + request.params.name);
             }
+
+            return reply(result.get({ plain: true }));
+
         })
-        .catch(err => reply.badImplementation(err));
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -88,8 +87,8 @@ exports.getAll = {
                 exclude: ['deleted_at', 'updated_at', 'created_at']
             }
         })
-        .then(results => reply(_.map(results, (result => result.get({plain : true})))))
-        .catch(err => reply.badImplementation(err));
+        .then((results) => reply(_.map(results, ((result) => result.get({ plain : true })))))
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -126,7 +125,7 @@ exports.post = {
         Role.create({
             name : request.payload.name
         })
-        .then(tag => reply(Utils.removeDates(tag)).code(201))
+        .then((tag) => reply(Utils.removeDates(tag)).code(201))
         .catch(() => reply.conflict());
     }
 };
@@ -168,7 +167,14 @@ exports.delete = {
                 name : request.params.name
             }
         })
-        .then(count => count === 0 ? reply.notFound() : reply().code(204))
-        .catch(error => reply.badImplementation(error));
+        .then((count) => {
+
+            if (count === 0) {
+                return reply.notFound();
+            }
+
+            return reply().code(204);
+        })
+        .catch((error) => reply.badImplementation(error));
     }
 };

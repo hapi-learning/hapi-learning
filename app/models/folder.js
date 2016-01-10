@@ -2,6 +2,7 @@
 
 // Folder == course container, not a physical folder
 module.exports = function (sequelize, DataTypes) {
+
     return sequelize.define('Folder', {
         name: {
             type: DataTypes.STRING,

@@ -2,7 +2,8 @@
 
 const Bcrypt = require('bcrypt-nodejs');
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
+
     return sequelize.define('User', {
         username: {
             type: DataTypes.STRING(30),
@@ -14,7 +15,8 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false,
             field: 'password',
-            set: function(val) {
+            set: function (val) {
+
                 this.setDataValue('password', Bcrypt.hashSync(val, Bcrypt.genSaltSync()));
             }
         },

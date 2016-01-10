@@ -3,14 +3,16 @@
 const Path = require('path');
 
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
+
     return sequelize.define('File', {
         name: {
             type: DataTypes.STRING,
             unique: 'file_key',
             allowNull: false,
             field: 'name',
-            set: function(val) {
+            set: function (val) {
+
                 this.setDataValue('name', val);
                 let ext = Path.extname(val);
                 if (ext.length === 0) {
@@ -23,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             unique: 'file_key',
             allowNull: true, // If root folder == null
-            field: 'directory',
+            field: 'directory'
         },
         ext: {
             type: DataTypes.STRING,

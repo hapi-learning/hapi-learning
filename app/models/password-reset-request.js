@@ -2,7 +2,8 @@
 
 //const Bcrypt = require('bcrypt-nodejs');
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
+
     return sequelize.define('PasswordResetRequest', {
         uuid: {
             type: DataTypes.STRING,

@@ -26,6 +26,7 @@ before((done) => {
         Models.Role.create({
             name: 'admin'
         }).then(() => {
+
              Models.User.create({
                 username: 'admin',
                 password: 'admin',

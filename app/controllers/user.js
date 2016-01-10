@@ -33,7 +33,7 @@ internals.schemaUserPOST = function(){
             firstName: Joi.string().min(1).max(255).description('User first name'),
             lastName: Joi.string().min(1).max(255).description('User last name'),
             phoneNumber: Joi.string().description('User phone number'),
-            role_id: Joi.number().integer().default(3)
+            'role_id': Joi.number().integer().default(3)
         }).options({stripUnknown : true});
 
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
@@ -188,7 +188,7 @@ exports.getTeachers = {
         const User = this.models.User;
 
         User.findAll({
-                where: { role_id: 2 },
+                where: { 'role_id': 2 },
                 attributes: {
                     exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
                 }
