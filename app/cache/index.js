@@ -1,7 +1,9 @@
+'use strict';
+
 const Catbox = require('catbox');
 
 
-exports.register = function(server, options, next) {
+exports.register = function (server, options, next) {
 
     options = options || {};
 

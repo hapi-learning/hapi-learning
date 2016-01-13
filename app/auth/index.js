@@ -6,7 +6,8 @@ const JWT = require('jsonwebtoken');
 
 exports.register = function (server, options, next) {
 
-    server.method('parseAuthorization', function(authorization) {
+    server.method('parseAuthorization', (authorization) => {
+
         Hoek.assert(authorization, 'Authorization header is required');
 
         // Removes useless labels
@@ -18,7 +19,7 @@ exports.register = function (server, options, next) {
         };
     });
 
-    const validateFunc = function(decoded, request, callback) {
+    const validateFunc = function (decoded, request, callback) {
 
         const User = server.plugins.models.models.User;
         const Role = server.plugins.models.models.Role;
@@ -41,40 +42,47 @@ exports.register = function (server, options, next) {
 
 
         // Check the user informations
-        const checkUser = function() {
+        const checkUser = function () {
+
             User.findOne({
                 where: {
-                    username: decoded.username,
+                    username: decoded.username
                 },
                 include: [{
                     model: Role
                 }]
-            }).then(result => {
-               if (result && result.Role.name === decoded.role) {
-                   request.decoded = decoded;
-                   request.token = token;
-                   return callback(null, true, {scope: [decoded.role, decoded.username]});
-               } else {
-                   return callback(null, false);
-               }
+            }).then((result) => {
+
+                if (result && result.Role.name === decoded.role) {
+                    request.decoded = decoded;
+                    request.token = token;
+                    return callback(null, true, {
+                        scope: [decoded.role, decoded.username]
+                    });
+                }
+
+                return callback(null, false);
+
             });
         };
 
 
         // Check if the token is in the invalidated / deleted token cache
         // If it's not, check the user information
-        Cache.get(invalidatedTokens, function(err, cached) {
-            if (cached) {
+        Cache.get(invalidatedTokens, (invalidatedIgnored, invalidatedCached) => {
+
+            if (invalidatedCached) {
                 return callback(null, false);
-            } else {
-                Cache.get(deletedTokens, function(err, cached) {
-                    if (cached) {
-                        return callback(null, false);
-                    } else {
-                        return checkUser();
-                    }
-                });
             }
+
+            Cache.get(deletedTokens, (deletedIgnored, deletedCached) => {
+
+                if (deletedCached) {
+                    return callback(null, false);
+                }
+
+                return checkUser();
+            });
         });
     };
 
@@ -82,7 +90,7 @@ exports.register = function (server, options, next) {
         key: process.env.AUTH_KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
         validateFunc: validateFunc,
         verifyOptions: {
-            algorithms: [ 'HS256' ]
+            algorithms: ['HS256']
         }
     });
 
@@ -90,8 +98,8 @@ exports.register = function (server, options, next) {
         key: process.env.AUTH_KEY || 'dJa1O65Yb25MNjq451NxvZb4tAxWQla1',
         validateFunc: validateFunc,
         verifyOptions: {
-            algorithms: [ 'HS256'],
-            ignoreExpiration: true,
+            algorithms: ['HS256'],
+            ignoreExpiration: true
         },
         urlKey: 'token'
     });
