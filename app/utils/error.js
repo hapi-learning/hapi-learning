@@ -2,36 +2,43 @@
 
 const Boom = require('boom');
 
-exports.register = function(server, options, next) {
+exports.register = function (server, options, next) {
 
 
-    server.decorate('reply', 'badImplementation', function(error) {
+    server.decorate('reply', 'badImplementation', function (error) {
+
         return this.response(Boom.badImplementation('An internal server error has occured. ' + error));
     });
 
-    server.decorate('reply', 'notImplemented', function(message) {
+    server.decorate('reply', 'notImplemented', function (message) {
+
         return this.response(Boom.notImplemented(message || 'Method not implemented'));
     });
 
-    server.decorate('reply', 'notFound', function(message) {
+    server.decorate('reply', 'notFound', function (message) {
+
         return this.response(Boom.notFound(message || 'Resource not found'));
     });
 
-    server.decorate('reply', 'conflict', function(message) {
+    server.decorate('reply', 'conflict', function (message) {
+
         message = message || 'A conflict has occured, resource may already exists or be deleted';
         return this.response(Boom.conflict(message));
     });
 
-    server.decorate('reply', 'badRequest', function(message) {
+    server.decorate('reply', 'badRequest', function (message) {
+
         return this.response(Boom.badRequest(message || 'Bad request'));
     });
 
-    server.decorate('reply', 'badData', function(message) {
+    server.decorate('reply', 'badData', function (message) {
+
         return this.response(Boom.badData(message || 'Bad data'));
     });
 
-    server.decorate('reply', 'forbidden', function(message) {
-        return this.response(Boom.forbidden(message));
+    server.decorate('reply', 'forbidden', function (message) {
+
+        return this.response(Boom.forbidden(message || 'Forbidden'));
     });
 
     // Add more common error here

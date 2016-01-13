@@ -92,6 +92,17 @@ exports.register = function (server, options, next) {
 
     server.expose('models', models);
 
+    server.ext('onPreStart', (s, n) => {
+
+        const Models = s.plugins.models.models;
+
+        Models.sequelize.sync({
+            force: options.flush,
+            logging: options.logging ? console.log : false
+        }).then(n);
+    });
+
+
     next();
 
 };

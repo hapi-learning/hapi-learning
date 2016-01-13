@@ -5,10 +5,10 @@ exports.register = function (server, options, next) {
 
     // RETURNS 404 PAGE IF REQUESTS IS INVALID
     server.ext('onPreResponse', (request, reply) => {
-        let response = request.response;
 
-        if (!response.isBoom)
-        {
+        const response = request.response;
+
+        if (!response.isBoom) {
             return reply.continue();
         }
 
@@ -23,13 +23,13 @@ exports.register = function (server, options, next) {
                 expiresIn: 1000 * 60 * 5, // 5 minutes
                 privacy: 'private'
             },
-            handler: function(request, reply) {
+            handler: function (request, reply) {
+
                 return reply({
                     api: request.server.select('api').info.uri
-                })
+                });
             }
         }
-
     });
 
     server.route({

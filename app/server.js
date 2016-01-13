@@ -5,276 +5,272 @@ require('dotenv').load(); // Load .env file
 require('hoek').assert(process.env.UPLOAD_MAX);
 
 const Glue = require('glue');
-const _ = require('lodash');
 const Path = require('path');
-const P = require('bluebird');
-const program = require('commander');
-const rmdir = require('rmdir');
+const Program = require('commander');
+const Rmdir = require('rmdir');
 
-program
+Program
     .version(require('../package.json').version)
+    .option('-T', '--test-data', 'Generate test data')
     .option('-f, --flush', 'Reset storage and database')
     .option('-v, --verbose', 'Verbose mode')
     .option('-P, --prod', 'Production mode')
     .parse(process.argv);
 
 
-const internals = {
-    manifest: {
-        connections: [{
-            host: process.env.WEB_HOST || 'localhost',
-            port: process.env.WEB_PORT || 8080,
-            routes: {
-                cors: process.env.WEB_CORS === 'true',
-                files: {
-                    relativeTo: Path.join(__dirname, program.prod ? 'dist' : 'public')
+const internals = {};
+
+
+internals.manifest = {
+    connections: [{
+        host: process.env.WEB_HOST || 'localhost',
+        port: process.env.WEB_PORT || 8080,
+        routes: {
+            cors: process.env.WEB_CORS === 'true',
+            files: {
+                relativeTo: Path.join(__dirname, Program.prod ? 'dist' : 'public')
+            }
+        },
+        labels: ['web']
+    }, {
+        host: process.env.API_HOST || 'localhost',
+        port: process.env.API_PORT || 8088,
+        routes: {
+            cors: process.env.API_CORS === 'true'
+        },
+        labels: ['api']
+    }],
+    registrations: [
+        {
+            plugin: {
+                register: './utils/on-exit'
+            },
+            options: {
+                select: ['api', 'web']
+            }
+        },
+        {
+            plugin: {
+                register: './hooks/postStart'
+            },
+            options: {
+                select: ['api', 'web']
+            }
+        },
+        {
+            plugin: {
+                register: 'hapi-qs'
+            },
+            options: {
+                select: ['api', 'web']
+            }
+        },
+        {
+            plugin: {
+                register: './cache'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: './utils/error'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: 'hapi-auth-jwt2'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: './auth'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: 'inert'
+            },
+            options: {
+                select: ['api', 'web']
+            }
+        },
+        {
+            plugin: {
+                register: './models',
+                options: {
+                    name: process.env.DB_NAME || null,
+                    username: process.env.DB_USERNAME || null,
+                    password: process.env.DB_PASSWORD || null,
+                    host: process.env.DB_HOST || null,
+                    dialect: process.env.DB_DIALECT || null,
+                    storage: process.env.DB_STORAGE || null,
+                    logging: Program.verbose ? console.log : false,
+                    flush: Program.flush
                 }
             },
-            labels: ['web']
-        }, {
-            host: process.env.API_HOST || 'localhost',
-            port: process.env.API_PORT || 8088,
-            routes: {
-                cors: process.env.API_CORS === 'true'
-            },
-            labels: ['api']
-        }],
-        plugins: {
-            'hapi-qs': [{
-                select: ['api', 'web']
-            }],
-           './cache': [{select: ['api']}],
-            './utils/error' : [{select: ['api']}],
-            'hapi-auth-jwt2': [{
+            options: {
                 select: ['api']
-            }],
-            './auth': [{select: ['api']}],
-            inert: [{
-                select: ['api', 'web']
-            }],
-            './models': [
-                {
-                    select: ['api'],
-                    options: {
-                        connection: 'api',
-                        name: process.env.DB_NAME || null,
-                        username: process.env.DB_USERNAME || null,
-                        password: process.env.DB_PASSWORD || null,
-                        host: process.env.DB_HOST || null,
-                        dialect: process.env.DB_DIALECT || null,
-                        storage: process.env.DB_STORAGE || null,
-                        logging: program.verbose ? console.log : false
-                    }
+            }
+        },
+        {
+            plugin: {
+                register: './utils/storage',
+                options: {
+                    root: process.env.STORAGE_PATH || __dirname,
+                    documents: 'documents',
+                    courses: 'courses',
+                    storage: 'storage'
                 }
-            ],
-            './utils/storage': [
-                {
-                    select: ['api'],
-                    options: {
-                        root: process.env.STORAGE_PATH || __dirname,
-                        documents: 'documents',
-                        courses: 'courses',
-                        storage: 'storage'
-                    }
-                }],
-            './utils/mailers/mailers': [{select : ['api'] }],
-            './controllers': [{
+            },
+            options: {
                 select: ['api']
-            }],
-            './routes/api': [{
+            }
+        },
+        {
+            plugin: {
+                register: './utils/mailers/mailers'
+            },
+            options: {
                 select: ['api']
-            }],
-            './routes/web': [{
+            }
+        },
+        {
+            plugin: {
+                register: './controllers'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: './routes/api'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: './routes/web'
+            },
+            options: {
                 select: ['web']
-            }],
-            'hapi-pagination': [
-                {
-                    select: ['api'],
-                    options: {
-                        routes: {
-                            include: ['/courses', '/users', '/news', '/me/news', '/courses/{id}/news']
+            }
+        },
+        {
+            plugin: {
+                register: 'hapi-pagination',
+                options: {
+                    routes: {
+                        include: ['/courses', '/users', '/news', '/me/news', '/courses/{id}/news']
+                    },
+                    meta: {
+                        self: {
+                            active: false
                         },
-                        meta: {
-                            self: {
-                                active: false
-                            },
-                            last: {
-                                active: false
-                            },
-                            previous: {
-                                active: false
-                            },
-                            next: {
-                                active: false
-                            },
-                            first: {
-                                active: false
+                        last: {
+                            active: false
+                        },
+                        previous: {
+                            active: false
+                        },
+                        next: {
+                            active: false
+                        },
+                        first: {
+                            active: false
+                        }
+                    }
+                }
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: 'vision'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: 'lout'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
+                register: 'good',
+                options: {
+                    reporters: [
+                        {
+                            'reporter': 'good-console',
+                            'events': {
+                                'ops': '*',
+                                'log': '*',
+                                'response': '*',
+                                'request': '*',
+                                'error': '*'
                             }
                         }
-                    }
+                    ]
                 }
-            ],
-            vision: [{
-                select: ['api']
-            }],
-            lout: [{
-                select: ['api']
-            }],
-            good: {
-                reporters: [
-                    {
-                        'reporter': 'good-console',
-                        'events': {
-                            'ops': '*',
-                            'log': '*',
-                            'response': '*',
-                            'request': '*',
-                            'error': '*'
-                        }
-                    }
-                ]
-            },
-            tv: {
-                host: process.env.API_HOST || 'localhost'
+            }
+        },
+        {
+            plugin: {
+                register: 'tv',
+                options: {
+                    host: process.env.API_HOST || 'localhost'
+                }
             }
         }
-    }
+    ]
 };
 
 
-const initializeData = function(server, Models) {
 
-    const Wreck = require('wreck');
-    const User = Models.User;
-    const baseUrl = server.select('api').info.uri;
+const compose = function () {
 
-    const users = require('../resources/users.json');
-    const tags  = require('../resources/tags.json');
-    const teachers = require('../resources/all_teachers.json');
-    const courses = require('../resources/all_courses.json');
-    const news = require('../resources/news.json');
-
-    User.create({
-        username: 'admin',
-        password: 'admin',
-        role_id: 1,
-        email: 'admin@admin.com',
-        firstName: 'admin',
-        lastName: 'admin'
-    }).then(function() {
-        Wreck.post(baseUrl + '/login', {
-            payload: JSON.stringify({
-                username: 'admin',
-                password: 'admin'
-            })
-        }, function(err, response, payload) {
-            const token = JSON.parse(payload.toString()).token;
-
-            const post = function(url, payload) {
-                return new P(function(resolve, reject) {
-                    Wreck.post(baseUrl + url, {
-                        payload: JSON.stringify(payload),
-                        headers: {
-                            Authorization: token
-                        }
-                    }, (err, r, p) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve();
-                        }
-                    });
-                });
-            };
-
-            const addCourses = function() {
-                return P.all(_.map(courses, course => post('/courses', course)));
-            };
-
-            const addTeachers = function() {
-                return P.all(_.map(teachers, teacher => post('/users', teacher)));
-            };
-
-            const addTags = function() {
-                return P.all(_.map(tags, tag => post('/tags', tag)));
-            };
-
-            const addNews = function() {
-                return P.all(_.map(news, n => post('/news', n)));
-            };
-
-            addTags().then(function() {
-                addTeachers().then(function() {
-                    addCourses().then(function() {
-                        addNews();
-                    });
-                });
-            });
-
-        });
-    }).catch(console.log);
-}
-
-
-
-const compose = function() {
-    Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
+    Glue.compose(internals.manifest, { relativeTo: __dirname }, (err, server) => {
 
         if (err) {
-            console.log('server.register error :');
+            console.error('server.register error :');
             throw err;
         }
 
-         process.on('SIGINT', function() {
-            console.log('Stopping server...');
-            server.plugins.cache.cache.stop();
-            server.stop({timeout: 10}, err => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('Server stopped successfuly !');
-                }
-                process.exit();
-            });
+        server.start((err) => {
+
+            if (err) {
+                throw err;
+            }
         });
 
-        const Models = server.plugins.models.models;
-
-        Models.sequelize.sync({
-            force: program.flush,
-            logging: program.verbose ? console.log : false
-        })
-        .then(() => {
-
-            server.start((err) => {
-                if (err) {
-                    throw err;
-                } else {
-
-                    _.forEach(server.connections,
-                              (connection) => console.log('Server running on ' + connection.info.uri));
-
-                    // INIT DATA FOR TEST PURPOSES
-
-                    // initialize roles
-                    const Role = Models.Role;
-                    const roles = _.map(require('../resources/roles.json'), role => Role.create(role));
-
-                    Promise.all(roles).then(function() {
-                        if (program.flush) {
-                            initializeData(server, Models);
-                        }
-                    })
-                    .catch(function() {});
-                }
-
-            });
-        });
     });
-}
+};
 
-if (program.flush) {
-    rmdir(Path.join(process.env.STORAGE_PATH || __dirname, 'storage'), compose);
-} else {
+
+// TODO -- move this to prestart
+if (Program.flush) {
+    Rmdir(Path.join(process.env.STORAGE_PATH || __dirname, 'storage'), compose);
+}
+else {
     compose();
 }
