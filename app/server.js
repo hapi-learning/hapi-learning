@@ -258,6 +258,7 @@ const compose = function () {
 
         server.start((err) => {
 
+
             if (err) {
                 throw err;
             }

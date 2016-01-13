@@ -99,7 +99,7 @@ exports.register = function (server, options, next) {
         Models.sequelize.sync({
             force: options.flush,
             logging: options.logging ? console.log : false
-        }).then(n);
+        }).finally(n);
     });
 
 

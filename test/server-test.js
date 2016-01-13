@@ -2,7 +2,6 @@
 
 require('dotenv').load(); // Load .env file
 
-
 const Glue  = require('glue');
 
 const internals = {
@@ -15,39 +14,73 @@ const internals = {
             },
             labels: ['api']
         }],
-        plugins: {
-            'hapi-qs': [{
-                select: ['api']
-            }],
-            '../app/cache': [{select: ['api']}],
-            '../app/utils/error' : [{select: ['api']}],
-            'hapi-auth-jwt2': [{select: ['api']}],
-            '../app/auth': [{select: ['api']}],
-            '../app/models': [
-                {
-                    select: ['api'],
+        registrations: [
+            {
+                plugin: {
+                    register: 'hapi-qs'
+                }
+            },
+            {
+                plugin: {
+                    register: './cache'
+                }
+            },
+            {
+                plugin: {
+                    register: './utils/error'
+                }
+            },
+            {
+                plugin: {
+                    register: 'hapi-auth-jwt2'
+                }
+            },
+            {
+                plugin: {
+                    register: './auth'
+                }
+            },
+            {
+                plugin: {
+                    register: 'inert'
+                }
+            },
+            {
+                plugin: {
+                    register: './models',
                     options: {
                         dialect: 'sqlite',
                         storage: 'test/test_database.sqlite',
                         logging: false
                     }
                 }
-            ],
-            '../app/utils/mailers/mailers': [{
-                select: ['api']
-            }],
-            '../app/utils/storage': [
-                {
-                    select: ['api'],
+            },
+            {
+                plugin: {
+                    register: './utils/storage',
                     options: {
                         root: __dirname
                     }
-                }],
-            '../app/controllers': [{select: ['api']}],
-            '../app/routes/api': [{select: ['api']}],
-            'hapi-pagination': [
-                {
-                    select: ['api'],
+                }
+            },
+            {
+                plugin: {
+                    register: './utils/mailers/mailers'
+                }
+            },
+            {
+                plugin: {
+                    register: './controllers'
+                }
+            },
+            {
+                plugin: {
+                    register: './routes/api'
+                }
+            },
+            {
+                plugin: {
+                    register: 'hapi-pagination',
                     options: {
                         routes: {
                             include: ['/courses', '/users', '/news', '/me/news', '/courses/{id}/news']
@@ -71,18 +104,19 @@ const internals = {
                         }
                     }
                 }
-            ]
-        }
+            }
+        ]
     }
 };
 
 
-Glue.compose(internals.manifest, {relativeTo: __dirname}, (err, server) => {
+Glue.compose(internals.manifest, { relativeTo: require('path').join(__dirname, '../app') }, (err, server) => {
 
     if (err) {
         console.log('server.register error :');
         throw err;
     }
+
     module.exports = server;
 });
 
