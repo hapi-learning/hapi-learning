@@ -14,13 +14,7 @@ internals.connections = function (server, next) {
     next();
 };
 
-exports.register = function (server, options, next) {
+exports = module.exports = [
+    internals.connections
+];
 
-    server.ext('onPostStart', internals.connections);
-    return next();
-};
-
-exports.register.attributes = {
-    name: 'hooks',
-    version: require('../../package.json').version
-};

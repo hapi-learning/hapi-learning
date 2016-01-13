@@ -51,7 +51,7 @@ internals.manifest = {
         },
         {
             plugin: {
-                register: './hooks/postStart'
+                register: './hooks'
             },
             options: {
                 select: ['api', 'web']
