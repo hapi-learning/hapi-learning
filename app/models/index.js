@@ -94,7 +94,7 @@ exports.register = function (server, options, next) {
 
     server.ext('onPreStart', (s, n) => {
 
-        const Models = s.plugins.models.models;
+        const Models = s.app.models;
 
         Models.sequelize.sync({
             force: options.flush,
