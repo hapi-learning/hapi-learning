@@ -2,11 +2,11 @@
 
 exports.register = function (server, options, next) {
 
-    const Cache       = server.plugins.cache.cache;
-    const Storage     = server.plugins.storage.storage;
-    const Controllers = server.plugins.controllers.controllers;
-    const Models      = server.plugins.models.models;
-    const Mailers     = server.plugins.mailers.mailers;
+    const Cache       = server.app.cache;
+    const Storage     = server.app.storage;
+    const Controllers = server.app.controllers;
+    const Models      = server.app.models;
+    const Mailers     = server.app.mailers;
 
 
     // Sets context for handlers

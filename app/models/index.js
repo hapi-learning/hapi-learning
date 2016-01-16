@@ -90,7 +90,7 @@ exports.register = function (server, options, next) {
     })(models);
 
 
-    server.expose('models', models);
+    server.app.models = models;
 
     server.ext('onPreStart', (s, n) => {
 

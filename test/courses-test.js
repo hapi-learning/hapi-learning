@@ -24,7 +24,7 @@ const internals = {};
 
 before((done) => {
     server = require('./server-test');
-    const Models = server.plugins.models.models;
+    const Models = server.app.models;
     Models.sequelize.sync({
         force: true
     }).then(() => {
@@ -144,7 +144,7 @@ describe('Controller.Course', () => {
         });
 
         it('should return the new added course', done => {
-            const Models = server.plugins.models.models;
+            const Models = server.app.models;
             const User = Models.User;
             const Tag = Models.Tag;
 
@@ -438,7 +438,7 @@ describe('Controller.Course', () => {
 
         it ('Should return an array with 1 user', done => {
             request.headers = internals.headers;
-            const Course = server.plugins.models.models.Course;
+            const Course = server.app.models.Course;
             const user = {
                 username: 'kevin2004',
                 password: 'jsstrofor',
@@ -483,7 +483,7 @@ describe('Controller.Course', () => {
 
         it ('Should return an array with 1 news', done => {
             request.headers = internals.headers;
-            const News = server.plugins.models.models.News;
+            const News = server.app.models.News;
             const news = {
                 subject: 'news1',
                 content: 'CONTENT1',
@@ -505,7 +505,7 @@ describe('Controller.Course', () => {
 
         it ('Should return an array with 3 news', done => {
             request.headers = internals.headers;
-            const News = server.plugins.models.models.News;
+            const News = server.app.models.News;
             const news = [{
                 subject: 'news2',
                 content: 'CONTENT2',
@@ -555,7 +555,7 @@ describe('Controller.Course', () => {
 
         it ('Should return an array with 3 teachers', done => {
             request.headers = internals.headers;
-            const Course = server.plugins.models.models.Course;
+            const Course = server.app.models.Course;
             const user = {
                 username: 'julien2004',
                 password: 'jsstrofor',
@@ -601,7 +601,7 @@ describe('Controller.Course', () => {
 
         it ('Should return an array with 3 tags', done => {
             request.headers = internals.headers;
-            const Course = server.plugins.models.models.Course;
+            const Course = server.app.models.Course;
             const tag = {
                 name: 'labo'
             };
@@ -695,7 +695,7 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the new tags', done => {
-            const Models = server.plugins.models.models;
+            const Models = server.app.models;
             const Tag = Models.Tag;
             request.headers = internals.headers;
             const createTags = new Promise((resolve, reject) => {
@@ -751,7 +751,7 @@ describe('Controller.Course', () => {
         };
 
         it('Should return the course with the new teachers', done => {
-            const Models = server.plugins.models.models;
+            const Models = server.app.models;
             const User = Models.User;
             request.headers = internals.headers;
             const createTeachers = new Promise((resolve, reject) => {

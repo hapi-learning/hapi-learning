@@ -620,7 +620,7 @@ exports.register = function(server, options, next) {
 
     Hoek.assert(options.root, 'option.root is required');
 
-    internals.File = server.plugins.models.models.File;
+    internals.File = server.app.models.File;
 
     internals.root = options.root;
     internals.relativeTo = Path.join(internals.root, options.storage || 'storage');
@@ -631,7 +631,8 @@ exports.register = function(server, options, next) {
     internals.initialize();
 
     const Storage = load();
-    server.expose('storage', Storage);
+
+    server.app.storage = Storage;
     next();
 };
 

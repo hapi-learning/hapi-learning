@@ -50,7 +50,7 @@ internals.newsCourseRelated = {
 
 before((done) => {
     server = require('./server-test');
-    const Models = server.plugins.models.models;
+    const Models = server.app.models;
     Models.sequelize.sync({
         force: true
     }).then(() => {

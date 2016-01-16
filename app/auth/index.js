@@ -21,9 +21,9 @@ exports.register = function (server, options, next) {
 
     const validateFunc = function (decoded, request, callback) {
 
-        const User = server.plugins.models.models.User;
-        const Role = server.plugins.models.models.Role;
-        const Cache = server.plugins.cache.cache;
+        const User = server.app.models.User;
+        const Role = server.app.models.Role;
+        const Cache = server.app.cache;
 
         const authorization = request.headers.authorization || request.query.token;
 

@@ -38,7 +38,7 @@ exports.register = function (server, options, next) {
             throw err;
         }
 
-        server.expose('controllers', controllers);
+        server.app.controllers = controllers;
 
         next();
     });

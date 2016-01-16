@@ -57,14 +57,14 @@ internals.manifest = {
                 select: ['api', 'web']
             }
         },
-        {
+       /* {
             plugin: {
                 register: 'hapi-qs'
             },
             options: {
                 select: ['api', 'web']
             }
-        },
+        },*/
         {
             plugin: {
                 register: './cache'

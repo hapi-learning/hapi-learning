@@ -6,7 +6,7 @@ const internals = {};
 
 internals.initializeData = function (server, next) {
 
-    const Models = server.plugins.models.models;
+    const Models = server.app.models;
     const Wreck = require('wreck');
     const User = Models.User;
     const baseUrl = server.select('api').info.uri;
@@ -90,7 +90,7 @@ internals.initializeData = function (server, next) {
 
 internals.onPostStart = function (server, next) {
 
-    const Models = server.plugins.models.models;
+    const Models = server.app.models;
 
     const Role = Models.Role;
     const roles = _.map(require('../resources/roles.json'), (role) => Role.create(role));

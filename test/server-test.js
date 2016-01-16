@@ -15,11 +15,11 @@ const internals = {
             labels: ['api']
         }],
         registrations: [
-            {
+           /* {
                 plugin: {
                     register: 'hapi-qs'
                 }
-            },
+            },*/
             {
                 plugin: {
                     register: './cache'

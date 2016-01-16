@@ -54,7 +54,7 @@ exports.register = function(server, options, next) {
         });
     };
 
-    server.expose('mailers', Mailers);
+    server.app.mailers = Mailers;
 
     next();
 };
