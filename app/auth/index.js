@@ -24,25 +24,17 @@ exports.register = function (server, options, next) {
         const User = server.app.models.User;
         const Role = server.app.models.Role;
         const Cache = server.app.cache;
-
         const authorization = request.headers.authorization || request.query.token;
-
         const token = server.methods.parseAuthorization(authorization).token;
-        // Key to deleted tokens
-        const deletedTokens = {
-            segment: 'DeletedTokens',
-            id: token
-        };
-
-        // Key to invalidated tokens
-        const invalidatedTokens = {
-            segment: 'InvalidatedTokens',
-            id: decoded.username
-        };
 
 
-        // Check the user informations
-        const checkUser = function () {
+        // Check if the token is in the invalidated / deleted token cache
+        // If it's not, check the user information
+        Cache.get({ segment: 'InvalidatedTokens', id: decoded.username }, (invalidatedIgnored, invalidatedCached) => {
+
+            if (invalidatedCached) {
+                return callback(null, false);
+            }
 
             User.findOne({
                 where: {
@@ -51,7 +43,8 @@ exports.register = function (server, options, next) {
                 include: [{
                     model: Role
                 }]
-            }).then((result) => {
+            })
+            .then((result) => {
 
                 if (result && result.Role.name === decoded.role) {
                     request.decoded = decoded;
@@ -63,25 +56,6 @@ exports.register = function (server, options, next) {
 
                 return callback(null, false);
 
-            });
-        };
-
-
-        // Check if the token is in the invalidated / deleted token cache
-        // If it's not, check the user information
-        Cache.get(invalidatedTokens, (invalidatedIgnored, invalidatedCached) => {
-
-            if (invalidatedCached) {
-                return callback(null, false);
-            }
-
-            Cache.get(deletedTokens, (deletedIgnored, deletedCached) => {
-
-                if (deletedCached) {
-                    return callback(null, false);
-                }
-
-                return checkUser();
             });
         });
     };
