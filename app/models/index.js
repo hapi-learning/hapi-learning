@@ -27,7 +27,7 @@ exports.register = function (server, options, next) {
 
         if (file !== Path.basename(__filename)) {
             const model = Path.basename(file, '.js');
-            const name = _.capitalize(_.camelCase(model));
+            const name = _.upperFirst(_.camelCase(model));
             models[name] = models.sequelize.import(model);
         }
     });

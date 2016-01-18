@@ -59,7 +59,6 @@ exports.login = {
 
         const User = this.models.User;
         const Role = this.models.Role;
-        const Cache = this.cache;
 
         const where = {};
         if (request.payload.username) {
@@ -87,46 +86,26 @@ exports.login = {
             if (result && Bcrypt.compareSync(request.payload.password,
                     result.password)) {
 
-                const key = {
-                    segment: 'InvalidatedTokens',
-                    id: result.get('username')
+                const payload = {
+                    id: result.id,
+                    username: result.username,
+                    email: result.email,
+                    role: result.Role.name,
+                    isAdmin: (result.Role.name === 'admin')
                 };
 
-                // Try to get the token from the cache.
-                // If the token is in the cache and
-                // expiration date is at least 30 minutes
-                // from now, returns the token in the cache
-                // then drop the token from the cache.
-                Cache.get(key, (ignored, cached) => {
+                // Sign the token
+                const token = {
+                    token: JWT.sign(payload, process.env.AUTH_KEY, {
+                        expiresIn: parseInt(process.env.TOKEN_EXP) || 7200
+                    })
+                };
 
-                    if (cached && cached.ttl > 3600000) {
-                        Cache.drop(key, () => reply({ token: cached.item }));
-                    }
-                    else {
+                return reply(token);
 
-                        // Generate the payload based on user data
-                        const payload = {
-                            id: result.id,
-                            username: result.username,
-                            email: result.email,
-                            role: result.Role.name,
-                            isAdmin: (result.Role.name === 'admin')
-                        };
-
-                        // Sign the token
-                        const token = {
-                            token: JWT.sign(payload, process.env.AUTH_KEY, {
-                                expiresIn: parseInt(process.env.TOKEN_EXP) || 7200
-                            })
-                        };
-
-                        return reply(token);
-                    }
-                });
             }
-            else {
-                reply(Boom.unauthorized('Invalid username and/or password'));
-            }
+
+            return reply(Boom.unauthorized('Invalid username and/or password'));
         });
     }
 };
@@ -232,51 +211,29 @@ exports.checkReset = {
  */
 exports.logout = {
     description: 'Logout and revoke the token',
+    pre: [{
+        assign: 'ttl',
+        method: function (request, reply) {
+
+            const user = request.auth.credentials.user;
+            const ttl = Math.abs(((user.iat + 7200) * 1000) - Date.now());
+
+            return reply(ttl);
+        }
+    }],
     handler: function (request, reply) {
 
-        const Cache = this.cache;
+        const username = request.auth.credentials.user.username;
+        const token = request.auth.credentials.token;
+        const ttl = request.pre.ttl;
 
-        const payload = request.decoded;
+        request.server.methods.invalidateToken(username, token, ttl, (err) => {
 
-        const key = {
-            segment: 'InvalidatedTokens',
-            id: payload.username
-        };
-
-        // Calculate time to live
-        // Math.abs in case of the expiration date expires just after the
-        // token validation and just before this handler
-        const ttl = Math.abs(((payload.iat + 7200) * 1000) - Date.now());
-        const token = request.token;
-
-        const cacheToken = function () {
-            // Invalidate the token by adding it to the cache.
-            Cache.set(key, token, ttl, (err) => {
-
-                if (err) {
-                    return reply.badImplementation(err);
-                }
-
-                return reply().code(204);
-            });
-        };
-
-        // If user already has a token in the invalidated token -
-        // Creates a entry in another segment of the cache (cannot be accessed again)
-        // This token is then marked to 'deletion'.
-        Cache.get(key, (ignored, cached) => {
-
-            if (cached) {
-
-                const keyToDelete = {
-                    segment: 'DeletedTokens',
-                    id: cached.item
-                };
-
-                Cache.set(keyToDelete, cached.item, cached.ttl, () => {});
+            if (err) {
+                return reply.badImplementation(err);
             }
 
-            cacheToken();
+            return reply().code(204);
         });
     }
 };
@@ -304,7 +261,7 @@ exports.me = {
 
         const User = this.models.User;
         const Role = this.models.Role;
-        const payload = request.decoded;
+        const payload = request.auth.credentials.user;
 
         User.findOne({
             where: {
@@ -367,7 +324,7 @@ exports.patchMe = {
     handler: function (request, reply) {
 
         const User = this.models.User;
-        const payload = request.decoded;
+        const payload = request.auth.credentials.user;
 
         User.update(
                 request.payload, {
@@ -400,7 +357,7 @@ exports.getCourses = {
     description: 'Get the courses (subscribed)',
     handler: function (request, reply) {
 
-        Utils.findUser(this.models.User, request.decoded.username)
+        Utils.findUser(this.models.User, request.auth.credentials.user.username)
         .then((user)    => user.getCourses())
         .then((results) => Promise.all(_.map(results, (c) => Utils.getCourse(c))))
         .then(reply)
@@ -432,7 +389,7 @@ exports.getNews = {
 
         const pagination = request.query.pagination;
 
-        Utils.findUser(User, request.decoded.username)
+        Utils.findUser(User, request.auth.credentials.user.username)
         .then((user) => {
 
             return user.getCourses({

@@ -22,6 +22,9 @@ const internals = {};
 
 
 internals.manifest = {
+    server: {
+        cache: 'catbox-memory'
+    },
     connections: [{
         host: process.env.WEB_HOST || 'localhost',
         port: process.env.WEB_PORT || 8080,

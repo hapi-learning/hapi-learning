@@ -1,38 +1,87 @@
 'use strict';
 
 const Hoek = require('hoek');
-const JWT = require('jsonwebtoken');
+const P = require('bluebird');
+const _ = require('lodash');
 
 
 exports.register = function (server, options, next) {
 
+    const invalidatedSegment = 'InvalidatedTokens';
+
     server.method('parseAuthorization', (authorization) => {
 
         Hoek.assert(authorization, 'Authorization header is required');
+        return authorization.replace(/Bearer/gi, '').replace(/ /g, '');
+    });
 
-        // Removes useless labels
-        authorization = authorization.replace(/Bearer/gi, '').replace(/ /g, '');
+    server.method('isInvalidated', (user, token) => {
 
-        return {
-            decoded: JWT.decode(authorization),
-            token: authorization
+        const Cache = server.app.cache;
+
+
+        return new P((resolve, reject) => {
+
+            Cache.get({
+                segment: invalidatedSegment,
+                id: user
+            }, (err, cached) => {
+
+                if (err) {
+                    return reject(err);
+                }
+
+                if (!cached) {
+                    return resolve(false);
+                }
+
+                return resolve(_.includes(cached.item, token));
+            });
+        });
+    });
+
+    server.method('invalidateToken', (user, token, ttl, callback) => {
+
+        Hoek.assert(callback, 'callback required');
+
+        const Cache = server.app.cache;
+
+        const key = {
+            segment: invalidatedSegment,
+            id: user
         };
+
+        Cache.get(key, (err, cached) => {
+
+            if (err) {
+                throw err;
+            }
+
+            let tokens = [token];
+
+            if (cached) {
+                tokens = _.concat(tokens, cached.item);
+            }
+
+            Cache.set({
+                segment: invalidatedSegment,
+                id: user
+            }, tokens, ttl, callback);
+        });
+
     });
 
     const validateFunc = function (decoded, request, callback) {
 
         const User = server.app.models.User;
         const Role = server.app.models.Role;
-        const Cache = server.app.cache;
         const authorization = request.headers.authorization || request.query.token;
-        const token = server.methods.parseAuthorization(authorization).token;
+        const token = server.methods.parseAuthorization(authorization);
 
+        server.methods.isInvalidated(decoded.username, token)
+        .then((invalidated) => {
 
-        // Check if the token is in the invalidated / deleted token cache
-        // If it's not, check the user information
-        Cache.get({ segment: 'InvalidatedTokens', id: decoded.username }, (invalidatedIgnored, invalidatedCached) => {
-
-            if (invalidatedCached) {
+            if (invalidated) {
                 return callback(null, false);
             }
 
@@ -47,9 +96,9 @@ exports.register = function (server, options, next) {
             .then((result) => {
 
                 if (result && result.Role.name === decoded.role) {
-                    request.decoded = decoded;
-                    request.token = token;
                     return callback(null, true, {
+                        user: decoded,
+                        token: token,
                         scope: [decoded.role, decoded.username]
                     });
                 }
@@ -57,7 +106,9 @@ exports.register = function (server, options, next) {
                 return callback(null, false);
 
             });
-        });
+
+        })
+        .catch((err) => callback(err, false));
     };
 
     server.auth.strategy('jwt', 'jwt', {
