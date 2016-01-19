@@ -9,7 +9,7 @@ const _ = require('lodash');
 
 const internals = {};
 
-internals.updateHandler = function(request, reply) {
+internals.updateHandler = function (request, reply) {
 
     const User = this.models.User;
 
@@ -21,20 +21,28 @@ internals.updateHandler = function(request, reply) {
             }
         }
     )
-    .then(result => result[0] === 0 ? reply.notFound() : reply().code(204))
-    .catch(error => reply.conflict(error));
+    .then((result) => {
+
+        if (result[0] === 0) {
+            return reply.notFound();
+        }
+
+        return reply().code(204);
+    })
+    .catch((error) => reply.conflict(error));
 };
 
-internals.schemaUserPOST = function(){
+internals.schemaUserPOST = function () {
+
     const user = Joi.object().keys({
-            username: Joi.string().min(3).max(30).required().description('User personal ID'),
-            password: Joi.string().min(3).max(255).required().description('User password'),
-            email: Joi.string().email().required().description('User email'),
-            firstName: Joi.string().min(1).max(255).description('User first name'),
-            lastName: Joi.string().min(1).max(255).description('User last name'),
-            phoneNumber: Joi.string().description('User phone number'),
-            'role_id': Joi.number().integer().default(3)
-        }).options({stripUnknown : true});
+        username: Joi.string().min(3).max(30).required().description('User personal ID'),
+        password: Joi.string().min(3).max(255).required().description('User password'),
+        email: Joi.string().email().required().description('User email'),
+        firstName: Joi.string().min(1).max(255).description('User first name'),
+        lastName: Joi.string().min(1).max(255).description('User last name'),
+        phoneNumber: Joi.string().description('User phone number'),
+        'role_id': Joi.number().integer().default(3)
+    }).options({ stripUnknown: true });
 
     return Joi.alternatives().try(user, Joi.array().items(user.required()));
 };
@@ -72,14 +80,15 @@ exports.get = {
         const User = this.models.User;
 
         Utils.findUser(User, request.params.username)
-            .then(result => {
+            .then((result) => {
+
                 if (result) {
                     return reply(Utils.removeDates(result));
-                } else {
-                    return reply.notFound('User not found');
                 }
+
+                return reply.notFound('User not found');
             })
-            .catch(err => reply.badImplementation(err));
+            .catch((err) => reply.badImplementation(err));
 
     }
 };
@@ -117,7 +126,7 @@ exports.getAll = {
             search: Joi.string().min(2)
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User = this.models.User;
         const pagination = request.query.pagination;
@@ -153,14 +162,16 @@ exports.getAll = {
         }
 
         User.findAndCountAll(options)
-            .then(results => {
+            .then((results) => {
+
                 if (pagination) {
                     return reply.paginate(Utils.removeDates(results.rows), results.count);
-                } else {
-                    return reply(results.rows);
                 }
+
+                return reply(results.rows);
+
             })
-            .catch(err => reply.badImplementation(err));
+            .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -183,18 +194,18 @@ exports.getAll = {
  */
 exports.getTeachers = {
     description: 'Get only teachers',
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User = this.models.User;
 
         User.findAll({
-                where: { 'role_id': 2 },
-                attributes: {
-                    exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
-                }
-            })
-            .then(results => reply(Utils.removeDates(results)))
-            .catch(err => reply.badImplementation(err));
+            where: { 'role_id': 2 },
+            attributes: {
+                exclude: ['password', 'updated_at', 'deleted_at', 'created_at']
+            }
+        })
+        .then((results) => reply(Utils.removeDates(results)))
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -235,24 +246,19 @@ exports.post = {
     validate: {
         payload : internals.schemaUserPOST()
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User = this.models.User;
+
         if (Array.isArray(request.payload)) {
-            User.bulkCreate(
-                request.payload,
-                {validate : true}
-            )
-            .then(results => (reply({count : results.length}).code(201)))
-            .catch((error) => {
-                return reply.conflict(error);
-            });
-        } else {
+            User.bulkCreate(request.payload, { validate: true })
+            .then((results) => reply({ count : results.length }).code(201))
+            .catch((err) => reply.conflict(err));
+        }
+        else {
             User.create(request.payload)
-            .then(result => reply(Utils.removeDates(result)).code(201))
-            .catch((error) => {
-                return reply.conflict(error);
-            });
+            .then((result) => reply(Utils.removeDates(result)).code(201))
+            .catch((err) => reply.conflict(err));
         }
     }
 };
@@ -294,27 +300,28 @@ exports.addTags = {
             tags: Joi.array().items(Joi.string().required())
         }
     },
-    handler : function(request, reply) {
+    handler : function (request, reply) {
+
         const Tag  = this.models.Tag;
         const User = this.models.User;
         const id = request.params.username;
 
-        Tag.findAll({where: { name: { $in: request.payload.tags } }})
-        .then(tags => {
-            Utils.findUser(User, id)
-            .then(user => {
+        Tag.findAll({ where: { name: { $in: request.payload.tags } } }).then((tags) => {
+
+            Utils.findUser(User, id).then((user) => {
+
                 if (user) {
                     user.addTags(tags).then(() => {
-                       Utils.getUser(user).then(result => {
-                           return reply(result);
-                       });
+
+                        Utils.getUser(user).then(reply);
                     });
-                } else {
+                }
+                else {
                     return reply.notFound('The user ' + id + ' does not exists.');
                 }
             });
         })
-        .catch(err => reply.badImplementation(err));
+        .catch(reply.badImplementation);
     }
 };
 
@@ -357,8 +364,15 @@ exports.delete = {
                 username : { $eq: request.params.username }
             }
         })
-        .then(count => count === 0 ? reply.notFound() : reply().code(204))
-        .catch(err => reply.badImplementation(err));
+        .then((count) => {
+
+            if (count === 0) {
+                return reply.notFound();
+            }
+
+            return reply().code(204);
+        })
+        .catch((err) => reply.badImplementation(err));
     }
 };
 
@@ -398,7 +412,7 @@ exports.put = {
     description: 'Update all info about user (except username)',
     validate: {
         params: {
-            username: Joi.string().min(1).max(30).required().description('User personal ID'),
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
         },
         payload: {
             password: Joi.string().min(1).max(255).required().description('User password'),
@@ -448,7 +462,7 @@ exports.patch = {
     description: 'Update some info about user (except username)',
     validate: {
         params: {
-            username: Joi.string().min(1).max(30).required().description('User personal ID'),
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
         },
         payload: {
             password: Joi.string().min(1).max(255).description('User password'),
@@ -488,21 +502,29 @@ exports.getTags = {
             username: Joi.string().min(1).max(30).required().description('User personal ID')
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User = this.models.User;
 
-            Utils.findUser(User, request.params.username)
-            .then(user => {
-                if (user) {
-                    user.getTags()
-                    .then(tags => reply(tags))
-                    .catch(error => reply.badImplementation(error));
-                } else {
-                    return reply.notFound('User ' + request.params.username + ' not found');
-                }
-            })
-            .catch(err => reply.badImplementation(err));
+        Utils.findUser(User, request.params.username).then((user) => {
+
+            if (!user) {
+                throw { statusCode: 404, message: 'User ' + request.params.username + ' not found' };
+            }
+
+            return user.getTags();
+        })
+        .then(reply)
+        .catch((err) => {
+
+            switch (err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                default:
+                    return reply.badImplementation(err);
+            }
+
+        });
     }
 };
 
@@ -514,24 +536,29 @@ exports.getFolders = {
             username: Joi.string().min(1).max(30).required().description('User personal ID')
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User = this.models.User;
 
-        Utils.findUser(User, request.params.username)
-        .then(user => {
-            if (user)
-            {
-                user.getFolders()
-                .then(folders => reply(folders))
-                .catch(error => reply.badImplementation(error));
+        Utils.findUser(User, request.params.username).then((user) => {
+
+            if (!user) {
+                throw { statusCode: 404, message: 'User ' + request.params.username + ' not found' };
             }
-            else
-            {
-                return reply.notFound('User ' + request.params.username + ' not found');
-            }
+
+            return user.getFolders();
         })
-        .catch(error => reply.badImplementation(error));
+        .then(reply)
+        .catch((err) => {
+
+            switch (err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                default:
+                    return reply.badImplementation(err);
+            }
+
+        });
     }
 };
 
@@ -561,30 +588,34 @@ exports.getCourses = {
             username: Joi.string().min(1).max(30).required().description('User personal ID')
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User = this.models.User;
 
-        Utils.findUser(User, request.params.username)
-        .then(user => {
-            if (user)
-            {
-                user.getCourses()
-                .then(results => {
-                    const promises = _.map(results, c => Utils.getCourse(c));
+        Utils.findUser(User, request.params.username).then((user) => {
 
-                    Promise.all(promises).then(courses => {
-                       return reply(courses);
-                    });
-                })
-                .catch(error => reply.badImplementation(error));
+            if (!user) {
+                throw { statusCode: 404, message: 'User ' + request.params.username + ' not found' };
             }
-            else
-            {
-                return reply.notFound('User ' + request.params.username + ' not found');
-            }
+
+            return user.getCourses();
         })
-        .catch(error => reply.badImplementation(error));
+        .then((courses) => {
+
+            const promises = _.map(courses, Utils.getCourse);
+            return P.all(promises);
+        })
+        .then(reply)
+        .catch((err) => {
+
+            switch (err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                default:
+                    return reply.badImplementation(err);
+            }
+
+        });
     }
 };
 
@@ -621,35 +652,48 @@ exports.subscribeToCourse = {
             crsId: Joi.string().required().description('Course id')
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const Course = this.models.Course;
         const User   = this.models.User;
 
         let userToUpdate;
-        Utils.findUser(User, request.params.username).then(user => {
-            if (user) {
-                userToUpdate = user;
-                return user.getCourses({where : {code : request.params.crsId}, joinTableAttributes: []});
-            } else {
+        Utils.findUser(User, request.params.username).then((user) => {
+
+            if (!user) {
                 throw { statusCode: 404, message: 'User not found' };
             }
-        }).then(courses => {
+
+            if (user) {
+                userToUpdate = user;
+                return user.getCourses({
+                    where: {
+                        code: request.params.crsId
+                    },
+                    joinTableAttributes: []
+                });
+            }
+        })
+        .then((courses) => {
+
             if (courses.length > 0) {
                 throw { statusCode: 409, message: 'Already subscribed' };
-            } else {
-                return Course.findOne({ where: { code: request.params.crsId }});
             }
-        }).then(course => {
-            if (course) {
-                return userToUpdate.addCourse(course).then(() => Utils.getCourse(course));
-            } else {
+
+            return Course.findOne({ where: { code: request.params.crsId } });
+        })
+        .then((course) => {
+
+            if (!course) {
                 throw { statusCode: 404, message: 'Course not found' };
             }
-        }).then(course => {
-            return reply(course);
-        }).catch(err => {
-            switch(err.statusCode) {
+
+            return userToUpdate.addCourse(course).then(() => Utils.getCourse(course));
+        })
+        .then(reply)
+        .catch((err) => {
+
+            switch (err.statusCode) {
                 case 404:
                     return reply.notFound(err.message);
                 case 409:
@@ -693,28 +737,37 @@ exports.unsubscribeToCourse = {
             crsId: Joi.string().required().description('Course id')
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
-        const User   = this.models.User;
+        const User = this.models.User;
 
         let userToUpdate;
-        Utils.findUser(User, request.params.username).then(user => {
-            if (user) {
-                userToUpdate = user;
-                return user.getCourses({where : {code : request.params.crsId}, joinTableAttributes: []});
-            } else {
+        Utils.findUser(User, request.params.username).then((user) => {
+
+            if (!user) {
                 throw { statusCode: 404, message: 'User not found' };
             }
-        }).spread(course => {
-            if (course) {
-                return userToUpdate.removeCourse(course).then(() => Utils.getCourse(course));
-            } else {
+
+            userToUpdate = user;
+            return user.getCourses({
+                where: {
+                    code: request.params.crsId
+                },
+                joinTableAttributes: []
+            });
+        })
+        .spread((course) => {
+
+            if (!course) {
                 throw { statusCode: 404, message: 'Course not found' };
             }
-        }).then(course => {
-            return reply(course);
-        }).catch(err => {
-            switch(err.statusCode) {
+
+            return userToUpdate.removeCourse(course).then(() => Utils.getCourse(course));
+        })
+        .then(reply)
+        .catch((err) => {
+
+            switch (err.statusCode) {
                 case 404:
                     return reply.notFound(err.message);
                 default:
@@ -731,13 +784,13 @@ exports.addFolders = {
     description: 'Add a folder',
     validate: {
         params: {
-            username: Joi.string().min(1).max(30).required().description('User personal ID'),
+            username: Joi.string().min(1).max(30).required().description('User personal ID')
         },
         payload: {
             folders: Joi.array().items(Joi.string().required())
         }
     },
-    handler: function(request, reply) {
+    handler: function (request, reply) {
 
         const User   = this.models.User;
         const Folder = this.models.Folder;
@@ -745,49 +798,53 @@ exports.addFolders = {
         const username = request.params.username;
         const folders  = request.payload.folders;
 
-        Utils.findUser(User, username)
-        .then(user => {
-            if (user)
-            {
+        let user;
 
-                let promises = _.map(folders, folder => {
-                    return Folder.findOne({
-                        where : {
-                            name : folder,
-                            userId : user.id
-                        }
-                    });
+        Utils.findUser(User, username).then((u) => {
+
+            user = u;
+
+            if (!user) {
+                throw { statusCode: 404, message: 'User not found' };
+            }
+
+
+            const promises = _.map(folders, (folder) => {
+
+                return Folder.findOne({
+                    where : {
+                        name : folder,
+                        userId : user.id
+                    }
                 });
+            });
 
-                Promise.all(promises)
-                .then(values => {
-
-                    new P(function(resolve, reject) {
-                        const createFolders = [];
-                        _.forEach(values, (value, key) => {
-                            if (!value) {
-                                createFolders.push(user.createFolder({name : folders[key]}));
-                            }
-                        });
-
-                        P.all(createFolders).then(resolve).catch(reject);
-
-                    }).then(() => {
-                        user.getFolders()
-                        .then(folders => reply(Utils.removeDates(folders)))
-                        .catch(error => reply.badImplementation(error));
-                    });
-
-
-                })
-                .catch(error => reply.badImplementation(error));
-            }
-            else
-            {
-                return reply.notFound('User ' + username + ' not found');
-            }
+            return P.all(promises);
         })
-        .catch(error => reply.badImplementation(error));
+        .then((values) => {
+
+            const promises = _.map(values, (value, key) => {
+
+                if (!value) {
+                    return user.createFolder({
+                        name: folders[key]
+                    });
+                }
+            });
+
+            return P.all(promises);
+        })
+        .then(() => user.getFolders())
+        .then((f) => reply(Utils.removeDates(f)))
+        .catch((err) => {
+
+            switch (err.statusCode) {
+                case 404:
+                    return reply.notFound(err.message);
+                default:
+                    return reply.badImplementation(err);
+            }
+        });
     }
 };
 
