@@ -23,7 +23,9 @@ const internals = {};
 
 internals.manifest = {
     server: {
-        cache: 'catbox-memory'
+        cache: {
+            engine: require('catbox-memory')
+        }
     },
     connections: [{
         host: process.env.WEB_HOST || 'localhost',
@@ -68,14 +70,6 @@ internals.manifest = {
                 select: ['api', 'web']
             }
         },*/
-        {
-            plugin: {
-                register: './cache'
-            },
-            options: {
-                select: ['api']
-            }
-        },
         {
             plugin: {
                 register: './utils/error'

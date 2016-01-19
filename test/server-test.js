@@ -6,6 +6,11 @@ const Glue  = require('glue');
 
 const internals = {
     manifest: {
+        server: {
+            cache: {
+                engine: require('catbox-memory')
+            }
+        },
         connections: [{
             host: process.env.HOST || 'localhost',
             port: process.env.API_PORT || 8088,
@@ -20,11 +25,6 @@ const internals = {
                     register: 'hapi-qs'
                 }
             },*/
-            {
-                plugin: {
-                    register: './cache'
-                }
-            },
             {
                 plugin: {
                     register: './utils/error'
@@ -116,6 +116,11 @@ Glue.compose(internals.manifest, { relativeTo: require('path').join(__dirname, '
         console.log('server.register error :');
         throw err;
     }
+
+    // Initializes cache
+    server.initialize(() => {
+
+    });
 
     module.exports = server;
 });

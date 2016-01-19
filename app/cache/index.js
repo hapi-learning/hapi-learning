@@ -1,20 +1,23 @@
 'use strict';
 
 const Catbox = require('catbox');
+const CatboxMemory = require('catbox-memory');
 
+const internals = {};
 
-exports.register = function (server, options, next) {
+module.exports = function (options) {
 
-    options = options || {};
+    if (!internals.client) {
+        internals.client = new Catbox.Client(CatboxMemory, options || {});
+        internals.client.start((err) => {
 
-    const client = new Catbox.Client(require('catbox-memory'), options);
+            if (err) {
+                throw err;
+            }
+        });
+    }
 
-    server.app.cache = client;
-    client.start(next);
+    return internals.client;
 };
 
 
-exports.register.attributes = {
-    name: 'cache',
-    version: require('../../package.json').version
-};

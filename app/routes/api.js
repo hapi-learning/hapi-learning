@@ -2,7 +2,6 @@
 
 exports.register = function (server, options, next) {
 
-    const Cache       = server.app.cache;
     const Storage     = server.app.storage;
     const Controllers = server.app.controllers;
     const Models      = server.app.models;
@@ -14,7 +13,6 @@ exports.register = function (server, options, next) {
     server.bind({
         models: Models,
         storage: Storage,
-        cache: Cache,
         mailers: Mailers
     });
 

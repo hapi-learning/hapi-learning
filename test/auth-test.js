@@ -21,39 +21,41 @@ before((done) => {
     const Models = server.app.models;
     Models.sequelize.sync({
         force: true
-    }).then(() => {
+    })
+    .then(() => {
 
-        Models.Role.create({
+        return Models.Role.create({
             name: 'admin'
-        }).then(() => {
-
-            Models.User.create({
-                username: 'admin',
-                password: 'admin',
-                role_id: 1,
-                email: 'admin@admin.com',
-                firstName: 'admin',
-                lastName: 'admin'
-            })
-            .then((user) => {
-
-                server.inject({
-                    method: 'POST',
-                    url: '/login',
-                    payload: {
-                        username: 'admin',
-                        password: 'admin'
-                    }
-                }, (res) => {
-
-                    internals.headers = {
-                        Authorization: res.request.response.source.token
-                    };
-                    done();
-                });
-            });
         });
+    })
+    .then(() => {
 
+        return Models.User.create({
+            username: 'admin',
+            password: 'admin',
+            role_id: 1,
+            email: 'admin@admin.com',
+            firstName: 'admin',
+            lastName: 'admin'
+        });
+    })
+    .then(() => {
+
+        server.inject({
+            method: 'POST',
+            url: '/login',
+            payload: {
+                username: 'admin',
+                password: 'admin'
+            }
+        }, (res) => {
+
+            internals.headers = {
+                Authorization: res.request.response.source.token
+            };
+
+            done();
+        });
     });
 });
 
@@ -112,14 +114,18 @@ describe('Controller.Auth', () => {
                 }
             };
 
-            server.inject(request, (res) => {
+            setTimeout(() => {
 
-                const response = res.request.response;
-                internals.headers.Authorization = res.request.response.source.token;
-                console.log('HEYYY');
-                expect(response.statusCode).to.equal(200);
-                done();
-            });
+                server.inject(request, (res) => {
+
+                    const response = res.request.response;
+                    internals.headers = {
+                        Authorization: response.source.token
+                    };
+                    expect(response.statusCode).to.equal(200);
+                    done();
+                });
+            }, 1000);
         });
     });
 
@@ -127,27 +133,26 @@ describe('Controller.Auth', () => {
 
         it('Should return the admin user', (done) => {
 
-            setTimeout(() => {
 
-                const request = {
-                    method: 'GET',
-                    url: '/me',
-                    headers: internals.headers
-                };
+            const request = {
+                method: 'GET',
+                url: '/me',
+                headers: internals.headers
+            };
 
 
-                server.inject(request, (res) => {
 
-                    const response = res.request.response;
-                    expect(response.statusCode).to.equal(200);
-                    const user = response.source;
-                    expect(user.username).to.equal('admin');
-                    expect(user.firstName).to.equal('admin');
-                    expect(user.lastName).to.equal('admin');
-                    expect(user.email).to.equal('admin@admin.com');
-                    done();
-                });
-            }, 1000);
+            server.inject(request, (res) => {
+
+                const response = res.request.response;
+                expect(response.statusCode).to.equal(200);
+                const user = response.source;
+                expect(user.username).to.equal('admin');
+                expect(user.firstName).to.equal('admin');
+                expect(user.lastName).to.equal('admin');
+                expect(user.email).to.equal('admin@admin.com');
+                done();
+            });
         });
     });
 

@@ -406,7 +406,7 @@ describe('Controller.Course', () => {
                         expect(stats).to.be.undefined();
                         done();
                     });
-                }, 1000);
+                }, 500);
             });
         });
 

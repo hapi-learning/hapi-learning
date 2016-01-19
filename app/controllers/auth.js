@@ -105,6 +105,8 @@ exports.login = {
 
             }
 
+            // TODO add to auth attempt
+
             return reply(Boom.unauthorized('Invalid username and/or password'));
         });
     }
