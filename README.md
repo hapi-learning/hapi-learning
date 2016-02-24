@@ -24,12 +24,12 @@ You can find the API documentation [here](http://fknop.github.io/hapi-learning-d
 
 ssh:
 ```
-$ git clone git@gitlab.com:fknop/ATL3-hapi-learning.git hapi-learning
+$ git clone git@github.com:fknop/hapi-learning.git hapi-learning
 ```
 
 https:
 ```
-$ git clone https://gitlab.com/fknop/ATL3-hapi-learning.git hapi-learning
+$ git clone https://github.com/fknop/hapi-learning.git hapi-learning
 ```
 
 ### 3. Configure your environments variables
