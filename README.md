@@ -3,7 +3,7 @@
 
 # hapi-learning 
 
-*This project is not stable at the moment.*
+*The master branch is not stable at the moment.* 
 
 [![Join the chat at https://gitter.im/fknop/hapi-learning](https://badges.gitter.im/fknop/hapi-learning.svg)](https://gitter.im/fknop/hapi-learning?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
